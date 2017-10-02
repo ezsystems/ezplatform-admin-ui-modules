@@ -1,0 +1,49 @@
+.c-grid-switcher,
+.c-grid-switcher * {
+    box-sizing: border-box;
+}
+
+.c-grid-switcher {
+    height: 50px;
+    width: 88px;
+    border: 3px solid #0e77a3;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+}
+
+.c-grid-switcher__option {
+    flex: 1 1 44px;
+    max-width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    border: 2px solid #fff;
+    background: #fff;
+    color: #0e77a3;
+    transition: all .1s ease-in-out;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.c-grid-switcher__option:first-of-type {
+    border-radius: 4px 0 0 4px;
+}
+
+.c-grid-switcher__option:last-of-type {
+    border-radius: 0 4px 4px 0;
+}
+
+.c-grid-switcher__option--active {
+    background: #0e77a3;
+}
+
+.c-grid-switcher__option .c-icon {
+    fill: #0e77a3;
+    margin: auto;
+}
+
+.c-grid-switcher__option--active .c-icon {
+    fill: #fff;
+}
