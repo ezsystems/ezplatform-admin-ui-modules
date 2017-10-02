@@ -1,0 +1,32 @@
+.selected-content-item-component {
+    background: #fff;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.selected-content-item-component__remove {
+    background: #b30;
+    color: #fff;
+    flex: 0 0 32px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .3s var(--transition-function);
+}
+
+.selected-content-item-component__remove:hover {
+    background: #d30;
+}
+
+.selected-content-item-component__wrapper {
+    flex: 1 1 auto;
+    padding: 4px;
+}
+
+.selected-content-item-component__name {
+    margin-bottom: 16px;
+    font-weight: 700;
+}

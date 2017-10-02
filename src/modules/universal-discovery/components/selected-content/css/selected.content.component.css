@@ -1,0 +1,19 @@
+.selected-content-component {
+    position: relative;
+    z-index: 1;
+}
+
+.selected-content-component__content-names {
+    width: 320px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selected-content-component .popup-module {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+}

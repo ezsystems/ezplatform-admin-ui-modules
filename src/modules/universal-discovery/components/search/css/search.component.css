@@ -1,0 +1,12 @@
+.search-component {
+    height: 100%;
+}
+
+.search-component__title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.search-component__form {
+    margin: 16px 0;
+}

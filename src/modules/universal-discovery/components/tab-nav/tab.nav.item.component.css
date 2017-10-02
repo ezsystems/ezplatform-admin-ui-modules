@@ -1,0 +1,14 @@
+.tab-nav-item-component {
+    background: #f0fafa;
+    border: 0 none;
+    border-top: 3px solid transparent;
+    font-size: 16px;
+    padding: 8px 16px;
+    outline: none;
+    font-weight: 700;
+}
+
+.tab-nav-item-component--selected {
+    background: #fff;
+    border-top-color: #b30;
+}

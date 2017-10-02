@@ -1,0 +1,14 @@
+.selected-content-popup-component .popup-module {
+    width: 640px;
+}
+
+.selected-content-popup-component .popup-module__content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selected-content-popup-component .selected-content-item-component {
+    flex: 1 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
+    margin: 4px;
+}

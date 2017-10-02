@@ -1,0 +1,14 @@
+.finder-component {
+    height: 100%;
+}
+
+.finder-component__branches {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+    overflow: auto;
+}
+
+.finder-component__branches .finder-tree-branch-component + .finder-tree-branch-component {
+    margin-left: 16px;
+}

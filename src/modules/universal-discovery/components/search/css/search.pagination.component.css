@@ -1,0 +1,32 @@
+.search-pagination-component {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.search-pagination-component:after {
+    content: '';
+    display: block;
+    width: 100%;
+    clear: both;
+}
+
+[class*="search-pagination-component__btn--"] {
+    border: 0 none;
+    background: none;
+    color: blue;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+[class*="search-pagination-component__btn--"][disabled] {
+    color: #bbb;
+    cursor: not-allowed;
+}
+
+.search-pagination-component__btn--first {
+    float: left;
+}
+
+.search-pagination-component__btn--last {
+    float: right;
+}

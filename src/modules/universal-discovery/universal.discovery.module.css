@@ -1,0 +1,117 @@
+.universal-discovery-module {
+    position: absolute;
+    z-index: 99999;
+    width: 90vw;
+    height: 90vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #eee;
+    padding: 16px;
+    box-shadow: 0 0 30px 0 rgba(0,0,0,.35);
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 48px 48px 1fr 48px;
+}
+
+.universal-discovery-module__title {
+    margin: 0;
+    grid-row: 1 / 2;
+}
+
+.universal-discovery-module__nav {
+    grid-row: 2 / 3;
+    display: flex;
+    align-items: baseline;
+}
+
+.universal-discovery-module__nav .tab-nav-item-component__wrapper {
+    align-self: flex-end;
+}
+
+.universal-discovery-module__content {
+    grid-row: 3 / 6;
+}
+
+.universal-discovery-module__panels {
+    padding: 16px;
+    background: #e3e3e3;
+    overflow: auto;
+    height: 100%;
+}
+
+[class*="universal-discovery-module__panels--"] {
+    height: 100%;
+}
+
+.universal-discovery-module__actions {
+    grid-row: 6 / 7;
+    height: 48px;
+    text-align: right;
+    margin-top: 16px;
+}
+
+.universal-discovery-module__action--cancel {
+    background: none;
+    font-size: 16px;
+    border: 0 none;
+    padding: 8px;
+    margin: 0 16px;
+}
+
+.universal-discovery-module__action--confirm {
+    padding: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #fff 0%, #e6e6e6 100%);
+    border: 1px solid #bbb;
+    cursor: pointer;
+    transition: background .3s var(--transition-function);
+}
+
+.universal-discovery-module__action--confirm:hover,
+.universal-discovery-module__action--confirm:focus {
+    background: linear-gradient(to bottom, #e6e6e6 0%, #fff 100%);
+}
+
+[class*="universal-discovery-module__tabs--"] {
+    display: inline-block;
+}
+
+.universal-discovery-module--with-preview .universal-discovery-module__content {
+    display: grid; 
+    grid-template-columns: auto 300px;
+    grid-column-gap: 16px;
+}
+
+.universal-discovery-module--with-preview .universal-discovery-module__panels {
+    grid-column: 1 / 2;
+}
+
+.universal-discovery-module--with-preview .universal-discovery-module__preview {
+    grid-column: 2 / 3;
+}
+
+.universal-discovery-module--with-preview.universal-discovery-module--with-selected-content .universal-discovery-module__panels {
+    grid-row: 1 / 2;
+}
+
+.universal-discovery-module--with-preview.universal-discovery-module--with-selected-content .universal-discovery-module__preview {
+    grid-row: 1 / 2;
+}
+
+.universal-discovery-module--with-selected-content .universal-discovery-module__actions {
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.universal-discovery-module--with-selected-content .universal-discovery-module__selected-content {
+    grid-column: 1 / 2;
+    text-align: left;
+}
+
+.universal-discovery-module--with-selected-content .universal-discovery-module__btns {
+    grid-column: 2 / 3;
+}

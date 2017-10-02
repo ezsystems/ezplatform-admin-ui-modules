@@ -1,0 +1,6 @@
+.finder-tree-branch-component {
+    background: #fff;
+    height: 100%;
+    max-width: 24ch;
+    flex: 1 0 24ch;
+}

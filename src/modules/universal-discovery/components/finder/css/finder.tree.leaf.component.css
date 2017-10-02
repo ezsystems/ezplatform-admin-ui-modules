@@ -1,0 +1,31 @@
+.finder-tree-leaf-component {
+    padding: 8px 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background .3s var(--transition-function);
+    position: relative;
+}
+
+.finder-tree-leaf-component:hover,
+.finder-tree-leaf-component:focus {
+    background: #ddd;
+}
+
+.finder-tree-leaf-component--has-children:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-left: 8px solid #b30;
+    border-bottom: 5px solid transparent;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.finder-tree-leaf-component--selected {
+    background: #eee;
+}
