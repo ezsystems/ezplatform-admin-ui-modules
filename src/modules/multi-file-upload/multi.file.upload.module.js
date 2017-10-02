@@ -14,10 +14,10 @@ export default class MultiFileUploadModule extends Component {
     constructor(props) {
         super(props);
 
-        let popupVisible = false;
+        let popupVisible = true;
 
-        if (props.popupOnly && !props.asButton) {
-            popupVisible = true;
+        if (props.asButton) {
+            popupVisible = false;
         }
 
         this.state = {
@@ -42,7 +42,7 @@ export default class MultiFileUploadModule extends Component {
     }
 
     renderPopup() {
-        if (!this.state.popupVisible && !this.props.popupOnly) {
+        if (!this.state.popupVisible) {
             return null;
         }
 
@@ -77,7 +77,6 @@ export default class MultiFileUploadModule extends Component {
 }
 
 MultiFileUploadModule.propTypes = {
-    checkCanUpload: PropTypes.func,
     onAfterUpload: PropTypes.func.isRequired,
     adminUiConfig: PropTypes.shape({
         multiFileUpload: PropTypes.shape({
@@ -95,22 +94,30 @@ MultiFileUploadModule.propTypes = {
         locationPath: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
     }).isRequired,
-    createFileStruct: PropTypes.func.isRequired,
-    publishFile: PropTypes.func.isRequired,
-    deleteFile: PropTypes.func.isRequired,
-    popupOnly: PropTypes.bool.isRequired,
+    checkCanUpload: PropTypes.func,
+    createFileStruct: PropTypes.func,
+    publishFile: PropTypes.func,
+    deleteFile: PropTypes.func,
     onPopupClose: PropTypes.func,
     itemsToUpload: PropTypes.array,
-    asButton: PropTypes.bool.isRequired
+    asButton: PropTypes.bool,
+    uploadBtnLabel: PropTypes.string,
+    popupTitle: PropTypes.string,
+    dropActionMessage: PropTypes.string,
+    maxFileSizeMessage: PropTypes.string,
+    uploadedItemsListTitle: PropTypes.string
 };
 
 MultiFileUploadModule.defaultProps = {
-    onAfterUpload: () => true,
-    popupOnly: false,
     createFileStruct,
     publishFile,
     deleteFile,
     checkCanUpload,
     itemsToUpload: [],
-    asButton: false
+    asButton: false,
+    uploadBtnLabel: 'Upload sub-items',
+    popupTitle: 'Multi-file upload',
+    dropActionMessage: 'Drag and drop your files on browser window or upload them',
+    maxFileSizeMessage: 'Max file size:',
+    uploadedItemsListTitle: 'Uploaded'
 };

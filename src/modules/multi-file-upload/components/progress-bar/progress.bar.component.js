@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './css/progress.bar.component.css';
@@ -17,12 +17,6 @@ ProgressBarComponent.propTypes = {
     progress: PropTypes.number.isRequired,
     uploaded: PropTypes.string.isRequired,
     total: PropTypes.string.isRequired
-};
-
-ProgressBarComponent.defaultProps = {
-    progress: 0,
-    uploaded: '0B',
-    total: '0B'
 };
 
 export default ProgressBarComponent;

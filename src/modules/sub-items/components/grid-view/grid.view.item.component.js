@@ -12,7 +12,7 @@ const GridViewItemComponent = (props) => {
     let image = <div className={`${imageClassName} ${imageClassName}--none`}>No image</div>;
 
     if (imageField) {
-        image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`Image - ${imageField.fieldValue.path}`} />;
+        image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={imageField.fieldValue.path} />;
     }
     
     return (

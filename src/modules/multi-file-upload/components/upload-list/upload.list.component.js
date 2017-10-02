@@ -98,7 +98,7 @@ export default class UploadListComponent extends Component {
         
         return (
             <div className="c-upload-list">
-                <div className="c-upload-list__title">Uploaded ({uploaded}/{total})</div>
+                <div className="c-upload-list__title">{this.props.uploadedItemsListTitle} ({uploaded}/{total})</div>
                 <div className="c-upload-list__items">
                     {itemsToUpload.map(this.renderItemToUpload.bind(this))}
                     {items.map(this.renderUploadedItem.bind(this))}
@@ -113,7 +113,6 @@ UploadListComponent.propTypes = {
     createFileStruct: PropTypes.func.isRequired,
     publishFile: PropTypes.func.isRequired,
     deleteFile: PropTypes.func.isRequired,
-    popupOnly: PropTypes.bool.isRequired,
     checkCanUpload: PropTypes.func.isRequired,
     adminUiConfig: PropTypes.shape({
         multiFileUpload: PropTypes.shape({
@@ -131,6 +130,7 @@ UploadListComponent.propTypes = {
         locationPath: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
     }).isRequired,
+    uploadedItemsListTitle: PropTypes.string.isRequired
 };
 
 UploadListComponent.defaultProps = {

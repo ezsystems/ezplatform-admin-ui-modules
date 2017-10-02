@@ -331,16 +331,13 @@ export default class UploadItemComponent extends Component {
 
 UploadItemComponent.propTypes = {
     data: PropTypes.object.isRequired,
-    onItemRemove: PropTypes.func,
-    onItemEdit: PropTypes.func,
-    onCancelUpload: PropTypes.func,
     onAfterUpload: PropTypes.func.isRequired,
     onAfterAbort: PropTypes.func.isRequired,
     onAfterDelete: PropTypes.func.isRequired,
     isUploaded: PropTypes.bool.isRequired,
-    createFileStruct: PropTypes.func,
-    publishFile: PropTypes.func,
-    deleteFile: PropTypes.func,
+    createFileStruct: PropTypes.func.isRequired,
+    publishFile: PropTypes.func.isRequired,
+    deleteFile: PropTypes.func.isRequired,
     checkCanUpload: PropTypes.func.isRequired,
     adminUiConfig: PropTypes.shape({
         multiFileUpload: PropTypes.shape({
@@ -361,8 +358,5 @@ UploadItemComponent.propTypes = {
 };
 
 UploadItemComponent.defaultProps = {
-    isUploaded: false,
-    onAfterUpload: () => true,
-    onAfterAbort: () => true,
-    onAfterDelete: () => true,
+    isUploaded: false
 };

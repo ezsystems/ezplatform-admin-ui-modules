@@ -21,10 +21,14 @@ export default class UploadPopupModule extends Component {
     render() {
         return (
             <div className="c-upload-popup">
-                <Popup {...this.props}>
+                <Popup title={this.props.popupTitle} {...this.props} >
                     <DropAreaComponent 
                         onDrop={this.uploadFiles.bind(this)} 
-                        maxFileSize={this.props.adminUiConfig.multiFileUpload.maxFileSize} />
+                        maxFileSize={this.props.adminUiConfig.multiFileUpload.maxFileSize}
+                        maxFileSizeMessage={this.props.maxFileSizeMessage}
+                        dropActionMessage={this.props.dropActionMessage}
+                        uploadBtnLabel={this.props.uploadBtnLabel}
+                         />
                     <UploadListComponent {...this.props} itemsToUpload={this.state.itemsToUpload} />
                 </Popup>
             </div>
@@ -33,7 +37,7 @@ export default class UploadPopupModule extends Component {
 }
 
 UploadPopupModule.propTypes = {
-    title: PropTypes.string,
+    popupTitle: PropTypes.string.isRequired,
     visible: PropTypes.bool,
     onUpload: PropTypes.func,
     onUploadEnd: PropTypes.func,
@@ -63,11 +67,13 @@ UploadPopupModule.propTypes = {
         locationPath: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
     }).isRequired,
+    uploadBtnLabel: PropTypes.string.isRequired,
+    dropActionMessage: PropTypes.string.isRequired,
+    maxFileSizeMessage: PropTypes.string.isRequired,
+    uploadedItemsListTitle: PropTypes.string.isRequired
 };
 
 UploadPopupModule.defaultProps = {
-    title: 'Multi-file upload',
     visible: true,
-    onAfterUpload: () => true,
     itemsToUpload: []
 };
