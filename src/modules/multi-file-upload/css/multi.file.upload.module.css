@@ -1,0 +1,33 @@
+.m-mfu,
+.m-mfu * {
+    box-sizing: border-box;
+}
+
+.m-mfu__btn--upload {
+    display: inline-flex;
+    padding: 0 20px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: .5px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #f15a10;
+    background-color: #f15a10;
+    transition: background .3s ease-in-out;
+    align-items: center;
+    height: 100%;
+}
+
+.m-mfu__btn--upload:hover,
+.m-mfu__btn--upload:focus {
+    background: #c3480b;
+}
+
+.m-mfu__btn--upload .c-icon {
+    fill: #fff;
+    stroke: #fff;
+    stroke-width: 16px;
+    margin-right: 8px;
+}

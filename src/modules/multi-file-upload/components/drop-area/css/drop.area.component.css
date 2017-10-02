@@ -1,0 +1,50 @@
+.c-drop-area {
+    padding: 0 16px;
+    text-align: center;
+}
+
+.c-drop-area__btn--select {
+    display: inline-flex;
+    padding: 7px 20px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: .5px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #f15a10;
+    background-color: #f15a10;
+    transition: background .3s ease-in-out;
+    align-items: center;
+}
+
+.c-drop-area__btn--select:hover,
+.c-drop-area__btn--select:focus {
+    background: #c3480b;
+}
+
+.c-drop-area__message--main {
+    box-sizing: border-box;
+    cursor: auto;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 60px;
+    margin: 0;
+}
+
+.c-drop-area__input--hidden {
+    display: none;
+}
+
+.c-drop-area .c-icon {
+    fill: #fff;
+    stroke: #fff;
+    stroke-width: 16px;
+    margin-right: 8px;
+}
+
+.c-drop-area__message--filesize {
+    font-size: 14px;
+    line-height: 60px;
+}

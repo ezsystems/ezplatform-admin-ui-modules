@@ -1,0 +1,41 @@
+.c-upload-list-item {
+    display: flex;
+    background: #fff;
+    padding: 8px 16px;
+    align-items: center;
+    height: 60px;
+}
+
+.c-upload-list-item__icon {
+    flex: 0 0 20px;
+}
+
+.c-upload-list-item__name {
+    flex: 1 1 auto;
+}
+
+.c-upload-list-item__info {
+    flex: 1 1 auto;
+    max-width: 200px;
+}
+
+.c-upload-list-item__actions {
+    flex: 1 1 44px;
+    max-width: 88px;
+    text-align: right;
+}
+
+[class*="c-upload-list-item__action--"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+}
+
+[class*="c-upload-list-item__action--"] .c-icon {
+    fill: #333;
+    stroke: #333;
+    stroke-width: 16px;
+}
