@@ -23,8 +23,8 @@ export default class SubItemsModule extends Component {
             items: props.items,
             contentTypesMap: {},
             total: 0,
-            limit: 10,
-            offset: 0,
+            limit: props.limit,
+            offset: props.offset,
             isLoading: !props.items.length
         };
     }
@@ -52,11 +52,14 @@ export default class SubItemsModule extends Component {
     }
 
     loadItems() {
+        const startingLocationId = this.props.startingLocationId;
+
         this.setState(state => Object.assign({}, state, {isLoading: true}));
 
-        this.loadLocation(this.props.startingLocationId)
-            .then(this.loadContentItems.bind(this, this.props.startingLocationId))
-            .then(this.updateItemsState.bind(this, this.props.startingLocationId))
+        this.loadLocation(startingLocationId)
+            .then(this.loadContentItems.bind(this, startingLocationId))
+            .then(this.loadContentTypes.bind(this))
+            .then(this.updateItemsState.bind(this, startingLocationId))
             .catch(error => console.log('sub:items:load:items:error', error));
     }
 
@@ -82,11 +85,11 @@ export default class SubItemsModule extends Component {
             content: contentInfo.View.Result.searchHits.searchHit
         })));
 
-        if (!Object.keys(this.state.contentTypesMap).length) {
-            promises.push(new Promise((resolve) => this.props.loadContentTypes([5], resolve)));
-        }
-
         return Promise.all(promises);
+    }
+
+    loadContentTypes(data) {
+        return new Promise(resolve => this.props.loadContentTypes(response => resolve([...data, response])));
     }
 
     updateItemsState(locationId, data) {
@@ -96,23 +99,24 @@ export default class SubItemsModule extends Component {
             content: content[index].value.Content
         }], []);
 
-        this.setState(state => {
-            const newState = {
-                items: [...state.items, ...items], 
-                isLoading: false,
-                totalCount
-            };
+        this.setState(state => Object.assign({}, state, {
+            items: [...state.items, ...items], 
+            isLoading: false,
+            totalCount,
+            contentTypesMap: this.buildContentTypesMap(data[1].ContentTypeInfoList.ContentType)
+        }));
+    }
 
-            if (data[1] && data[1].ContentTypeInfoList) {
-                newState.contentTypesMap = data[1].ContentTypeInfoList.ContentType.reduce((total, item) => {
-                    total[item._href] = item;
+    buildContentTypesMap(contentTypes) {
+        if (!contentTypes) {
+            return {};
+        }
 
-                    return total;
-                }, {});
-            }
+        return contentTypes.reduce((total, item) => {
+            total[item._href] = item;
 
-            return Object.assign({}, state, newState);
-        });
+            return total;
+        }, {});
     }
 
     handleItemPriorityUpdate(data) {
@@ -181,12 +185,6 @@ export default class SubItemsModule extends Component {
 
 SubItemsModule.propTypes = {
     startingLocationId: PropTypes.number.isRequired,
-    activeView: PropTypes.string.isRequired,
-    loadLocation: PropTypes.func.isRequired,
-    loadContentInfo: PropTypes.func.isRequired,
-    loadContentTypes: PropTypes.func.isRequired,
-    updateLocationPriority: PropTypes.func.isRequired,
-    items: PropTypes.arrayOf(PropTypes.object),
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired
@@ -195,15 +193,24 @@ SubItemsModule.propTypes = {
         component: PropTypes.element,
         attrs: PropTypes.object
     })),
+    limit: PropTypes.number,
+    offset: PropTypes.number,
+    activeView: PropTypes.string,
+    loadLocation: PropTypes.func,
+    loadContentInfo: PropTypes.func,
+    loadContentTypes: PropTypes.func,
+    updateLocationPriority: PropTypes.func,
+    items: PropTypes.arrayOf(PropTypes.object)
 };
 
 SubItemsModule.defaultProps = {
-    startingLocationId: 2,
     activeView: 'table',
     items: [],
+    extraActions: [],
+    limit: 10,
+    offset: 0,
     loadLocation,
     loadContentInfo,
     loadContentTypes,
     updateLocationPriority,
-    extraActions: []
 };

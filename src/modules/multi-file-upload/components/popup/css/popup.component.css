@@ -18,9 +18,23 @@
     z-index: 2;
     top: 50%;
     right: 8px;
-    height: 100%;
     display: flex;
     align-items: center;
     color: #9B9B9B;
     transform: translate(-50%, -50%);
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+    transition: background .3s ease-in-out;
+}
+
+.c-popup__close:hover,
+.c-popup__close:focus {
+    background: #ccc;
+}
+
+.c-popup .c-popup__close {
+    box-sizing: content-box;
+    padding: 8px;
+    border-radius: 50%;
 }

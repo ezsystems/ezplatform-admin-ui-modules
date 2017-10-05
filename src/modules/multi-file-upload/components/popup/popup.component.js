@@ -8,11 +8,10 @@ import './css/popup.component.css';
 
 export default class PopupComponent extends Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
-            items: [],
-            visible: !!props.visible
+            visible: props.visible
         };
     }
 
@@ -20,8 +19,18 @@ export default class PopupComponent extends Component {
         this.setState(state => Object.assign({}, state, {visible: props.visible}));
     }
 
+    /**
+     * Hides a popup
+     *
+     * @method hidePopup
+     * @memberof PopupComponent
+     */
     hidePopup() {
-        this.props.onClose();
+        this.setState(state => Object.assign({}, state, {visible: false}));
+
+        if (typeof this.props.onClose === 'function') {
+            this.props.onClose();
+        }
     }
 
     render() {
@@ -47,4 +56,8 @@ PopupComponent.propTypes = {
     children: PropTypes.any,
     visible: PropTypes.bool,
     onClose: PropTypes.func
+};
+
+PopupComponent.defaultProps = {
+    visible: false
 };

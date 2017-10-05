@@ -70,14 +70,10 @@ export const loadContentInfo = (contentIds, callback) => {
         .catch(error => console.log('error:load:content:info', error));
 };
 
-export const loadContentTypes = (contentTypeIds, callback) => {
-    const headers = new Headers({
-        'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json'
-
-    });
+export const loadContentTypes = (callback) => {
     const request = new Request('/api/ezp/v2/content/types', {
         method: 'GET',
-        headers,
+        headers: {'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json'},
         mode: 'cors',
     });
     

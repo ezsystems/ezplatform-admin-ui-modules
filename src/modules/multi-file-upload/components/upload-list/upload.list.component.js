@@ -15,18 +15,41 @@ export default class UploadListComponent extends Component {
         };
     }
 
+    componentWillReceiveProps(props) {
+        this.setState(state => {
+            const stateItems = state.itemsToUpload.filter(stateItem => !props.itemsToUpload.find(propItem => propItem.id === stateItem.id));
+
+            return Object.assign({}, state, {itemsToUpload: [...stateItems, ...props.itemsToUpload]});
+        });
+    }
+
+    componentDidUpdate() {
+        this.props.onAfterUpload(this.state.items);
+    }
+
+    /**
+     * Handles after file upload event
+     *
+     * @method handleAfterUpload
+     * @param {Object} item
+     * @memberof UploadListComponent
+     */
     handleAfterUpload(item) {
         this.setState(state => {
-            const items = [...state.items, item];
-            const itemsToUpload = state.itemsToUpload.filter(data => data.id !== item.id);
-
             return Object.assign({}, state, {
-                itemsToUpload,
-                items
+                itemsToUpload: state.itemsToUpload.filter(data => data.id !== item.id),
+                items: [...state.items, item]
             });
         });
     }
 
+    /**
+     * Handles after file upload abort event
+     *
+     * @method handleAfterAbort
+     * @param {Object} item
+     * @memberof UploadListComponent
+     */
     handleAfterAbort(item) {
         this.setState(state => {
             const items = state.items.filter(data => data.id !== item.id);
@@ -41,6 +64,13 @@ export default class UploadListComponent extends Component {
         });
     }
 
+    /**
+     * Handles after file delete event
+     *
+     * @method handleAfterDelete
+     * @param {Object} item
+     * @memberof UploadListComponent
+     */
     handleAfterDelete(item) {
         this.setState(state => {
             const items = state.items.filter(data => data.id !== item.id);
@@ -55,6 +85,14 @@ export default class UploadListComponent extends Component {
         });
     }
 
+    /**
+     * Renders an item to upload
+     *
+     * @method renderItemToUpload
+     * @param {Object} item
+     * @memberof UploadListComponent
+     * @returns {Element}
+     */
     renderItemToUpload(item) {
         return this.renderItem(item, {
             isUploaded: false,
@@ -66,6 +104,14 @@ export default class UploadListComponent extends Component {
         });
     }
 
+    /**
+     * Renders an uploaded item
+     *
+     * @method renderUploadedItem
+     * @param {Object} item
+     * @memberof UploadListComponent
+     * @returns {Element}
+     */
     renderUploadedItem(item) {
         return this.renderItem(item, {
             isUploaded: true,
@@ -74,6 +120,15 @@ export default class UploadListComponent extends Component {
         });
     }
 
+    /**
+     * Renders an item
+     *
+     * @method renderItem
+     * @param {Object} item
+     * @param {Object} customAttrs component's custom attrs
+     * @memberof UploadListComponent
+     * @returns {Element}
+     */
     renderItem(item, customAttrs) {
         const attrs = Object.assign({
             key: item.id,
@@ -85,20 +140,14 @@ export default class UploadListComponent extends Component {
         return <UploadItemComponent {...attrs} />
     }
 
-    componentWillReceiveProps(props) {
-        this.setState(state => {
-            return Object.assign({}, state, {itemsToUpload: [...state.itemsToUpload, ...props.itemsToUpload]});
-        });
-    }
-
     render() {
         const {items, itemsToUpload} = this.state;
         const uploaded = items.length;
         const total = uploaded + itemsToUpload.length;
-        
+
         return (
             <div className="c-upload-list">
-                <div className="c-upload-list__title">Uploaded ({uploaded}/{total})</div>
+                <div className="c-upload-list__title">{this.props.uploadedItemsListTitle} ({uploaded}/{total})</div>
                 <div className="c-upload-list__items">
                     {itemsToUpload.map(this.renderItemToUpload.bind(this))}
                     {items.map(this.renderUploadedItem.bind(this))}
@@ -110,10 +159,10 @@ export default class UploadListComponent extends Component {
 
 UploadListComponent.propTypes = {
     itemsToUpload: PropTypes.arrayOf(PropTypes.object),
+    onAfterUpload: PropTypes.func.isRequired,
     createFileStruct: PropTypes.func.isRequired,
     publishFile: PropTypes.func.isRequired,
     deleteFile: PropTypes.func.isRequired,
-    popupOnly: PropTypes.bool.isRequired,
     checkCanUpload: PropTypes.func.isRequired,
     adminUiConfig: PropTypes.shape({
         multiFileUpload: PropTypes.shape({
@@ -131,6 +180,7 @@ UploadListComponent.propTypes = {
         locationPath: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
     }).isRequired,
+    uploadedItemsListTitle: PropTypes.string.isRequired
 };
 
 UploadListComponent.defaultProps = {

@@ -1,3 +1,10 @@
+/**
+ * Returns a filesize as a formatted string
+ *
+ * @function fileSizeToString
+ * @param {Number} filesize
+ * @returns {String}
+ */
 export const fileSizeToString = (filesize) => {
     const units = ['bytes', 'KB', 'MB', 'GB'];
     const kilobyte = 1024;
