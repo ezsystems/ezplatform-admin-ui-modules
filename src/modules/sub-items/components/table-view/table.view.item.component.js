@@ -92,7 +92,8 @@ export default class TableViewItemComponent extends Component {
     render() {
         const {content, contentTypesMap} = this.props;
         const date = new Date(content.lastModificationDate);
-        const contentTypeName = contentTypesMap[content.ContentType._href].names.value[0]['#text'];
+        const contentType = contentTypesMap[content.ContentType._href];
+        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : 'N/A';
 
         return (
             <tr className="c-table-view-item">

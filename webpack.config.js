@@ -9,7 +9,7 @@ module.exports = {
         'multi.file.upload': './src/modules/multi-file-upload/multi.file.upload.module.js',
     },
     output: {
-        filename: 'ez.[name].module.js',
+        filename: '[name].module.js',
         path: path.resolve(__dirname, 'dist'),
         library: ['ez', '[name]'],
         libraryTarget: 'umd',

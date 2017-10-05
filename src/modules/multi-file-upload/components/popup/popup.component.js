@@ -19,6 +19,12 @@ export default class PopupComponent extends Component {
         this.setState(state => Object.assign({}, state, {visible: props.visible}));
     }
 
+    /**
+     * Hides a popup
+     *
+     * @method hidePopup
+     * @memberof PopupComponent
+     */
     hidePopup() {
         this.setState(state => Object.assign({}, state, {visible: false}));
 

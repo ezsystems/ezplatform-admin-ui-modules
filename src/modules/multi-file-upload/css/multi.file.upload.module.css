@@ -3,6 +3,10 @@
     box-sizing: border-box;
 }
 
+.m-mfu {
+    font-weight: 400;
+}
+
 .m-mfu__btn--upload {
     display: inline-flex;
     padding: 0 20px;

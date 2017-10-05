@@ -6,17 +6,36 @@
     height: 60px;
 }
 
+.c-upload-list-item .c-icon {
+    stroke-width: 16px;
+}
+
 .c-upload-list-item__icon {
     flex: 0 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.c-upload-list-item__meta {
+    padding: 0 16px;
+    line-height: 1.4;
 }
 
 .c-upload-list-item__name {
-    flex: 1 1 auto;
+    font-size: 14px;
+}
+
+.c-upload-list-item__size {
+    font-size: 10px;
 }
 
 .c-upload-list-item__info {
     flex: 1 1 auto;
-    max-width: 200px;
+}
+
+[class*="c-upload-list-item__message--"] {
+    font-style: italic;
+    font-size: 12px;
 }
 
 .c-upload-list-item__actions {
@@ -35,7 +54,18 @@
 }
 
 [class*="c-upload-list-item__action--"] .c-icon {
-    fill: #333;
-    stroke: #333;
-    stroke-width: 16px;
+    fill: #f15a10;
+    stroke: #f15a10;
+    transition: all .3s ease-in-out;
+}
+
+[class*="c-upload-list-item__action--"] .c-icon:hover,
+[class*="c-upload-list-item__action--"] .c-icon:focus {
+    fill: #c3480b;
+    stroke: #c3480b;
+}
+
+.c-upload-list-item .c-progress-bar {
+    max-width: 200px;
+    float: right;
 }

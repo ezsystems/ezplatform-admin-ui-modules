@@ -8,42 +8,39 @@ import { UPLOAD } from '../icon/icons.constants.json';
 import './css/drop.area.component.css';
 
 export default class DropAreaComponent extends Component {
+    /**
+     * Opens a browser native file selector
+     *
+     * @method openFileSelector
+     * @param {Event} event
+     * @memberof DropAreaComponent
+     */
     openFileSelector(event) {
         event.preventDefault();
 
         this._refFileInput.click();
     }
 
+    /**
+     * Handles file upload
+     *
+     * @method handleUpload
+     * @param {Event} event
+     * @memberof DropAreaComponent
+     */
     handleUpload(event) {
-        event.preventDefault();
-
-        const target = event.nativeEvent.dataTransfer || event.nativeEvent.target;
-
-        if (!target) {
-            return;
-        }
-
-        const files = [...target.files].map(file => ({
-            id: (Math.floor(Math.random() * Date.now())),
-            file
-        }));
-
-        this.props.onDrop(files);
+        this.props.preventDefaultAction(event);
+        this.props.onDrop(this.props.proccessUploadedFiles(event));
     }
 
     componentDidMount() {
-        window.addEventListener('drop', this.preventDefaultAction, false);
-        window.addEventListener('dragover', this.preventDefaultAction, false);
+        window.addEventListener('drop', this.props.preventDefaultAction, false);
+        window.addEventListener('dragover', this.props.preventDefaultAction, false);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('drop', this.preventDefaultAction, false);
-        window.removeEventListener('dragover', this.preventDefaultAction, false);
-    }
-
-    preventDefaultAction(event) {
-        event.preventDefault();
-        event.stopPropagation();
+        window.removeEventListener('drop', this.props.preventDefaultAction, false);
+        window.removeEventListener('dragover', this.props.preventDefaultAction, false);
     }
 
     render() {
@@ -55,14 +52,14 @@ export default class DropAreaComponent extends Component {
                     {this.props.uploadBtnLabel}
                 </div>
                 <div className="c-drop-area__message--filesize">({this.props.maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})</div>
-                <input 
-                    className="c-drop-area__input--hidden" 
+                <input
+                    className="c-drop-area__input--hidden"
                     ref={ref => this._refFileInput = ref }
-                    id="mfu-files" 
-                    type="file" 
-                    name="files[]" 
-                    hidden 
-                    multiple 
+                    id="mfu-files"
+                    type="file"
+                    name="files[]"
+                    hidden
+                    multiple
                     onChange={this.handleUpload.bind(this)} />
             </form>
         );
@@ -74,5 +71,7 @@ DropAreaComponent.propTypes = {
     maxFileSize: PropTypes.number.isRequired,
     maxFileSizeMessage: PropTypes.string.isRequired,
     dropActionMessage: PropTypes.string.isRequired,
-    uploadBtnLabel: PropTypes.string.isRequired
+    uploadBtnLabel: PropTypes.string.isRequired,
+    proccessUploadedFiles: PropTypes.func.isRequired,
+    preventDefaultAction: PropTypes.func.isRequired
 };

@@ -1,17 +1,23 @@
-const handleOnReadyStateChange = (xhr, onSuccess, onError) => {   
+/**
+ * Handles ready state change of request
+ *
+ * @function handleOnReadyStateChange
+ * @param {XMLHttpRequest} xhr
+ * @param {Function} onSuccess
+ * @param {Function} onError
+ */
+const handleOnReadyStateChange = (xhr, onSuccess, onError) => {
     if (xhr.readyState !== 4) {
         return;
     }
 
-    const response = new Response({
-        status: xhr.status,
-        headers: xhr.getAllResponseHeaders(),
-        body: xhr.responseText,
-        xhr: xhr,
-    });
+    if (xhr.status === 0 && xhr.statusText === '') {
+        // request aborted
+        return;
+    }
 
     if (xhr.status >= 400 || !xhr.status) {
-        onError(response.text());
+        onError(xhr);
 
         return;
     }
@@ -19,6 +25,13 @@ const handleOnReadyStateChange = (xhr, onSuccess, onError) => {
     onSuccess(JSON.parse(xhr.response));
 };
 
+/**
+ * Handles request response
+ *
+ * @function handleRequestResponse
+ * @param {Response} response
+ * @returns {String|Response}
+ */
 const handleRequestResponse = response => {
     if (!response.ok) {
         throw Error(response.text());
@@ -27,22 +40,70 @@ const handleRequestResponse = response => {
     return response;
 };
 
+/**
+ * Read file handler
+ *
+ * @function readFile
+ * @param {File} file
+ * @param {Function} resolve
+ * @param {Function} reject
+ */
 const readFile = function (file, resolve, reject) {
     this.addEventListener('load', () => resolve({fileReader: this, file}), false);
     this.addEventListener('error', () => reject(), false);
     this.readAsDataURL(file);
 }
 
+/**
+ * Finds a content type mapping based on a file type
+ *
+ * @function findFileTypeMapping
+ * @param {Array} mappings
+ * @param {File} file
+ * @returns {Object|undefined}
+ */
 const findFileTypeMapping = (mappings, file) => mappings.find(item => item.mimeTypes.find(type => type === file.type));
+/**
+ * Checks if file's MIME Type is allowed
+ *
+ * @function isMimeTypeAllowed
+ * @param {Array} mappings
+ * @param {File} file
+ * @returns {Boolean}
+ */
 const isMimeTypeAllowed = (mappings, file) => !!findFileTypeMapping(mappings, file);
+/**
+ * Checks if file type is allowed
+ *
+ * @function checkFileTypeAllowed
+ * @param {File} file
+ * @param {Object} locationMapping
+ * @returns {Boolean}
+ */
 const checkFileTypeAllowed = (file, locationMapping) => !locationMapping ? true : isMimeTypeAllowed(locationMapping.mappings, file);
+/**
+ * Detects a content type for a given file
+ *
+ * @function detectContentTypeMapping
+ * @param {File} file
+ * @param {Object} parentInfo
+ * @param {Object} config
+ * @returns {Object} detected content type config
+ */
 const detectContentTypeMapping = (file, parentInfo, config) => {
     const locationMapping = config.locationMappings.find(item => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
     const mappings = locationMapping ? locationMapping.mappings : config.defaultMappings;
 
     return findFileTypeMapping(mappings, file) || config.fallbackContentType;
 };
-
+/**
+ * Gets content type identifier
+ *
+ * @function getContentTypeByIdentifier
+ * @param {Object} params params object containing token and siteaccess properties
+ * @param {String} identifier content type identifier
+ * @returns {Promise}
+ */
 const getContentTypeByIdentifier = ({token, siteaccess}, identifier) => {
     const request = new Request(`/api/ezp/v2/content/types?identifier=${identifier}`, {
         method: 'GET',
@@ -57,7 +118,14 @@ const getContentTypeByIdentifier = ({token, siteaccess}, identifier) => {
 
     return fetch(request).then(handleRequestResponse);
 };
-
+/**
+ * Prepares a ContentCreate struct based on an uploaded file type
+ *
+ * @function prepareStruct
+ * @param {Object} params params object containing parentInfo and config properties
+ * @param {Object} data file data containing File object and FileReader object
+ * @returns {Promise}
+ */
 const prepareStruct = ({parentInfo, config}, data) => {
     let parentLocation = `/api/ezp/v2/content/locations${parentInfo.locationPath}`;
 
@@ -96,15 +164,21 @@ const prepareStruct = ({parentInfo, config}, data) => {
                     fields: {field: fields}
                 }
             };
-        
+
             return struct;
         })
         .catch(error => console.log('create:struct:error', error));
 };
 
-const createDraft = (data, requestEventHandlers) => {
-    const {struct, token, siteaccess} = data;
-
+/**
+ * Creates a content draft
+ *
+ * @function createDraft
+ * @param {Object} params params object containing struct, token and siteaccess properties
+ * @param {Object} requestEventHandlers object containing a list of callbacks
+ * @returns {Promise}
+ */
+const createDraft = ({struct, token, siteaccess}, requestEventHandlers) => {
     const xhr = new XMLHttpRequest();
     const body = JSON.stringify(struct);
     const headers = {
@@ -116,12 +190,12 @@ const createDraft = (data, requestEventHandlers) => {
 
     return new Promise((resolve, reject) => {
         xhr.open('POST', '/api/ezp/v2/content/objects', true);
-        
+
         xhr.onreadystatechange = handleOnReadyStateChange.bind(null, xhr, resolve, reject);
-    
+
         if (requestEventHandlers && Object.keys(requestEventHandlers).length) {
             const uploadEvents = requestEventHandlers.upload;
-    
+
             if (uploadEvents && Object.keys(uploadEvents).length) {
                 xhr.upload.onabort = uploadEvents.onabort;
                 xhr.upload.onerror = reject;
@@ -129,23 +203,33 @@ const createDraft = (data, requestEventHandlers) => {
                 xhr.upload.onprogress = uploadEvents.onprogress;
                 xhr.upload.ontimeout = uploadEvents.ontimeout;
             }
-    
+
             xhr.onerror = reject;
             xhr.onloadstart = requestEventHandlers.onloadstart;
         }
-    
+
         for (let headerType in headers) {
             if (headers.hasOwnProperty(headerType)) {
                 xhr.setRequestHeader(headerType, headers[headerType]);
             }
         }
-    
+
         xhr.send(body);
     });
 };
+/**
+ * Publishes a content draft
+ *
+ * @function publishDraft
+ * @param {Object} params params object containing token and siteaccess properties
+ * @param {Object} response object containing created draft struct
+ * @returns {Promise}
+ */
+const publishDraft = ({token, siteaccess}, response) => {
+    if (!response || !response.hasOwnProperty('Content')) {
+        return Promise.reject('Cannot publish content based on an uploaded file');
+    }
 
-const publishDraft = (data, response) => {
-    const {token, siteaccess} = data;
     const request = new Request(response.Content.CurrentVersion.Version._href, {
         method: 'POST',
         headers: {
@@ -156,10 +240,19 @@ const publishDraft = (data, response) => {
         mode: 'cors',
         credentials: 'same-origin'
     });
-    
+
     return fetch(request).then(handleRequestResponse);
 };
-
+/**
+ * Checks if a file can be uploaded
+ *
+ * @function checkCanUpload
+ * @param {File} file
+ * @param {Object} parentInfo parent info hash
+ * @param {Object} config multi file upload config
+ * @param {Object} callbacks a list of callbacks
+ * @returns {Boolean}
+ */
 export const checkCanUpload = (file, parentInfo, config, callbacks) => {
     const locationMapping = config.locationMappings.find(item => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
 
@@ -178,16 +271,39 @@ export const checkCanUpload = (file, parentInfo, config, callbacks) => {
     return true;
 };
 
+/**
+ * Creates a ContentCreate struct based on a file
+ *
+ * @function createFileStruct
+ * @param {File} file
+ * @param {Object} params struct params
+ * @returns {Promise}
+ */
 export const createFileStruct = (file, params) => new Promise(readFile.bind(new FileReader(), file)).then(prepareStruct.bind(null, params));
 
+/**
+ * Publishes file
+ *
+ * @function publishFile
+ * @param {Object} data file data
+ * @param {Object} requestEventHandlers a list of request event handlers
+ * @param {Function} callback a success callback
+ */
 export const publishFile = (data, requestEventHandlers, callback) => {
     createDraft(data, requestEventHandlers)
-        .catch(error => console.log('create:draft:error', error))
         .then(publishDraft.bind(null, data))
         .then(callback)
         .catch(error => console.log('publish:file:error', error));
 };
 
+/**
+ * Deletes file
+ *
+ * @function deleteFile
+ * @param {Object} data file data
+ * @param {Object} struct Content struct
+ * @param {Function} callback file deleted callback
+ */
 export const deleteFile = (data, struct, callback) => {
     const {token, siteaccess} = data;
     const request = new Request(struct.Content._href, {
@@ -199,7 +315,7 @@ export const deleteFile = (data, struct, callback) => {
         mode: 'cors',
         credentials: 'same-origin'
     });
-    
+
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)

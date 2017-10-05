@@ -5,6 +5,10 @@ import TableViewItemComponent from './table.view.item.component';
 
 import './css/table.view.component.css';
 
+const SORTKEY_NAME = 'name';
+const SORTKEY_DATE = 'date';
+const SORTKEY_PRIORITY = 'priority';
+
 export default class TableViewComponent extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +21,25 @@ export default class TableViewComponent extends Component {
     }
 
     componentWillReceiveProps({items}) {
-        this.setState(state => Object.assign({}, state, {items}));
+        this.sortItems(items);
+    }
+
+    sortItems(items) {
+        const sortKey = this.state.sortKey;
+
+        if (!sortKey) {
+            this.setState(state => Object.assign({}, state, {items}));
+        }
+
+        if (sortKey === SORTKEY_NAME) {
+            this.sortByName(items);
+        } else if (sortKey === SORTKEY_DATE) {
+            this.sortByDate(items);
+        } else if (sortKey === SORTKEY_PRIORITY) {
+            this.sortByPriority(items);
+        } else {
+            this.setState(state => Object.assign({}, state, {items}));
+        }
     }
 
     renderItem(data) {
@@ -28,10 +50,12 @@ export default class TableViewComponent extends Component {
         />;
     }
 
-    sortByName() {
+    sortByName(items) {
         this.setState(state => {
-            const items = state.items;
-            const isAscSort = !state.isAscSort;
+            const isOnClick = !Array.isArray(items); 
+            const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
+
+            items = isOnClick ? state.items : items;
 
             items.sort((a, b) => {
                 if (isAscSort) {
@@ -44,15 +68,17 @@ export default class TableViewComponent extends Component {
             return Object.assign({}, state, {
                 items, 
                 isAscSort,
-                sortKey: 'name'
+                sortKey: SORTKEY_NAME
             });
         });
     }
 
-    sortByDate() {
+    sortByDate(items) {
         this.setState(state => {
-            const items = state.items;
-            const isAscSort = !state.isAscSort;
+            const isOnClick = !Array.isArray(items); 
+            const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
+
+            items = isOnClick ? state.items : items;
 
             items.sort((a, b) => {
                 if (isAscSort) {
@@ -65,15 +91,17 @@ export default class TableViewComponent extends Component {
             return Object.assign({}, state, {
                 items, 
                 isAscSort,
-                sortKey: 'date'
+                sortKey: SORTKEY_DATE
             });
         });
     }
 
-    sortByPriority() {
+    sortByPriority(items) {
         this.setState(state => {
-            const items = state.items;
-            const isAscSort = !state.isAscSort;
+            const isOnClick = !Array.isArray(items); 
+            const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
+
+            items = isOnClick ? state.items : items;
 
             items.sort((a, b) => {
                 if (isAscSort) {
@@ -86,7 +114,7 @@ export default class TableViewComponent extends Component {
             return Object.assign({}, state, {
                 items, 
                 isAscSort,
-                sortKey: 'priority'
+                sortKey: SORTKEY_PRIORITY
             });
         });
     }
