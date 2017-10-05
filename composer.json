@@ -1,0 +1,19 @@
+{
+  "name": "ezsystems/ezplatform-admin-ui-modules",
+  "description": "External assets dependencies for EzPlatform AdminUI",
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "eZ dev-team & eZ Community",
+      "homepage": "https://github.com/ezsystems/ezplatform/contributors"
+    }
+  ],
+  "require": {
+    "symfony/symfony": "^2.5 | ^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "EzSystems\\EzPlatformAdminUiModules\\": ""
+    }
+  }
+}
