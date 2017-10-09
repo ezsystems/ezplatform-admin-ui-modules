@@ -61,9 +61,7 @@ export default class MultiFileUploadModule extends Component {
     hidePopup() {
         this.setState(state => Object.assign({}, state, {popupVisible: false}));
 
-        if (typeof this.props.onPopupClose === 'function') {
-            this.props.onPopupClose(this._itemsUploaded);
-        }
+        this.props.onPopupClose(this._itemsUploaded);
     }
 
     /**
@@ -231,29 +229,29 @@ MultiFileUploadModule.propTypes = {
     }).isRequired,
     checkCanUpload: PropTypes.func,
     createFileStruct: PropTypes.func,
-    publishFile: PropTypes.func,
     deleteFile: PropTypes.func,
     onPopupClose: PropTypes.func,
-    itemsToUpload: PropTypes.array,
-    asButton: PropTypes.bool,
-    uploadBtnLabel: PropTypes.string,
-    popupTitle: PropTypes.string,
+    publishFile: PropTypes.func,
     dropActionMessage: PropTypes.string,
+    itemsToUpload: PropTypes.array,
     maxFileSizeMessage: PropTypes.string,
+    popupTitle: PropTypes.string,
+    uploadBtnLabel: PropTypes.string,
     uploadedItemsListTitle: PropTypes.string,
     withUploadButton: PropTypes.bool
 };
 
 MultiFileUploadModule.defaultProps = {
-    createFileStruct,
-    publishFile,
-    deleteFile,
     checkCanUpload,
-    itemsToUpload: [],
-    withUploadButton: true,
-    uploadBtnLabel: 'Upload sub-items',
-    popupTitle: 'Multi-file upload',
+    createFileStruct,
+    deleteFile,
+    onPopupClose: () => {},
+    publishFile,
     dropActionMessage: 'Drag and drop your files on browser window or upload them',
+    itemsToUpload: [],
     maxFileSizeMessage: 'Max file size:',
-    uploadedItemsListTitle: 'Uploaded'
+    popupTitle: 'Multi-file upload',
+    uploadBtnLabel: 'Upload sub-items',
+    uploadedItemsListTitle: 'Uploaded',
+    withUploadButton: true
 };

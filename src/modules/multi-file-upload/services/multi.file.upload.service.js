@@ -63,6 +63,7 @@ const readFile = function (file, resolve, reject) {
  * @returns {Object|undefined}
  */
 const findFileTypeMapping = (mappings, file) => mappings.find(item => item.mimeTypes.find(type => type === file.type));
+
 /**
  * Checks if file's MIME Type is allowed
  *
@@ -72,6 +73,7 @@ const findFileTypeMapping = (mappings, file) => mappings.find(item => item.mimeT
  * @returns {Boolean}
  */
 const isMimeTypeAllowed = (mappings, file) => !!findFileTypeMapping(mappings, file);
+
 /**
  * Checks if file type is allowed
  *
@@ -81,6 +83,7 @@ const isMimeTypeAllowed = (mappings, file) => !!findFileTypeMapping(mappings, fi
  * @returns {Boolean}
  */
 const checkFileTypeAllowed = (file, locationMapping) => !locationMapping ? true : isMimeTypeAllowed(locationMapping.mappings, file);
+
 /**
  * Detects a content type for a given file
  *
@@ -96,6 +99,7 @@ const detectContentTypeMapping = (file, parentInfo, config) => {
 
     return findFileTypeMapping(mappings, file) || config.fallbackContentType;
 };
+
 /**
  * Gets content type identifier
  *
@@ -118,6 +122,7 @@ const getContentTypeByIdentifier = ({token, siteaccess}, identifier) => {
 
     return fetch(request).then(handleRequestResponse);
 };
+
 /**
  * Prepares a ContentCreate struct based on an uploaded file type
  *
@@ -217,6 +222,7 @@ const createDraft = ({struct, token, siteaccess}, requestEventHandlers) => {
         xhr.send(body);
     });
 };
+
 /**
  * Publishes a content draft
  *
@@ -243,6 +249,7 @@ const publishDraft = ({token, siteaccess}, response) => {
 
     return fetch(request).then(handleRequestResponse);
 };
+
 /**
  * Checks if a file can be uploaded
  *
@@ -300,12 +307,11 @@ export const publishFile = (data, requestEventHandlers, callback) => {
  * Deletes file
  *
  * @function deleteFile
- * @param {Object} data file data
+ * @param {Object} systemInfo system info containing: token and siteaccess info.
  * @param {Object} struct Content struct
  * @param {Function} callback file deleted callback
  */
-export const deleteFile = (data, struct, callback) => {
-    const {token, siteaccess} = data;
+export const deleteFile = ({token, siteaccess}, struct, callback) => {
     const request = new Request(struct.Content._href, {
         method: 'DELETE',
         headers: {
