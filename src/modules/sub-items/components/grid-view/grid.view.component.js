@@ -18,8 +18,20 @@ export default class GridViewComponent extends Component {
         this.setState(state => Object.assign({}, state, {items}));
     }
 
+    /**
+     * Renders grid view list item
+     *
+     * @method renderItem
+     * @param {Object} data
+     * @returns {Element}
+     * @memberof GridViewComponent
+     */
     renderItem(data) {
-        return <GridViewItemComponent key={data.location.id} {...data} contentTypesMap={this.props.contentTypesMap} />
+        return <GridViewItemComponent
+            key={data.location.id}
+            {...data}
+            contentTypesMap={this.props.contentTypesMap}
+            labels={this.props.labels.gridViewItem} />
     }
 
     render() {
@@ -33,5 +45,8 @@ export default class GridViewComponent extends Component {
 
 GridViewComponent.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object),
-    contentTypesMap: PropTypes.object
+    contentTypesMap: PropTypes.object,
+    labels: PropTypes.shape({
+        gridViewItem: PropTypes.object.isRequired
+    })
 };

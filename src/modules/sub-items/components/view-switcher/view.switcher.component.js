@@ -11,7 +11,7 @@ export default class ViewSwitcherComponent extends Component {
         super(props);
 
         this.state = {
-            activeView: 'table'
+            activeView: props.activeView
         };
     }
 
@@ -19,14 +19,29 @@ export default class ViewSwitcherComponent extends Component {
         this.setState(state => Object.assign({}, state, {activeView: props.activeView}));
     }
 
-	toggleView(id) {
+    /**
+     * Toggles list view
+     *
+     * @method toggleListView
+     * @param {String} id
+     * @memberof ViewSwitcherComponent
+     */
+	toggleListView(id) {
 		this.props.onViewChange(id);
     }
 
+    /**
+     * Renders a list button
+     *
+     * @param {String} id
+     * @param {String} icon icon identifier
+     * @returns {Element}
+     * @memberof ViewSwitcherComponent
+     */
     renderButton(id, icon) {
         const attrs = {
-            id: 'table',
-            onClick: this.toggleView.bind(this, id),
+            id,
+            onClick: this.toggleListView.bind(this, id),
             className: 'c-grid-switcher__option'
         };
 
@@ -52,10 +67,6 @@ export default class ViewSwitcherComponent extends Component {
 }
 
 ViewSwitcherComponent.propTypes = {
-    onViewChange: PropTypes.func,
+    onViewChange: PropTypes.func.isRequired,
     activeView: PropTypes.string.isRequired
-};
-
-ViewSwitcherComponent.defaultProps = {
-    activeView: 'table'
 };

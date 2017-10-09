@@ -6,15 +6,15 @@ import ICONS from '../../components/icon/icons.constants.json';
 import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
-    const {content, contentTypesMap} = props;
+    const {content, contentTypesMap, labels} = props;
     const imageField = content.CurrentVersion.Version.Fields.field.find(item => item.fieldDefinitionIdentifier === 'image');
     const imageClassName = 'c-grid-view-item__image';
-    let image = <div className={`${imageClassName} ${imageClassName}--none`}>No image</div>;
+    let image = <div className={`${imageClassName} ${imageClassName}--none`}>{labels.noImage}</div>;
 
     if (imageField) {
-        image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`Image - ${imageField.fieldValue.path}`} />;
+        image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`${imageField.fieldValue.path}`} />;
     }
-    
+
     return (
         <a className="c-grid-view-item" href={`/admin/view/content/${content._id}`}>
             <div className="c-grid-view-item__content-type">
@@ -30,7 +30,10 @@ const GridViewItemComponent = (props) => {
 GridViewItemComponent.propTypes = {
     content: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    contentTypesMap: PropTypes.object.isRequired
+    contentTypesMap: PropTypes.object.isRequired,
+    labels: PropTypes.shape({
+        noImage: PropTypes.string.isRequired
+    })
 };
 
 export default GridViewItemComponent;
