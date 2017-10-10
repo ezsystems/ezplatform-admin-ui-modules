@@ -1,14 +1,14 @@
-.finder-component {
+.c-finder {
     height: 100%;
 }
 
-.finder-component__branches {
+.c-finder__branches {
     display: flex;
     flex-wrap: nowrap;
     height: 100%;
     overflow: auto;
 }
 
-.finder-component__branches .finder-tree-branch-component + .finder-tree-branch-component {
+.c-finder__branches .c-finder-tree-branch + .c-finder-tree-branch {
     margin-left: 16px;
 }

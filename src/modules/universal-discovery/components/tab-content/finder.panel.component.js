@@ -1,36 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import TabContentPanelComponent from './tab.content.panel.component.js';
-import FinderComponent from '../finder/finder.component.js';
+
+import TabContentPanelComponent from './tab.content.panel.component';
+import FinderComponent from '../finder/finder.component';
 
 import './css/finder.panel.component.css';
 
-export default class FinderPanelComponent extends Component {
-    render() {
-        const attrs = {className: 'finder-panel-component'};
-        const {canSelectContent, multiple, startingLocationId, minDiscoverDepth, shouldLoadContent, onItemSelect} = this.props;
-        const finderAttrs = Object.assign({}, {canSelectContent, multiple, startingLocationId, minDiscoverDepth, shouldLoadContent, onItemSelect});
+const FinderPanelComponent = (props) => {
+    const wrapperAttrs = {className: 'c-finder-panel'};
+    const {multiple, startingLocationId, findLocationsByParentLocationId, onItemSelect, maxHeight} = props;
+    const finderAttrs = Object.assign({}, {multiple, startingLocationId, findLocationsByParentLocationId, onItemSelect, maxHeight});
 
-        if (!this.props.isVisible) {
-            attrs.hidden = true;
-        }
-
-        return (
-            <div {...attrs}>
-                <TabContentPanelComponent {...this.props}>
-                    <FinderComponent {...finderAttrs}/>
-                </TabContentPanelComponent>
-            </div>
-        );
+    if (!props.isVisible) {
+        wrapperAttrs.hidden = true;
     }
-}
+
+    return (
+        <div {...wrapperAttrs}>
+            <TabContentPanelComponent {...props}>
+                <FinderComponent {...finderAttrs}/>
+            </TabContentPanelComponent>
+        </div>
+    );
+};
 
 FinderPanelComponent.propTypes = {
     isVisible: PropTypes.bool.isRequired,
-    canSelectContent: PropTypes.func,
-    multiple: PropTypes.bool,
-    startingLocationId: PropTypes.string,
-    minDiscoverDepth: PropTypes.number,
-    shouldLoadContent: PropTypes.bool,
-    onItemSelect: PropTypes.func.isRequired
+    multiple: PropTypes.bool.isRequired,
+    startingLocationId: PropTypes.number.isRequired,
+    findLocationsByParentLocationId: PropTypes.func.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
+    maxHeight: PropTypes.number.isRequired
 };
+
+export default FinderPanelComponent;

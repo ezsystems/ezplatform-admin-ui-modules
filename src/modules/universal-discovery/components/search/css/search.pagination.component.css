@@ -1,16 +1,16 @@
-.search-pagination-component {
+.c-search-pagination {
     text-align: center;
     padding: 8px 0;
 }
 
-.search-pagination-component:after {
+.c-search-pagination:after {
     content: '';
     display: block;
     width: 100%;
     clear: both;
 }
 
-[class*="search-pagination-component__btn--"] {
+[class*="c-search-pagination__btn--"] {
     border: 0 none;
     background: none;
     color: blue;
@@ -18,15 +18,15 @@
     cursor: pointer;
 }
 
-[class*="search-pagination-component__btn--"][disabled] {
+[class*="c-search-pagination__btn--"][disabled] {
     color: #bbb;
     cursor: not-allowed;
 }
 
-.search-pagination-component__btn--first {
+.c-search-pagination__btn--first {
     float: left;
 }
 
-.search-pagination-component__btn--last {
+.c-search-pagination__btn--last {
     float: right;
 }

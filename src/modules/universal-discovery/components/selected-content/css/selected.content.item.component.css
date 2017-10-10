@@ -1,10 +1,10 @@
-.selected-content-item-component {
+.c-selected-content-item {
     background: #fff;
     display: flex;
     flex-wrap: nowrap;
 }
 
-.selected-content-item-component__remove {
+.c-selected-content-item__remove {
     background: #b30;
     color: #fff;
     flex: 0 0 32px;
@@ -17,16 +17,16 @@
     transition: background .3s var(--transition-function);
 }
 
-.selected-content-item-component__remove:hover {
+.c-selected-content-item__remove:hover {
     background: #d30;
 }
 
-.selected-content-item-component__wrapper {
+.c-selected-content-item__wrapper {
     flex: 1 1 auto;
     padding: 4px;
 }
 
-.selected-content-item-component__name {
+.c-selected-content-item__name {
     margin-bottom: 16px;
     font-weight: 700;
 }

@@ -1,12 +1,12 @@
-.search-component {
+.c-search {
     height: 100%;
 }
 
-.search-component__title {
+.c-search__title {
     font-size: 18px;
     font-weight: 700;
 }
 
-.search-component__form {
+.c-search__form {
     margin: 16px 0;
 }

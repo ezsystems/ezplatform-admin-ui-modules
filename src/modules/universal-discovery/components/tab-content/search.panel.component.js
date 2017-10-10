@@ -1,37 +1,46 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import TabContentPanelComponent from './tab.content.panel.component.js';
-import SearchComponent from '../search/search.component.js';
+import TabContentPanelComponent from './tab.content.panel.component';
+import SearchComponent from '../search/search.component';
 
 import './css/search.panel.component.css';
 
-export default class SearchPanelComponent extends Component {
-    render() {
-        const attrs = {className: 'search-panel-component'};
-        const {canSelectContent, multiple, startingLocationId, minDiscoverDepth, shouldLoadContent, onItemSelect} = this.props;
-        const searchAttrs = Object.assign({}, {canSelectContent, multiple, startingLocationId, minDiscoverDepth, shouldLoadContent, onItemSelect});
+const SearchPanelComponent = (props) => {
+    const wrapperAttrs = {className: 'c-search-panel'};
+    const {multiple, findContentBySearchQuery, onItemSelect, maxHeight, contentTypesMap, searchResultsPerPage, labels} = props;
+    const searchAttrs = Object.assign({}, {
+        multiple,
+        findContentBySearchQuery,
+        onItemSelect,
+        maxHeight,
+        contentTypesMap,
+        searchResultsPerPage,
+        labels
+    });
 
-        if (!this.props.isVisible) {
-            attrs.hidden = true;
-        }
-
-        return (
-            <div {...attrs}>
-                <TabContentPanelComponent {...this.props}>
-                    <SearchComponent {...searchAttrs} />
-                </TabContentPanelComponent>
-            </div>
-        );
+    if (!props.isVisible) {
+        wrapperAttrs.hidden = true;
     }
-}
+
+    return (
+        <div {...wrapperAttrs}>
+            <TabContentPanelComponent {...props}>
+                <SearchComponent {...searchAttrs} />
+            </TabContentPanelComponent>
+        </div>
+    );
+};
 
 SearchPanelComponent.propTypes = {
     isVisible: PropTypes.bool.isRequired,
-    canSelectContent: PropTypes.func,
-    multiple: PropTypes.bool,
-    startingLocationId: PropTypes.string,
-    minDiscoverDepth: PropTypes.number,
-    shouldLoadContent: PropTypes.bool,
-    onItemSelect: PropTypes.func.isRequired
+    multiple: PropTypes.bool.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
+    findContentBySearchQuery: PropTypes.func.isRequired,
+    maxHeight: PropTypes.number.isRequired,
+    contentTypesMap: PropTypes.object.isRequired,
+    searchResultsPerPage: PropTypes.number.isRequired,
+    labels: PropTypes.object.isRequired
 };
+
+export default SearchPanelComponent;

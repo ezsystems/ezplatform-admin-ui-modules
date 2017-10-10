@@ -1,6 +1,11 @@
-.finder-tree-branch-component {
+.c-finder-tree-branch {
     background: #fff;
     height: 100%;
     max-width: 24ch;
-    flex: 1 0 24ch;
+    flex: 0 0 24ch;
+}
+
+.c-finder-tree-branch__list-wrapper {
+    max-height: 100%;
+    overflow: auto;
 }
