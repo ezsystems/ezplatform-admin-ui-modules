@@ -74,6 +74,12 @@ const attrs = {
 
 ## Props list
 
+The `<MultiFileUpload />` module can handle additional properties. There are 2 types of properties: **required** and **optional**. All of them are listed below.
+
+### Required props
+
+Without all the following properties the Multi File Upload will not work.
+
 **onAfterUpload** _{Function}_ - a callback to be invoked just after a file has been uploaded
 
 **adminUiConfig** _{Object}_ - UI config object. It should keep the following structure:
@@ -90,3 +96,51 @@ const attrs = {
         - **nameFieldIdentifier** _{String}_ - name field identifier
     - **locationMappings** _{Array}_ - list of file type to content type mappings based on a location identifier
     - **maxFileSize** {Number} - maximum file size allowed for uploading. It's a number of bytes.
+- **token** _{String}_ - CSRF token,
+- **siteaccess** _{String}_ - SiteAccess identifier.
+
+**parentInfo** _{Object}_ - parent location meta information:
+
+- **contentTypeIdentifier** _{String}_ - content type identifier,
+- **contentTypeId** _{Number}_ - content type id,
+- **locationPath** _{String}_ - location path string,
+- **language** _{String}_ - language code identifier.
+
+### Optional props
+
+Optionally, Multi File Upload module can take a following list of props:
+
+**checkCanUpload** _{Function}_ - checks whether am uploaded file can be uploaded. The callback takes 4 params:
+
+- **file** _{File}_ - file object,
+- **parentInfo** _{Object}_ - parent location meta information,
+- **config** _{Object}_ - Multi File Upload module config,
+- **callbacks** _{Object}_ - error callbacks list: **fileTypeNotAllowedCallback** and **fileSizeNotAllowedCallback**.
+
+**createFileStruct** _{Function}_ - a function that creates a _ContentCreate_ struct. The function takes 2 params:
+
+- **file** _{File}_ - file object,
+- **params** _{Object}_ - params hash containing: **parentInfo** and **adminUiConfig** stored under the **config** key.
+
+**deleteFile** _{Function}_ - a function deleting Content created from a given file. It takes 3 params:
+
+- **systemInfo** _{Object}_ - hash containing information about CSRF token and siteaccess: **token** and **siteaccess**,
+- **struct** _{Object}_ - Content struct,
+- **callback** _{Function}_ - content deleted callback.
+
+**onPopupClose** _{Function}_ - function invoked when closing a Multi File Upload popup. It takes one param: **itemsUploaded** - the list of uploaded items.
+
+**publishFile** _{Function}_ - publishes an uploaded file-based content item. Takes 3 params:
+
+- **data** _{Object}_ - an object containing information about:
+    - **struct** _{Object}_ - the ContentCreate struct (),
+    - **token** _{String}_ - CSRF token,
+    - **siteaccess** _{String}_ - SiteAccess identifier,
+- **requestEventHandlers** _{Object}_ - a list of upload event handlers:
+    - **onloadstart** _{Function}_ - on load start callback,
+    - **upload** _{Object}_ - file upload events:
+        - **onabort** _{Function}_ - on abort callback,
+        - **onload** _{Function}_ - on load callback,
+        - **onprogress** _{Function}_ - on progress callback,
+        - **ontimeout** _{Function}_ - on timeout callback.
+- **callback** _{Function}_ - a callback invoked when an uploaded file-based content has been published.
