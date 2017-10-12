@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './css/tab.content.panel.component.css';
 
-export default class TabContentPanelComponent extends Component {
-    render() {
-        const attrs = {
-            id: this.props.id,
-            className: 'tab-content-panel-component'
-        };
+const TabContentPanelComponent = (props) => {
+    const attrs = {
+        id: props.id,
+        className: 'c-tab-content-panel'
+    };
 
-        if (!this.props.isVisible) {
-            attrs.hidden = true;
-        }
-
-        return (
-            <div {...attrs}>
-                {this.props.children}
-            </div>
-        );
+    if (!props.isVisible) {
+        attrs.hidden = true;
     }
-}
+
+    return (
+        <div {...attrs}>
+            {props.children}
+        </div>
+    );
+};
 
 TabContentPanelComponent.propTypes = {
     id: PropTypes.string.isRequired,
     isVisible: PropTypes.bool.isRequired,
-    children: PropTypes.any
+    children: PropTypes.node.isRequired
 };
+
+export default TabContentPanelComponent;

@@ -1,4 +1,4 @@
-.finder-tree-leaf-component {
+.c-finder-tree-leaf {
     padding: 8px 16px;
     cursor: pointer;
     white-space: nowrap;
@@ -6,14 +6,15 @@
     text-overflow: ellipsis;
     transition: background .3s var(--transition-function);
     position: relative;
+    background: #fff;
 }
 
-.finder-tree-leaf-component:hover,
-.finder-tree-leaf-component:focus {
+.c-finder-tree-leaf:hover,
+.c-finder-tree-leaf:focus {
     background: #ddd;
 }
 
-.finder-tree-leaf-component--has-children:after {
+.c-finder-tree-leaf--has-children:after {
     content: '';
     width: 0;
     height: 0;
@@ -26,6 +27,6 @@
     transform: translateY(-50%);
 }
 
-.finder-tree-leaf-component--selected {
+.c-finder-tree-leaf--selected {
     background: #eee;
 }

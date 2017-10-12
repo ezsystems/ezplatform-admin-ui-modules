@@ -1,71 +1,62 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './css/search.pagination.component.css';
 
-export default class SearchPaginationComponent extends Component {
-    loadFirstPage() {
-        this.props.onChange(this.props.minIndex);
-    }
-
-    loadLastPage() {
-        this.props.onChange(this.props.maxIndex);
-    }
-
-    loadPrevPage() {
-        this.props.onChange(this.props.activeIndex - 1);
-    }
-
-    loadNextPage() {
-        this.props.onChange(this.props.activeIndex + 1);
-    }
-
-    render() {
-        const {minIndex, activeIndex, maxIndex} = this.props;
+const SearchPaginationComponent = (props) => {
+        const {minIndex, activeIndex, maxIndex, onChange, labels} = props;
+        const btnClass = 'c-search-pagination__btn--';
         const firstAttrs = {
-            onClick: this.loadFirstPage.bind(this),
-            className: 'search-pagination-component__btn--first'
+            onClick: () => onChange(minIndex),
+            className: `${btnClass}first`
         };
 
         const prevAttrs = {
-            onClick: this.loadPrevPage.bind(this),
-            className: 'search-pagination-component__btn--prev'
+            onClick: () => onChange(activeIndex - 1),
+            className: `${btnClass}prev`
         };
 
         const nextAttrs = {
-            onClick: this.loadNextPage.bind(this),
-            className: 'search-pagination-component__btn--next'
+            onClick: () => onChange(activeIndex + 1),
+            className: `${btnClass}next`
         };
 
         const lastAttrs = {
-            onClick: this.loadLastPage.bind(this),
-            className: 'search-pagination-component__btn--last'
+            onClick: () => onChange(maxIndex),
+            className: `${btnClass}last`
         };
 
-        if (activeIndex === minIndex) { 
-            firstAttrs.disabled = true; 
+        if (activeIndex === minIndex) {
+            firstAttrs.disabled = true;
             prevAttrs.disabled = true;
         }
 
-        if (activeIndex === maxIndex) { 
+        if (activeIndex === maxIndex) {
             nextAttrs.disabled = true;
-            lastAttrs.disabled = true; 
+            lastAttrs.disabled = true;
         }
 
         return (
-            <div className="search-pagination-component">
-                <button {...firstAttrs}>&laquo; First</button>
-                <button {...prevAttrs}>&lsaquo; Previous</button>
-                <button {...nextAttrs}>Next &rsaquo;</button>
-                <button {...lastAttrs}>Last &raquo;</button>
+            <div className="c-search-pagination">
+                <button {...firstAttrs}>&laquo; {labels.first}</button>
+                <button {...prevAttrs}>&lsaquo; {labels.prev}</button>
+                <button {...nextAttrs}>{labels.next} &rsaquo;</button>
+                <button {...lastAttrs}>{labels.last} &raquo;</button>
             </div>
         );
-    }
 }
 
 SearchPaginationComponent.propTypes = {
     minIndex: PropTypes.number.isRequired,
     maxIndex: PropTypes.number.isRequired,
     activeIndex: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    labels: PropTypes.shape({
+        first: PropTypes.string.isRequired,
+        prev: PropTypes.string.isRequired,
+        next: PropTypes.string.isRequired,
+        last: PropTypes.string.isRequired
+    }).isRequired
 };
+
+export default SearchPaginationComponent;

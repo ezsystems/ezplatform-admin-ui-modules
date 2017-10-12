@@ -1,42 +1,42 @@
-.search-results-component {
+.c-search-results {
     overflow: auto;
 }
 
-.search-results-component__title {
+.c-search-results__title {
     font-size: 18px;
     font-weight: 700;
 }
 
-.search-results-component__list-headers,
-.search-results-component .search-results-item-component {
+.c-search-results__list-headers,
+.c-search-results .c-search-results-item {
     display: flex;
     flex-wrap: nowrap;
 }
 
-.search-results-component__list {
+.c-search-results__list {
     border: 1px solid #cbcbcb;
 }
 
-[class*="search-results-component__list-header--"] {
+[class*="c-search-results__list-header--"] {
     padding: 8px 16px;
     background: #e0e0e0;
     font-weight: 700;
 }
 
-.search-results-component__list-header--name,
-.search-results-component .search-results-item-component__name {
+.c-search-results__list-header--name,
+.c-search-results .c-search-results-item__name {
     flex: 1 1 280px;
 }
 
-.search-results-component__list-header--type,
-.search-results-component .search-results-item-component__type {
+.c-search-results__list-header--type,
+.c-search-results .c-search-results-item__type {
     flex: 1 1 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.search-results-component__list-header--span,
-.search-results-component .search-results-item-component__actions {
+.c-search-results__list-header--span,
+.c-search-results .c-search-results-item__actions {
     flex: 0 0 90px;
 }

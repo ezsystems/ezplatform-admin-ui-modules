@@ -1,19 +1,32 @@
-.selected-content-component {
+.c-selected-content {
     position: relative;
     z-index: 1;
 }
 
-.selected-content-component__content-names {
+.c-selected-content__content-names {
     width: 320px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.selected-content-component .popup-module {
+.c-selected-content .c-popup {
     position: absolute;
     z-index: 2;
     top: 0;
     left: 0;
-    transform: translateY(-100%);
+    transform: translateY(-100%) translateY(-1rem);
+}
+
+.c-selected-content .c-popup:after {
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 12px solid #eee;
+    transform: translateY(100%) translateY(-1px);
 }

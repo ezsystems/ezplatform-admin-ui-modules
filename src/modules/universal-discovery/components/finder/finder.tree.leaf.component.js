@@ -4,32 +4,32 @@ import PropTypes from 'prop-types';
 import './css/finder.tree.leaf.component.css';
 
 export default class FinderTreeLeafComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
-            selected: false
+            selected: props.selected
         };
     }
 
-    componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {selected: props.selected}));
+    componentWillReceiveProps({selected}) {
+        this.setState(state => Object.assign({}, state, {selected}));
     }
 
     handleClick() {
-        const {locationData} = this.props;
+        const {location} = this.props;
 
         this.setState(state => Object.assign({}, state, {selected: true}));
-        
-        this.props.onClick(locationData);
+
+        this.props.onClick(location);
     }
 
     render() {
-        const location = this.props.locationData;
-        const leafClassName = 'finder-tree-leaf-component.js';
-        const selectedClassName = this.state.selected ? `${leafClassName}--selected` : '';
-        const childrenClassName = location.childCount ? `${leafClassName}--has-children` : '';
-        const finalClassName = `${leafClassName} ${selectedClassName} ${childrenClassName}`;
+        const location = this.props.location;
+        const componentClassName = 'c-finder-tree-leaf';
+        const selectedClassName = this.state.selected ? `${componentClassName}--selected` : '';
+        const childrenClassName = location.childCount ? `${componentClassName}--has-children` : '';
+        const finalClassName = `${componentClassName} ${selectedClassName} ${childrenClassName}`;
 
         return (
             <div className={finalClassName} onClick={this.handleClick.bind(this)}>
@@ -40,7 +40,7 @@ export default class FinderTreeLeafComponent extends Component {
 }
 
 FinderTreeLeafComponent.propTypes = {
-    locationData: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired,
-    selected: PropTypes.bool
+    selected: PropTypes.bool.isRequired
 };

@@ -1,29 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import './tab.nav.item.component.css';
+import './css/tab.nav.item.component.css';
 
-export default class TabNavItemComponent extends Component {
-    componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {isSelected: !!props.isSelected}));
-    }
+const TabNavItemComponent = (props) => {
+    const attrs = {
+        className: `c-tab-nav-item ${props.isSelected ? 'c-tab-nav-item--selected' : ''}`,
+        onClick: () => props.onClick(props.id)
+    };
 
-    handleClick() {
-        this.props.onClick(this.props.id);
-    }
-
-    render() {
-        const attrs = {
-            className: `tab-nav-item-component ${this.props.isSelected ? 'tab-nav-item-component--selected' : ''}`,
-            onClick: this.handleClick.bind(this)
-        };
-
-        return (
-            <div className="tab-nav-item-component__wrapper">
-                <button {...attrs}>{this.props.title}</button>
-            </div>
-        );
-    }
+    return (
+        <div className="c-tab-nav-item__wrapper">
+            <button {...attrs}>{props.title}</button>
+        </div>
+    );
 }
 
 TabNavItemComponent.propTypes = {
@@ -32,3 +22,5 @@ TabNavItemComponent.propTypes = {
     isSelected: PropTypes.bool.isRequired,
     onClick: PropTypes.func.isRequired
 };
+
+export default TabNavItemComponent;

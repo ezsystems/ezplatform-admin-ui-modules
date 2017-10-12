@@ -12,17 +12,17 @@ const App = (props) => {
         locationPath: '/1/2',
         language: 'eng-GB'
     };
-    
+
     return (
         <div className="app">
-            <MultiFileUploadModule 
+            <MultiFileUploadModule
                 adminUiConfig={adminUiConfig}
                 parentInfo={parentInfo}
                 updateList={() => {}}
                 onAfterUpload={() => window.location.reload()}
                 />
             {/* <SubItemsModule /> */}
-            {/* <UniversalDiscoveryModule cancelDiscoverHandler={() => {}} contentDiscoverHandler={() => {}}/> */}
+            <UniversalDiscoveryModule onCancel={() => {}} onConfirm={() => {}}/>
         </div>
     );
 };

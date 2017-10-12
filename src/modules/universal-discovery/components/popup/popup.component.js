@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 import './css/popup.component.css';
 
 export default class PopupComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
-            items: [],
-            visible: false
+            visible: props.visible
         };
     }
 
@@ -17,23 +16,31 @@ export default class PopupComponent extends Component {
         this.setState(state => Object.assign({}, state, {visible: props.visible}));
     }
 
+    /**
+     * Hides a popup
+     *
+     * @method hidePopup
+     * @memberof PopupComponent
+     */
     hidePopup() {
         this.setState(state => Object.assign({}, state, {visible: false}));
+
+        this.props.onClose();
     }
 
     render() {
         const attrs = {
-            className: 'popup-component',
+            className: 'c-popup',
             hidden: !this.state.visible
         };
 
         return (
             <div {...attrs}>
-                <h3 className="popup-component__title">{this.props.title}</h3>
-                <div className="popup-component__content">
-                    {this.props.children}
+                <div className="c-popup__header">
+                    <div className="c-popup__title">{this.props.title}</div>
+                    <div className="c-popup__close" onClick={this.hidePopup.bind(this)}>&times;</div>
                 </div>
-                <button className="popup-component__close" onClick={this.hidePopup.bind(this)}>X</button>
+                <div className="c-popup__content">{this.props.children}</div>
             </div>
         );
     }
@@ -41,6 +48,11 @@ export default class PopupComponent extends Component {
 
 PopupComponent.propTypes = {
     title: PropTypes.string.isRequired,
-    children: PropTypes.any,
-    visible: PropTypes.bool
+    children: PropTypes.node.isRequired,
+    visible: PropTypes.bool.isRequired,
+    onClose: PropTypes.func
+};
+
+PopupComponent.defaultProps = {
+    onClose: () => {}
 };
