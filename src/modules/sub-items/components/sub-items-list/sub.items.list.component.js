@@ -31,12 +31,12 @@ export default class SubItemsListComponent extends Component {
 }
 
 SubItemsListComponent.propTypes = {
-    activeView: PropTypes.string,
+    activeView: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.object),
     contentTypesMap: PropTypes.object.isRequired,
-    handleItemPriorityUpdate: PropTypes.func.isRequired
+    handleItemPriorityUpdate: PropTypes.func.isRequired,
+    labels: PropTypes.shape({
+        tableView: PropTypes.object.isRequired,
+        tableViewItem: PropTypes.object.isRequired
+    }).isRequired
 };
-
-SubItemsListComponent.defaultProps = {
-    activeView: 'table'
-}

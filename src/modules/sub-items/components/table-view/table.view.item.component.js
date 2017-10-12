@@ -17,10 +17,28 @@ export default class TableViewItemComponent extends Component {
         };
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.state.priorityInputEnabled !== nextState.priorityInputEnabled;
+    }
+
+    /**
+     * Enables priority input field
+     *
+     * @method enablePriorityInput
+     * @memberof TableViewItemComponent
+     */
     enablePriorityInput() {
         this.setState(state => Object.assign({}, state, {priorityInputEnabled: true}));
     }
 
+    /**
+     * Handles priority update cancel action.
+     * Restores previous value and blocks the priority input.
+     *
+     * @method handleCancel
+     * @param {Event} event
+     * @memberof TableViewItemComponent
+     */
     handleCancel(event) {
         event.preventDefault();
 
@@ -30,6 +48,14 @@ export default class TableViewItemComponent extends Component {
         }));
     }
 
+    /**
+     * Handles submit action.
+     * Updates priority value.
+     *
+     * @method handleSubmit
+     * @param {Event} event
+     * @memberof TableViewItemComponent
+     */
     handleSubmit(event) {
         event.preventDefault();
 
@@ -45,19 +71,29 @@ export default class TableViewItemComponent extends Component {
         }));
     }
 
+    /**
+     * Stores priority value
+     *
+     * @method storePriorityValue
+     * @param {Event} event
+     * @memberof TableViewItemComponent
+     */
     storePriorityValue(event) {
         event.preventDefault();
 
         this.setState(state => Object.assign({}, state, {priorityValue: this._refPriorityInput.value}))
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.priorityInputEnabled !== nextState.priorityInputEnabled;
-    }
-
+    /**
+     * Renders a priority cell with input field
+     *
+     * @method renderPriorityCell
+     * @returns {Element}
+     * @memberof TableViewItemComponent
+     */
     renderPriorityCell() {
         const inputAttrs = {
-            type: 'number', 
+            type: 'number',
             defaultValue: this.state.priorityValue,
             onChange: this.storePriorityValue.bind(this)
         };
@@ -90,7 +126,7 @@ export default class TableViewItemComponent extends Component {
     }
 
     render() {
-        const {content, contentTypesMap} = this.props;
+        const {content, contentTypesMap, labels} = this.props;
         const date = new Date(content.lastModificationDate);
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeName = contentType ? contentType.names.value[0]['#text'] : 'N/A';
@@ -109,7 +145,7 @@ export default class TableViewItemComponent extends Component {
                     <button className="c-table-view-item__btn--edit">
                         <div className="c-table-view-item__btn-inner">
                             <IconComponent icon={ICONS.EDIT} height={20} color="#fff" />
-                            Edit
+                            {labels.edit}
                         </div>
                     </button>
                     </div>
@@ -123,5 +159,8 @@ TableViewItemComponent.propTypes = {
     content: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
-    onItemPriorityUpdate: PropTypes.func.isRequired
+    onItemPriorityUpdate: PropTypes.func.isRequired,
+    labels: PropTypes.shape({
+        edit: PropTypes.string.isRequired
+    }).isRequired
 };

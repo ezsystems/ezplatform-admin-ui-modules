@@ -1,4 +1,4 @@
-# Multi File Upload - doc
+# Multi File Upload
 
 Multi File Upload module is meant to be used as a part of editorial interface of eZ Platform. It provides an interface to publish content based on dropped files while uploading them in the interface.
 
@@ -69,7 +69,7 @@ const attrs = {
     }
 };
 
-<MultiFileUpload {...attrs}/>
+<MultiFileUploadModule {...attrs}/>
 ```
 
 ## Props list
