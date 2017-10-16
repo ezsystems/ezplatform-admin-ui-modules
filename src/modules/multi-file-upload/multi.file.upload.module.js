@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import UploadPopupComponent from './components/upload-popup/upload.popup.component';
-
-import IconComponent from './components/icon/icon.component';
-import { UPLOAD } from './components/icon/icons.constants.json';
-
+import IconComponent from '../common/icon/icon.component';
+import { UPLOAD } from '../common/icon/defs/upload.json';
 import { createFileStruct, publishFile, deleteFile, checkCanUpload } from './services/multi.file.upload.service';
 
 import './css/multi.file.upload.module.css';

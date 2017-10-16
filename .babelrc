@@ -1,7 +1,11 @@
 {
     "presets":[
-        "es2015",
-        "react"
+        "react",
+        ["env", {
+            "targets": {
+                "browsers": ["last 1 version"]
+            }
+        }]
     ],
     "plugins": [
         "transform-react-remove-prop-types"

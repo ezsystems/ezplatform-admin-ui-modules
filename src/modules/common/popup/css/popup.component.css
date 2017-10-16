@@ -5,15 +5,22 @@
     position: relative;
 }
 
+.c-popup__header {
+    position: relative;
+}
+
 .c-popup__title {
     margin-top: 0;
 }
 
 .c-popup__close {
     position: absolute;
-    top: 16px;
+    display: flex;
+    align-items: center;
+    top: 0;
+    bottom: 0;
     right: 16px;
-    background: none;
-    border: 0 none;
-    font-weight: 700;
+    font-weight: 400;
+    font-size: 32px;
+    cursor: pointer;
 }

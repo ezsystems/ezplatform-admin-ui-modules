@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../icon/icon.component';
+import IconComponent from '../../../common/icon/icon.component';
 import { fileSizeToString } from '../../helpers/text.helper';
-import { UPLOAD } from '../icon/icons.constants.json';
+import { UPLOAD } from '../../../common/icon/defs/upload.json';
 
 import './css/drop.area.component.css';
 

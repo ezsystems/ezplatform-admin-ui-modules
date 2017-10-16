@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../../components/icon/icon.component';
-import ICONS from '../../components/icon/icons.constants.json';
+import IconComponent from '../../../common/icon/icon.component';
+import { CATEGORY } from '../../../common/icon/defs/category.json';
+
 import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
@@ -18,7 +19,7 @@ const GridViewItemComponent = (props) => {
     return (
         <a className="c-grid-view-item" href={`/admin/view/content/${content._id}`}>
             <div className="c-grid-view-item__content-type">
-                <IconComponent icon={ICONS.CATEGORY} />
+                <IconComponent icon={CATEGORY} />
                 {contentTypesMap[content.ContentType._href].identifier}
             </div>
             <div className="c-grid-view-item__image-wrapper">{image}</div>
