@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../icon/icon.component';
+import IconComponent from '../../../common/icon/icon.component';
+import { CHECKMARK } from '../../../common/icon/defs/checkmark.json';
+import { DISCARD } from '../../../common/icon/defs/discard.json';
+import { EDIT } from '../../../common/icon/defs/edit.json';
 
-import ICONS from '../icon/icons.constants.json';
 import './css/table.view.item.component.css';
 
 export default class TableViewItemComponent extends Component {
@@ -115,10 +117,10 @@ export default class TableViewItemComponent extends Component {
                     </div>
                     <div className="c-table-view-item__priority-actions" {...innerWrapperAttrs}>
                         <button className="c-table-view-item__btn--submit" onClick={this.handleSubmit.bind(this)}>
-                            <IconComponent icon={ICONS.CHECKMARK} color="#fff" />
+                            <IconComponent icon={CHECKMARK} color="#fff" />
                         </button>
                         <button className="c-table-view-item__btn--cancel" onClick={this.handleCancel.bind(this)}>
-                            <IconComponent icon={ICONS.DISCARD} color="#fff" />
+                            <IconComponent icon={DISCARD} color="#fff" />
                         </button>
                     </div>
                 </div>
@@ -145,7 +147,7 @@ export default class TableViewItemComponent extends Component {
                     <div>
                     <button className="c-table-view-item__btn--edit">
                         <div className="c-table-view-item__btn-inner">
-                            <IconComponent icon={ICONS.EDIT} height={20} color="#fff" />
+                            <IconComponent icon={EDIT} height={20} color="#fff" />
                             {labels.edit}
                         </div>
                     </button>

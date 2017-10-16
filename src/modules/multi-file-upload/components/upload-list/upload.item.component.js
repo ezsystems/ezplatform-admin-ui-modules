@@ -2,17 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ProgressBarComponent from '../progress-bar/progress.bar.component';
-import IconComponent from '../icon/icon.component';
 import { fileSizeToString } from '../../helpers/text.helper';
-import {
-    FILE_DEFAULT,
-    FILE_PDF,
-    FILE_VIDEO,
-    FILE_IMAGE,
-    CIRCLE_CLOSE,
-    EDIT,
-    TRASH
-} from '../icon/icons.constants.json';
+import IconComponent from '../../../common/icon/icon.component';
+import { FILE } from '../../../common/icon/defs/file.json';
+import { FILE_PDF } from '../../../common/icon/defs/file-pdf.json';
+import { FILE_VIDEO } from '../../../common/icon/defs/file-video.json';
+import { FILE_IMAGE } from '../../../common/icon/defs/file-image.json';
+import { CIRCLE_CLOSE } from '../../../common/icon/defs/circle-close.json';
+import { EDIT } from '../../../common/icon/defs/edit.json';
+import { TRASH } from '../../../common/icon/defs/trash.json';
 
 import './css/upload.item.component.css';
 
@@ -306,7 +304,7 @@ export default class UploadItemComponent extends Component {
             return FILE_IMAGE;
         }
 
-        return FILE_DEFAULT;
+        return FILE;
     }
 
         /**

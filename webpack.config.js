@@ -4,15 +4,16 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: {
-        'sub.items': './src/modules/sub-items/sub.items.module.js',
-        'universal.discovery': './src/modules/universal-discovery/universal.discovery.module.js',
-        'multi.file.upload': './src/modules/multi-file-upload/multi.file.upload.module.js',
+        'SubItems': './src/modules/sub-items/sub.items.module.js',
+        'UniversalDiscovery': './src/modules/universal-discovery/universal.discovery.module.js',
+        'MultiFileUpload': './src/modules/multi-file-upload/multi.file.upload.module.js',
     },
     output: {
         filename: '[name].module.js',
         path: path.resolve(__dirname, 'dist'),
-        library: ['ez', '[name]'],
+        library: ['eZ', 'modules', '[name]'],
         libraryTarget: 'umd',
+        libraryExport: 'default',
     },
     devtool: 'source-map',
     module: {

@@ -21,7 +21,7 @@ const App = (props) => {
                 updateList={() => {}}
                 onAfterUpload={() => window.location.reload()}
                 />
-            {/* <SubItemsModule /> */}
+            <SubItemsModule />
             <UniversalDiscoveryModule onCancel={() => {}} onConfirm={() => {}}/>
         </div>
     );

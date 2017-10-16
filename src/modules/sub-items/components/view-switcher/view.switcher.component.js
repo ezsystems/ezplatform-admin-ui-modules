@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../icon/icon.component';
-import ICONS from '../icon/icons.constants.json';
+import IconComponent from '../../../common/icon/icon.component';
+import { VIEW_LIST } from '../../../common/icon/defs/view-list.json';
+import { VIEW_GRID } from '../../../common/icon/defs/view-grid.json';
 
 import './css/view.switcher.component.css';
 
@@ -59,8 +60,8 @@ export default class ViewSwitcherComponent extends Component {
     render() {
         return (
             <div className="c-grid-switcher">
-                {this.renderButton('table', ICONS.VIEW_LIST)}
-                {this.renderButton('grid', ICONS.VIEW_GRID)}
+                {this.renderButton('table', VIEW_LIST)}
+                {this.renderButton('grid', VIEW_GRID)}
             </div>
         );
     }

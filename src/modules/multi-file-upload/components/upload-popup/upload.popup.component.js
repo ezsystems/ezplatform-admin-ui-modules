@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Popup from '../popup/popup.component';
+import Popup from '../../../common/popup/popup.component';
 import DropAreaComponent from '../drop-area/drop.area.component';
 import UploadListComponent from '../upload-list/upload.list.component';
 

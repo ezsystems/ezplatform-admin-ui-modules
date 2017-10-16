@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import PopupComponent from '../popup/popup.component';
+import PopupComponent from '../../../common/popup/popup.component';
 
 import './css/selected.content.popup.component.css';
 
