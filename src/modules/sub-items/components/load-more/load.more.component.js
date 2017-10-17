@@ -43,14 +43,10 @@ export default class LoadMoreComponent extends Component {
             btnAttrs.disabled = true;
         }
 
-        const loadMoreText = this.props.labels.info;
-        const actionText = this.props.labels.action;
-
-        loadMoreText
+        const loadMoreText = this.props.labels.info
             .replace('{{loaded}}', this.state.loadedCount)
             .replace('{{total}}', this.state.totalCount);
-
-        actionText.replace('{{limit}}', this.state.limit);
+        const actionText = this.props.labels.action.replace('{{limit}}', this.state.limit);
 
         return (
             <div className="c-load-more">
