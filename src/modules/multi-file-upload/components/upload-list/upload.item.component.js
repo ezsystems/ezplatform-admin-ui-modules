@@ -144,6 +144,8 @@ export default class UploadItemComponent extends Component {
         this.setState(state => Object.assign({}, state, {
             uploading: true,
             disallowed: false,
+            disallowedType: false,
+            disallowedSize: false,
             uploaded: false,
             aborted: false,
             failed: false,
@@ -161,6 +163,8 @@ export default class UploadItemComponent extends Component {
         this.setState(state => Object.assign({}, state, {
             uploading: false,
             disallowed: false,
+            disallowedType: false,
+            disallowedSize: false,
             uploaded: false,
             aborted: true,
             failed: false
@@ -177,6 +181,8 @@ export default class UploadItemComponent extends Component {
         this.setState(state => Object.assign({}, state, {
             uploading: false,
             disallowed: state.disallowed,
+            disallowedSize: state.disallowedSize,
+            disallowedType: state.disallowedType,
             uploaded: false,
             aborted: state.aborted,
             failed: true
@@ -193,6 +199,8 @@ export default class UploadItemComponent extends Component {
         this.setState(state => Object.assign({}, state, {
             uploading: false,
             disallowed: false,
+            disallowedType: false,
+            disallowedSize: false,
             uploaded: true,
             aborted: false,
             failed: false
@@ -214,6 +222,8 @@ export default class UploadItemComponent extends Component {
             uploadedSize: fileSizeToString(fraction * parseInt(this.props.data.file.size, 10)),
             uploading: true,
             disallowed: false,
+            disallowedType: false,
+            disallowedSize: false,
             uploaded: false,
             aborted: false,
             failed: false,
@@ -237,6 +247,8 @@ export default class UploadItemComponent extends Component {
                 struct,
                 uploading: false,
                 disallowed: false,
+                disallowedType: false,
+                disallowedSize: false,
                 uploaded: true,
                 aborted: false,
                 failed: false,
@@ -315,9 +327,9 @@ export default class UploadItemComponent extends Component {
      * @returns {null|Element}
      */
     renderProgressBar() {
-        const {uploaded, aborted, progress, totalSize, uploadedSize} = this.state;
+        const {uploaded, aborted, progress, totalSize, uploadedSize, disallowed} = this.state;
 
-        if (this.props.isUploaded || uploaded || aborted) {
+        if (this.props.isUploaded || uploaded || aborted || disallowed) {
             return null;
         }
 
@@ -335,8 +347,8 @@ export default class UploadItemComponent extends Component {
      * @returns {null|Element}
      */
     renderErrorMessage() {
-        const {uploaded, aborted, disallowed, disallowedType, disallowedSize, failed, uploading} = this.state;
-        const isError = !uploaded && !aborted && !disallowed && failed && !uploading;
+        const {uploaded, aborted, disallowedType, disallowedSize, failed, uploading} = this.state;
+        const isError = !uploaded && !aborted && (disallowedSize || disallowedType) && failed && !uploading;
         let msg = 'Cannot upload file';
 
         if (disallowedType) {
@@ -358,8 +370,8 @@ export default class UploadItemComponent extends Component {
      * @returns {null|Element}
      */
     renderSuccessMessage() {
-        const {uploaded, aborted, disallowed, failed, uploading} = this.state;
-        const isSuccess = uploaded && !aborted && !disallowed && !failed && !uploading;
+        const {uploaded, aborted, disallowedSize, disallowedType, failed, uploading} = this.state;
+        const isSuccess = uploaded && !aborted && !(disallowedSize || disallowedType) && !failed && !uploading;
 
         return isSuccess ? <div className="c-upload-list-item__message--success">Uploaded</div> : null;
     }
@@ -372,8 +384,8 @@ export default class UploadItemComponent extends Component {
      * @returns {null|Element}
      */
     renderAbortBtn() {
-        const {uploaded, aborted, disallowed, failed, uploading} = this.state;
-        const canAbort = !uploaded && !aborted && !disallowed && !failed && uploading;
+        const {uploaded, aborted, disallowedSize, disallowedType, failed, uploading} = this.state;
+        const canAbort = !uploaded && !aborted && !disallowedSize && !disallowedType && !failed && uploading;
 
         if (!canAbort) {
             return null;
@@ -394,8 +406,8 @@ export default class UploadItemComponent extends Component {
      * @returns {null|Element}
      */
     renderEditBtn() {
-        const {uploaded, aborted, disallowed, failed, uploading} = this.state;
-        const canEdit = this.props.isUploaded || (uploaded && !aborted && !disallowed && !failed && !uploading);
+        const {uploaded, aborted, disallowedSize, disallowedType, failed, uploading} = this.state;
+        const canEdit = this.props.isUploaded || (uploaded && !aborted && !(disallowedSize || disallowedType) && !failed && !uploading);
 
         if (!canEdit) {
             return null;
@@ -416,8 +428,8 @@ export default class UploadItemComponent extends Component {
      * @returns {null|Element}
      */
     renderDeleteBtn() {
-        const {uploaded, aborted, disallowed, failed, uploading} = this.state;
-        const canDelete = this.props.isUploaded || (uploaded && !aborted && !disallowed && !failed && !uploading);
+        const {uploaded, aborted, disallowedSize, disallowedType, failed, uploading} = this.state;
+        const canDelete = this.props.isUploaded || (uploaded && !aborted && !(disallowedSize || disallowedType) && !failed && !uploading);
 
         if (!canDelete) {
             return null;
