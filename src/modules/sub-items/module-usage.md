@@ -40,6 +40,8 @@ Without all the following properties the Sub Items module will not work.
 
 **parentLocationId** _{Number}_ - parent location ID.
 
+**locationViewLink** _{String}_ - a link pattern sub item location view. It should follow the pattern similar to: `/admin/content/location/{{locationId}}`
+
 **restInfo** _{Object}_ - backend config object:
 
 - **token** _{String}_ - CSRF token,
