@@ -10,7 +10,7 @@ module.exports = {
     },
     output: {
         filename: '[name].module.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'Resources/public/js'),
         library: ['eZ', 'modules', '[name]'],
         libraryTarget: 'umd',
         libraryExport: 'default',
