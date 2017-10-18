@@ -258,6 +258,7 @@ export default class SubItemsModule extends Component {
                         activeView={this.state.activeView}
                         contentTypesMap={this.state.contentTypesMap}
                         handleItemPriorityUpdate={this.handleItemPriorityUpdate.bind(this)}
+                        locationViewLink={this.props.locationViewLink}
                         items={this.state.items}
                         labels={this.props.labels} />
                 </div>
@@ -273,6 +274,7 @@ export default class SubItemsModule extends Component {
 }
 
 SubItemsModule.propTypes = {
+    locationViewLink: PropTypes.string.isRequired,
     parentLocationId: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
@@ -323,7 +325,8 @@ SubItemsModule.defaultProps = {
             headerTranslations: 'Translations'
         },
         tableViewItem: {
-            edit: 'Edit'
+            edit: 'Edit',
+            notAvailable: 'N/A'
         },
         loadMore: {
             info: 'Viewing <strong>{{loaded}}</strong> out of <strong>{{total}}</strong> sub-items',

@@ -7,7 +7,7 @@ import { CATEGORY } from '../../../common/icon/defs/category.json';
 import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
-    const {content, contentTypesMap, labels} = props;
+    const {content, contentTypesMap, labels, locationViewLink, location} = props;
     const imageField = content.CurrentVersion.Version.Fields.field.find(item => item.fieldDefinitionIdentifier === 'image');
     const imageClassName = 'c-grid-view-item__image';
     let image = <div className={`${imageClassName} ${imageClassName}--none`}>{labels.noImage}</div>;
@@ -17,7 +17,7 @@ const GridViewItemComponent = (props) => {
     }
 
     return (
-        <a className="c-grid-view-item" href={`/admin/view/content/${content._id}`}>
+        <a className="c-grid-view-item" href={locationViewLink.replace('{{locationId}}', location.id)}>
             <div className="c-grid-view-item__content-type">
                 <IconComponent icon={CATEGORY} />
                 {contentTypesMap[content.ContentType._href].identifier}
@@ -34,7 +34,8 @@ GridViewItemComponent.propTypes = {
     contentTypesMap: PropTypes.object.isRequired,
     labels: PropTypes.shape({
         noImage: PropTypes.string.isRequired
-    })
+    }).isRequired,
+    locationViewLink: PropTypes.string.isRequired
 };
 
 export default GridViewItemComponent;

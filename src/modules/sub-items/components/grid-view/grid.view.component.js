@@ -31,7 +31,8 @@ export default class GridViewComponent extends Component {
             key={data.location.id}
             {...data}
             contentTypesMap={this.props.contentTypesMap}
-            labels={this.props.labels.gridViewItem} />
+            labels={this.props.labels.gridViewItem}
+            locationViewLink={this.props.locationViewLink} />
     }
 
     render() {
@@ -48,5 +49,6 @@ GridViewComponent.propTypes = {
     contentTypesMap: PropTypes.object,
     labels: PropTypes.shape({
         gridViewItem: PropTypes.object.isRequired
-    })
+    }),
+    locationViewLink: PropTypes.string.isRequired
 };
