@@ -9,7 +9,7 @@
     }
   ],
   "require": {
-    "symfony/symfony": "^2.5 | ^3.0"
+    "symfony/symfony": "^3.3"
   },
   "autoload": {
     "psr-4": {
@@ -17,8 +17,8 @@
     }
   },
   "extra": {
-      "branch-alias": {
-          "dev-master": "2.0.x-dev"
-      }
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
   }
 }
