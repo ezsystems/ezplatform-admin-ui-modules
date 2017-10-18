@@ -137,10 +137,14 @@ export default class SubItemsModule extends Component {
      */
     updateItemsState(data) {
         const {locations, content, totalCount} = data[0];
-        const items = locations.reduce((total, location, index) => [...total, {
-            location: location.value.Location,
-            content: content[index].value.Content
-        }], []);
+        const items = locations.reduce((total, location) => {
+            const itemLocation = location.value.Location;
+
+            return [...total, {
+                location: itemLocation,
+                content: content.find(item => item.value.Content._id === itemLocation.ContentInfo.Content._id).value.Content
+            }];
+        }, []);
 
         this.setState(state => Object.assign({}, state, {
             items: [...state.items, ...items],
