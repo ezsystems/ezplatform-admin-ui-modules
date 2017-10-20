@@ -84,7 +84,7 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadLocation(locationId) {
-        return new Promise((resolve) => this.props.loadLocation(locationId, this.state.limit, this.state.offset, resolve));
+        return new Promise((resolve) => this.props.loadLocation(this.props.restInfo, locationId, this.state.limit, this.state.offset, resolve));
     }
 
     /**
@@ -106,7 +106,7 @@ export default class SubItemsModule extends Component {
         promises.push(new Promise((resolve) => {
             const contentIds = locations.map(item => item.value.Location.ContentInfo.Content._id);
 
-            this.props.loadContentInfo(contentIds, resolve);
+            this.props.loadContentInfo(this.props.restInfo, contentIds, resolve);
         }).then(contentInfo => ({
             locations,
             totalCount: response.View.Result.count,
@@ -125,7 +125,7 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadContentTypes(responses) {
-        return new Promise(resolve => this.props.loadContentTypes(response => resolve([...responses, response])));
+        return new Promise(resolve => this.props.loadContentTypes(this.props.restInfo, response => resolve([...responses, response])));
     }
 
     /**

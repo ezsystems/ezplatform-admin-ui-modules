@@ -27,7 +27,7 @@ const handleRequestResponse = response => {
  * @param {Number} offset
  * @param {Function} callback
  */
-export const loadLocation = (locationId = 2, limit = 10, offset = 0, callback) => {
+export const loadLocation = ({token, siteaccess}, locationId = 2, limit = 10, offset = 0, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `subitems-load-location-${locationId}`,
@@ -42,12 +42,15 @@ export const loadLocation = (locationId = 2, limit = 10, offset = 0, callback) =
             }
         }
     });
-    const headers = new Headers(HEADERS_CREATE_VIEW);
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers,
+        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        }),
         body,
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)
@@ -63,7 +66,7 @@ export const loadLocation = (locationId = 2, limit = 10, offset = 0, callback) =
  * @param {Array} contentIds
  * @param {Function} callback
  */
-export const loadContentInfo = (contentIds, callback) => {
+export const loadContentInfo = ({token, siteaccess}, contentIds, callback) => {
     const ids = contentIds.join();
     const body = JSON.stringify({
         ViewInput: {
@@ -79,12 +82,15 @@ export const loadContentInfo = (contentIds, callback) => {
             }
         }
     });
-    const headers = new Headers(HEADERS_CREATE_VIEW);
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers,
+        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        }),
         body,
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)
@@ -99,11 +105,16 @@ export const loadContentInfo = (contentIds, callback) => {
  * @function loadContentTypes
  * @param {Function} callback
  */
-export const loadContentTypes = (callback) => {
+export const loadContentTypes = ({token, siteaccess}, callback) => {
     const request = new Request('/api/ezp/v2/content/types', {
         method: 'GET',
-        headers: {'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json'},
+        headers: {
+            'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        },
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)
