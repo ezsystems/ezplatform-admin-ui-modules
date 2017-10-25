@@ -22,10 +22,11 @@ const handleRequestResponse = response => {
  * Loads content info
  *
  * @function loadContentInfo
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
  * @param {String} contentId
  * @param {Function} callback
  */
-export const loadContentInfo = (contentId, callback) => {
+export const loadContentInfo = ({token, siteaccess}, contentId, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-load-content-info-${contentId}`,
@@ -40,12 +41,15 @@ export const loadContentInfo = (contentId, callback) => {
             }
         }
     });
-    const headers = new Headers(HEADERS_CREATE_VIEW);
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers,
+        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        }),
         body,
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)
@@ -58,10 +62,11 @@ export const loadContentInfo = (contentId, callback) => {
  * Finds locations related to the parent location
  *
  * @function findLocationsByParentLocationId
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
  * @param {String} parentLocationId
  * @param {Function} callback
  */
-export const findLocationsByParentLocationId = (parentLocationId, callback) => {
+export const findLocationsByParentLocationId = ({token, siteaccess}, parentLocationId, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-parent-location-id-${parentLocationId}`,
@@ -76,12 +81,15 @@ export const findLocationsByParentLocationId = (parentLocationId, callback) => {
             }
         }
     });
-    const headers = new Headers(HEADERS_CREATE_VIEW);
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers,
+        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        }),
         body,
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)
@@ -97,10 +105,11 @@ export const findLocationsByParentLocationId = (parentLocationId, callback) => {
  * Finds content matching a given text query
  *
  * @function findContentBySearchQuery
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
  * @param {String} query
  * @param {Function} callback
  */
-export const findContentBySearchQuery = (query, callback) => {
+export const findContentBySearchQuery = ({token, siteaccess}, query, callback) => {
     const body = JSON.stringify({
         ViewInput:{
             identifier: `udw-locations-by-search-query-${query}`,
@@ -115,12 +124,15 @@ export const findContentBySearchQuery = (query, callback) => {
             }
         }
     });
-    const headers = new Headers(HEADERS_CREATE_VIEW);
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers,
+        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        }),
         body,
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)
@@ -133,17 +145,19 @@ export const findContentBySearchQuery = (query, callback) => {
  * Loads content types
  *
  * @function loadContentTypes
+  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
  * @param {Function} callback
  */
-export const loadContentTypes = (callback) => {
-    const headers = new Headers({
-        'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json'
-
-    });
+export const loadContentTypes = ({token, siteaccess}, callback) => {
     const request = new Request('/api/ezp/v2/content/types', {
         method: 'GET',
-        headers,
+        headers: {
+            'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        },
         mode: 'cors',
+        credentials: 'same-origin'
     });
 
     fetch(request)

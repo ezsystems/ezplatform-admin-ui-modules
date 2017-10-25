@@ -33,7 +33,7 @@ export default class ContentMetaPreviewComponent extends Component {
      * @memberof ContentMetaPreviewComponent
      */
     loadContentInfo(contentId) {
-        const promise = new Promise(resolve => this.props.loadContentInfo(contentId, resolve));
+        const promise = new Promise(resolve => this.props.loadContentInfo(this.props.restInfo, contentId, resolve));
 
         promise
             .then(this.setImageUri.bind(this))
@@ -119,6 +119,10 @@ ContentMetaPreviewComponent.propTypes = {
     canSelectContent: PropTypes.func.isRequired,
     loadContentInfo: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
+    restInfo: PropTypes.shape({
+        token: PropTypes.string.isRequired,
+        siteaccess: PropTypes.string.isRequired
+    }).isRequired,
     labels: PropTypes.shape({
         title: PropTypes.string.isRequired,
         selectContent: PropTypes.string.isRequired,

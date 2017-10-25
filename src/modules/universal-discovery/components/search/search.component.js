@@ -21,7 +21,7 @@ export default class SearchComponent extends Component {
      * @memberof SearchComponent
      */
     searchContent() {
-        const promise = new Promise(resolve => this.props.findContentBySearchQuery(this._refSearchInput.value, resolve));
+        const promise = new Promise(resolve => this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve));
 
         promise
             .then(this.updateItemsState.bind(this))
@@ -72,5 +72,9 @@ SearchComponent.propTypes = {
             title: PropTypes.string.isRequired
         }).isRequired,
         searchPagination: PropTypes.object.isRequired
+    }).isRequired,
+    restInfo: PropTypes.shape({
+        token: PropTypes.string.isRequired,
+        siteaccess: PropTypes.string.isRequired
     }).isRequired
 };

@@ -74,15 +74,17 @@ Without all the following properties the Universal Discovery module will not wor
 
 **onCancel** _{Function}_ - a callback to be invoked when a user clicks on the cancel button in a Universal Discovery popup. It takes no extra params.
 
+**restInfo** _{Function}_ - a config hash containing: token (_{String}_) and siteaccess (_{String}_).
+
 ### Optional props
 
 Optionally, Universal Discovery module can take a following list of props:
 
-**loadContentInfo** _{Function}_ - loads content info. It takes 2 params: `contentId` and `callback`
-**loadContentTypes** _{Function}_ - loads content types data. It takes one param: `callback`,
+**loadContentInfo** _{Function}_ - loads content info. It takes 3 params: `restInfo`, `contentId` and `callback`
+**loadContentTypes** _{Function}_ - loads content types data. It takes 2 params: `restInfo`, `callback`,
 **canSelectContent** _{Function}_ - checks whether a content item can be selected. It takes one param: `content` - the content struct,
-**findContentBySearchQuery** _{Function}_ - finds a content using a search query. It takes 2 params: `query` and `callback`,
-**findLocationsByParentLocationId** _{Function}_ - finds sub items of a given location. It takes 2 params: `parentLocationId` and `callback`,
+**findContentBySearchQuery** _{Function}_ - finds a content using a search query. It takes 3 params: `restInfo`, `query` and `callback`,
+**findLocationsByParentLocationId** _{Function}_ - finds sub items of a given location. It takes 3 params: `restInfo`, `parentLocationId` and `callback`,
 **title** _{String}_ - the title of Universal Discovery popup. Default value: `Find content`,
 **multiple** _{Boolean}_ - can select multiple content items flag. Default value: `true`,
 **activeTab** _{String}_ - active tab identifier. Default value: `browse`,
