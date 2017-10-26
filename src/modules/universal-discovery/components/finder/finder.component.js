@@ -16,7 +16,11 @@ export default class FinderComponent extends Component {
     }
 
     componentDidMount() {
-        this.props.findLocationsByParentLocationId(this.props.startingLocationId, this.updateLocationsData.bind(this));
+        this.props.findLocationsByParentLocationId(
+            this.props.restInfo,
+            this.props.startingLocationId,
+            this.updateLocationsData.bind(this)
+        );
     }
 
     componentDidUpdate() {
@@ -65,7 +69,7 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     findLocationChildren({parent, location}) {
-        const promise = new Promise(resolve => this.props.findLocationsByParentLocationId(parent, resolve));
+        const promise = new Promise(resolve => this.props.findLocationsByParentLocationId(this.props.restInfo, parent, resolve));
 
         promise
             .then((response) => {
@@ -162,5 +166,9 @@ FinderComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     onItemSelect: PropTypes.func.isRequired,
     startingLocationId: PropTypes.number.isRequired,
-    findLocationsByParentLocationId: PropTypes.func.isRequired
+    findLocationsByParentLocationId: PropTypes.func.isRequired,
+    restInfo: PropTypes.shape({
+        token: PropTypes.string.isRequired,
+        siteaccess: PropTypes.string.isRequired
+    }).isRequired
 };

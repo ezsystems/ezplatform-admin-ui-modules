@@ -32,7 +32,7 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     componentDidMount() {
-        this.props.loadContentTypes(this.setContentTypesMap.bind(this));
+        this.props.loadContentTypes(this.props.restInfo, this.setContentTypesMap.bind(this));
 
         if (!this._refContentContainer) {
             return null;
@@ -106,6 +106,7 @@ export default class UniversalDiscoveryModule extends Component {
                     canSelectContent={this.canSelectContent.bind(this)}
                     onSelectContent={this.updateSelectedContent.bind(this)}
                     loadContentInfo={this.props.loadContentInfo}
+                    restInfo={this.props.restInfo}
                     contentTypesMap={this.state.contentTypesMap}
                     labels={this.props.labels.contentMetaPreview} />
             </div>
@@ -189,7 +190,8 @@ export default class UniversalDiscoveryModule extends Component {
             findContentBySearchQuery,
             multiple,
             searchResultsPerPage,
-            labels
+            labels,
+            restInfo
         } = this.props;
         const {activeTab, maxHeight, contentTypesMap} = this.state;
         const attrs = Object.assign({}, {
@@ -203,7 +205,8 @@ export default class UniversalDiscoveryModule extends Component {
             contentTypesMap,
             multiple,
             searchResultsPerPage,
-            labels
+            labels,
+            restInfo
         }, item.attrs);
 
         return <Panel key={`panel-${item.id}`} {...attrs} />;
@@ -253,6 +256,10 @@ export default class UniversalDiscoveryModule extends Component {
 UniversalDiscoveryModule.propTypes = {
     onConfirm: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
+    restInfo: PropTypes.shape({
+        token: PropTypes.string.isRequired,
+        siteaccess: PropTypes.string.isRequired
+    }).isRequired,
     title: PropTypes.string,
     multiple: PropTypes.bool,
     activeTab: PropTypes.string,

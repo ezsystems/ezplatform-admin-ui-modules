@@ -8,7 +8,7 @@ import './css/search.panel.component.css';
 
 const SearchPanelComponent = (props) => {
     const wrapperAttrs = {className: 'c-search-panel'};
-    const {multiple, findContentBySearchQuery, onItemSelect, maxHeight, contentTypesMap, searchResultsPerPage, labels} = props;
+    const {multiple, findContentBySearchQuery, onItemSelect, maxHeight, contentTypesMap, searchResultsPerPage, labels, restInfo} = props;
     const searchAttrs = Object.assign({}, {
         multiple,
         findContentBySearchQuery,
@@ -16,7 +16,8 @@ const SearchPanelComponent = (props) => {
         maxHeight,
         contentTypesMap,
         searchResultsPerPage,
-        labels
+        labels,
+        restInfo
     });
 
     if (!props.isVisible) {
@@ -40,7 +41,11 @@ SearchPanelComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     searchResultsPerPage: PropTypes.number.isRequired,
-    labels: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    restInfo: PropTypes.shape({
+        token: PropTypes.string.isRequired,
+        siteaccess: PropTypes.string.isRequired
+    }).isRequired,
 };
 
 export default SearchPanelComponent;

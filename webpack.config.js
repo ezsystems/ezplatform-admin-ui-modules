@@ -44,7 +44,7 @@ module.exports = {
         }
     },
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        new CleanWebpackPlugin(['Resources']),
         new UglifyJSPlugin({
             sourceMap: true,
             uglifyOptions: {
