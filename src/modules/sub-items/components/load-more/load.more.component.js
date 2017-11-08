@@ -67,3 +67,8 @@ LoadMoreComponent.propTypes = {
         action: PropTypes.string.isRequired
     })
 };
+
+LoadMoreComponent.defaultProps = {
+    totalCount: 0,
+    loadedCount: 0
+};
