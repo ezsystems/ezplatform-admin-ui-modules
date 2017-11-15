@@ -1,5 +1,5 @@
 import {
-    handleRequestResponse, 
+    handleRequestResponse,
     ENDPOINT_VIEWS,
     HEADERS_VIEWS
 } from './common.service';
@@ -26,7 +26,7 @@ export const loadLocation = (locationId = 2, limit = 10, offset = 0, callback) =
         body,
         mode: 'cors',
     });
-    
+
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
@@ -55,11 +55,11 @@ export const findLocationsByParentLocationId = (parentLocationId, callback) => {
         body,
         mode: 'cors',
     });
-    
+
     fetch(request)
         .then(handleRequestResponse)
         .then(json => callback({
-            parentLocationId, 
+            parentLocationId,
             data: json
         }))
         .catch(error => console.log('error:find:locations:by:parent:location:id', error));

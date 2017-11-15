@@ -8,7 +8,8 @@ export default class ContentMetaPreviewComponent extends Component {
         super();
 
         this.state = {
-            imageUri: null
+            imageUri: null,
+            selectContentEnabled: false
         };
     }
 
@@ -64,6 +65,21 @@ export default class ContentMetaPreviewComponent extends Component {
     }
 
     /**
+     * Toggles the enabled state on select content button
+     *
+     * @method toggleEnabledState
+     * @param {Boolean} disabled The disabled state
+     * @memberof ContentMetaPreviewComponent
+     */
+    toggleEnabledState(enabled) {
+        if (this.state.selectContentEnabled === enabled) {
+            return;
+        }
+
+        this.setState(state => Object.assign({}, state, {selectContentEnabled: enabled}));
+    }
+
+    /**
      * Renders a select content button
      *
      * @method renderSelectContentBtn
@@ -72,13 +88,14 @@ export default class ContentMetaPreviewComponent extends Component {
      */
     renderSelectContentBtn() {
         const {data, canSelectContent, onSelectContent, labels} = this.props;
-        const canSelect = canSelectContent(data.ContentInfo.Content);
         const attrs = {
             className: 'c-meta-preview__btn--select',
             onClick: onSelectContent
         };
 
-        if (!canSelect) {
+        canSelectContent(data, this.toggleEnabledState.bind(this));
+
+        if (!this.state.selectContentEnabled) {
             attrs.disabled = true;
         }
 

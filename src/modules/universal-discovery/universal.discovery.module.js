@@ -63,14 +63,14 @@ export default class UniversalDiscoveryModule extends Component {
         this.setState(state => Object.assign({}, state, {selectedContent}));
     }
 
-    canSelectContent(content) {
-        const isAlreadySelected = this.state.selectedContent.find(item => item.ContentInfo.Content._id === content._id);
+    canSelectContent(data, callback) {
+        const isAlreadySelected = this.state.selectedContent.find(item => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
 
         if (isAlreadySelected) {
-            return false;
+            return callback(false);
         }
 
-        return this.props.canSelectContent(content);
+        return this.props.canSelectContent(data, callback);
     }
 
     togglePanel(activeTab) {
@@ -301,7 +301,7 @@ UniversalDiscoveryModule.defaultProps = {
     loadContentTypes,
     findContentBySearchQuery,
     findLocationsByParentLocationId,
-    canSelectContent: () => true,
+    canSelectContent: (item, callback) => callback(true),
     startingLocationId: 1,
     maxHeight: 500,
     searchResultsPerPage: 10,
