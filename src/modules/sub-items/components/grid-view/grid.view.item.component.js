@@ -12,7 +12,7 @@ const GridViewItemComponent = (props) => {
     const imageClassName = 'c-grid-view-item__image';
     let image = <div className={`${imageClassName} ${imageClassName}--none`}>{labels.noImage}</div>;
 
-    if (imageField) {
+    if (imageField && imageField.fieldValue && imageField.fieldValue.uri && imageField.fieldValue.path) {
         image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`${imageField.fieldValue.path}`} />;
     }
 
