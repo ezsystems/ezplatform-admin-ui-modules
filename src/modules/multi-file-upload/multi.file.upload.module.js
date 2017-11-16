@@ -99,43 +99,54 @@ export default class MultiFileUploadModule extends Component {
     handleDropOnWindow(event) {
         this.preventDefaultAction(event);
 
-        if (!this.state.allowDropOnWindow) {
+        const itemsToUpload = this.proccessUploadedFiles(this.extractDroppedFilesList(event));
+
+        // Covers the case when dragging and dropping page elements inside the browser,
+        // like links, images, etc.
+        if (!this.state.allowDropOnWindow || !itemsToUpload.length) {
             return;
         }
 
         window.removeEventListener('drop', this._handleDropOnWindow, false);
         window.removeEventListener('dragover', this.preventDefaultAction, false);
 
-        this.setState(state => {
-            return Object.assign({}, state, {
-                itemsToUpload: this.proccessUploadedFiles(event) || state.itemsToUpload,
-                popupVisible: true,
-                allowDropOnWindow: false
-            });
-        });
+        this.setState(state => Object.assign({}, state, {
+            itemsToUpload,
+            popupVisible: true,
+            allowDropOnWindow: false
+        }));
+    }
+
+    /**
+     * Extracts information about dropped files
+     *
+     * @method extractDroppedFilesList
+     * @param {Event} event
+     * @returns {undefined|Array}
+     * @memberof MultiFileUploadModule
+     */
+    extractDroppedFilesList(event) {
+        let list;
+
+        if (event.nativeEvent) {
+            list = event.nativeEvent.dataTransfer || event.nativeEvent.target;
+        } else {
+            list = event.dataTransfer;
+        }
+
+        return list;
     }
 
     /**
      * Processes uploaded files and generates an unique file id
      *
-     * @param {Event} event
-     * @returns {undefined|Array}
+     * @method processUploadedFiles
+     * @param {FilesList} list
+     * @returns {Array}
      * @memberof MultiFileUploadModule
      */
-    proccessUploadedFiles(event) {
-        let target;
-
-        if (event.nativeEvent) {
-            target = event.nativeEvent.dataTransfer || event.nativeEvent.target;
-        } else {
-            target = event.dataTransfer;
-        }
-
-        if (!target) {
-            return;
-        }
-
-        return [...target.files].map(file => ({
+    proccessUploadedFiles(list) {
+        return [...list.files].map(file => ({
             id: (Math.floor(Math.random() * Date.now())),
             file
         }));
