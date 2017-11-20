@@ -268,16 +268,6 @@ export default class UploadItemComponent extends Component {
     }
 
     /**
-     * Redirects to content edit
-     *
-     * @method editContent
-     * @memberof UploadItemComponent
-     */
-    editContent() {
-        console.log('to:do:editContent');
-    }
-
-    /**
      * Deletes a file
      *
      * @method deleteFile
@@ -319,7 +309,24 @@ export default class UploadItemComponent extends Component {
         return FILE;
     }
 
-        /**
+    /**
+     * Creates edit link
+     *
+     * @method createEditLink
+     * @return {String}
+     * @memberof UploadItemComponent
+     */
+    createEditLink() {
+        if (!this.state.struct) {
+            return;
+        }
+
+        return Routing.generate('ez_content_draft_create', {
+            contentId: this.state.struct.Content._id,
+        });
+    }
+
+    /**
      * Renders a progress bar
      *
      * @method renderProgressBar
@@ -414,9 +421,9 @@ export default class UploadItemComponent extends Component {
         }
 
         return (
-            <div className="c-upload-list-item__action--edit" onClick={this.editContent.bind(this)} title="Edit">
+            <a href={this.createEditLink()} className="c-upload-list-item__action--edit" title="Edit">
                 <IconComponent icon={EDIT} height={20} />
-            </div>
+            </a>
         );
     }
 
