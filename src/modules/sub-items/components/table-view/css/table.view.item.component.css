@@ -103,6 +103,8 @@
 .c-table-view-item__btn--edit:hover,
 .c-table-view-item__btn--edit:focus {
     background: #0a4b67;
+    color: #fff;
+    text-decoration: none;
 }
 
 .c-table-view-item__btn--edit .c-icon {

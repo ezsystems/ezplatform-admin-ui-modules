@@ -87,6 +87,19 @@ export default class TableViewItemComponent extends Component {
     }
 
     /**
+     * Creates edit link
+     *
+     * @method createEditLink
+     * @return {String}
+     * @memberof TableViewItemComponent
+     */
+    createEditLink() {
+        return Routing.generate('ez_content_draft_create', {
+            contentId: this.props.content._id,
+        });
+    }
+
+    /**
      * Renders a priority cell with input field
      *
      * @method renderPriorityCell
@@ -145,12 +158,12 @@ export default class TableViewItemComponent extends Component {
                 <td className="c-table-view-item__cell--translations">{content.mainLanguageCode}</td>
                 <td className="c-table-view-item__cell--actions">
                     <div>
-                    <button className="c-table-view-item__btn--edit">
+                    <a href={this.createEditLink()} className="c-table-view-item__btn--edit">
                         <div className="c-table-view-item__btn-inner">
                             <IconComponent icon={EDIT} height={20} color="#fff" />
                             {labels.edit}
                         </div>
-                    </button>
+                    </a>
                     </div>
                 </td>
             </tr>
