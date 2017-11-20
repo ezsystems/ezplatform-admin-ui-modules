@@ -60,11 +60,16 @@ Optionally, Sub Items module can take a following list of props:
 
 - **callback** _{Function}_ - callback invoked when content types are loaded.
 
-**loadLocation** _{Function}_ - loads location. Takes 4 params:
+**loadLocation** _{Function}_ - loads location. Takes 3 params:
 
-- **locationId** _{Number}_ - location ID,
-- **limit** _{Number}_ - content items limit,
-- **offset** _{Number}_ - items offset,
+- **restInfo** _{Object}_ - rest info params:
+    - **token** _{String}_ - the user token,
+    - **siteaccess** _{String}_ the current siteaccess.
+- **queryConfig** _{Object}_ query config:
+    - **locationId** _{Number}_ - location ID,
+    - **limit** _{Number}_ - content items limit,
+    - **offset** _{Number}_ - items offset,
+    - **sortClauses** _{Object}_ - the sort clauses, ex: {LocationPriority: 'ascending'},
 - **callback** _{Function}_ - callback invoked when location is loaded.
 
 **updateLocationPriority** - updates item location priority. Takes 2 params:
