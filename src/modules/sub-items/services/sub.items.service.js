@@ -22,12 +22,17 @@ const handleRequestResponse = response => {
  * Loads location struct
  *
  * @function loadLocation
- * @param {Number} locationId
- * @param {Number} limit
- * @param {Number} offset
+ * @param {Object} restInfo - contains:
+ * @param {String} restInfo.token
+ * @param {String} restInfo.siteaccess
+ * @param {Object} queryConfig - contains:
+ * @param {Number} queryConfig.locationId
+ * @param {Number} queryConfig.limit
+ * @param {Number} queryConfig.offset
+ * @param {Object} queryConfig.sortClauses
  * @param {Function} callback
  */
-export const loadLocation = ({token, siteaccess}, locationId = 2, limit = 10, offset = 0, callback) => {
+export const loadLocation = ({token, siteaccess}, {locationId = 2, limit = 10, offset = 0, sortClauses}, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `subitems-load-location-${locationId}`,
@@ -35,7 +40,7 @@ export const loadLocation = ({token, siteaccess}, locationId = 2, limit = 10, of
             LocationQuery: {
                 Criteria: {},
                 FacetBuilders: {},
-                SortClauses: {LocationPriority: 'ascending'},
+                SortClauses: sortClauses,
                 Filter: {ParentLocationIdCriterion: locationId},
                 limit,
                 offset

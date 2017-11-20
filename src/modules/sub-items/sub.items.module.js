@@ -84,7 +84,14 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadLocation(locationId) {
-        return new Promise((resolve) => this.props.loadLocation(this.props.restInfo, locationId, this.state.limit, this.state.offset, resolve));
+        const queryConfig = {
+            locationId,
+            limit: this.state.limit,
+            offset: this.state.offset,
+            sortClauses: this.props.sortClauses,
+        }
+
+        return new Promise((resolve) => this.props.loadLocation(this.props.restInfo, queryConfig, resolve));
     }
 
     /**
@@ -287,6 +294,7 @@ SubItemsModule.propTypes = {
     loadContentInfo: PropTypes.func,
     loadContentTypes: PropTypes.func,
     loadLocation: PropTypes.func,
+    sortClauses: PropTypes.object,
     updateLocationPriority: PropTypes.func,
     activeView: PropTypes.string,
     extraActions: PropTypes.arrayOf(PropTypes.shape({
@@ -312,6 +320,7 @@ SubItemsModule.defaultProps = {
     loadContentInfo,
     loadContentTypes,
     loadLocation,
+    sortClauses: {},
     updateLocationPriority,
     activeView: 'table',
     extraActions: [],
