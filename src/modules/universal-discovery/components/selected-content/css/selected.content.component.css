@@ -30,3 +30,8 @@
     border-top: 12px solid #eee;
     transform: translateY(100%) translateY(-1px);
 }
+
+.c-selected-content__label--limit {
+    padding-left: 8px;
+    font-style: italic;
+}

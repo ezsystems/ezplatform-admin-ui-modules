@@ -57,20 +57,60 @@ export default class SelectedContentComponent extends Component {
             labels={this.props.labels.selectedContentItem} />;
     }
 
+    /**
+     * Renders a limit information label
+     *
+     * @method renderLimitLabel
+     * @returns {Element}
+     * @memberof SelectedContentComponent
+     */
+    renderLimitLabel() {
+        let limitLabel = '';
+
+        if (this.props.itemsLimit) {
+            const limit = this.props.labels.selectedContent.limit.replace('{items}', this.props.itemsLimit);
+
+            limitLabel = <small className="c-selected-content__label--limit">{limit}</small>;
+        }
+
+        return limitLabel;
+    }
+
+    /**
+     * Renders selected items info
+     *
+     * @method renderSelectedItems
+     * @returns {Element}
+     * @memberof SelectedContentComponent
+     */
+    renderSelectedItems() {
+        if (!this.props.items.length) {
+            return null;
+        }
+
+        return (
+            <SelectedContentPopupComponent
+                title={this.props.labels.selectedContent.confirmedItems}
+                visible={this.state.isPopupVisible}
+                onClose={this.hidePopup.bind(this)}>
+                {this.props.items.map(this.renderSelectedItem.bind(this))}
+            </SelectedContentPopupComponent>
+        );
+    }
+
     render() {
         const titles = this.props.items.map(item => item.ContentInfo.Content.Name).join(', ');
 
         return (
             <div className="c-selected-content">
-                <SelectedContentPopupComponent
-                    title="Confirmed items"
-                    visible={this.state.isPopupVisible}
-                    onClose={this.hidePopup.bind(this)}>
-                    {this.props.items.map(this.renderSelectedItem.bind(this))}
-                </SelectedContentPopupComponent>
-                <strong className="c-selected-content__title">{this.props.labels.selectedContent.confirmedItems}</strong>
+                {this.renderSelectedItems()}
+                <strong className="c-selected-content__title">
+                    {this.props.labels.selectedContent.confirmedItems}&nbsp;
+                    {!!this.props.items.length && `(${this.props.items.length})`}
+                </strong>
+                {this.renderLimitLabel()}
                 <div className="c-selected-content__content-names" onClick={this.togglePopup.bind(this)}>
-                    ({this.props.items.length}) {titles}
+                    {titles.length ? titles : this.props.labels.selectedContent.noConfirmedContent}
                 </div>
             </div>
         );
@@ -79,12 +119,16 @@ export default class SelectedContentComponent extends Component {
 
 SelectedContentComponent.propTypes = {
     items: PropTypes.array.isRequired,
+    multiple: PropTypes.bool.isRequired,
+    itemsLimit: PropTypes.number.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     labels: PropTypes.shape({
         selectedContentItem: PropTypes.object.isRequired,
         selectedContent: PropTypes.shape({
-            confirmedItems: PropTypes.string.isRequired
+            confirmedItems: PropTypes.string.isRequired,
+            limit: PropTypes.string.isRequired,
+            noConfirmedContent: PropTypes.string.isRequired
         }).isRequired
     }).isRequired
 };

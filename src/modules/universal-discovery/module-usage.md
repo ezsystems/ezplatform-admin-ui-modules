@@ -105,3 +105,4 @@ Optionally, Universal Discovery module can take a following list of props:
     - **searchPagination** _{Object}_ - a hash of text labels for Search Pagination component,
     - **searchResults** _{Object}_ - a hash of text labels for Search Results component,
     - **searchResultsItem** _{Object}_ - a hash of text labels for Search Results Item component.
+**selectedItemsLimit** _{Number}_ - limit of items that can be selected. Should be combined with the `multiple` attribute set to `true`. Default value is `0`, which means no limit.

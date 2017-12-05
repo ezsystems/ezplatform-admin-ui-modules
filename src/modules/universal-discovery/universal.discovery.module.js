@@ -66,7 +66,7 @@ export default class UniversalDiscoveryModule extends Component {
     canSelectContent(data, callback) {
         const isAlreadySelected = this.state.selectedContent.find(item => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
 
-        if (isAlreadySelected) {
+        if (isAlreadySelected || this.state.selectedContent.length >= this.props.selectedItemsLimit) {
             return callback(false);
         }
 
@@ -115,18 +115,17 @@ export default class UniversalDiscoveryModule extends Component {
 
     renderSelectedContent() {
         const items = this.state.selectedContent;
-
-        if (!items.length) {
-            return null;
-        }
+        const {selectedItemsLimit, labels, multiple} = this.props;
 
         return (
             <div className="m-ud__selected-content">
                 <SelectedContentComponent
                     items={items}
+                    itemsLimit={selectedItemsLimit}
                     onItemRemove={this.onItemRemove.bind(this)}
+                    multiple={multiple}
                     contentTypesMap={this.state.contentTypesMap}
-                    labels={this.props.labels} />
+                    labels={labels} />
             </div>
         );
     }
@@ -266,6 +265,7 @@ UniversalDiscoveryModule.propTypes = {
     loadContentInfo: PropTypes.func,
     loadContentTypes: PropTypes.func,
     canSelectContent: PropTypes.func,
+    selectedItemsLimit: PropTypes.number,
     startingLocationId: PropTypes.number,
     findContentBySearchQuery: PropTypes.func,
     findLocationsByParentLocationId: PropTypes.func,
@@ -296,6 +296,7 @@ UniversalDiscoveryModule.propTypes = {
 UniversalDiscoveryModule.defaultProps = {
     title: 'Find content',
     multiple: true,
+    selectedItemsLimit: 0,
     activeTab: TAB_BROWSE,
     loadContentInfo,
     loadContentTypes,
@@ -313,7 +314,9 @@ UniversalDiscoveryModule.defaultProps = {
             search: 'Search'
         },
         selectedContent: {
-            confirmedItems: 'Confirmed items'
+            confirmedItems: 'Confirmed items',
+            limit: 'Limit {items} max',
+            noConfirmedContent: 'No comfirmed content yet'
         },
         selectedContentItem: {
             notAvailable: 'N/A'
