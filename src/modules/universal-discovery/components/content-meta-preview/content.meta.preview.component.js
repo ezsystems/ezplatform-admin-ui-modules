@@ -55,7 +55,7 @@ export default class ContentMetaPreviewComponent extends Component {
 
         const imageField = response.View.Result.searchHits.searchHit[0]
             .value.Content.CurrentVersion.Version
-            .Fields.field.find(field => field.fieldDefinitionIdentifier === 'image');
+            .Fields.field.find(field => field.fieldTypeIdentifier === 'ezimage');
 
         if (!imageField) {
             return;

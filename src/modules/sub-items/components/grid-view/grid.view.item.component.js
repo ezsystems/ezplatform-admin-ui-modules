@@ -8,7 +8,7 @@ import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
     const {content, contentTypesMap, labels, locationViewLink, location} = props;
-    const imageField = content.CurrentVersion.Version.Fields.field.find(item => item.fieldDefinitionIdentifier === 'image');
+    const imageField = content.CurrentVersion.Version.Fields.field.find(item => item.fieldTypeIdentifier === 'ezimage');
     const imageClassName = 'c-grid-view-item__image';
     let image = <div className={`${imageClassName} ${imageClassName}--none`}>{labels.noImage}</div>;
 
