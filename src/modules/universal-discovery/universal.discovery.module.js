@@ -79,7 +79,10 @@ export default class UniversalDiscoveryModule extends Component {
             return callback(false);
         }
 
-        return this.props.canSelectContent(data, callback);
+        return this.props.canSelectContent({
+            item: data,
+            itemsCount: selectedContent.length
+        }, callback);
     }
 
     togglePanel(activeTab) {
