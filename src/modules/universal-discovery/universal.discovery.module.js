@@ -64,9 +64,10 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     canSelectContent(data, callback) {
-        const isAlreadySelected = this.state.selectedContent.find(item => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
+        const {selectedContent} = this.state;
+        const isAlreadySelected = selectedContent.find(item => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
 
-        if (isAlreadySelected || this.state.selectedContent.length >= this.props.selectedItemsLimit) {
+        if (isAlreadySelected || (!!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit)) {
             return callback(false);
         }
 
