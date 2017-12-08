@@ -82,7 +82,7 @@ Optionally, Universal Discovery module can take a following list of props:
 
 **loadContentInfo** _{Function}_ - loads content info. It takes 3 params: `restInfo`, `contentId` and `callback`
 **loadContentTypes** _{Function}_ - loads content types data. It takes 2 params: `restInfo`, `callback`,
-**canSelectContent** _{Function}_ - checks whether a content item can be selected. It takes one param: `content` - the content struct,
+**canSelectContent** _{Function}_ - checks whether a content item can be selected. It takes one param: `data` object containing `item` property as the content struct and `itemsCount` as a number of selected items in UDW,
 **findContentBySearchQuery** _{Function}_ - finds a content using a search query. It takes 3 params: `restInfo`, `query` and `callback`,
 **findLocationsByParentLocationId** _{Function}_ - finds sub items of a given location. It takes 3 params: `restInfo`, `parentLocationId` and `callback`,
 **title** _{String}_ - the title of Universal Discovery popup. Default value: `Find content`,
