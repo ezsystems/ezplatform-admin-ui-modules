@@ -42,7 +42,15 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     handleConfirm() {
-        this.props.onConfirm(this.state.selectedContent);
+        this.props.onConfirm(this.addContentTypeInfo(this.state.selectedContent));
+    }
+
+    addContentTypeInfo(content) {
+        return content.map(item => {
+            item.ContentInfo.Content.ContentType = this.state.contentTypesMap[item.ContentInfo.Content.ContentType._href];
+
+            return item;
+        });
     }
 
     onItemRemove(id) {
