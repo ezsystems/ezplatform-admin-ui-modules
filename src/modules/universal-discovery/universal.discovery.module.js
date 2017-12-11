@@ -47,7 +47,7 @@ export default class UniversalDiscoveryModule extends Component {
 
     addContentTypeInfo(content) {
         return content.map(item => {
-            item.ContentInfo.Content.ContentType = this.state.contentTypesMap[item.ContentInfo.Content.ContentType._href];
+            item.ContentInfo.Content.ContentTypeInfo = this.state.contentTypesMap[item.ContentInfo.Content.ContentType._href];
 
             return item;
         });
@@ -78,6 +78,8 @@ export default class UniversalDiscoveryModule extends Component {
         if (isAlreadySelected || (!!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit)) {
             return callback(false);
         }
+
+        data.ContentInfo.Content.ContentTypeInfo = this.state.contentTypesMap[data.ContentInfo.Content.ContentType._href];
 
         return this.props.canSelectContent({
             item: data,
@@ -328,7 +330,7 @@ UniversalDiscoveryModule.defaultProps = {
         selectedContent: {
             confirmedItems: 'Confirmed items',
             limit: 'Limit {items} max',
-            noConfirmedContent: 'No comfirmed content yet'
+            noConfirmedContent: 'No confirmed content yet'
         },
         selectedContentItem: {
             notAvailable: 'N/A'
