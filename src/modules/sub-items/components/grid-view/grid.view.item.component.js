@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../../../common/icon/icon.component';
-import { CATEGORY } from '../../../common/icon/defs/category.json';
-
 import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
@@ -19,7 +16,9 @@ const GridViewItemComponent = (props) => {
     return (
         <a className="c-grid-view-item" href={locationViewLink.replace('{{locationId}}', location.id)}>
             <div className="c-grid-view-item__content-type">
-                <IconComponent icon={CATEGORY} />
+                <svg className="ez-icon">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#category"></use>
+                </svg>
                 {contentTypesMap[content.ContentType._href].identifier}
             </div>
             <div className="c-grid-view-item__image-wrapper">{image}</div>

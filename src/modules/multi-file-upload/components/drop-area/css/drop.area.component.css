@@ -37,10 +37,10 @@
     display: none;
 }
 
-.c-drop-area .c-icon {
+.c-drop-area .ez-icon {
     fill: #fff;
-    stroke: #fff;
-    stroke-width: 16px;
+    width: 20px;
+    height: 20px;
     margin-right: 8px;
 }
 

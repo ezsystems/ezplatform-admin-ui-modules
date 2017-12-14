@@ -107,11 +107,13 @@
     text-decoration: none;
 }
 
-.c-table-view-item__btn--edit .c-icon {
+.c-table-view-item__btn--edit .ez-icon {
     margin-right: 8px;
 }
 
-.c-table-view-item .c-icon {
+.c-table-view-item .ez-icon {
+    width: 16px;
+    height: 16px;
     fill: #fff;
 }
 

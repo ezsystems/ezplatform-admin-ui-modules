@@ -6,8 +6,9 @@
     height: 60px;
 }
 
-.c-upload-list-item .c-icon {
-    stroke-width: 16px;
+.c-upload-list-item .ez-icon {
+    width: 20px;
+    height: 20px;
 }
 
 .c-upload-list-item__icon {
@@ -53,16 +54,16 @@
     cursor: pointer;
 }
 
-[class*="c-upload-list-item__action--"] .c-icon {
+[class*="c-upload-list-item__action--"] .ez-icon {
     fill: #f15a10;
-    stroke: #f15a10;
     transition: all .3s ease-in-out;
+    width: 20px;
+    height: 20px;
 }
 
-[class*="c-upload-list-item__action--"] .c-icon:hover,
-[class*="c-upload-list-item__action--"] .c-icon:focus {
+[class*="c-upload-list-item__action--"] .ez-icon:hover,
+[class*="c-upload-list-item__action--"] .ez-icon:focus {
     fill: #c3480b;
-    stroke: #c3480b;
 }
 
 .c-upload-list-item .c-progress-bar {

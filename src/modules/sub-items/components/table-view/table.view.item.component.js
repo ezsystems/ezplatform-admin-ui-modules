@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../../../common/icon/icon.component';
-import { CHECKMARK } from '../../../common/icon/defs/checkmark.json';
-import { DISCARD } from '../../../common/icon/defs/discard.json';
-import { EDIT } from '../../../common/icon/defs/edit.json';
-
 import './css/table.view.item.component.css';
 
 export default class TableViewItemComponent extends Component {
@@ -130,10 +125,14 @@ export default class TableViewItemComponent extends Component {
                     </div>
                     <div className="c-table-view-item__priority-actions" {...innerWrapperAttrs}>
                         <button className="c-table-view-item__btn--submit" onClick={this.handleSubmit.bind(this)}>
-                            <IconComponent icon={CHECKMARK} color="#fff" />
+                            <svg className="ez-icon">
+                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#checkmark"></use>
+                            </svg>
                         </button>
                         <button className="c-table-view-item__btn--cancel" onClick={this.handleCancel.bind(this)}>
-                            <IconComponent icon={DISCARD} color="#fff" />
+                            <svg className="ez-icon">
+                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard"></use>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -160,7 +159,9 @@ export default class TableViewItemComponent extends Component {
                     <div>
                     <a href={this.createEditLink()} className="c-table-view-item__btn--edit">
                         <div className="c-table-view-item__btn-inner">
-                            <IconComponent icon={EDIT} height={20} color="#fff" />
+                            <svg className="ez-icon">
+                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
+                            </svg>
                             {labels.edit}
                         </div>
                     </a>

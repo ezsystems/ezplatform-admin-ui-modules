@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 
 import ProgressBarComponent from '../progress-bar/progress.bar.component';
 import { fileSizeToString } from '../../helpers/text.helper';
-import IconComponent from '../../../common/icon/icon.component';
-import { FILE } from '../../../common/icon/defs/file.json';
-import { FILE_PDF } from '../../../common/icon/defs/file-pdf.json';
-import { FILE_VIDEO } from '../../../common/icon/defs/file-video.json';
-import { FILE_IMAGE } from '../../../common/icon/defs/file-image.json';
-import { CIRCLE_CLOSE } from '../../../common/icon/defs/circle-close.json';
-import { EDIT } from '../../../common/icon/defs/edit.json';
-import { TRASH } from '../../../common/icon/defs/trash.json';
 
 import './css/upload.item.component.css';
 
@@ -299,14 +291,14 @@ export default class UploadItemComponent extends Component {
         const filetype = this.props.data.file.type;
 
         if (filetype.includes('/pdf')) {
-            return FILE_PDF;
+            return 'pdf-file';
         } else if (filetype.includes('video/')) {
-            return FILE_VIDEO;
+            return 'file-video';
         } else if (filetype.includes('image/')) {
-            return FILE_IMAGE;
+            return 'image';
         }
 
-        return FILE;
+        return 'file';
     }
 
     /**
@@ -400,7 +392,9 @@ export default class UploadItemComponent extends Component {
 
         return (
             <div className="c-upload-list-item__action--abort" onClick={this.abortUploading.bind(this)} title="Abort">
-                <IconComponent icon={CIRCLE_CLOSE} height={20} />
+                <svg className="ez-icon">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#circle-close"></use>
+                </svg>
             </div>
         );
     }
@@ -422,7 +416,9 @@ export default class UploadItemComponent extends Component {
 
         return (
             <a href={this.createEditLink()} className="c-upload-list-item__action--edit" title="Edit">
-                <IconComponent icon={EDIT} height={20} />
+                <svg className="ez-icon">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
+                </svg>
             </a>
         );
     }
@@ -444,7 +440,9 @@ export default class UploadItemComponent extends Component {
 
         return (
             <div className="c-upload-list-item__action--delete" onClick={this.deleteFile.bind(this)} title="Delete">
-                <IconComponent icon={TRASH} height={20} />
+                <svg className="ez-icon">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#trash"></use>
+                </svg>
             </div>
         );
     }
@@ -457,7 +455,9 @@ export default class UploadItemComponent extends Component {
         return (
             <div className="c-upload-list-item">
                 <div className="c-upload-list-item__icon">
-                    <IconComponent icon={this.detectFileType()} height={30} width={20} />
+                    <svg className="ez-icon">
+                        <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${this.detectFileType()}`}></use>
+                    </svg>
                 </div>
                 <div className="c-upload-list-item__meta">
                     <div className="c-upload-list-item__name">{this.props.data.file.name}</div>
