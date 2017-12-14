@@ -21,8 +21,8 @@ export default class SubItemsModule extends Component {
         this.state = {
             activeView: props.activeView,
             items: props.items,
-            contentTypesMap: {},
-            total: 0,
+            contentTypesMap: props.contentTypesMap,
+            totalCount: 0,
             limit: props.limit,
             offset: props.offset,
             isLoading: !props.items.length
@@ -152,6 +152,8 @@ export default class SubItemsModule extends Component {
                 content: content.find(item => item.value.Content._id === itemLocation.ContentInfo.Content._id).value.Content
             }];
         }, []);
+
+        console.log(this.buildContentTypesMap(data[1].ContentTypeInfoList.ContentType));
 
         this.setState(state => Object.assign({}, state, {
             items: [...state.items, ...items],
@@ -315,7 +317,8 @@ SubItemsModule.propTypes = {
         loadMore: PropTypes.object.isRequired,
         gridViewItem: PropTypes.object.isRequired
     }),
-    handleEditItem: PropTypes.func.isRequired
+    handleEditItem: PropTypes.func.isRequired,
+    contentTypesMap: PropTypes.object
 };
 
 SubItemsModule.defaultProps = {
@@ -352,5 +355,6 @@ SubItemsModule.defaultProps = {
         }
     },
     limit: 10,
-    offset: 0
+    offset: 0,
+    contentTypesMap: {}
 };
