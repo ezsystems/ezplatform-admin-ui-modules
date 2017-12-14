@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import UploadPopupComponent from './components/upload-popup/upload.popup.component';
-import IconComponent from '../common/icon/icon.component';
-import { UPLOAD } from '../common/icon/defs/upload.json';
 import { createFileStruct, publishFile, deleteFile, checkCanUpload } from './services/multi.file.upload.service';
 
 import './css/multi.file.upload.module.css';
@@ -181,8 +179,9 @@ export default class MultiFileUploadModule extends Component {
 
         return (
             <div className="m-mfu__btn--upload" onClick={this.showUploadPopup.bind(this, [])}>
-                <IconComponent icon={UPLOAD} height={20} />
-                {this.props.uploadBtnLabel}
+                <svg className="ez-icon">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload"></use>
+                </svg>
             </div>
         );
     }

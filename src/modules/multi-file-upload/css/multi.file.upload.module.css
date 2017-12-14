@@ -9,7 +9,7 @@
 
 .m-mfu__btn--upload {
     display: inline-flex;
-    padding: 0 20px;
+    padding: 0 16px;
     border-radius: 4px;
     text-align: center;
     cursor: pointer;
@@ -29,9 +29,8 @@
     background: #c3480b;
 }
 
-.m-mfu__btn--upload .c-icon {
+.m-mfu__btn--upload .ez-icon {
+    width: 20px;
+    height: 20px;
     fill: #fff;
-    stroke: #fff;
-    stroke-width: 16px;
-    margin-right: 8px;
 }

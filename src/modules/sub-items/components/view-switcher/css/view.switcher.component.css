@@ -39,11 +39,13 @@
     background: #0e77a3;
 }
 
-.c-grid-switcher__option .c-icon {
+.c-grid-switcher__option .ez-icon {
     fill: #0e77a3;
     margin: auto;
+    width: 24px;
+    height: 24px;
 }
 
-.c-grid-switcher__option--active .c-icon {
+.c-grid-switcher__option--active .ez-icon {
     fill: #fff;
 }

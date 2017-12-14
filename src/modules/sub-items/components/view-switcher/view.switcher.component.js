@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import IconComponent from '../../../common/icon/icon.component';
-import { VIEW_LIST } from '../../../common/icon/defs/view-list.json';
-import { VIEW_GRID } from '../../../common/icon/defs/view-grid.json';
-
 import './css/view.switcher.component.css';
 
 export default class ViewSwitcherComponent extends Component {
@@ -52,7 +48,9 @@ export default class ViewSwitcherComponent extends Component {
 
         return (
             <div {...attrs}>
-                <IconComponent icon={icon} height={32} />
+                <svg className="ez-icon">
+                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${icon}`}></use>
+                </svg>
             </div>
         );
     }
@@ -60,8 +58,8 @@ export default class ViewSwitcherComponent extends Component {
     render() {
         return (
             <div className="c-grid-switcher">
-                {this.renderButton('table', VIEW_LIST)}
-                {this.renderButton('grid', VIEW_GRID)}
+                {this.renderButton('table', 'view-list')}
+                {this.renderButton('grid', 'view-grid')}
             </div>
         );
     }
