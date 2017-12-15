@@ -23,7 +23,7 @@ export default class SubItemsModule extends Component {
             activeView: props.activeView,
             items: props.items,
             contentTypesMap: props.contentTypesMap,
-            totalCount: 0,
+            totalCount: props.totalCount,
             limit: props.limit,
             offset: props.offset,
             isLoading: !props.items.length
@@ -337,7 +337,8 @@ SubItemsModule.propTypes = {
         gridViewItem: PropTypes.object.isRequired
     }),
     handleEditItem: PropTypes.func.isRequired,
-    contentTypesMap: PropTypes.object
+    contentTypesMap: PropTypes.object,
+    totalCount: PropTypes.number
 };
 
 SubItemsModule.defaultProps = {
@@ -376,5 +377,6 @@ SubItemsModule.defaultProps = {
     },
     limit: 10,
     offset: 0,
-    contentTypesMap: {}
+    contentTypesMap: {},
+    totalCount: 0
 };

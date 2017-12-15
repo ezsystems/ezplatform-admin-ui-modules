@@ -38,15 +38,18 @@ export default class LoadMoreComponent extends Component {
             className: 'c-load-more__btn--load',
             onClick: this.loadMore.bind(this)
         };
+        const {totalCount, loadedCount, limit} = this.state;
 
-        if (!this.state.totalCount || this.state.loadedCount >= this.state.totalCount) {
+        if (!totalCount || loadedCount >= totalCount) {
             btnAttrs.disabled = true;
         }
 
         const loadMoreText = this.props.labels.info
-            .replace('{{loaded}}', this.state.loadedCount)
-            .replace('{{total}}', this.state.totalCount);
-        const actionText = this.props.labels.action.replace('{{limit}}', this.state.limit);
+            .replace('{{loaded}}', loadedCount)
+            .replace('{{total}}', totalCount);
+        const delta = totalCount - loadedCount;
+        const loadMoreLimit = delta > limit ? limit : delta;
+        const actionText = this.props.labels.action.replace('{{limit}}', loadMoreLimit);
 
         return (
             <div className="c-load-more">
