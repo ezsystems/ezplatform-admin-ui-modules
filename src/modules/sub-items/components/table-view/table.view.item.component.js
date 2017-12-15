@@ -146,10 +146,14 @@ export default class TableViewItemComponent extends Component {
         return (
             <tr className="c-table-view-item">
                 <td className="c-table-view-item__cell--name">
-                    <a className="c-table-view-item__link" href={locationViewLink.replace('{{locationId}}', location.id)}>{content.Name}</a>
+                    <a className="c-table-view-item__link c-table-view-item__text-wrapper" title={content.Name} href={locationViewLink.replace('{{locationId}}', location.id)}>{content.Name}</a>
                 </td>
-                <td className="c-table-view-item__cell--modified">{date.toLocaleDateString()}<br/>{date.toLocaleTimeString()}</td>
-                <td className="c-table-view-item__cell--content-type">{contentTypeName}</td>
+                <td className="c-table-view-item__cell--modified">
+                    <div className="c-table-view-item__text-wrapper">{date.toLocaleDateString()}<br/>{date.toLocaleTimeString()}</div>
+                </td>
+                <td className="c-table-view-item__cell--content-type">
+                    <div className="c-table-view-item__text-wrapper">{contentTypeName}</div>
+                </td>
                 {this.renderPriorityCell()}
                 <td className="c-table-view-item__cell--translations">{content.mainLanguageCode}</td>
                 <td className="c-table-view-item__cell--actions">
@@ -159,7 +163,6 @@ export default class TableViewItemComponent extends Component {
                             <svg className="ez-icon">
                                 <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
                             </svg>
-                            {labels.edit}
                         </div>
                     </span>
                     </div>
