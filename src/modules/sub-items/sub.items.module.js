@@ -271,7 +271,8 @@ export default class SubItemsModule extends Component {
                         handleItemPriorityUpdate={this.handleItemPriorityUpdate.bind(this)}
                         locationViewLink={this.props.locationViewLink}
                         items={this.state.items}
-                        labels={this.props.labels} />
+                        labels={this.props.labels}
+                        handleEditItem={this.props.handleEditItem} />
                 </div>
                 <LoadMoreComponent
                     totalCount={this.state.totalCount}
@@ -313,7 +314,8 @@ SubItemsModule.propTypes = {
         tableViewItem: PropTypes.object.isRequired,
         loadMore: PropTypes.object.isRequired,
         gridViewItem: PropTypes.object.isRequired
-    })
+    }),
+    handleEditItem: PropTypes.func.isRequired
 };
 
 SubItemsModule.defaultProps = {

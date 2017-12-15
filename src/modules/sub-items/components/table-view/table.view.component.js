@@ -148,7 +148,7 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     renderItem(data) {
-        const {contentTypesMap, handleItemPriorityUpdate, labels, locationViewLink} = this.props;
+        const {contentTypesMap, handleItemPriorityUpdate, labels, locationViewLink, handleEditItem} = this.props;
 
         return <TableViewItemComponent
             key={data.location.id}
@@ -156,7 +156,8 @@ export default class TableViewComponent extends Component {
             contentTypesMap={contentTypesMap}
             onItemPriorityUpdate={handleItemPriorityUpdate}
             labels={labels.tableViewItem}
-            locationViewLink={locationViewLink} />;
+            locationViewLink={locationViewLink}
+            handleEditItem={handleEditItem} />;
     }
 
     render() {

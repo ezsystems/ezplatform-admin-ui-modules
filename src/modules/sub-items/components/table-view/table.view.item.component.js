@@ -82,16 +82,13 @@ export default class TableViewItemComponent extends Component {
     }
 
     /**
-     * Creates edit link
+     * Handles edit action.
      *
-     * @method createEditLink
-     * @return {String}
+     * @method handleEdit
      * @memberof TableViewItemComponent
      */
-    createEditLink() {
-        return Routing.generate('ez_content_draft_create', {
-            contentId: this.props.content._id,
-        });
+    handleEdit() {
+        this.props.handleEditItem(this.props.content);
     }
 
     /**
@@ -157,14 +154,14 @@ export default class TableViewItemComponent extends Component {
                 <td className="c-table-view-item__cell--translations">{content.mainLanguageCode}</td>
                 <td className="c-table-view-item__cell--actions">
                     <div>
-                    <a href={this.createEditLink()} className="c-table-view-item__btn--edit">
+                    <span onClick={this.handleEdit.bind(this)} className="c-table-view-item__btn--edit">
                         <div className="c-table-view-item__btn-inner">
                             <svg className="ez-icon">
                                 <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
                             </svg>
                             {labels.edit}
                         </div>
-                    </a>
+                    </span>
                     </div>
                 </td>
             </tr>
