@@ -10,8 +10,8 @@
 
 .c-table-view-item__text-wrapper {
     text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .c-table-view-item__cell--name .c-table-view-item__text-wrapper {
