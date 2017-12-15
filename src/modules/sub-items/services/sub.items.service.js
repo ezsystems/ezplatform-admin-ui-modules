@@ -129,6 +129,30 @@ export const loadContentTypes = ({token, siteaccess}, callback) => {
 };
 
 /**
+ * Loads content types
+ *
+ * @function loadContentType
+ * @param {Function} callback
+ */
+export const loadContentType = (id, { token, siteaccess }, callback) => {
+    const request = new Request(id, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/vnd.ez.api.ContentType+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token
+        },
+        mode: 'cors',
+        credentials: 'same-origin'
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
+        .catch(error => console.log('error:load:content:info', error));
+};
+
+/**
  * Updates location priority
  *
  * @function updateLocationPriority

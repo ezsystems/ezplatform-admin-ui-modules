@@ -9,6 +9,7 @@ import {
     updateLocationPriority,
     loadLocation,
     loadContentInfo,
+    loadContentType,
     loadContentTypes
 } from './services/sub.items.service';
 
@@ -132,7 +133,27 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadContentTypes(responses) {
-        return new Promise(resolve => this.props.loadContentTypes(this.props.restInfo, response => resolve([...responses, response])));
+        const promises = responses[0].content.reduce((total, item) => {
+            return [...total, new Promise(resolve => {
+                const contentTypeId = item.value.Content.ContentType._href;
+
+                if (!this.state.contentTypesMap[contentTypeId]) {
+                    this.props.loadContentType(
+                        contentTypeId,
+                        this.props.restInfo,
+                        response => resolve(response)
+                    );
+                } else {
+                    resolve(this.state.contentTypesMap[contentTypeId])
+                }
+            })];
+        }, []);
+
+        return Promise.all(promises).then(contentTypes => {
+            responses[0].contentTypes = contentTypes;
+
+            return responses[0];
+        });
     }
 
     /**
@@ -142,8 +163,7 @@ export default class SubItemsModule extends Component {
      * @param {Array} responses
      * @memberof SubItemsModule
      */
-    updateItemsState(data) {
-        const {locations, content, totalCount} = data[0];
+    updateItemsState({locations, content, totalCount, contentTypes}) {
         const items = locations.reduce((total, location) => {
             const itemLocation = location.value.Location;
 
@@ -153,13 +173,11 @@ export default class SubItemsModule extends Component {
             }];
         }, []);
 
-        console.log(this.buildContentTypesMap(data[1].ContentTypeInfoList.ContentType));
-
         this.setState(state => Object.assign({}, state, {
             items: [...state.items, ...items],
             isLoading: false,
             totalCount,
-            contentTypesMap: this.buildContentTypesMap(data[1].ContentTypeInfoList.ContentType)
+            contentTypesMap: this.buildContentTypesMap(contentTypes)
         }));
     }
 
@@ -177,7 +195,7 @@ export default class SubItemsModule extends Component {
         }
 
         return contentTypes.reduce((total, item) => {
-            total[item._href] = item;
+            total[item.ContentType._href] = item.ContentType;
 
             return total;
         }, {});
@@ -295,6 +313,7 @@ SubItemsModule.propTypes = {
         siteaccess: PropTypes.string.isRequired
     }).isRequired,
     loadContentInfo: PropTypes.func,
+    loadContentType: PropTypes.func,
     loadContentTypes: PropTypes.func,
     loadLocation: PropTypes.func,
     sortClauses: PropTypes.object,
@@ -323,6 +342,7 @@ SubItemsModule.propTypes = {
 
 SubItemsModule.defaultProps = {
     loadContentInfo,
+    loadContentType,
     loadContentTypes,
     loadLocation,
     sortClauses: {},
