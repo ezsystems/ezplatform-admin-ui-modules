@@ -144,7 +144,7 @@ export default class SubItemsModule extends Component {
                         response => resolve(response)
                     );
                 } else {
-                    resolve(this.state.contentTypesMap[contentTypeId])
+                    resolve({ContentType: this.state.contentTypesMap[contentTypeId]})
                 }
             })];
         }, []);
