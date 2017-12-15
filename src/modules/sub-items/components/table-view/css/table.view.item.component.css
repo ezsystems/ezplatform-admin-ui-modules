@@ -8,6 +8,20 @@
     line-height: 20px;
 }
 
+.c-table-view-item__text-wrapper {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.c-table-view-item__cell--name .c-table-view-item__text-wrapper {
+    max-width: 260px;
+}
+
+.c-table-view-item__cell--modified .c-table-view-item__text-wrapper {
+    max-width: 190px;
+}
+
 .c-table-view-item__priority-wrapper {
     position: relative;
 }
@@ -89,32 +103,16 @@
 }
 
 .c-table-view-item__btn--edit {
-    background: #0f6d95;
-    font-size: 14px;
-    border-radius: 4px;
     text-align: center;
     cursor: pointer;
-    letter-spacing: .5px;
-    border: 1px solid #0f6d95;
     color: #fff;
     display: inline-block;
 }
 
-.c-table-view-item__btn--edit:hover,
-.c-table-view-item__btn--edit:focus {
-    background: #0a4b67;
-    color: #fff;
-    text-decoration: none;
-}
-
-.c-table-view-item__btn--edit .ez-icon {
-    margin-right: 8px;
-}
-
 .c-table-view-item .ez-icon {
-    width: 16px;
-    height: 16px;
-    fill: #fff;
+    width: 24px;
+    height: 24px;
+    fill: #f15a10;
 }
 
 .c-table-view-item__link {

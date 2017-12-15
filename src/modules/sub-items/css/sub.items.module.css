@@ -17,7 +17,8 @@
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    padding: 0 0 0 16px;
+    padding: 0 16px;
+    align-items: center;
 }
 
 .m-sub-items__title {
@@ -27,8 +28,8 @@
 }
 
 .m-sub-items__actions .m-mfu {
-    height: 46px;
-    margin: 2px;
+    height: 40px;
+    margin-right: 16px;
 }
 
 .m-sub-items__list {
