@@ -112,6 +112,10 @@
 .c-table-view-item .ez-icon {
     width: 24px;
     height: 24px;
+    fill: #f15a10;
+}
+
+.c-table-view-item__priority-actions .ez-icon {
     fill: #fff;
 }
 
