@@ -61,8 +61,10 @@
     word-break: break-all;
     line-height: 20px;
     padding: 10px 0;
+    font-size: 14px;
+    padding: 4px 8px;
+    color: #333;
     font-weight: 700;
-    padding: 0 8px;
 }
 
 .c-grid-view-item__image--none .ez-icon {
