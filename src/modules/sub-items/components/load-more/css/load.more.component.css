@@ -13,9 +13,9 @@
     text-align: center;
     cursor: pointer;
     letter-spacing: .5px;
-    border: 1px solid #757575;
-    background-color: #757575;
-    color: #fff;
+    border: 1px solid #0f6d95;
+    background-color: transparent;
+    color: #0f6d95;
     font-size: 16px;
     display: inline-block;
     transition: background .3s ease-in-out;
@@ -23,13 +23,13 @@
 
 .c-load-more__btn--load:hover,
 .c-load-more__btn--load:focus {
-    background: #5c5c5c;
+    background: #0f6d95;
+    color: #fff;
 }
 
 .c-load-more__btn--load[disabled],
 .c-load-more__btn--load[disabled]:hover,
 .c-load-more__btn--load[disabled]:focus {
     cursor: not-allowed;
-    color: #333;
-    background: #e6e6e6;
+    opacity: .3
 }
