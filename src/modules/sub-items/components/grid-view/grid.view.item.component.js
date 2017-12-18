@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
-    const {content, location} = props;
+    const {content, location, handleViewItem} = props;
     const imageField = content.CurrentVersion.Version.Fields.field.find(item => item.fieldTypeIdentifier === 'ezimage');
     const imageClassName = 'c-grid-view-item__image';
     const hasImage = imageField && imageField.fieldValue && imageField.fieldValue.uri && imageField.fieldValue.path;
@@ -29,7 +29,7 @@ const GridViewItemComponent = (props) => {
     }
 
     return (
-        <div className="c-grid-view-item" onClick={this.props.handleViewItem.bind(null, location.id)}>
+        <div className="c-grid-view-item" onClick={handleViewItem.bind(null, location.id)}>
             {contentTypeIcon}
             <div className="c-grid-view-item__image-wrapper">{image}</div>
             <div className="c-grid-view-item__title">{content.Name}</div>
