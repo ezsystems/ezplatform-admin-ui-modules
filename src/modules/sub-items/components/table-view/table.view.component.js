@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
+import NoItemsComponent from '../no-items/no.items.component';
 
 import './css/table.view.component.css';
 
@@ -160,12 +161,34 @@ export default class TableViewComponent extends Component {
             handleEditItem={handleEditItem} />;
     }
 
-    render() {
+    /**
+     * Renders no items message
+     *
+     * @method renderNoItems
+     * @returns {Element}
+     * @memberof TableViewComponent
+     */
+    renderNoItems() {
+        return (<tr><td><NoItemsComponent labels={this.props.labels} /></td></tr>);
+    }
+
+    /**
+     * Renders table's head
+     *
+     * @method renderHead
+     * @returns {Element}
+     * @memberof GridViewComponent
+     */
+    renderHead() {
         const cellClass = 'c-table-view__cell';
         const cellHeadClass = `${cellClass}--head`;
         const cellSortClass = `${cellClass}--sortable`;
-        const {labels, items} = this.props;
+        const { labels, items } = this.props;
         let headClass = 'c-table-view__head';
+
+        if (!items.length) {
+            return;
+        }
 
         if (this.state.sortKey) {
             const headSortClass = this.state.isAscSort ? `${headClass}--sort-asc` : `${headClass}--sort-desc`;
@@ -175,27 +198,38 @@ export default class TableViewComponent extends Component {
         }
 
         return (
+            <thead className={headClass}>
+                <tr className="c-table-view__row">
+                    <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName.bind(this)}>
+                        <span className="c-table-view__label">{labels.tableView.headerName}</span>
+                    </td>
+                    <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate.bind(this)}>
+                        <span className="c-table-view__label">{labels.tableView.headerModified}</span>
+                    </td>
+                    <td className={cellHeadClass}>
+                        <span className="c-table-view__label">{labels.tableView.headerContentType}</span>
+                    </td>
+                    <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority.bind(this)}>
+                        <span className="c-table-view__label">{labels.tableView.headerPriority}</span>
+                    </td>
+                    <td className={cellHeadClass} colSpan="2">
+                        <span className="c-table-view__label">{labels.tableView.headerTranslations}</span>
+                    </td>
+                </tr>
+            </thead>
+        );
+    }
+
+    render() {
+        const {items} = this.props;
+        const content = items.length ? items.map(this.renderItem.bind(this)) : this.renderNoItems();
+
+        return (
             <table className="c-table-view">
-                <thead className={headClass}>
-                    <tr className="c-table-view__row">
-                        <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName.bind(this)}>
-                            <span className="c-table-view__label">{labels.tableView.headerName}</span>
-                        </td>
-                        <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate.bind(this)}>
-                            <span className="c-table-view__label">{labels.tableView.headerModified}</span>
-                        </td>
-                        <td className={cellHeadClass}>
-                            <span className="c-table-view__label">{labels.tableView.headerContentType}</span>
-                        </td>
-                        <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority.bind(this)}>
-                            <span className="c-table-view__label">{labels.tableView.headerPriority}</span>
-                        </td>
-                        <td className={cellHeadClass} colSpan="2">
-                            <span className="c-table-view__label">{labels.tableView.headerTranslations}</span>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody className="c-table-view__body">{items.map(this.renderItem.bind(this))}</tbody>
+                {this.renderHead()}
+                <tbody className="c-table-view__body">
+                    {content}
+                </tbody>
             </table>
         );
     }
@@ -213,7 +247,8 @@ TableViewComponent.propTypes = {
             headerPriority: PropTypes.string.isRequired,
             headerTranslations: PropTypes.string.isRequired
         }),
-        tableViewItem: PropTypes.object.isRequired
+        tableViewItem: PropTypes.object.isRequired,
+        noItems: PropTypes.object.isRequired
     }).isRequired,
     locationViewLink: PropTypes.string.isRequired
 };

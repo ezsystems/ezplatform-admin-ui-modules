@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import GridViewItemComponent from './grid.view.item.component';
+import NoItemsComponent from '../no-items/no.items.component';
 
 import './css/grid.view.component.css';
 
@@ -35,10 +36,23 @@ export default class GridViewComponent extends Component {
             locationViewLink={this.props.locationViewLink} />
     }
 
+    /**
+     * Renders no items message
+     *
+     * @method renderNoItems
+     * @returns {Element}
+     * @memberof GridViewComponent
+     */
+    renderNoItems() {
+        return <NoItemsComponent labels={this.props.labels} />
+    }
+
     render() {
+        const content = this.state.items.length ? this.state.items.map(this.renderItem.bind(this)) : this.renderNoItems();
+
         return (
             <div className="c-grid-view">
-                {this.state.items.map(this.renderItem.bind(this))}
+                {content}
             </div>
         );
     }
@@ -48,7 +62,8 @@ GridViewComponent.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object),
     contentTypesMap: PropTypes.object,
     labels: PropTypes.shape({
-        gridViewItem: PropTypes.object.isRequired
+        gridViewItem: PropTypes.object.isRequired,
+        noItems: PropTypes.object.isRequired
     }),
     locationViewLink: PropTypes.string.isRequired
 };

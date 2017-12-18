@@ -268,6 +268,26 @@ export default class SubItemsModule extends Component {
         return <Action className="m-sub-items__action" {...action.attrs} />;
     }
 
+    /**
+     * Renders load more button
+     *
+     * @method renderLoadMore
+     * @returns {Element}
+     * @memberof SubItemsModule
+     */
+    renderLoadMore() {
+        if (!this.state.totalCount) {
+            return;
+        }
+
+        return <LoadMoreComponent
+            totalCount={this.state.totalCount}
+            loadedCount={this.state.items.length}
+            limit={this.state.limit}
+            labels={this.props.labels.loadMore}
+            onLoadMore={this.handleLoadMore.bind(this)} />;
+    }
+
     render() {
         let listClassName = 'm-sub-items__list';
 
@@ -294,12 +314,7 @@ export default class SubItemsModule extends Component {
                         labels={this.props.labels}
                         handleEditItem={this.props.handleEditItem} />
                 </div>
-                <LoadMoreComponent
-                    totalCount={this.state.totalCount}
-                    loadedCount={this.state.items.length}
-                    limit={this.state.limit}
-                    labels={this.props.labels.loadMore}
-                    onLoadMore={this.handleLoadMore.bind(this)} />
+                {this.renderLoadMore()}
             </div>
         );
     }
@@ -334,7 +349,8 @@ SubItemsModule.propTypes = {
         tableView: PropTypes.object.isRequired,
         tableViewItem: PropTypes.object.isRequired,
         loadMore: PropTypes.object.isRequired,
-        gridViewItem: PropTypes.object.isRequired
+        gridViewItem: PropTypes.object.isRequired,
+        noItems: PropTypes.object.isRequired
     }),
     handleEditItem: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object,
@@ -373,6 +389,9 @@ SubItemsModule.defaultProps = {
         },
         gridViewItem: {
             noImage: 'No image'
+        },
+        noItems: {
+            message: 'This location has no sub-items'
         }
     },
     limit: 10,
