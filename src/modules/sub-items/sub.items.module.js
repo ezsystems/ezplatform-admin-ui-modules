@@ -302,7 +302,8 @@ export default class SubItemsModule extends Component {
                     <div className="m-sub-items__actions">{this.props.extraActions.map(this.renderExtraActions)}</div>
                     <ViewSwitcherComponent
                         onViewChange={this.switchView.bind(this)}
-                        activeView={this.state.activeView} />
+                        activeView={this.state.activeView}
+                        isDisabled={!this.state.items.length} />
                 </div>
                 <div className={listClassName}>
                     <SubItemsListComponent
