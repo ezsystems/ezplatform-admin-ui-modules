@@ -36,14 +36,19 @@ export default class ViewSwitcherComponent extends Component {
      * @memberof ViewSwitcherComponent
      */
     renderButton(id, icon) {
+        const baseClassName = 'c-grid-switcher__option';
         const attrs = {
             id,
             onClick: this.toggleListView.bind(this, id),
-            className: 'c-grid-switcher__option'
+            className: baseClassName
         };
 
         if (this.state.activeView === id) {
-            attrs.className = `${attrs.className} ${attrs.className}--active`;
+            attrs.className = `${baseClassName} ${baseClassName}--active`;
+        }
+
+        if (this.props.isDisabled) {
+            attrs.className = `${attrs.className} ${baseClassName}--disabled`
         }
 
         return (
@@ -56,8 +61,14 @@ export default class ViewSwitcherComponent extends Component {
     }
 
     render() {
+        let componentClassName = 'c-grid-switcher';
+
+        if (this.props.isDisabled) {
+            componentClassName = `${componentClassName} ${componentClassName}--disabled`
+        }
+
         return (
-            <div className="c-grid-switcher">
+            <div className={componentClassName}>
                 {this.renderButton('table', 'view-list')}
                 {this.renderButton('grid', 'view-grid')}
             </div>
@@ -67,5 +78,6 @@ export default class ViewSwitcherComponent extends Component {
 
 ViewSwitcherComponent.propTypes = {
     onViewChange: PropTypes.func.isRequired,
-    activeView: PropTypes.string.isRequired
+    activeView: PropTypes.string.isRequired,
+    isDisabled: PropTypes.bool.isRequired
 };

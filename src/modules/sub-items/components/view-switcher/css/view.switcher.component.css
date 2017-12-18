@@ -52,3 +52,12 @@
 .c-grid-switcher__option--active .ez-icon {
     fill: #fff;
 }
+
+.c-grid-switcher__option--disabled {
+    pointer-events: none;
+    opacity: .5;
+}
+
+.c-grid-switcher--disabled {
+    cursor: not-allowed;
+}
