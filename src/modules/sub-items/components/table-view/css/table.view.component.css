@@ -58,3 +58,8 @@
 	border-right: 3px solid transparent;
     border-bottom: 5px solid #333;
 }
+
+.c-table-view__body .c-no-items {
+    padding-top: 7px;
+    padding-left: 39px;
+}
