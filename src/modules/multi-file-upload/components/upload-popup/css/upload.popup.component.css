@@ -33,6 +33,6 @@
 
 .c-upload-popup .c-upload-list {
     padding: 16px;
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 30vw;
 }
