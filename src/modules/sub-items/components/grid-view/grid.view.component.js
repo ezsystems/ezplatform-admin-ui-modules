@@ -33,7 +33,7 @@ export default class GridViewComponent extends Component {
             {...data}
             contentTypesMap={this.props.contentTypesMap}
             labels={this.props.labels.gridViewItem}
-            locationViewLink={this.props.locationViewLink} />
+            handleViewItem={this.props.handleViewItem} />
     }
 
     /**
@@ -65,5 +65,5 @@ GridViewComponent.propTypes = {
         gridViewItem: PropTypes.object.isRequired,
         noItems: PropTypes.object.isRequired
     }),
-    locationViewLink: PropTypes.string.isRequired
+    handleViewItem: PropTypes.func.isRequired
 };

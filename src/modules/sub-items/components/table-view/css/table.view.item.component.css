@@ -121,4 +121,14 @@
 
 .c-table-view-item__link {
     display: block;
+    color: #0645ad;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color .3s cubic-bezier(.25, .8, .25, 1);
+}
+
+.c-table-view-item__link:hover,
+.c-table-view-item__link:focus {
+    color: #032863;
+    text-decoration: underline;
 }

@@ -310,10 +310,10 @@ export default class SubItemsModule extends Component {
                         activeView={this.state.activeView}
                         contentTypesMap={this.state.contentTypesMap}
                         handleItemPriorityUpdate={this.handleItemPriorityUpdate.bind(this)}
-                        locationViewLink={this.props.locationViewLink}
                         items={this.state.items}
                         labels={this.props.labels}
-                        handleEditItem={this.props.handleEditItem} />
+                        handleEditItem={this.props.handleEditItem}
+                        handleViewItem={this.props.handleViewItem} />
                 </div>
                 {this.renderLoadMore()}
             </div>
@@ -322,7 +322,6 @@ export default class SubItemsModule extends Component {
 }
 
 SubItemsModule.propTypes = {
-    locationViewLink: PropTypes.string.isRequired,
     parentLocationId: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
@@ -354,6 +353,7 @@ SubItemsModule.propTypes = {
         noItems: PropTypes.object.isRequired
     }),
     handleEditItem: PropTypes.func.isRequired,
+    handleViewItem: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object,
     totalCount: PropTypes.number
 };

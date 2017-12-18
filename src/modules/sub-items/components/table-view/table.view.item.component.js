@@ -138,7 +138,7 @@ export default class TableViewItemComponent extends Component {
     }
 
     render() {
-        const {content, location, contentTypesMap, labels, locationViewLink} = this.props;
+        const {content, location, contentTypesMap, labels} = this.props;
         const date = new Date(content.lastModificationDate);
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.notAvailable;
@@ -146,7 +146,12 @@ export default class TableViewItemComponent extends Component {
         return (
             <tr className="c-table-view-item">
                 <td className="c-table-view-item__cell--name">
-                    <a className="c-table-view-item__link c-table-view-item__text-wrapper" title={content.Name} href={locationViewLink.replace('{{locationId}}', location.id)}>{content.Name}</a>
+                    <div
+                        className="c-table-view-item__link c-table-view-item__text-wrapper"
+                        title={content.Name}
+                        onClick={this.props.handleViewItem.bind(null, location.id)}>
+                        {content.Name}
+                    </div>
                 </td>
                 <td className="c-table-view-item__cell--modified">
                     <div className="c-table-view-item__text-wrapper">{date.toLocaleDateString()}<br/>{date.toLocaleTimeString()}</div>
@@ -181,5 +186,6 @@ TableViewItemComponent.propTypes = {
         edit: PropTypes.string.isRequired,
         notAvailable: PropTypes.string.isRequired
     }).isRequired,
-    locationViewLink: PropTypes.string.isRequired
+    handleEditItem: PropTypes.func.isRequired,
+    handleViewItem: PropTypes.func.isRequired
 };
