@@ -3,6 +3,8 @@
     height: 100%;
     max-width: 24ch;
     flex: 0 0 24ch;
+    border-radius: 4px;
+    overflow: auto;
 }
 
 .c-finder-tree-branch__list-wrapper {

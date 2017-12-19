@@ -1,17 +1,21 @@
 .c-finder-tree-leaf {
-    padding: 8px 16px;
+    padding: 0 16px;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: background .3s var(--transition-function);
+    transition: background .2s cubic-bezier(.25, .8, .25, 1);
     position: relative;
     background: #fff;
+    line-height: 25px;
+    font-size: 14px;
+    color: #515151;
 }
 
 .c-finder-tree-leaf:hover,
 .c-finder-tree-leaf:focus {
-    background: #ddd;
+    background: #e1f5ff;
+    color: #515151;
 }
 
 .c-finder-tree-leaf--has-children:after {
@@ -19,7 +23,7 @@
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-left: 8px solid #b30;
+    border-left: 8px solid #646464;
     border-bottom: 5px solid transparent;
     position: absolute;
     right: 16px;
@@ -27,6 +31,20 @@
     transform: translateY(-50%);
 }
 
-.c-finder-tree-leaf--selected {
-    background: #eee;
+.c-finder-tree-leaf--selected,
+.c-finder-tree-leaf--selected:hover,
+.c-finder-tree-leaf--selected:focus {
+    background: #2b84b1;
+    color: #fff;
+}
+
+.c-finder-tree-leaf--selected.c-finder-tree-leaf--has-children:after,
+.c-finder-tree-leaf--selected.c-finder-tree-leaf--has-children:hover:after,
+.c-finder-tree-leaf--selected.c-finder-tree-leaf--has-children:focus:after {
+    border-left-color: #fff;
+}
+
+.c-finder-tree-leaf:hover:after,
+.c-finder-tree-leaf:focus:after {
+    border-left-color: #646464;
 }

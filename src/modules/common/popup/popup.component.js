@@ -38,7 +38,11 @@ export default class PopupComponent extends Component {
             <div {...attrs}>
                 <div className="c-popup__header">
                     <div className="c-popup__title">{this.props.title}</div>
-                    <div className="c-popup__close" onClick={this.hidePopup.bind(this)}>&times;</div>
+                    <div className="c-popup__close" onClick={this.hidePopup.bind(this)}>
+                        <svg className="ez-icon">
+                            <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard"></use>
+                        </svg>
+                    </div>
                 </div>
                 <div className="c-popup__content">{this.props.children}</div>
             </div>

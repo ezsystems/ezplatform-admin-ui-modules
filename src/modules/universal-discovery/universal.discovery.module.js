@@ -116,13 +116,14 @@ export default class UniversalDiscoveryModule extends Component {
         return (
             <div className="m-ud__preview">
                 <ContentMetaPreviewComponent
-                    data={this.state.contentMeta}
+                    data={this.addContentTypeInfo([this.state.contentMeta])[0]}
                     canSelectContent={this.canSelectContent.bind(this)}
                     onSelectContent={this.updateSelectedContent.bind(this)}
                     loadContentInfo={this.props.loadContentInfo}
                     restInfo={this.props.restInfo}
                     contentTypesMap={this.state.contentTypesMap}
-                    labels={this.props.labels.contentMetaPreview} />
+                    labels={this.props.labels.contentMetaPreview}
+                    maxHeight={this.state.maxHeight} />
             </div>
         );
     }
@@ -154,12 +155,14 @@ export default class UniversalDiscoveryModule extends Component {
                     id={TAB_BROWSE}
                     title={this.props.labels.udw.browse}
                     onClick={this.togglePanel.bind(this)}
-                    isSelected={isBrowseVisible} />
+                    isSelected={isBrowseVisible}
+                    iconIdentifier={TAB_BROWSE} />
                 <TabNavItemComponent
                     id={TAB_SEARCH}
                     title={this.props.labels.udw.search}
                     onClick={this.togglePanel.bind(this)}
-                    isSelected={isSearchVisible} />
+                    isSelected={isSearchVisible}
+                    iconIdentifier={TAB_SEARCH} />
                 {this.props.extraTabs && this.props.extraTabs.map(this.renderSingleTab.bind(this))}
             </nav>
         );
@@ -248,16 +251,18 @@ export default class UniversalDiscoveryModule extends Component {
             <div className="m-ud__wrapper">
                 <div className={containerClassName}>
                     <h1 className="m-ud__title">{this.props.title}</h1>
-                    {this.renderTabs()}
-                    <div className="m-ud__content" ref={ref => this._refContentContainer = ref}>
-                        {this.renderPanels()}
-                        {this.renderContentMetaPreview()}
-                    </div>
-                    <div className="m-ud__actions">
-                        {this.renderSelectedContent()}
-                        <div className="m-ud__btns">
-                            <button className="m-ud__action--cancel" onClick={this.props.onCancel}>{this.props.labels.udw.cancel}</button>
-                            {this.renderConfirmBtn()}
+                    <div className="m-ud__content-wrapper">
+                        {this.renderTabs()}
+                        <div className="m-ud__content" ref={ref => this._refContentContainer = ref}>
+                            {this.renderPanels()}
+                            {this.renderContentMetaPreview()}
+                        </div>
+                        <div className="m-ud__actions">
+                            {this.renderSelectedContent()}
+                            <div className="m-ud__btns">
+                                <button className="m-ud__action--cancel" onClick={this.props.onCancel}>{this.props.labels.udw.cancel}</button>
+                                {this.renderConfirmBtn()}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -339,10 +344,14 @@ UniversalDiscoveryModule.defaultProps = {
         contentMetaPreview: {
             title: 'Content Meta Preview',
             selectContent: 'Select content',
-            notAvailable: 'N/A'
+            notAvailable: 'N/A',
+            creationDate: 'Creation date',
+            lastModified: 'Last modified',
+            translations: 'Translations'
         },
         search: {
-            title: 'Search'
+            title: 'Search',
+            searchBtnLabel: 'Search'
         },
         searchPagination: {
             first: 'First',
@@ -352,7 +361,7 @@ UniversalDiscoveryModule.defaultProps = {
         },
         searchResults: {
             headerName: 'Name',
-            headerType: 'Type',
+            headerType: 'Content Type',
             resultsTitle: 'Search results'
         },
         searchResultsItem: {

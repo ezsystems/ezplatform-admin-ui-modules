@@ -3,16 +3,29 @@ import PropTypes from 'prop-types';
 
 import './css/selected.content.item.component.css';
 
-const SelectedContentItemComponent = ({data, onRemove, contentTypesMap, labels}) => {
-    const contentType = contentTypesMap ? contentTypesMap[data.ContentInfo.Content.ContentType._href] : false;
-    const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.notAvailable;
+const SelectedContentItemComponent = ({data, onRemove, labels}) => {
+    const contentTypeInfo = data.ContentInfo.Content.ContentTypeInfo;
+    const contentTypeName = contentTypeInfo ? contentTypeInfo.names.value[0]['#text'] : labels.notAvailable;
+    let icon;
+
+    if (contentTypeInfo) {
+        icon = (
+            <svg className="ez-icon c-selected-content-item__icon">
+                <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${contentTypeInfo.identifier}`}></use>
+            </svg>
+        );
+    }
 
     return (
         <div className="c-selected-content-item">
-            <div className="c-selected-content-item__remove" onClick={() => onRemove(data.id)}>&times;</div>
             <div className="c-selected-content-item__wrapper">
                 <div className="c-selected-content-item__name">{data.ContentInfo.Content.Name}</div>
-                <div className="c-selected-content-item__type">{contentTypeName}</div>
+                <div className="c-selected-content-item__type">{icon} {contentTypeName}</div>
+            </div>
+            <div className="c-selected-content-item__remove" onClick={() => onRemove(data.id)}>
+                <svg className="ez-icon">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard"></use>
+                </svg>
             </div>
         </div>
     );
@@ -21,7 +34,6 @@ const SelectedContentItemComponent = ({data, onRemove, contentTypesMap, labels})
 SelectedContentItemComponent.propTypes = {
     data: PropTypes.object.isRequired,
     onRemove: PropTypes.func.isRequired,
-    contentTypesMap: PropTypes.object.isRequired,
     labels: PropTypes.shape({
         notAvailable: PropTypes.string.isRequired
     }).isRequired

@@ -24,3 +24,9 @@
     font-size: 32px;
     cursor: pointer;
 }
+
+.c-popup__close .ez-icon {
+    width: 16px;
+    height: 16px;
+    fill: #333;
+}
