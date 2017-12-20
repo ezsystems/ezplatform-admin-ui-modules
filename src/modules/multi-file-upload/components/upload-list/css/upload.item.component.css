@@ -20,10 +20,15 @@
 .c-upload-list-item__meta {
     padding: 0 16px;
     line-height: 1.4;
+    max-width: 25vw;
 }
 
 .c-upload-list-item__name {
     font-size: 14px;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .c-upload-list-item__size {
