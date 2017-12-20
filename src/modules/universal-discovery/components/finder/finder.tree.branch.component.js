@@ -79,7 +79,7 @@ export default class FinderTreeBranchComponent extends Component {
 
     render() {
         return (
-            <div className="c-finder-tree-branch">
+            <div className="c-finder-tree-branch" style={{ height: `${this.props.maxHeight}px` }}>
                 <div className="c-finder-tree-branch__list-wrapper">
                     {this.props.items.map(this.renderLeaf.bind(this))}
                     {this.renderLoadMore()}
@@ -100,5 +100,6 @@ FinderTreeBranchComponent.propTypes = {
         finderBranch: PropTypes.shape({
             loadMore: PropTypes.string.isRequired
         }).isRequired
-    }).isRequired
+    }).isRequired,
+    maxHeight: PropTypes.number.isRequired
 };

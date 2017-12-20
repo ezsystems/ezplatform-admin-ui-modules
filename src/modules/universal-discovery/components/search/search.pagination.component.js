@@ -5,25 +5,25 @@ import './css/search.pagination.component.css';
 
 const SearchPaginationComponent = (props) => {
         const {minIndex, activeIndex, maxIndex, onChange, labels} = props;
-        const btnClass = 'c-search-pagination__btn--';
+        const btnClass = 'c-search-pagination__btn';
         const firstAttrs = {
             onClick: () => onChange(minIndex),
-            className: `${btnClass}first`
+            className: `${btnClass}--first`
         };
 
         const prevAttrs = {
             onClick: () => onChange(activeIndex - 1),
-            className: `${btnClass}prev`
+            className: `${btnClass}--prev ${btnClass}--middle`
         };
 
         const nextAttrs = {
             onClick: () => onChange(activeIndex + 1),
-            className: `${btnClass}next`
+            className: `${btnClass}--next ${btnClass}--middle`
         };
 
         const lastAttrs = {
             onClick: () => onChange(maxIndex),
-            className: `${btnClass}last`
+            className: `${btnClass}--last`
         };
 
         if (activeIndex === minIndex) {

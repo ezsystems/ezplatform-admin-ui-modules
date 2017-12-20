@@ -106,24 +106,57 @@ export default class ContentMetaPreviewComponent extends Component {
         );
     }
 
-    render() {
-        const data = this.props.data.ContentInfo.Content;
-        const contentType = this.props.contentTypesMap ? this.props.contentTypesMap[data.ContentType._href] : false;
-        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : this.props.labels.notAvailable;
+    /**
+     * Renders an icon related to a content type
+     *
+     * @method renderIcon
+     * @returns {Element}
+     * @memberof ContentMetaPreviewComponent
+     */
+    renderIcon() {
+        const contentTypeInfo = this.props.data.ContentInfo.Content.ContentTypeInfo;
+
+        if (!contentTypeInfo) {
+            return;
+        }
 
         return (
-            <div className="c-meta-preview">
-                <h1 className="c-meta-preview__title">{this.props.labels.title}</h1>
-                <div className="c-meta-preview__meta-wrapper">
-                    <div className="c-meta-preview__content-type">{contentTypeName}</div>
-                    <div className="c-meta-preview__image-wrapper">
-                        <img className="c-meta-preview__image" src={this.state.imageUri} alt=""/>
+            <svg className="ez-icon c-meta-preview__icon">
+                <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${contentTypeInfo.identifier}`}></use>
+            </svg>
+        );
+    }
+
+    render() {
+        const data = this.props.data.ContentInfo.Content;
+        const labels = this.props.labels;
+        const contentType = this.props.contentTypesMap ? this.props.contentTypesMap[data.ContentType._href] : false;
+        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.notAvailable;
+
+        return (
+            <div className="c-meta-preview__wrapper">
+                <h1 className="c-meta-preview__title">{labels.title}</h1>
+                <div className="c-meta-preview" style={{ maxHeight: `${this.props.maxHeight - 64}px` }}>
+                    <div className="c-meta-preview__content-type">{this.renderIcon()} {contentTypeName}</div>
+                    <div className="c-meta-preview__meta-wrapper">
+                        <div className="c-meta-preview__image-wrapper">
+                            <img className="c-meta-preview__image" src={this.state.imageUri} alt=""/>
+                        </div>
+                        <div className="c-meta-preview__name">{data.Name}</div>
+                        {this.renderSelectContentBtn()}
+                        <div className="c-meta-preview__content-info">
+                            <h3 className="c-meta-preview__subtitle">{labels.lastModified}:</h3>
+                            {(new Date(data.lastModificationDate)).toLocaleString()}
+                        </div>
+                        <div className="c-meta-preview__content-info">
+                            <h3 className="c-meta-preview__subtitle">{labels.creationDate}:</h3>
+                            {(new Date(data.publishedDate)).toLocaleString()}
+                        </div>
+                        <div className="c-meta-preview__content-info">
+                            <h3 className="c-meta-preview__subtitle">{labels.translations}:</h3>
+                            {data.mainLanguageCode}
+                        </div>
                     </div>
-                    {this.renderSelectContentBtn()}
-                    <div className="c-meta-preview__name">{data.Name}</div>
-                    <div className="c-meta-preview__modified">{data.lastModificationDate}</div>
-                    <div className="c-meta-preview__published">{data.publishedDate}</div>
-                    <div className="c-meta-preview__language-versions">{data.mainLanguageCode}</div>
                 </div>
             </div>
         );
@@ -143,6 +176,10 @@ ContentMetaPreviewComponent.propTypes = {
     labels: PropTypes.shape({
         title: PropTypes.string.isRequired,
         selectContent: PropTypes.string.isRequired,
-        notAvailable: PropTypes.string.isRequired
-    }).isRequired
+        notAvailable: PropTypes.string.isRequired,
+        creationDate: PropTypes.string.isRequired,
+        lastModified: PropTypes.string.isRequired,
+        translations: PropTypes.string.isRequired
+    }).isRequired,
+    maxHeight: PropTypes.number.isRequired
 };

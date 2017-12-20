@@ -90,12 +90,30 @@ export default class SelectedContentComponent extends Component {
 
         return (
             <SelectedContentPopupComponent
-                title={this.props.labels.selectedContent.confirmedItems}
+                title={this.getTitle()}
                 visible={this.state.isPopupVisible}
                 onClose={this.hidePopup.bind(this)}>
                 {this.props.items.map(this.renderSelectedItem.bind(this))}
             </SelectedContentPopupComponent>
         );
+    }
+
+    /**
+     * Gets component title
+     *
+     * @method getTitle
+     * @returns {String}
+     * @memberof SelectedContentComponent
+     */
+    getTitle() {
+        let title = this.props.labels.selectedContent.confirmedItems;
+        const total = this.props.items.length;
+
+        if (total) {
+            title = `${title} (${total})`;
+        }
+
+        return title;
     }
 
     render() {
@@ -104,10 +122,7 @@ export default class SelectedContentComponent extends Component {
         return (
             <div className="c-selected-content">
                 {this.renderSelectedItems()}
-                <strong className="c-selected-content__title">
-                    {this.props.labels.selectedContent.confirmedItems}&nbsp;
-                    {!!this.props.items.length && `(${this.props.items.length})`}
-                </strong>
+                <strong className="c-selected-content__title">{this.getTitle()}</strong>
                 {this.renderLimitLabel()}
                 <div className="c-selected-content__content-names" onClick={this.togglePopup.bind(this)}>
                     {titles.length ? titles : this.props.labels.selectedContent.noConfirmedContent}

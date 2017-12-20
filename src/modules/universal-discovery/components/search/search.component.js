@@ -18,9 +18,17 @@ export default class SearchComponent extends Component {
      * Searches content by a query
      *
      * @method searchContent
+     * @param {Event} event
      * @memberof SearchComponent
      */
-    searchContent() {
+    searchContent(event) {
+        const isClickEvent = event.nativeEvent.type === 'click';
+        const isEnterKeyEvent = event.nativeEvent.type === 'keyup' && event.nativeEvent.keyCode === 13;
+
+        if (!isClickEvent && !isEnterKeyEvent) {
+            return;
+        }
+
         const promise = new Promise(resolve => this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve));
 
         promise
@@ -42,11 +50,16 @@ export default class SearchComponent extends Component {
         const {labels, onItemSelect, searchResultsPerPage, contentTypesMap, maxHeight} = this.props;
 
         return (
-            <div className="c-search" style={{maxHeight:`${maxHeight}px`}}>
-                <div className="c-search__title">{labels.search.title}</div>
+            <div className="c-search" style={{maxHeight:`${maxHeight - 32}px`}}>
+                <div className="c-search__title">{labels.search.title}:</div>
                 <div className="c-search__form">
-                    <input className="c-search__input" type="text" ref={(ref) => this._refSearchInput = ref} />
-                    <button className="c-search__submit" onClick={this.searchContent.bind(this)}>Search</button>
+                    <input className="c-search__input" type="text" ref={(ref) => this._refSearchInput = ref} onKeyUp={this.searchContent.bind(this)}/>
+                    <button className="c-search__submit" onClick={this.searchContent.bind(this)}>
+                        <svg className="ez-icon">
+                            <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#search"></use>
+                        </svg>
+                        {labels.search.searchBtnLabel}
+                    </button>
                 </div>
                 <div className="c-search__results">
                     <SearchResultsComponent
@@ -69,7 +82,8 @@ SearchComponent.propTypes = {
     searchResultsPerPage: PropTypes.number.isRequired,
     labels: PropTypes.shape({
         search: PropTypes.shape({
-            title: PropTypes.string.isRequired
+            title: PropTypes.string.isRequired,
+            searchBtnLabel: PropTypes.string.isRequired
         }).isRequired,
         searchPagination: PropTypes.object.isRequired
     }).isRequired,

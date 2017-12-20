@@ -205,7 +205,8 @@ export default class FinderComponent extends Component {
             selectedLocations={selectedLocations}
             labels={this.props.labels}
             onItemClick={this.findLocationChildren}
-            onLoadMore={this.onLoadMore} />
+            onLoadMore={this.onLoadMore}
+            maxHeight={this.props.maxHeight} />
     }
 
     render() {

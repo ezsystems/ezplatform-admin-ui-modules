@@ -97,7 +97,6 @@ export default class SearchResultsComponent extends Component {
         return (
             <div className="c-search-results">
                 <div className="c-search-results__title">{labels.searchResults.resultsTitle} ({this.state.items.length})</div>
-                <SearchPaginationComponent {...paginationAttrs} />
                 <div className="c-search-results__list-headers">
                     <div className="c-search-results__list-header--name">{labels.searchResults.headerName}</div>
                     <div className="c-search-results__list-header--type">{labels.searchResults.headerType}</div>

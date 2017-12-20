@@ -13,7 +13,11 @@ const SearchResultsItemComponent = (props) => {
             <div className="c-search-results-item__name" title={item.Name}>{item.Name}</div>
             <div className="c-search-results-item__type" title={contentTypeName}>{contentTypeName}</div>
             <div className="c-search-results-item__actions">
-                <button className="c-search-results-item__btn--preview" onClick={() => props.onPreview(props.data)}>Preview</button>
+                <button className="c-search-results-item__btn--preview" onClick={() => props.onPreview(props.data)}>
+                    <svg className="ez-icon">
+                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#view"></use>
+                    </svg>
+                </button>
             </div>
         </div>
     );

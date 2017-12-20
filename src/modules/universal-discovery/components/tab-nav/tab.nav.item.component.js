@@ -11,7 +11,12 @@ const TabNavItemComponent = (props) => {
 
     return (
         <div className="c-tab-nav-item__wrapper">
-            <button {...attrs}>{props.title}</button>
+            <button {...attrs}>
+                <svg className="ez-icon c-tab-nav-item__icon">
+                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${props.iconIdentifier}`}></use>
+                </svg>
+                {props.title}
+            </button>
         </div>
     );
 }
@@ -20,7 +25,8 @@ TabNavItemComponent.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     isSelected: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    iconIdentifier: PropTypes.string.isRequired
 };
 
 export default TabNavItemComponent;

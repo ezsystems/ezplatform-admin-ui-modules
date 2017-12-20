@@ -3,11 +3,18 @@
     z-index: 1;
 }
 
+.c-selected-content__title {
+    font-size: 15px;
+    line-height: 20px;
+}
+
 .c-selected-content__content-names {
     width: 320px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 13px;
+    line-height: 15px;
 }
 
 .c-selected-content .c-popup {
@@ -15,13 +22,14 @@
     z-index: 2;
     top: 0;
     left: 0;
-    transform: translateY(-100%) translateY(-1rem);
+    transform: translateY(-100%) translateY(-16px);
+    border-radius: 6px;
 }
 
 .c-selected-content .c-popup:after {
     position: absolute;
     bottom: 0;
-    left: 1rem;
+    left: 16px;
     content: '';
     width: 0;
     height: 0;

@@ -3,8 +3,12 @@
 }
 
 .c-search-results__title {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 17px;
+    border-radius: 4px 4px 0 0;
+    background-color: #445A64;
+    color: #fff;
+    line-height: 50px;
+    padding: 0 16px
 }
 
 .c-search-results__list-headers,
@@ -13,14 +17,11 @@
     flex-wrap: nowrap;
 }
 
-.c-search-results__list {
-    border: 1px solid #cbcbcb;
-}
-
 [class*="c-search-results__list-header--"] {
     padding: 8px 16px;
-    background: #e0e0e0;
     font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
 }
 
 .c-search-results__list-header--name,
