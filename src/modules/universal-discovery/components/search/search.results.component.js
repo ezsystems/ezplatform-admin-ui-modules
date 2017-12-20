@@ -16,6 +16,9 @@ export default class SearchResultsComponent extends Component {
             activePage: 0,
             pages: this.splitToPages(props.items, props.perPage)
         };
+
+        this.setActivePage = this.setActivePage.bind(this);
+        this.renderItem = this.renderItem.bind(this);
     }
 
     componentWillReceiveProps({items, perPage}) {
@@ -80,19 +83,35 @@ export default class SearchResultsComponent extends Component {
             labels={labels.searchResultsItem} />;
     }
 
+    /**
+     * Renders pagination
+     *
+     * @method renderPagination
+     * @returns {Element}
+     * @memberof SearchResultsComponent
+     */
+    renderPagination() {
+        const paginationAttrs = {
+            minIndex: 0,
+            maxIndex: this.state.pages.length - 1,
+            activeIndex: this.state.activePage,
+            onChange: this.setActivePage,
+            labels: this.props.labels.searchPagination
+        };
+
+        if (paginationAttrs.minIndex === paginationAttrs.maxIndex) {
+            return;
+        }
+
+        return <SearchPaginationComponent {...paginationAttrs} />;
+    }
+
     render() {
         if (!this.state.pages.length) {
             return null;
         }
 
         const {labels} = this.props;
-        const paginationAttrs = {
-            minIndex: 0,
-            maxIndex: this.state.pages.length - 1,
-            activeIndex: this.state.activePage,
-            onChange: this.setActivePage.bind(this),
-            labels: labels.searchPagination
-        };
 
         return (
             <div className="c-search-results">
@@ -103,9 +122,9 @@ export default class SearchResultsComponent extends Component {
                     <div className="c-search-results__list-header--span"></div>
                 </div>
                 <div className="c-search-results__list">
-                    {this.state.pages[this.state.activePage].map(this.renderItem.bind(this))}
+                    {this.state.pages[this.state.activePage].map(this.renderItem)}
                 </div>
-                <SearchPaginationComponent {...paginationAttrs} />
+                {this.renderPagination()}
             </div>
         );
     }
