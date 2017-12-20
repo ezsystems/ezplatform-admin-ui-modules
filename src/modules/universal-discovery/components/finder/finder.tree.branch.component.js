@@ -56,11 +56,33 @@ export default class FinderTreeBranchComponent extends Component {
             selected={this.state.selectedLocations.includes(location.id)} />
     }
 
+    /**
+     * Render load more button
+     *
+     * @method renderLoadMore
+     * @returns {Element}
+     * @memberof FinderTreeBranchComponent
+     */
+    renderLoadMore() {
+        if (this.props.items.length === this.props.total) {
+            return;
+        }
+
+        return (
+            <button
+                className="c-finder-tree-branch__load-more"
+                onClick={() => this.props.onLoadMore(this.props.parent)}>
+                {this.props.labels.finderBranch.loadMore}
+            </button>
+        );
+    }
+
     render() {
         return (
             <div className="c-finder-tree-branch">
                 <div className="c-finder-tree-branch__list-wrapper">
                     {this.props.items.map(this.renderLeaf.bind(this))}
+                    {this.renderLoadMore()}
                 </div>
             </div>
         );
@@ -69,7 +91,14 @@ export default class FinderTreeBranchComponent extends Component {
 
 FinderTreeBranchComponent.propTypes = {
     items: PropTypes.array.isRequired,
+    total: PropTypes.number.isRequired,
     parent: PropTypes.number.isRequired,
     onItemClick: PropTypes.func.isRequired,
-    selectedLocations: PropTypes.array.isRequired
+    selectedLocations: PropTypes.array.isRequired,
+    onLoadMore: PropTypes.func.isRequired,
+    labels: PropTypes.shape({
+        finderBranch: PropTypes.shape({
+            loadMore: PropTypes.string.isRequired
+        }).isRequired
+    }).isRequired
 };

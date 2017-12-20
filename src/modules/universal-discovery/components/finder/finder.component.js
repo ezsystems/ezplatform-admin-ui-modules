@@ -11,15 +11,21 @@ export default class FinderComponent extends Component {
 
         this.state = {
             locationsMap: {},
-            activeLocations: {}
+            activeLocations: {},
+            limit: 50
         };
+
+        this.appendMoreItems = this.appendMoreItems.bind(this);
+        this.updateLocationsData = this.updateLocationsData.bind(this);
+        this.findLocationChildren = this.findLocationChildren.bind(this);
+        this.onLoadMore = this.onLoadMore.bind(this);
+        this.renderBranch = this.renderBranch.bind(this);
     }
 
     componentDidMount() {
         this.props.findLocationsByParentLocationId(
-            this.props.restInfo,
-            this.props.startingLocationId,
-            this.updateLocationsData.bind(this)
+            Object.assign({}, this.props.restInfo, { parentLocationId: this.props.startingLocationId}),
+            this.updateLocationsData
         );
     }
 
@@ -40,7 +46,11 @@ export default class FinderComponent extends Component {
             const locationsMap = Object.assign({}, state.locationsMap, {[parentLocationId]: data});
 
             if (!Object.keys(activeLocations).length) {
-                activeLocations[0] = {parent: 0, data};
+                activeLocations[0] = {
+                    parent: 0,
+                    offset: 0,
+                    data
+                };
             }
 
             return Object.assign({}, state, {activeLocations, locationsMap});
@@ -62,6 +72,51 @@ export default class FinderComponent extends Component {
     }
 
     /**
+     * Handles loading more items for a selected parent location
+     *
+     * @method onLoadMore
+     * @param {Number} parentLocationId
+     * @memberof FinderComponent
+     */
+    onLoadMore(parentLocationId) {
+        const limit = this.state.limit;
+        const offset = Object.values(this.state.activeLocations).find(location => location.parent === parentLocationId).offset + limit;
+
+        this.props.findLocationsByParentLocationId(
+            Object.assign({}, this.props.restInfo, { parentLocationId, limit, offset }),
+            this.appendMoreItems
+        );
+    }
+
+    /**
+     * Appends more subitems for a selected location
+     *
+     * @method appendMoreItems
+     * @param {Object} response object containing information about: parentLocationId, offset and data
+     * @memberof FinderComponent
+     */
+    appendMoreItems({parentLocationId, offset, data}) {
+        this.setState(state => {
+            const activeLocations = Object.assign({}, state.activeLocations);
+            const locationsMap = Object.assign({}, state.locationsMap);
+
+            Object.keys(activeLocations).forEach(key => {
+                const location = activeLocations[key];
+
+                if (location.parent === parentLocationId) {
+                    const results = [...location.data.View.Result.searchHits.searchHit, ...data.View.Result.searchHits.searchHit];
+
+                    location.offset = offset;
+                    location.data.View.Result.searchHits.searchHit = results;
+                    locationsMap[parentLocationId] = location.data;
+                }
+            });
+
+            return Object.assign({}, state, { activeLocations, locationsMap });
+        });
+    }
+
+    /**
      * Finds location children (sub-items)
      *
      * @method findLocationChildren
@@ -69,7 +124,8 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     findLocationChildren({parent, location}) {
-        const promise = new Promise(resolve => this.props.findLocationsByParentLocationId(this.props.restInfo, parent, resolve));
+        const promise = new Promise(resolve => this.props.findLocationsByParentLocationId(
+            Object.assign({}, this.props.restInfo, {parentLocationId: parent}), resolve));
 
         promise
             .then((response) => {
@@ -114,7 +170,11 @@ export default class FinderComponent extends Component {
                 return total;
             }, {});
 
-        activeLocations[locationDepth] = {parent, data};
+        activeLocations[locationDepth] = {
+            offset: 0,
+            parent,
+            data,
+        };
 
         return Object.assign({}, state, {activeLocations});
     }
@@ -133,6 +193,7 @@ export default class FinderComponent extends Component {
         }
 
         const items = data.View.Result.searchHits.searchHit;
+        const total = data.View.Result.count;
         const activeLocations = Object.values(this.state.activeLocations);
         const selectedLocations = activeLocations.map(item => item.parent);
 
@@ -140,8 +201,11 @@ export default class FinderComponent extends Component {
             key={parent}
             parent={parent}
             items={items}
+            total={total}
             selectedLocations={selectedLocations}
-            onItemClick={this.findLocationChildren.bind(this)} />
+            labels={this.props.labels}
+            onItemClick={this.findLocationChildren}
+            onLoadMore={this.onLoadMore} />
     }
 
     render() {
@@ -154,7 +218,7 @@ export default class FinderComponent extends Component {
         return (
             <div className="c-finder" style={{maxHeight:`${this.props.maxHeight}px`}}>
                 <div className="c-finder__branches" ref={(ref) => this._refBranchesContainer = ref}>
-                    {activeLocations.map(this.renderBranch.bind(this))}
+                    {activeLocations.map(this.renderBranch)}
                 </div>
             </div>
         );
@@ -170,5 +234,6 @@ FinderComponent.propTypes = {
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired
-    }).isRequired
+    }).isRequired,
+    labels: PropTypes.object.isRequired
 };

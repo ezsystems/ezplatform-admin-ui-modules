@@ -8,8 +8,6 @@ import './css/finder.panel.component.css';
 
 const FinderPanelComponent = (props) => {
     const wrapperAttrs = {className: 'c-finder-panel'};
-    const {multiple, startingLocationId, findLocationsByParentLocationId, onItemSelect, maxHeight, restInfo} = props;
-    const finderAttrs = Object.assign({}, {multiple, startingLocationId, findLocationsByParentLocationId, onItemSelect, maxHeight, restInfo});
 
     if (!props.isVisible) {
         wrapperAttrs.hidden = true;
@@ -18,7 +16,7 @@ const FinderPanelComponent = (props) => {
     return (
         <div {...wrapperAttrs}>
             <TabContentPanelComponent {...props}>
-                <FinderComponent {...finderAttrs}/>
+                <FinderComponent {...props} />
             </TabContentPanelComponent>
         </div>
     );
@@ -35,6 +33,7 @@ FinderPanelComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired
     }).isRequired,
+    labels: PropTypes.object.isRequired
 };
 
 export default FinderPanelComponent;
