@@ -2,6 +2,7 @@ const HEADERS_CREATE_VIEW = {
     "Accept":"application/vnd.ez.api.View+json; version=1.1",
     "Content-Type":"application/vnd.ez.api.ViewInput+json; version=1.1"
 };
+const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
 /**
  * Handles request response
@@ -62,11 +63,16 @@ export const loadContentInfo = ({token, siteaccess}, contentId, callback) => {
  * Finds locations related to the parent location
  *
  * @function findLocationsByParentLocationId
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} parentLocationId
+ * @param {Object} params params hash containing REST config: token and siteaccess properties; parentLocationId and offset
  * @param {Function} callback
  */
-export const findLocationsByParentLocationId = ({token, siteaccess}, parentLocationId, callback) => {
+export const findLocationsByParentLocationId = ({
+        token,
+        siteaccess,
+        parentLocationId,
+        limit = QUERY_LIMIT,
+        offset = 0
+    }, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-parent-location-id-${parentLocationId}`,
@@ -76,8 +82,8 @@ export const findLocationsByParentLocationId = ({token, siteaccess}, parentLocat
                 FacetBuilders: {},
                 SortClauses: {SectionIdentifier: 'ascending'},
                 Filter: {ParentLocationIdCriterion: parentLocationId},
-                limit: 50,
-                offset: 0
+                limit,
+                offset
             }
         }
     });
@@ -96,6 +102,7 @@ export const findLocationsByParentLocationId = ({token, siteaccess}, parentLocat
         .then(handleRequestResponse)
         .then(json => callback({
             parentLocationId,
+            offset,
             data: json
         }))
         .catch(error => console.log('error:find:locations:by:parent:location:id', error));
@@ -119,7 +126,7 @@ export const findContentBySearchQuery = ({token, siteaccess}, query, callback) =
                 FacetBuilders: {},
                 SortClauses: {},
                 Filter: {FullTextCriterion: query},
-                limit: 50,
+                limit: QUERY_LIMIT,
                 offset: 0
             }
         }

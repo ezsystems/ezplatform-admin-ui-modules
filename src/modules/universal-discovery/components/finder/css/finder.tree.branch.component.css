@@ -9,3 +9,23 @@
     max-height: 100%;
     overflow: auto;
 }
+
+.c-finder-tree-branch__load-more {
+    border: 1px solid #106d95;
+    background: none;
+    display: block;
+    text-align: center;
+    color: #106d95;
+    width: 80%;
+    border-radius: 4px;
+    margin: 0 auto 10px;
+    transition: background .3s cubic-bezier(.25, .8, .25, 1), color .3s cubic-bezier(.25, .8, .25, 1);
+    cursor: pointer;
+}
+
+.c-finder-tree-branch__load-more:hover,
+.c-finder-tree-branch__load-more:focus {
+    background: #0f6d95;
+    color: #fff;
+    outline: none;
+}

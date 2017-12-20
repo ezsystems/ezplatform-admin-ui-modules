@@ -301,7 +301,8 @@ UniversalDiscoveryModule.propTypes = {
         search: PropTypes.object.isRequired,
         searchPagination: PropTypes.object.isRequired,
         searchResults: PropTypes.object.isRequired,
-        searchResultsItem: PropTypes.object.isRequired
+        searchResultsItem: PropTypes.object.isRequired,
+        finderBranch: PropTypes.object.isRequired
     }),
     maxHeight: PropTypes.number,
     searchResultsPerPage: PropTypes.number
@@ -356,6 +357,9 @@ UniversalDiscoveryModule.defaultProps = {
         },
         searchResultsItem: {
             notAvailable: 'N/A'
+        },
+        finderBranch: {
+            loadMore: 'Load more'
         }
     }
 };
