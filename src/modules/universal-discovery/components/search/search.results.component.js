@@ -100,7 +100,7 @@ export default class SearchResultsComponent extends Component {
         };
 
         if (paginationAttrs.minIndex === paginationAttrs.maxIndex) {
-            return;
+            return null;
         }
 
         return <SearchPaginationComponent {...paginationAttrs} />;

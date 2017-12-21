@@ -10,8 +10,12 @@ export default class SearchComponent extends Component {
         super();
 
         this.state = {
-            items: []
-        }
+            items: [],
+            isSearching: false
+        };
+
+        this.updateItemsState = this.updateItemsState.bind(this);
+        this.searchContent = this.searchContent.bind(this);
     }
 
     /**
@@ -29,11 +33,17 @@ export default class SearchComponent extends Component {
             return;
         }
 
-        const promise = new Promise(resolve => this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve));
+        this.setState(state => Object.assign({}, state, {isSearching: true}), () => {
+            const promise = new Promise(resolve => this.props.findContentBySearchQuery(
+                this.props.restInfo,
+                this._refSearchInput.value,
+                resolve
+            ));
 
-        promise
-            .then(this.updateItemsState.bind(this))
-            .catch(error => console.log('search:component:search', error));
+            promise
+                .then(this.updateItemsState)
+                .catch(error => console.log('search:component:search', error));
+        });
     }
 
     /**
@@ -43,7 +53,34 @@ export default class SearchComponent extends Component {
      * @memberof SearchComponent
      */
     updateItemsState(response) {
-        this.setState(state => Object.assign({}, state, {items: response.View.Result.searchHits.searchHit}));
+        this.setState(state => Object.assign({}, state, {
+            items: response.View.Result.searchHits.searchHit,
+            isSearching: false
+        }));
+    }
+
+    renderSubmitBtn() {
+        const btnAttrs = { className: 'c-search__submit' };
+        const svgAttrs = { className: 'ez-icon'};
+        let iconIdentifier = 'search';
+
+        if (this.state.isSearching) {
+            btnAttrs.className = `${btnAttrs.className} c-search__submit--loading`;
+            btnAttrs.disabled = true;
+            svgAttrs.className = `${svgAttrs.className} ez-spin ez-icon-x2 ez-icon-spinner`;
+            iconIdentifier = 'spinner';
+        } else {
+            btnAttrs.onClick = this.searchContent;
+        }
+
+        return (
+            <button {...btnAttrs}>
+                <svg {...svgAttrs}>
+                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${iconIdentifier}`}></use>
+                </svg>
+                {!this.state.isSearching && this.props.labels.search.searchBtnLabel}
+            </button>
+        );
     }
 
     render() {
@@ -53,13 +90,8 @@ export default class SearchComponent extends Component {
             <div className="c-search" style={{maxHeight:`${maxHeight - 32}px`}}>
                 <div className="c-search__title">{labels.search.title}:</div>
                 <div className="c-search__form">
-                    <input className="c-search__input" type="text" ref={(ref) => this._refSearchInput = ref} onKeyUp={this.searchContent.bind(this)}/>
-                    <button className="c-search__submit" onClick={this.searchContent.bind(this)}>
-                        <svg className="ez-icon">
-                            <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#search"></use>
-                        </svg>
-                        {labels.search.searchBtnLabel}
-                    </button>
+                    <input className="c-search__input" type="text" ref={(ref) => this._refSearchInput = ref} onKeyUp={this.searchContent}/>
+                    {this.renderSubmitBtn()}
                 </div>
                 <div className="c-search__results">
                     <SearchResultsComponent
@@ -67,6 +99,7 @@ export default class SearchComponent extends Component {
                         onItemSelect={onItemSelect}
                         perPage={searchResultsPerPage}
                         contentTypesMap={contentTypesMap}
+                        isSearching={this.state.isSearching}
                         labels={labels} />
                 </div>
             </div>
