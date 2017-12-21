@@ -65,7 +65,7 @@ export default class FinderTreeBranchComponent extends Component {
      */
     renderLoadMore() {
         if (this.props.items.length === this.props.total) {
-            return;
+            return null;
         }
 
         return (

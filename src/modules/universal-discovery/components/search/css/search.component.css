@@ -33,6 +33,12 @@
     padding: 0 8px;
     display: flex;
     align-items: center;
+    min-width: 100px;
+    text-align: center;
+}
+
+.c-search__submit--loading {
+    justify-content: center;
 }
 
 .c-search__submit:focus {
@@ -49,4 +55,8 @@
     width: 16px;
     height: 16px;
     margin-right: 8px;
+}
+
+.c-search__submit--loading .ez-icon {
+    margin-right: 0;
 }

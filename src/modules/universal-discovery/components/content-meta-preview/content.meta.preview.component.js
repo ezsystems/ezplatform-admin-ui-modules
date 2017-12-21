@@ -117,7 +117,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const contentTypeInfo = this.props.data.ContentInfo.Content.ContentTypeInfo;
 
         if (!contentTypeInfo) {
-            return;
+            return null;
         }
 
         return (
