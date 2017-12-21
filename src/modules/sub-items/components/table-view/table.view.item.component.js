@@ -163,7 +163,7 @@ export default class TableViewItemComponent extends Component {
                 <td className="c-table-view-item__cell--translations">{content.mainLanguageCode}</td>
                 <td className="c-table-view-item__cell--actions">
                     <div>
-                    <span onClick={this.handleEdit.bind(this)} className="c-table-view-item__btn--edit">
+                    <span title={labels.edit} onClick={this.handleEdit.bind(this)} className="c-table-view-item__btn--edit">
                         <div className="c-table-view-item__btn-inner">
                             <svg className="ez-icon">
                                 <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
