@@ -10,12 +10,16 @@ export default class FinderTreeBranchComponent extends Component {
         super(props);
 
         this.state = {
-            selectedLocations: props.selectedLocations
+            selectedLocations: props.selectedLocations,
+            currentlyLoadingLocationId: false
         };
     }
 
     componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {selectedLocations: props.selectedLocations}));
+        this.setState(state => Object.assign({}, state, {
+            selectedLocations: props.selectedLocations,
+            currentlyLoadingLocationId: false
+        }));
     }
 
     /**
@@ -29,7 +33,10 @@ export default class FinderTreeBranchComponent extends Component {
         this.setState(state => {
             const locations = [...state.selectedLocations, location.id];
 
-            return Object.assign({}, state, {selectedLocations: [...new Set(locations)]});
+            return Object.assign({}, state, {
+                selectedLocations: [...new Set(locations)],
+                currentlyLoadingLocationId: location.id
+            });
         });
 
         this.props.onItemClick({
@@ -48,12 +55,14 @@ export default class FinderTreeBranchComponent extends Component {
      */
     renderLeaf(data) {
         const location = data.value.Location;
+        const isLoadingChildren = location.id === this.state.currentlyLoadingLocationId;
 
         return <FinderTreeLeafComponent
             key={location.remoteId}
             location={location}
             onClick={this.updateSelectedLocations.bind(this)}
-            selected={this.state.selectedLocations.includes(location.id)} />
+            selected={this.state.selectedLocations.includes(location.id)}
+            isLoadingChildren={isLoadingChildren} />
     }
 
     /**

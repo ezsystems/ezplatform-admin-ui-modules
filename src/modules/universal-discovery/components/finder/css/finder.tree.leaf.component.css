@@ -48,3 +48,16 @@
 .c-finder-tree-leaf:focus:after {
     border-left-color: #646464;
 }
+
+.c-finder-tree-leaf--selected.c-finder-tree-leaf--loading:after {
+    display: none;
+}
+
+.c-finder-tree-leaf--loading .ez-icon {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+    position: absolute;
+    right: 12px;
+    top: 5px;
+}
