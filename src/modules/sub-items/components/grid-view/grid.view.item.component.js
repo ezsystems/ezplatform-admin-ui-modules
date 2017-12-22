@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './css/grid.view.item.component.css';
 
 const GridViewItemComponent = (props) => {
-    const {content, location, handleViewItem} = props;
+    const { content, location, generateLink } = props;
     const imageField = content.CurrentVersion.Version.Fields.field.find(item => item.fieldTypeIdentifier === 'ezimage');
     const imageClassName = 'c-grid-view-item__image';
     const hasImage = imageField && imageField.fieldValue && imageField.fieldValue.uri && imageField.fieldValue.path;
@@ -29,11 +29,11 @@ const GridViewItemComponent = (props) => {
     }
 
     return (
-        <div className="c-grid-view-item" onClick={handleViewItem.bind(null, location.id)}>
+        <a className="c-grid-view-item" href={generateLink(location.id)}>
             {contentTypeIcon}
             <div className="c-grid-view-item__image-wrapper">{image}</div>
             <div className="c-grid-view-item__title">{content.Name}</div>
-        </div>
+        </a>
     );
 }
 
@@ -44,7 +44,7 @@ GridViewItemComponent.propTypes = {
     labels: PropTypes.shape({
         noImage: PropTypes.string.isRequired
     }).isRequired,
-    handleViewItem: PropTypes.func.isRequired
+    generateLink: PropTypes.func.isRequired
 };
 
 export default GridViewItemComponent;

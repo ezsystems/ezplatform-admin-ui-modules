@@ -313,7 +313,7 @@ export default class SubItemsModule extends Component {
                         items={this.state.items}
                         labels={this.props.labels}
                         handleEditItem={this.props.handleEditItem}
-                        handleViewItem={this.props.handleViewItem} />
+                        generateLink={this.props.generateLink} />
                 </div>
                 {this.renderLoadMore()}
             </div>
@@ -353,7 +353,7 @@ SubItemsModule.propTypes = {
         noItems: PropTypes.object.isRequired
     }),
     handleEditItem: PropTypes.func.isRequired,
-    handleViewItem: PropTypes.func.isRequired,
+    generateLink: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object,
     totalCount: PropTypes.number
 };
