@@ -138,20 +138,20 @@ export default class TableViewItemComponent extends Component {
     }
 
     render() {
-        const {content, location, contentTypesMap, labels} = this.props;
+        const { content, location, contentTypesMap, labels, generateLink } = this.props;
         const date = new Date(content.lastModificationDate);
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.notAvailable;
+        const linkAttrs = {
+            className: 'c-table-view-item__link c-table-view-item__text-wrapper',
+            title: content.Name,
+            href: generateLink(location.id)
+        };
 
         return (
             <tr className="c-table-view-item">
                 <td className="c-table-view-item__cell--name">
-                    <div
-                        className="c-table-view-item__link c-table-view-item__text-wrapper"
-                        title={content.Name}
-                        onClick={this.props.handleViewItem.bind(null, location.id)}>
-                        {content.Name}
-                    </div>
+                    <a {...linkAttrs}>{content.Name}</a>
                 </td>
                 <td className="c-table-view-item__cell--modified">
                     <div className="c-table-view-item__text-wrapper">{date.toLocaleDateString()}<br/>{date.toLocaleTimeString()}</div>
@@ -187,5 +187,5 @@ TableViewItemComponent.propTypes = {
         notAvailable: PropTypes.string.isRequired
     }).isRequired,
     handleEditItem: PropTypes.func.isRequired,
-    handleViewItem: PropTypes.func.isRequired
+    generateLink: PropTypes.func.isRequired
 };
