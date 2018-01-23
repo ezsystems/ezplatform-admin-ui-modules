@@ -67,8 +67,13 @@ export default class ViewSwitcherComponent extends Component {
             componentClassName = `${componentClassName} ${componentClassName}--disabled`
         }
 
+        const attrs = {
+            className: componentClassName,
+            title: this.props.tooltipLabel
+        };
+
         return (
-            <div className={componentClassName}>
+            <div {...attrs}>
                 {this.renderButton('table', 'view-list')}
                 {this.renderButton('grid', 'view-grid')}
             </div>
@@ -79,5 +84,10 @@ export default class ViewSwitcherComponent extends Component {
 ViewSwitcherComponent.propTypes = {
     onViewChange: PropTypes.func.isRequired,
     activeView: PropTypes.string.isRequired,
-    isDisabled: PropTypes.bool.isRequired
+    isDisabled: PropTypes.bool.isRequired,
+    tooltipLabel: PropTypes.string
+};
+
+ViewSwitcherComponent.defaultProps = {
+    tooltipLabel: "Change view"
 };
