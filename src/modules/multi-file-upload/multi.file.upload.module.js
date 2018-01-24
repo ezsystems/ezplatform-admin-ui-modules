@@ -179,7 +179,7 @@ export default class MultiFileUploadModule extends Component {
 
         return (
             <div className="m-mfu__btn--upload" title={this.props.uploadBtnLabel} onClick={this.showUploadPopup.bind(this, [])}>
-                <svg className="ez-icon">extractDroppedFilesList(2)
+                <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload"></use>
                 </svg>
             </div>
