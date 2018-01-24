@@ -1,7 +1,7 @@
 {
   "name": "ezsystems/ezplatform-admin-ui-modules",
   "description": "External assets dependencies for EzPlatform AdminUI",
-  "license": "GPL-2.0",
+  "license": "GPL-2.0-only",
   "authors": [
     {
       "name": "eZ dev-team & eZ Community",
