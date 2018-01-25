@@ -32,17 +32,17 @@ export default class ViewSwitcherComponent extends Component {
      *
      * @param {String} id
      * @param {String} icon icon identifier
-     * @param {String} titleLabel label for title attribiute
+     * @param {String} title label for title attribiute
      * @returns {Element}
      * @memberof ViewSwitcherComponent
      */
-    renderButton(id, icon, titleLabel) {
+    renderButton(id, icon, title) {
         const baseClassName = 'c-grid-switcher__option';
         const attrs = {
             id,
             onClick: this.toggleListView.bind(this, id),
             className: baseClassName,
-            title: titleLabel
+            title
         };
 
         if (this.state.activeView === id) {
@@ -69,14 +69,10 @@ export default class ViewSwitcherComponent extends Component {
             componentClassName = `${componentClassName} ${componentClassName}--disabled`
         }
 
-        const attrs = {
-            className: componentClassName
-        };
-
         return (
-            <div {...attrs}>
-                {this.renderButton('table', 'view-list', this.props.labels.title.viewList)}
-                {this.renderButton('grid', 'view-grid', this.props.labels.title.gridList)}
+            <div className={componentClassName}>
+                {this.renderButton('table', 'view-list', this.props.labels.listViewTitle)}
+                {this.renderButton('grid', 'view-grid', this.props.labels.gridViewTitle)}
             </div>
         );
     }
@@ -87,15 +83,14 @@ ViewSwitcherComponent.propTypes = {
     activeView: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
     labels: PropTypes.shape({
-        title: PropTypes.object.isRequired
-    })
+        listViewTitle: PropTypes.string.isRequired,
+        gridViewTitle: PropTypes.string.isRequired
+    }).isRequired
 };
 
 ViewSwitcherComponent.defaultProps = {
     labels: {
-        title: {
-            viewList: "View as list",
-            gridList: "View as grid"
-        }
+        listViewTitle: "View as list",
+        gridViewTitle: "View as grid"
     }
 };
