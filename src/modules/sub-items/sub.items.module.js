@@ -262,10 +262,10 @@ export default class SubItemsModule extends Component {
      * @returns {Element}
      * @memberof SubItemsModule
      */
-    renderExtraActions(action) {
+    renderExtraActions(action, index) {
         const Action = action.component;
 
-        return <Action className="m-sub-items__action" {...action.attrs} />;
+        return <Action key="{index}" className="m-sub-items__action" {...action.attrs} />;
     }
 
     /**
