@@ -57,7 +57,7 @@ export default class ContentMetaPreviewComponent extends Component {
             .value.Content.CurrentVersion.Version
             .Fields.field.find(field => field.fieldTypeIdentifier === 'ezimage');
 
-        if (!imageField) {
+        if (!imageField || !imageField.fieldValue) {
             return;
         }
 
