@@ -206,7 +206,9 @@ export default class FinderComponent extends Component {
             labels={this.props.labels}
             onItemClick={this.findLocationChildren}
             onLoadMore={this.onLoadMore}
-            maxHeight={this.props.maxHeight} />
+            maxHeight={this.props.maxHeight}
+            allowContainersOnly={this.props.allowContainersOnly}
+            contentTypesMap={this.props.contentTypesMap} />
     }
 
     render() {
@@ -236,5 +238,7 @@ FinderComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired
     }).isRequired,
-    labels: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    allowContainersOnly: PropTypes.bool,
+    contentTypesMap: PropTypes.object
 };

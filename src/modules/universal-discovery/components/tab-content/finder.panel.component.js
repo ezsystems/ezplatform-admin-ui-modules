@@ -33,7 +33,8 @@ FinderPanelComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired
     }).isRequired,
-    labels: PropTypes.object.isRequired
+    labels: PropTypes.object.isRequired,
+    allowContainersOnly: PropTypes.bool.isRequired
 };
 
 export default FinderPanelComponent;

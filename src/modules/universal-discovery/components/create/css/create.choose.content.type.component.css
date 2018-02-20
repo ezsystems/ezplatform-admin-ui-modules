@@ -1,0 +1,37 @@
+.c-choose-content-type {
+    padding: 8px;
+    background: #dbdbdb;
+    border-radius: 5px;
+}
+
+.c-choose-content-type__list-wrapper {
+    background-color: #fff;
+    padding: 8px;
+}
+
+.c-choose-content-type__list-wrapper .form-control {
+    border-width: 3px;
+}
+
+.c-choose-content-type__title {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.c-choose-content-type__list {
+    margin-top: 8px;
+    overflow: auto;
+}
+
+.c-choose-content-type__group-item {
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+.c-choose-content-type__group-item:hover {
+    background-color: #e1f5ff;
+}
+
+.c-choose-content-type__group-item.is-selected {
+    background-color: #2b84b1;
+}

@@ -1,0 +1,19 @@
+.c-choose-language {
+    padding: 8px;
+    background: #dbdbdb;
+    border-radius: 5px;
+    font-weight: 700;
+}
+
+.c-choose-language__title {
+    margin-bottom: 8px;
+}
+
+.c-choose-lagauge__select-wrapper {
+    padding: 8px;
+    background-color: #fff;
+}
+
+.c-choose-lagauge__select-wrapper .form-control {
+    border-width: 3px;
+}

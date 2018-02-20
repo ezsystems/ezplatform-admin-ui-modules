@@ -56,13 +56,18 @@ export default class FinderTreeBranchComponent extends Component {
     renderLeaf(data) {
         const location = data.value.Location;
         const isLoadingChildren = location.id === this.state.currentlyLoadingLocationId;
+        const contentTypesMap = this.props.contentTypesMap;
+        const contentTypeHref = location.ContentInfo.Content.ContentType._href;
+        const isContainer = contentTypesMap && contentTypesMap[contentTypeHref] && contentTypesMap[contentTypeHref].isContainer;
+        const isSelectable = !(this.props.allowContainersOnly && !isContainer);
 
         return <FinderTreeLeafComponent
             key={location.remoteId}
             location={location}
             onClick={this.updateSelectedLocations.bind(this)}
             selected={this.state.selectedLocations.includes(location.id)}
-            isLoadingChildren={isLoadingChildren} />
+            isLoadingChildren={isLoadingChildren}
+            isSelectable={isSelectable} />
     }
 
     /**
@@ -110,5 +115,7 @@ FinderTreeBranchComponent.propTypes = {
             loadMore: PropTypes.string.isRequired
         }).isRequired
     }).isRequired,
-    maxHeight: PropTypes.number.isRequired
+    maxHeight: PropTypes.number.isRequired,
+    allowContainersOnly: PropTypes.bool,
+    contentTypesMap: PropTypes.object
 };
