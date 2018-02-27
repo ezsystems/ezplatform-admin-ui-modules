@@ -177,7 +177,11 @@ export default class UniversalDiscoveryModule extends Component {
             isSelected: this.state.activeTab === tab.id
         };
 
-        return <TabNavItemComponent key={`panel-${tab.id}`} {...attrs}/>;
+        if (tab.iconIdentifier) {
+            attrs.iconIdentifier = tab.iconIdentifier;
+        }
+
+        return <TabNavItemComponent key={`panel-${tab.id}`} {...attrs} />;
     }
 
     renderPanels() {
