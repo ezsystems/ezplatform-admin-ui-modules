@@ -248,7 +248,9 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     render() {
-        console.log('udw:render', this.props.extraTabs);
+        console.log('udw:render:1', this.props.extraTabs);
+        console.log('udw:render:2', window.eZ.adminUiConfig.universalDiscoveryWidget.extraTabs);
+
         const componentClassName = 'm-ud';
         const metaPreviewClassName = (!!this.state.contentMeta) ? `${componentClassName}--with-preview` : '';
         const selectedContentClassName = this.state.selectedContent.length ? `${componentClassName}--with-selected-content` : '';
