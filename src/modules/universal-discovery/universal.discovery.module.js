@@ -145,14 +145,9 @@ export default class UniversalDiscoveryModule extends Component {
         );
     }
 
-    getExtraTabsConfig() {
-
-    }
-
     renderTabs() {
         const isBrowseVisible = this.state.activeTab === TAB_BROWSE;
         const isSearchVisible = this.state.activeTab === TAB_SEARCH;
-        const { extraTabs } = this.props;
 
         return (
             <nav className="m-ud__nav">
@@ -168,7 +163,7 @@ export default class UniversalDiscoveryModule extends Component {
                     onClick={this.togglePanel.bind(this)}
                     isSelected={isSearchVisible}
                     iconIdentifier={TAB_SEARCH} />
-                {extraTabs.map(this.renderSingleTab.bind(this))}
+                {this.props.extraTabs && this.props.extraTabs.map(this.renderSingleTab.bind(this))}
             </nav>
         );
     }
@@ -185,7 +180,6 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     renderPanels() {
-        const { extraTabs } = this.props;
         const browsePanelConfig = {
             id: TAB_BROWSE,
             panel: FinderPanelComponent
@@ -199,7 +193,7 @@ export default class UniversalDiscoveryModule extends Component {
             <div className="m-ud__panels">
                 {this.renderSinglePanel(browsePanelConfig)}
                 {this.renderSinglePanel(searchPanelConfig)}
-                {extraTabs.map(this.renderSinglePanel.bind(this))}
+                {this.props.extraTabs && this.props.extraTabs.map(this.renderSinglePanel.bind(this))}
             </div>
         );
     }
@@ -248,9 +242,6 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     render() {
-        console.log('udw:render:1', this.props.extraTabs);
-        console.log('udw:render:2', window.eZ.adminUiConfig.universalDiscoveryWidget.extraTabs);
-
         const componentClassName = 'm-ud';
         const metaPreviewClassName = (!!this.state.contentMeta) ? `${componentClassName}--with-preview` : '';
         const selectedContentClassName = this.state.selectedContent.length ? `${componentClassName}--with-selected-content` : '';
@@ -332,7 +323,6 @@ UniversalDiscoveryModule.defaultProps = {
     findContentBySearchQuery,
     findLocationsByParentLocationId,
     canSelectContent: (item, callback) => callback(true),
-    extraTabs: window.eZ.adminUiConfig.universalDiscoveryWidget.extraTabs || [],
     startingLocationId: 1,
     maxHeight: 500,
     searchResultsPerPage: 10,
