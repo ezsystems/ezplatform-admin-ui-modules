@@ -1,8 +1,9 @@
 .c-popup {
-    background: #eee;
+    background: #ededed;
     padding: 16px;
     box-shadow: 0 0 30px 0 rgba(0,0,0,.35);
     position: relative;
+    border-radius: 4px;
 }
 
 .c-popup__header {

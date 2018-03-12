@@ -5,13 +5,12 @@
 
 .c-drop-area__btn--select {
     display: inline-flex;
-    padding: 7px 20px;
+    padding: 0 20px;
     border-radius: 4px;
     text-align: center;
     cursor: pointer;
-    letter-spacing: .5px;
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     border: 1px solid #f15a10;
     background-color: #f15a10;

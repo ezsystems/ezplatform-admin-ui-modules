@@ -1,6 +1,6 @@
 .c-progress-bar {
     background: #d8d8d8;
-    height: 16px;
+    height: 6px;
     width: 100%;
     border-radius: 4px;
     position: relative;
@@ -31,5 +31,8 @@
 }
 
 .c-progress-bar__progress-uploaded {
+    margin-top: -7px;
     transform: translate(-50%, 150%);
+    font-weight: 400;
+    font-size: 10px;
 }
