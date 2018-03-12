@@ -61,3 +61,10 @@
     right: 12px;
     top: 5px;
 }
+
+.c-finder-tree-leaf--not-selectable,
+.c-finder-tree-leaf--not-selectable:hover,
+.c-finder-tree-leaf--not-selectable:focus {
+    background-color: #eee;
+    cursor: not-allowed;
+}

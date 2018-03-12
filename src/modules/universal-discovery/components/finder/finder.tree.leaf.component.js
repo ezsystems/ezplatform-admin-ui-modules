@@ -29,6 +29,10 @@ export default class FinderTreeLeafComponent extends Component {
     handleClick() {
         const {location} = this.props;
 
+        if (!this.props.isSelectable) {
+            return;
+        }
+
         this.setState(
             (state) => Object.assign({}, state, {
                 selected: true,
@@ -61,9 +65,10 @@ export default class FinderTreeLeafComponent extends Component {
         const location = this.props.location;
         const componentClassName = 'c-finder-tree-leaf';
         const isSelected = this.state.selected ? `${componentClassName}--selected` : '';
+        const isNotSelectable = !this.props.isSelectable ? `${componentClassName}--not-selectable` : '';
         const hasChildren = location.childCount ? `${componentClassName}--has-children` : '';
         const isLoadingChildren = this.state.isLoadingChildren ? `${componentClassName}--loading` : '';
-        const finalClassName = `${componentClassName} ${isSelected} ${hasChildren} ${isLoadingChildren}`;
+        const finalClassName = `${componentClassName} ${isSelected} ${hasChildren} ${isLoadingChildren} ${isNotSelectable}`;
 
         return (
             <div className={finalClassName} onClick={this.handleClick.bind(this)}>
@@ -78,5 +83,6 @@ FinderTreeLeafComponent.propTypes = {
     location: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired,
     selected: PropTypes.bool.isRequired,
-    isLoadingChildren: PropTypes.bool.isLoadingChildren
+    isLoadingChildren: PropTypes.bool.isRequired,
+    isSelectable: PropTypes.bool.isRequired
 };

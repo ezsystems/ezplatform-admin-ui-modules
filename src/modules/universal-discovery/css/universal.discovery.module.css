@@ -90,6 +90,9 @@
 
 .m-ud__btns {
     grid-column: 2 / 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
 }
 
 [class*="m-ud__action--"] {
@@ -112,17 +115,21 @@
     background: #3e3e3e;
 }
 
-.m-ud__action--confirm {
+.m-ud__action--confirm,
+.m-ud__action--create-content {
     font-weight: 700;
     background: #f15a10;
 }
 
 .m-ud__action--confirm:hover,
-.m-ud__action--confirm:focus {
+.m-ud__action--confirm:focus,
+.m-ud__action--create-content:hover,
+.m-ud__action--create-content:focus {
     background: #cb3400;
 }
 
-.m-ud__action--confirm[disabled] {
+.m-ud__action--confirm[disabled],
+.m-ud__action--create-content[disabled] {
     cursor: not-allowed;
     opacity: .3;
 }
@@ -152,4 +159,10 @@
 
 .m-ud--with-preview.m-ud--with-selected-content .m-ud__preview {
     grid-row: 1 / 2;
+}
+
+.m-ud__no-permission {
+    color: #d92d42;
+    max-width: 21rem;
+    display: inline-block;
 }

@@ -4,30 +4,48 @@ import PropTypes from 'prop-types';
 import TabNavItemComponent from './components/tab-nav/tab.nav.item.component';
 import FinderPanelComponent from './components/tab-content/finder.panel.component';
 import SearchPanelComponent from './components/tab-content/search.panel.component';
+import CreatePanelComponent from './components/tab-content/create.panel.component';
+import ContentCreatorComponent from './components/content-creator/content.creator.component';
 import SelectedContentComponent from './components/selected-content/selected.content.component';
 import ContentMetaPreviewComponent from './components/content-meta-preview/content.meta.preview.component';
 import {
     loadContentInfo,
     loadContentTypes,
     findLocationsByParentLocationId,
-    findContentBySearchQuery
+    findContentBySearchQuery,
+    checkCreatePermission
 } from './services/universal.discovery.service';
 
 import './css/universal.discovery.module.css';
 
 const TAB_BROWSE = 'browse';
 const TAB_SEARCH = 'search';
+const TAB_CREATE = 'create';
 
 export default class UniversalDiscoveryModule extends Component {
     constructor(props) {
         super(props);
+
+        let selectedLanguage = props.languages[0];
+
+        this.onLanguageSelected = this.onLanguageSelected.bind(this);
+        this.onContentTypeSelected = this.onContentTypeSelected.bind(this);
+        this.handlePublish = this.handlePublish.bind(this);
+
+        if (props.cotfForcedLanguage) {
+            selectedLanguage = props.languages.find(language => language.languageCode === props.cotfForcedLanguage);
+        }
 
         this.state = {
             activeTab: props.activeTab,
             contentMeta: null,
             contentTypesMap: {},
             selectedContent: [],
-            maxHeight: props.maxHeight
+            maxHeight: props.maxHeight,
+            selectedLanguage: selectedLanguage,
+            selectedContentType: '',
+            isCreateMode: false,
+            hasPermission: true
         };
     }
 
@@ -43,6 +61,14 @@ export default class UniversalDiscoveryModule extends Component {
 
     handleConfirm() {
         this.props.onConfirm(this.addContentTypeInfo(this.state.selectedContent));
+    }
+
+    handleCreateContent() {
+        this.setState(state => Object.assign({}, state, {isCreateMode: true}));
+    }
+
+    handlePublish(location) {
+        this.props.onConfirm(this.addContentTypeInfo([location]));
     }
 
     addContentTypeInfo(content) {
@@ -61,6 +87,14 @@ export default class UniversalDiscoveryModule extends Component {
 
     onItemSelect(contentMeta) {
         this.setState(state => Object.assign({}, state, {contentMeta}));
+    }
+
+    onLanguageSelected(selectedLanguage) {
+        this.setState(state => Object.assign({}, state, {selectedLanguage}));
+    }
+
+    onContentTypeSelected(selectedContentType) {
+        this.setState(state => Object.assign({}, state, {selectedContentType}));
     }
 
     updateSelectedContent() {
@@ -123,7 +157,8 @@ export default class UniversalDiscoveryModule extends Component {
                     restInfo={this.props.restInfo}
                     contentTypesMap={this.state.contentTypesMap}
                     labels={this.props.labels.contentMetaPreview}
-                    maxHeight={this.state.maxHeight} />
+                    maxHeight={this.state.maxHeight}
+                    activeTab={this.state.activeTab}/>
             </div>
         );
     }
@@ -131,6 +166,10 @@ export default class UniversalDiscoveryModule extends Component {
     renderSelectedContent() {
         const items = this.state.selectedContent;
         const {selectedItemsLimit, labels, multiple} = this.props;
+
+        if (this.state.activeTab === TAB_CREATE) {
+            return null;
+        }
 
         return (
             <div className="m-ud__selected-content">
@@ -148,7 +187,12 @@ export default class UniversalDiscoveryModule extends Component {
     renderTabs() {
         const isBrowseVisible = this.state.activeTab === TAB_BROWSE;
         const isSearchVisible = this.state.activeTab === TAB_SEARCH;
+        const isCreateVisible = this.state.activeTab === TAB_CREATE;
         const { extraTabs } = this.props;
+
+        if (this.props.onlyContentOnTheFly) {
+            return null;
+        }
 
         return (
             <nav className="m-ud__nav">
@@ -164,6 +208,12 @@ export default class UniversalDiscoveryModule extends Component {
                     onClick={this.togglePanel.bind(this)}
                     isSelected={isSearchVisible}
                     iconIdentifier={TAB_SEARCH} />
+                <TabNavItemComponent
+                    id={TAB_CREATE}
+                    title={this.props.labels.udw.create}
+                    onClick={this.togglePanel.bind(this)}
+                    isSelected={isCreateVisible}
+                    iconIdentifier={TAB_CREATE} />
                 {extraTabs.map(this.renderSingleTab.bind(this))}
             </nav>
         );
@@ -194,11 +244,32 @@ export default class UniversalDiscoveryModule extends Component {
             id: TAB_SEARCH,
             panel: SearchPanelComponent
         };
+        const createPanelConfig = {
+            id: TAB_CREATE,
+            panel: CreatePanelComponent,
+            attrs: {
+                languages: this.props.languages,
+                contentTypes: this.props.contentTypes,
+                onLanguageSelected: this.onLanguageSelected,
+                onContentTypeSelected: this.onContentTypeSelected,
+                contentTypesMap: this.state.contentTypesMap,
+                forcedLanguage: this.props.cotfForcedLanguage
+            }
+        };
+
+        if (this.props.onlyContentOnTheFly) {
+            return (
+                <div className="m-ud__panels">
+                    {this.renderSinglePanel(createPanelConfig)}
+                </div>
+            );
+        }
 
         return (
             <div className="m-ud__panels">
                 {this.renderSinglePanel(browsePanelConfig)}
                 {this.renderSinglePanel(searchPanelConfig)}
+                {this.renderSinglePanel(createPanelConfig)}
                 {extraTabs.map(this.renderSinglePanel.bind(this))}
             </div>
         );
@@ -221,6 +292,7 @@ export default class UniversalDiscoveryModule extends Component {
             onItemSelect: this.onItemSelect.bind(this),
             maxHeight: maxHeight - 32,
             id: item.id,
+            allowContainersOnly: this.props.allowContainersOnly,
             startingLocationId,
             findLocationsByParentLocationId,
             findContentBySearchQuery,
@@ -240,6 +312,10 @@ export default class UniversalDiscoveryModule extends Component {
             onClick: this.handleConfirm.bind(this)
         };
 
+        if (this.state.activeTab === TAB_CREATE) {
+            return null;
+        }
+
         if (!this.state.selectedContent.length) {
             attrs.disabled = true;
         }
@@ -247,11 +323,67 @@ export default class UniversalDiscoveryModule extends Component {
         return <button {...attrs}>{this.props.labels.udw.confirm}</button>
     }
 
+    checkPermission() {
+        checkCreatePermission({
+           token: this.props.restInfo.token,
+           contentTypeIdentifier: this.state.selectedContentType.identifier,
+           languageCode: this.state.selectedLanguage.languageCode,
+           locationId: this.state.contentMeta.id
+        }, (response) => {
+            if (this.state.hasPermission !== response.access) {
+               this.setState(state => Object.assign({}, state, {hasPermission: response.access}));
+            }
+        });
+    }
+
+    renderCreateBtn() {
+        const isDataSelected = this.state.selectedLanguage && this.state.selectedContentType  && this.state.contentMeta;
+        const attrs = {
+            className: 'm-ud__action--create-content',
+            onClick: this.handleCreateContent.bind(this),
+            disabled: !this.state.hasPermission || !isDataSelected
+        };
+
+        if (this.state.activeTab !== TAB_CREATE) {
+            return null;
+        }
+
+        if (isDataSelected) {
+            this.checkPermission();
+        }
+
+        return <button {...attrs}>{this.props.labels.contentOnTheFly.createContent}</button>
+    }
+
+    renderPermissionError() {
+        const isDataSelected = this.state.selectedLanguage && this.state.selectedContentType  && this.state.contentMeta;
+
+        if (this.state.hasPermission || !isDataSelected) {
+            return null;
+        }
+
+        return (
+            <span className="m-ud__no-permission">{this.props.labels.contentOnTheFly.noPermission}</span>
+        );
+    }
+
     render() {
         const componentClassName = 'm-ud';
         const metaPreviewClassName = (!!this.state.contentMeta) ? `${componentClassName}--with-preview` : '';
         const selectedContentClassName = this.state.selectedContent.length ? `${componentClassName}--with-selected-content` : '';
         const containerClassName = `${componentClassName} ${selectedContentClassName} ${metaPreviewClassName}`;
+
+        if (this.state.isCreateMode) {
+            return <ContentCreatorComponent
+                maxHeight={this.state.maxHeight}
+                labels={this.props.labels}
+                selectedLanguage={this.state.selectedLanguage}
+                selectedContentType={this.state.selectedContentType}
+                selectedLocationId={this.state.contentMeta.id}
+                onCancel={this.props.onCancel}
+                handlePublish={this.handlePublish}
+                restInfo={this.props.restInfo} />
+        }
 
         return (
             <div className="m-ud__wrapper">
@@ -266,8 +398,10 @@ export default class UniversalDiscoveryModule extends Component {
                         <div className="m-ud__actions">
                             {this.renderSelectedContent()}
                             <div className="m-ud__btns">
+                                {this.renderPermissionError()}
                                 <button className="m-ud__action--cancel" onClick={this.props.onCancel}>{this.props.labels.udw.cancel}</button>
                                 {this.renderConfirmBtn()}
+                                {this.renderCreateBtn()}
                             </div>
                         </div>
                     </div>
@@ -305,7 +439,8 @@ UniversalDiscoveryModule.propTypes = {
             confirm: PropTypes.string.isRequired,
             cancel: PropTypes.string.isRequired,
             search: PropTypes.string.isRequired,
-            browse: PropTypes.string.isRequired
+            browse: PropTypes.string.isRequired,
+            create: PropTypes.string.isRequired
         }).isRequired,
         selectedContentItem: PropTypes.object.isRequired,
         contentMetaPreview: PropTypes.object.isRequired,
@@ -313,10 +448,16 @@ UniversalDiscoveryModule.propTypes = {
         searchPagination: PropTypes.object.isRequired,
         searchResults: PropTypes.object.isRequired,
         searchResultsItem: PropTypes.object.isRequired,
-        finderBranch: PropTypes.object.isRequired
+        finderBranch: PropTypes.object.isRequired,
+        contentOnTheFly: PropTypes.object.isRequired
     }),
     maxHeight: PropTypes.number,
-    searchResultsPerPage: PropTypes.number
+    searchResultsPerPage: PropTypes.number,
+    languages: PropTypes.array,
+    contentTypes: PropTypes.object,
+    allowContainersOnly: PropTypes.bool.isRequired,
+    onlyContentOnTheFly: PropTypes.bool,
+    cotfForcedLanguage: PropTypes.string,
 };
 
 UniversalDiscoveryModule.defaultProps = {
@@ -333,12 +474,18 @@ UniversalDiscoveryModule.defaultProps = {
     startingLocationId: 1,
     maxHeight: 500,
     searchResultsPerPage: 10,
+    languages: window.eZ.adminUiConfig.universalDiscoveryWidget.contentOnTheFly.languages,
+    contentTypes: window.eZ.adminUiConfig.universalDiscoveryWidget.contentOnTheFly.contentTypes,
+    allowContainersOnly: false,
+    onlyContentOnTheFly: false,
+    cotfForcedLanguage: '',
     labels: {
         udw: {
             confirm: 'Confirm',
             cancel: 'Cancel',
             browse: 'Browse',
-            search: 'Search'
+            search: 'Search',
+            create: 'Create'
         },
         selectedContent: {
             confirmedItems: 'Confirmed items',
@@ -376,6 +523,17 @@ UniversalDiscoveryModule.defaultProps = {
         },
         finderBranch: {
             loadMore: 'Load more'
+        },
+        contentOnTheFly: {
+            chooseLangaugeAndContentType: 'Choose Language and Content Type',
+            selectLocation: 'Select Location',
+            selectLanguage: 'Select a language',
+            selectContentType: 'Select a Content Type',
+            creatingContent: 'Creating - {contentType} in {language}',
+            publish: 'Publish',
+            createContent: 'Create content',
+            noPermission: 'Sorry, but you don\'t have permission for this action. Please contact your site Admin.',
+            typeToRefine: 'Type to refine'
         }
     }
 };

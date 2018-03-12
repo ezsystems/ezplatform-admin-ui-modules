@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import './css/content.meta.preview.component.css';
 
+const TAB_CREATE = 'create';
+
 export default class ContentMetaPreviewComponent extends Component {
     constructor() {
         super();
@@ -87,6 +89,10 @@ export default class ContentMetaPreviewComponent extends Component {
      * @memberof ContentMetaPreviewComponent
      */
     renderSelectContentBtn() {
+        if (this.props.activeTab === TAB_CREATE) {
+            return null;
+        }
+
         const {data, canSelectContent, onSelectContent, labels} = this.props;
         const attrs = {
             className: 'c-meta-preview__btn--select',
@@ -181,5 +187,6 @@ ContentMetaPreviewComponent.propTypes = {
         lastModified: PropTypes.string.isRequired,
         translations: PropTypes.string.isRequired
     }).isRequired,
-    maxHeight: PropTypes.number.isRequired
+    maxHeight: PropTypes.number.isRequired,
+    activeTab: PropTypes.string.isRequired
 };
