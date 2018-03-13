@@ -24,7 +24,8 @@ export const loadLocation = (locationId = 2, limit = 10, offset = 0, callback) =
         method: 'POST',
         headers: HEADERS_VIEWS,
         body,
-        mode: 'cors',
+        mode: 'same-origin',
+        credentials: 'same-origin'
     });
 
     fetch(request)
@@ -53,7 +54,8 @@ export const findLocationsByParentLocationId = (parentLocationId, callback) => {
         method: 'POST',
         headers: HEADERS_VIEWS,
         body,
-        mode: 'cors',
+        mode: 'same-origin',
+        credentials: 'same-origin'
     });
 
     fetch(request)

@@ -10,6 +10,22 @@ export default class UploadItemComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.handleFileSizeNotAllowed = this.handleFileSizeNotAllowed.bind(this);
+        this.handleFileTypeNotAllowed = this.handleFileTypeNotAllowed.bind(this);
+        this.handleEditBtnClick = this.handleEditBtnClick.bind(this);
+        this.handleUploadAbort = this.handleUploadAbort.bind(this);
+        this.handleUploadError = this.handleUploadError.bind(this);
+        this.handleUploadLoad = this.handleUploadLoad.bind(this);
+        this.handleUploadProgress = this.handleUploadProgress.bind(this);
+        this.handleUploadEnd = this.handleUploadEnd.bind(this);
+        this.handleLoadStart = this.handleLoadStart.bind(this);
+        this.handleFileDeleted = this.handleFileDeleted.bind(this);
+        this.abortUploading = this.abortUploading.bind(this);
+        this.deleteFile = this.deleteFile.bind(this);
+        this.contentInfoInput = null;
+        this.contentVersionInfoInput = null;
+        this.contentVersionNoInput = null;
+        this.contentEditBtn = null;
         this.state = {
             uploading: false,
             uploaded: props.isUploaded,
@@ -37,14 +53,19 @@ export default class UploadItemComponent extends Component {
             checkCanUpload,
         } = this.props;
 
+        this.contentInfoInput = window.document.querySelector('#form_subitems_content_edit_content_info');
+        this.contentVersionInfoInput = window.document.querySelector('#form_subitems_content_edit_version_info_content_info');
+        this.contentVersionNoInput = window.document.querySelector('#form_subitems_content_edit_version_info_version_no');
+        this.contentEditBtn = window.document.querySelector('#form_subitems_content_edit_create');
+
         if (isUploaded) {
             return;
         }
 
         const config = adminUiConfig.multiFileUpload;
         const callbacks = {
-            fileTypeNotAllowedCallback: this.handleFileTypeNotAllowed.bind(this),
-            fileSizeNotAllowedCallback: this.handleFileSizeNotAllowed.bind(this)
+            fileTypeNotAllowedCallback: this.handleFileTypeNotAllowed,
+            fileSizeNotAllowedCallback: this.handleFileSizeNotAllowed
         };
 
         if (!checkCanUpload(data.file, parentInfo, config, callbacks)) {
@@ -78,15 +99,15 @@ export default class UploadItemComponent extends Component {
             {struct, token, siteaccess},
             {
                 upload: {
-                    onabort: this.handleUploadAbort.bind(this),
-                    onerror: this.handleUploadError.bind(this),
-                    onload: this.handleUploadLoad.bind(this),
-                    onprogress: this.handleUploadProgress.bind(this)
+                    onabort: this.handleUploadAbort,
+                    onerror: this.handleUploadError,
+                    onload: this.handleUploadLoad,
+                    onprogress: this.handleUploadProgress
                 },
-                onloadstart: this.handleLoadStart.bind(this),
-                onerror: this.handleUploadError.bind(this),
+                onloadstart: this.handleLoadStart,
+                onerror: this.handleUploadError,
             },
-            this.handleUploadEnd.bind(this));
+            this.handleUploadEnd);
     }
 
     /**
@@ -233,7 +254,7 @@ export default class UploadItemComponent extends Component {
         this.setState(state => {
             const struct = JSON.parse(state.xhr.response);
 
-            this.props.onAfterUpload(Object.assign({}, this.props.data, {struct}));
+            this.props.onAfterUpload(Object.assign({}, this.props.data, { struct }));
 
             return Object.assign({}, state, {
                 struct,
@@ -267,7 +288,7 @@ export default class UploadItemComponent extends Component {
      */
     deleteFile() {
         this.setState(state => Object.assign({}, state, {deleted: true}));
-        this.props.deleteFile(this.props.adminUiConfig, this.state.struct, this.handleFileDeleted.bind(this));
+        this.props.deleteFile(this.props.adminUiConfig, this.state.struct, this.handleFileDeleted);
     }
 
     /**
@@ -299,23 +320,6 @@ export default class UploadItemComponent extends Component {
         }
 
         return 'file';
-    }
-
-    /**
-     * Creates edit link
-     *
-     * @method createEditLink
-     * @return {String}
-     * @memberof UploadItemComponent
-     */
-    createEditLink() {
-        if (!this.state.struct) {
-            return;
-        }
-
-        return Routing.generate('ez_content_draft_create', {
-            contentId: this.state.struct.Content._id,
-        });
     }
 
     /**
@@ -391,12 +395,35 @@ export default class UploadItemComponent extends Component {
         }
 
         return (
-            <div className="c-upload-list-item__action--abort" onClick={this.abortUploading.bind(this)} title="Abort">
+            <div className="c-upload-list-item__action--abort" onClick={this.abortUploading} title="Abort">
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#circle-close"></use>
                 </svg>
             </div>
         );
+    }
+
+    /**
+     * Handles the edit button click event. Fills in the hidden form to redirect a user to a correct content edit location.
+     *
+     * @method handleEditBtnClick
+     * @memberof UploadItemComponent
+     * @param {Event} event
+     */
+    handleEditBtnClick(event) {
+        event.preventDefault();
+
+        const { struct } = this.state;
+        const content = struct.Content;
+        const contentId = content._id;
+        const languageCode = content.CurrentVersion.Version.VersionInfo.VersionTranslationInfo.Language['0'].languageCode;
+        const versionNo = content.CurrentVersion.Version.VersionInfo.versionNo;
+
+        this.contentInfoInput.value = contentId;
+        this.contentVersionInfoInput.value = contentId;
+        this.contentVersionNoInput.value = versionNo;
+        window.document.querySelector(`#form_subitems_content_edit_language_${languageCode}`).checked = true;
+        this.contentEditBtn.click();
     }
 
     /**
@@ -415,11 +442,11 @@ export default class UploadItemComponent extends Component {
         }
 
         return (
-            <a href={this.createEditLink()} className="c-upload-list-item__action--edit" title="Edit">
+            <div className="c-upload-list-item__action--edit" title="Edit" onClick={this.handleEditBtnClick}>
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
                 </svg>
-            </a>
+            </div>
         );
     }
 
@@ -439,7 +466,7 @@ export default class UploadItemComponent extends Component {
         }
 
         return (
-            <div className="c-upload-list-item__action--delete" onClick={this.deleteFile.bind(this)} title="Delete">
+            <div className="c-upload-list-item__action--delete" onClick={this.deleteFile} title="Delete">
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#trash"></use>
                 </svg>

@@ -1,5 +1,5 @@
 import {
-    handleRequestResponse, 
+    handleRequestResponse,
     ENDPOINT_VIEWS,
     HEADERS_VIEWS
 } from './common.service';
@@ -24,9 +24,10 @@ export const loadContentInfo = (contentIds, callback) => {
         method: 'POST',
         headers: HEADERS_VIEWS,
         body,
-        mode: 'cors',
+        mode: 'same-origin',
+        credentials: 'same-origin'
     });
-    
+
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
@@ -53,9 +54,10 @@ export const findContentBySearchQuery = (query, callback) => {
         method: 'POST',
         headers: HEADERS_VIEWS,
         body,
-        mode: 'cors',
+        mode: 'same-origin',
+        credentials: 'same-origin'
     });
-    
+
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)

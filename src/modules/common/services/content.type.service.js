@@ -4,9 +4,10 @@ export const loadContentTypes = (contentTypeIds, callback) => {
     const request = new Request(ENDPOINT_CONTENT_TYPES, {
         method: 'GET',
         headers: {'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json'},
-        mode: 'cors',
+        mode: 'same-origin',
+        credentials: 'same-origin'
     });
-    
+
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
