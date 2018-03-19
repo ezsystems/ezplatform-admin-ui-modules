@@ -21,12 +21,12 @@
 }
 
 .c-upload-popup .c-popup__title {
-    background: #bfbfbf;
+    background: #dbdbdb;
     height: 60px;
-    letter-spacing: 1px;
     margin: 0;
     padding: 0 16px;
-    font-size: 20px;
+    font-size: 24px;
+    font-weight: bold;
     line-height: 60px;
     border-radius: 4px 4px 0 0;
 }
