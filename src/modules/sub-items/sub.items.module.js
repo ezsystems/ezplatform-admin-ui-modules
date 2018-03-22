@@ -312,6 +312,7 @@ export default class SubItemsModule extends Component {
                         handleItemPriorityUpdate={this.handleItemPriorityUpdate.bind(this)}
                         items={this.state.items}
                         labels={this.props.labels}
+                        languages={this.props.languages}
                         handleEditItem={this.props.handleEditItem}
                         generateLink={this.props.generateLink} />
                 </div>
@@ -355,7 +356,8 @@ SubItemsModule.propTypes = {
     handleEditItem: PropTypes.func.isRequired,
     generateLink: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object,
-    totalCount: PropTypes.number
+    totalCount: PropTypes.number,
+    languages: PropTypes.object,
 };
 
 SubItemsModule.defaultProps = {
@@ -367,6 +369,7 @@ SubItemsModule.defaultProps = {
     updateLocationPriority,
     activeView: 'table',
     extraActions: [],
+    languages: window.eZ.adminUiConfig.languages,
     items: [],
     labels: {
         subItems: {

@@ -38,5 +38,6 @@ SubItemsListComponent.propTypes = {
     labels: PropTypes.shape({
         tableView: PropTypes.object.isRequired,
         tableViewItem: PropTypes.object.isRequired
-    }).isRequired
+    }).isRequired,
+    languages: PropTypes.object.isRequired
 };

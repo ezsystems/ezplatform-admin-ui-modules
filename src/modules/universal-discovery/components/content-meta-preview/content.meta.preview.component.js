@@ -11,12 +11,13 @@ export default class ContentMetaPreviewComponent extends Component {
 
         this.state = {
             imageUri: null,
+            translations: [],
             selectContentEnabled: false
         };
     }
 
     componentDidMount() {
-        this.loadContentInfo(this.props.data);
+        this.loadContentInfo(this.props.data.ContentInfo.Content._id);
     }
 
     componentWillReceiveProps(props) {
@@ -55,15 +56,15 @@ export default class ContentMetaPreviewComponent extends Component {
             return;
         }
 
-        const imageField = response.View.Result.searchHits.searchHit[0]
-            .value.Content.CurrentVersion.Version
-            .Fields.field.find(field => field.fieldTypeIdentifier === 'ezimage');
+        const version = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion.Version
+        const imageField = version.Fields.field.find(field => field.fieldTypeIdentifier === 'ezimage');
+        const translations = version.VersionInfo.VersionTranslationInfo.Language.map(langauge => {
+            // @TODO: pass it in props when COTF is cleaned
+            return window.eZ.adminUiConfig.languages.map[langauge.languageCode].name;
+        });
+        const imageUri = imageField && imageField.fieldValue ? imageField.fieldValue.uri : null;
 
-        if (!imageField || !imageField.fieldValue) {
-            return;
-        }
-
-        this.setState(state => Object.assign({}, state, {imageUri: imageField.fieldValue.uri}));
+        this.setState(state => Object.assign({}, state, { imageUri, translations }));
     }
 
     /**
@@ -133,6 +134,19 @@ export default class ContentMetaPreviewComponent extends Component {
         );
     }
 
+    /**
+     * Renders a translation item
+     *
+     * @method renderTranslation
+     * @returns {Element}
+     * @memberof ContentMetaPreviewComponent
+     */
+    renderTranslation(translation, index) {
+        return (
+            <span key={index} className="c-meta-preview__translation">{translation}</span>
+        );
+    }
+
     render() {
         const data = this.props.data.ContentInfo.Content;
         const labels = this.props.labels;
@@ -160,7 +174,7 @@ export default class ContentMetaPreviewComponent extends Component {
                         </div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{labels.translations}:</h3>
-                            {data.mainLanguageCode}
+                            {this.state.translations.map(this.renderTranslation)}
                         </div>
                     </div>
                 </div>
