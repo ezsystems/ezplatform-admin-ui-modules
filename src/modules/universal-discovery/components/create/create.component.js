@@ -17,7 +17,7 @@ const CreateComponent = (props) => {
 CreateComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     labels: PropTypes.object.isRequired,
-    languages: PropTypes.array.isRequired,
+    languages: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,

@@ -161,7 +161,7 @@ export default class TableViewItemComponent extends Component {
             href: generateLink(location.id)
         };
         const translations = content.CurrentVersion.Version.VersionInfo.VersionTranslationInfo.Language.map(langauge => {
-            return languages.map[langauge.languageCode].name;
+            return languages.mappings[langauge.languageCode].name;
         });
 
         return (
