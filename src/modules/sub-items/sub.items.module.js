@@ -26,16 +26,8 @@ export default class SubItemsModule extends Component {
             totalCount: props.totalCount,
             limit: props.limit,
             offset: props.offset,
-            isLoading: !props.items.length
+            isLoading: false
         };
-    }
-
-    componentDidMount() {
-        if (this.state.items.length) {
-            return;
-        }
-
-        this.loadItems();
     }
 
     componentDidUpdate(prevProps, prevState) {
