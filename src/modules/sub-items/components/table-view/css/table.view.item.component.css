@@ -8,6 +8,14 @@
     line-height: 20px;
 }
 
+.c-table-view-item__cell--translations {
+    max-width: 100px;
+}
+
+.c-table-view-item__translation {
+    display: block;
+}
+
 .c-table-view-item__text-wrapper {
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -137,8 +137,21 @@ export default class TableViewItemComponent extends Component {
         );
     }
 
+    /**
+     * Renders a translation item
+     *
+     * @method renderTranslation
+     * @returns {Element}
+     * @memberof TableViewItemComponent
+     */
+    renderTranslation(translation, index) {
+        return (
+            <span key={index} className="c-table-view-item__translation">{translation}</span>
+        );
+    }
+
     render() {
-        const { content, location, contentTypesMap, labels, generateLink } = this.props;
+        const { content, location, contentTypesMap, labels, generateLink, languages } = this.props;
         const date = new Date(content.lastModificationDate);
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.notAvailable;
@@ -147,6 +160,9 @@ export default class TableViewItemComponent extends Component {
             title: content.Name,
             href: generateLink(location.id)
         };
+        const translations = content.CurrentVersion.Version.VersionInfo.VersionTranslationInfo.Language.map(langauge => {
+            return languages.map[langauge.languageCode].name;
+        });
 
         return (
             <tr className="c-table-view-item">
@@ -160,7 +176,7 @@ export default class TableViewItemComponent extends Component {
                     <div className="c-table-view-item__text-wrapper">{contentTypeName}</div>
                 </td>
                 {this.renderPriorityCell()}
-                <td className="c-table-view-item__cell--translations">{content.mainLanguageCode}</td>
+                <td className="c-table-view-item__cell--translations">{translations.map(this.renderTranslation)}</td>
                 <td className="c-table-view-item__cell--actions">
                     <div>
                     <span title={labels.edit} onClick={this.handleEdit.bind(this)} className="c-table-view-item__btn--edit">
@@ -187,5 +203,6 @@ TableViewItemComponent.propTypes = {
         notAvailable: PropTypes.string.isRequired
     }).isRequired,
     handleEditItem: PropTypes.func.isRequired,
-    generateLink: PropTypes.func.isRequired
+    generateLink: PropTypes.func.isRequired,
+    languages: PropTypes.object.isRequired
 };
