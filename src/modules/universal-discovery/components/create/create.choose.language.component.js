@@ -11,31 +11,32 @@ export default class ChooseLanguageComponent extends Component {
         this.renderOption = this.renderOption.bind(this);
 
         this.state = {
-            selectedLanguage: props.languages[0]
+            selectedLanguage: props.languages.mappings[props.languages.priority[0]]
         };
     }
 
     updateSelection(event) {
         const languageCode = event.target.value;
-        const selectedLanguage = this.props.languages.find(language => language.languageCode === languageCode);
+        const selectedLanguage = this.props.languages.mappings[languageCode];
 
         this.props.onLanguageSelected(selectedLanguage);
 
         this.setState(state => Object.assign({}, state, { selectedLanguage }));
     }
 
-    renderOption(item, index) {
+    renderOption(languageCode, index) {
+        const language = this.props.languages.mappings[languageCode];
         const attrs = {
             key: index,
-            value: item.languageCode
+            value: language.languageCode
         };
 
-        if (item.languageCode === this.props.forcedLanguage) {
+        if (languageCode === this.props.forcedLanguage) {
             attrs.selected = true;
         }
 
         return (
-            <option {...attrs}>{item.name}</option>
+            <option {...attrs}>{language.name}</option>
         );
     }
 
@@ -54,7 +55,7 @@ export default class ChooseLanguageComponent extends Component {
                 <p className="c-choose-language__title">{this.props.labels.contentOnTheFly.selectLanguage}</p>
                 <div className="c-choose-lagauge__select-wrapper">
                     <select {...selectAttrs}>
-                        {this.props.languages.map(this.renderOption)}
+                        {this.props.languages.priority.map(this.renderOption)}
                     </select>
                 </div>
             </div>
@@ -65,7 +66,7 @@ export default class ChooseLanguageComponent extends Component {
 ChooseLanguageComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     labels: PropTypes.object.isRequired,
-    languages: PropTypes.array.isRequired,
+    languages: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     forcedLanguage: PropTypes.string.isRequired
 };

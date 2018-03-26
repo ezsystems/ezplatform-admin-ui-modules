@@ -26,14 +26,14 @@ export default class UniversalDiscoveryModule extends Component {
     constructor(props) {
         super(props);
 
-        let selectedLanguage = props.languages[0];
+        let selectedLanguage = props.languages.mappings[props.languages.priority[0]];
 
         this.onLanguageSelected = this.onLanguageSelected.bind(this);
         this.onContentTypeSelected = this.onContentTypeSelected.bind(this);
         this.handlePublish = this.handlePublish.bind(this);
 
         if (props.cotfForcedLanguage) {
-            selectedLanguage = props.languages.find(language => language.languageCode === props.cotfForcedLanguage);
+            selectedLanguage = props.languages.mappings[props.cotfForcedLanguage];
         }
 
         this.state = {
@@ -156,6 +156,7 @@ export default class UniversalDiscoveryModule extends Component {
                     loadContentInfo={this.props.loadContentInfo}
                     restInfo={this.props.restInfo}
                     contentTypesMap={this.state.contentTypesMap}
+                    languages={this.props.languages}
                     labels={this.props.labels.contentMetaPreview}
                     maxHeight={this.state.maxHeight}
                     activeTab={this.state.activeTab}/>
@@ -453,7 +454,7 @@ UniversalDiscoveryModule.propTypes = {
     }),
     maxHeight: PropTypes.number,
     searchResultsPerPage: PropTypes.number,
-    languages: PropTypes.array,
+    languages: PropTypes.object,
     contentTypes: PropTypes.object,
     allowContainersOnly: PropTypes.bool.isRequired,
     onlyContentOnTheFly: PropTypes.bool,
@@ -474,8 +475,8 @@ UniversalDiscoveryModule.defaultProps = {
     startingLocationId: 1,
     maxHeight: 500,
     searchResultsPerPage: 10,
-    languages: window.eZ.adminUiConfig.universalDiscoveryWidget.contentOnTheFly.languages,
-    contentTypes: window.eZ.adminUiConfig.universalDiscoveryWidget.contentOnTheFly.contentTypes,
+    languages: window.eZ.adminUiConfig.languages,
+    contentTypes: window.eZ.adminUiConfig.contentTypes,
     allowContainersOnly: false,
     onlyContentOnTheFly: false,
     cotfForcedLanguage: '',

@@ -56,12 +56,10 @@ export default class ContentMetaPreviewComponent extends Component {
             return;
         }
 
-        const version = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion.Version
+        const version = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion.Version;
         const imageField = version.Fields.field.find(field => field.fieldTypeIdentifier === 'ezimage');
-        const translations = version.VersionInfo.VersionTranslationInfo.Language.map(langauge => {
-            // @TODO: pass it in props when COTF is cleaned
-            return window.eZ.adminUiConfig.languages.map[langauge.languageCode].name;
-        });
+        const versionLanguages = version.VersionInfo.VersionTranslationInfo.Language;
+        const translations = versionLanguages.map(langauge => this.props.languages.mappings[langauge.languageCode].name);
         const imageUri = imageField && imageField.fieldValue ? imageField.fieldValue.uri : null;
 
         this.setState(state => Object.assign({}, state, { imageUri, translations }));
@@ -202,5 +200,6 @@ ContentMetaPreviewComponent.propTypes = {
         translations: PropTypes.string.isRequired
     }).isRequired,
     maxHeight: PropTypes.number.isRequired,
-    activeTab: PropTypes.string.isRequired
+    activeTab: PropTypes.string.isRequired,
+    languages: PropTypes.object.isRequired
 };
