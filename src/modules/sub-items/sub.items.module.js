@@ -290,7 +290,7 @@ export default class SubItemsModule extends Component {
         return (
             <div className="m-sub-items">
                 <div className="m-sub-items__header">
-                    <div className="m-sub-items__title">{this.props.labels.subItems.listTitle} ({this.state.items.length})</div>
+                    <div className="m-sub-items__title">{this.props.labels.subItems.listTitle} ({this.state.totalCount})</div>
                     <div className="m-sub-items__actions">{this.props.extraActions.map(this.renderExtraActions)}</div>
                     <ViewSwitcherComponent
                         onViewChange={this.switchView.bind(this)}
