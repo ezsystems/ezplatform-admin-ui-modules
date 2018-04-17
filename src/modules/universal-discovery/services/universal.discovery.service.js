@@ -20,6 +20,32 @@ const handleRequestResponse = response => {
 };
 
 /**
+ * Loads preselected location data
+ *
+ * @function loadPreselectedLocationData
+ * @param {String} startingLocationId
+ * @param {String} locationId
+ * @param {Number} limit
+ * @param {Function} callback
+ */
+export const loadPreselectedLocationData = ({startingLocationId, locationId, limit = QUERY_LIMIT}, callback) => {
+    const endpoint = window.Routing.generate('ezplatform.udw.preselected_location.data', {
+        startingLocationId,
+        locationId,
+        limit
+    });
+    const request = new Request(endpoint, {
+        mode: 'same-origin',
+        credentials: 'same-origin'
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
+        .catch(error => console.log('error:load:preselected:location:data', error));
+};
+
+/**
  * Loads content info
  *
  * @function loadContentInfo

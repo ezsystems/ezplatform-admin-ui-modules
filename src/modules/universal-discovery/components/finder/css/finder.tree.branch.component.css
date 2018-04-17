@@ -31,3 +31,8 @@
     color: #fff;
     outline: none;
 }
+
+.c-finder-tree-branch--collapsed {
+    flex: 0 0 3ch;
+    cursor: pointer;
+}
