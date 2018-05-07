@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import FinderTreeBranchComponent from './finder.tree.branch.component';
+import { loadPreselectedLocationData } from '../../services/universal.discovery.service';
 
 import './css/finder.component.css';
 
@@ -18,39 +19,144 @@ export default class FinderComponent extends Component {
         this.appendMoreItems = this.appendMoreItems.bind(this);
         this.updateLocationsData = this.updateLocationsData.bind(this);
         this.findLocationChildren = this.findLocationChildren.bind(this);
+        this.loadBranchLeaves = this.loadBranchLeaves.bind(this);
         this.onLoadMore = this.onLoadMore.bind(this);
         this.renderBranch = this.renderBranch.bind(this);
+
+        this.locationsMap = {};
+        this.activeLocations = {};
+        this.preselectedItem = null;
     }
 
     componentDidMount() {
-        this.props.findLocationsByParentLocationId(
-            Object.assign({}, this.props.restInfo, { parentLocationId: this.props.startingLocationId}),
-            this.updateLocationsData
-        );
+        const isForcedLocation = this.props.allowedLocations.length === 1;
+        const allowedIncludesPreselected = this.props.allowedLocations.includes(this.props.preselectedLocation);
+        const isPreselectedLocation = this.props.preselectedLocation && (!this.props.allowedLocations.length || allowedIncludesPreselected);
+
+        if (isForcedLocation) {
+            this.loadPreselectedData(this.props.allowedLocations[0], true);
+        } else if (isPreselectedLocation) {
+            this.loadPreselectedData(this.props.preselectedLocation, true);
+        } else {
+            this.props.findLocationsByParentLocationId(
+                Object.assign({}, this.props.restInfo, { parentLocationId: this.props.startingLocationId }),
+                this.updateLocationsData
+            );
+        }
     }
 
     componentDidUpdate() {
         this.updateBranchesContainerScroll();
     }
 
+    componentWillReceiveProps(nextProps) {
+        const isShowingUp = nextProps.isVisible && nextProps.isVisible !== this.props.isVisible;
+
+        if (this.preselectedItem && this.locationsMap && this.activeLocations && isShowingUp) {
+            this.setState(state => Object.assign({}, state, {
+                locationsMap: this.locationsMap,
+                activeLocations: this.activeLocations
+            }), () => nextProps.isVisible && this.props.onItemSelect(this.preselectedItem));
+        }
+    }
+
+    /**
+     * Load data of preselected location.
+     *
+     * @method loadPreselectedData
+     * @param {String} locationId
+     * @memberof FinderComponent
+     */
+    loadPreselectedData(locationId) {
+        const promise = new Promise(resolve => loadPreselectedLocationData(
+            {startingLocationId: this.props.startingLocationId, locationId},
+            resolve
+        ));
+
+        promise
+            .then((response) => {
+                this.createPreselectedLocationData(response);
+                this.preselectedItem = response.locations[locationId].Location;
+                this.setPreselectedLocationData();
+            });
+    }
+
+    /**
+     * Create preselected location data.
+     *
+     * @method createPreselectedLocationData
+     * @param {Object} locations
+     * @param {Object} subitems
+     * @memberof FinderComponent
+     */
+    createPreselectedLocationData({locations, subitems}) {
+        const createItem = ({parent, offset = 0, children, location}) => {
+            const createData = (items) => {
+                return items.locations.map(value => {
+                    return { value };
+                });
+            };
+            const data = children ? createData(children) : [];
+            const count = children ? children.totalCount : location.childCount;
+
+            return {count, data, offset, parent};
+        };
+
+        if (subitems[1]) {
+            const item = createItem({
+                parent: 1,
+                children: subitems[1]
+            });
+
+            this.locationsMap[1] = item;
+            this.activeLocations[0] = item;
+        }
+
+        Object.entries(locations).forEach(([key, value]) => {
+            const item = createItem({
+                parent: parseInt(key, 10),
+                children: subitems[key],
+                location: value.Location
+            });
+
+            this.locationsMap[key] = item;
+            this.activeLocations[value.Location.depth] = item;
+        });
+    }
+
+    /**
+     * Sets preselected location data.
+     *
+     * @method setPreselectedLocationData
+     * @memberof FinderComponent
+     */
+    setPreselectedLocationData() {
+        this.setState(state => Object.assign({}, state, {
+            locationsMap: this.locationsMap,
+            activeLocations: this.activeLocations
+        }), () => this.props.isVisible && this.props.onItemSelect(this.preselectedItem));
+    }
+
     /**
      * Updates locations based state attributes: activeLocations and locationsMap
      *
      * @method updateLocationsData
-     * @param {Object} params params hash containing: parentLocationId and data properties
+     * @param {Object} params params hash containing: parentLocationId, data and offset properties
      * @memberof FinderComponent
      */
-    updateLocationsData({parentLocationId, data}) {
+    updateLocationsData({parentLocationId, data, offset}) {
         this.setState(state => {
             const activeLocations = Object.assign({}, state.activeLocations);
-            const locationsMap = Object.assign({}, state.locationsMap, {[parentLocationId]: data});
+            const location = {
+                parent: parentLocationId,
+                data: data.View.Result.searchHits.searchHit,
+                count: data.View.Result.count,
+                offset,
+            }
+            const locationsMap = Object.assign({}, state.locationsMap, {[parentLocationId]: location});
 
             if (!Object.keys(activeLocations).length) {
-                activeLocations[0] = {
-                    parent: 0,
-                    offset: 0,
-                    data
-                };
+                activeLocations[0] = location;
             }
 
             return Object.assign({}, state, {activeLocations, locationsMap});
@@ -104,16 +210,52 @@ export default class FinderComponent extends Component {
                 const location = activeLocations[key];
 
                 if (location.parent === parentLocationId) {
-                    const results = [...location.data.View.Result.searchHits.searchHit, ...data.View.Result.searchHits.searchHit];
+                    const results = [...location.data, ...data.View.Result.searchHits.searchHit];
 
                     location.offset = offset;
-                    location.data.View.Result.searchHits.searchHit = results;
-                    locationsMap[parentLocationId] = location.data;
+                    location.data = results;
+                    locationsMap[parentLocationId] = location;
                 }
             });
 
             return Object.assign({}, state, { activeLocations, locationsMap });
         });
+    }
+
+    /**
+     * Loads branch children (sub-items)
+     *
+     * @method loadBranchLeaves
+     * @param {String} parent the parent id
+     * @memberof FinderComponent
+     */
+    loadBranchLeaves(parent) {
+        const promise = new Promise(resolve => this.props.findLocationsByParentLocationId(
+            Object.assign({}, this.props.restInfo, {parentLocationId: parent}),
+            resolve
+        ));
+
+        promise
+            .then((response) => {
+                this.updateLocationsData(response);
+                this.updateBranchActiveLocations(parent);
+            });
+    }
+
+    /**
+     * Updates branch active locations
+     *
+     * @method updateBranchActiveLocations
+     * @param {String} parent the parent id
+     * @memberof FinderComponent
+     */
+    updateBranchActiveLocations(parent) {
+        const activeLocations = Object.assign({}, this.state.activeLocations);
+        const depth = Object.keys(activeLocations).find(locationDepth => activeLocations[locationDepth].parent === parent);
+
+        activeLocations[depth] = this.state.locationsMap[parent];
+
+        this.setState(state => Object.assign({}, state, { activeLocations }));
     }
 
     /**
@@ -124,13 +266,26 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     findLocationChildren({parent, location}) {
+        if (this.props.allowedLocations.length === 1) {
+            return;
+        }
+
+        if (this.state.locationsMap[parent]) {
+            this.updateSelectedBranches(location);
+            this.props.onItemSelect(location);
+
+            return;
+        }
+
         const promise = new Promise(resolve => this.props.findLocationsByParentLocationId(
-            Object.assign({}, this.props.restInfo, {parentLocationId: parent}), resolve));
+            Object.assign({}, this.props.restInfo, {parentLocationId: parent}),
+            resolve
+        ));
 
         promise
             .then((response) => {
                 this.updateLocationsData(response);
-                this.updateSelectedBranches(parent, location);
+                this.updateSelectedBranches(location);
                 this.props.onItemSelect(location);
             });
     }
@@ -138,26 +293,23 @@ export default class FinderComponent extends Component {
     /**
      * Updates selected branches state
      *
-     * @param {String} parent parent location id
      * @param {Object} location location struct
      * @memberof FinderComponent
      */
-    updateSelectedBranches(parent, location) {
-        this.setState(this.updateActiveLocations.bind(this, parent, location));
+    updateSelectedBranches(location) {
+        this.setState(this.updateActiveLocations.bind(this, location));
     }
 
     /**
      * Updates active locations info
      *
      * @method updateActiveLocations
-     * @param {String} parent
      * @param {Object} location location struct
      * @param {Object} state component state
      * @returns {Object}
      * @memberof FinderComponent
      */
-    updateActiveLocations(parent, location, state) {
-        const data = state.locationsMap[location.id] || {};
+    updateActiveLocations(location, state) {
         const locationDepth = parseInt(location.depth, 10);
         const activeLocations = Object
             .keys(state.activeLocations)
@@ -170,11 +322,7 @@ export default class FinderComponent extends Component {
                 return total;
             }, {});
 
-        activeLocations[locationDepth] = {
-            offset: 0,
-            parent,
-            data,
-        };
+        activeLocations[locationDepth] = state.locationsMap[location.id];
 
         return Object.assign({}, state, {activeLocations});
     }
@@ -183,32 +331,32 @@ export default class FinderComponent extends Component {
      * Renders branch (the sub items container)
      *
      * @method renderBranch
-     * @param {Object} params params hash containing: parent and data properties
+     * @param {Object} params params hash containing: parent, count and data properties
      * @returns {null|Element}
      * @memberof FinderComponent
      */
-    renderBranch({parent, data}) {
-        if (!data.View || !data.View.Result.count) {
+    renderBranch({parent, data, count}) {
+        if (!data || !count) {
             return null;
         }
 
-        const items = data.View.Result.searchHits.searchHit;
-        const total = data.View.Result.count;
         const activeLocations = Object.values(this.state.activeLocations);
         const selectedLocations = activeLocations.map(item => item.parent);
 
         return <FinderTreeBranchComponent
             key={parent}
             parent={parent}
-            items={items}
-            total={total}
+            items={data}
+            total={count}
             selectedLocations={selectedLocations}
             labels={this.props.labels}
             onItemClick={this.findLocationChildren}
+            onBranchClick={this.loadBranchLeaves}
             onLoadMore={this.onLoadMore}
             maxHeight={this.props.maxHeight}
             allowContainersOnly={this.props.allowContainersOnly}
-            contentTypesMap={this.props.contentTypesMap} />
+            contentTypesMap={this.props.contentTypesMap}
+            allowedLocations={this.props.allowedLocations} />
     }
 
     render() {
@@ -240,5 +388,12 @@ FinderComponent.propTypes = {
     }).isRequired,
     labels: PropTypes.object.isRequired,
     allowContainersOnly: PropTypes.bool,
-    contentTypesMap: PropTypes.object
+    contentTypesMap: PropTypes.object,
+    preselectedLocation: PropTypes.number,
+    allowedLocations: PropTypes.array,
+    isVisible: PropTypes.bool
+};
+
+FinderComponent.defaultProps = {
+    allowedLocations: [],
 };

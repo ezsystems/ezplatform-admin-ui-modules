@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './css/create.choose.content.type.component.css';
+import './css/choose.content.type.component.css';
 
 export default class ChooseContentTypeComponent extends Component {
     constructor(props) {
         super(props);
+
+        let selectedContentType = {};
+        const isForcedContentType = props.allowedContentTypes.length === 1;
+        const hasPreselectedAllowedContentType = !props.allowedContentTypes.length || props.allowedContentTypes.includes(props.preselectedContentType);
+        const isPreselectedContentType = props.preselectedContentType && hasPreselectedAllowedContentType;
 
         this._filterTimeout = null;
 
@@ -13,16 +18,40 @@ export default class ChooseContentTypeComponent extends Component {
         this.renderGroup = this.renderGroup.bind(this);
         this.renderItem = this.renderItem.bind(this);
 
+        if (isForcedContentType) {
+            selectedContentType = this.findContentType(props.allowedContentTypes[0]);
+        } else if (isPreselectedContentType) {
+            selectedContentType = this.findContentType(props.preselectedContentType);
+        }
+
         this.state = {
-            selected: {},
+            selectedContentType,
             filterQuery: ''
         };
     }
 
-    updateSelectedItem(item) {
-        this.props.onContentTypeSelected(item);
+    componentDidMount() {
+        this.props.onContentTypeSelected(this.state.selectedContentType);
+    }
 
-        this.setState(state => Object.assign({}, state, {selected: item}));
+    findContentType(identifier) {
+        let contentType = null;
+
+        Object.values(this.props.contentTypes).forEach(group => {
+            const result = group.find(contentType => contentType.identifier === identifier);
+
+            if (result) {
+                contentType = result;
+            }
+        });
+
+        return contentType;
+    }
+
+    updateSelectedItem(selectedContentType) {
+        this.props.onContentTypeSelected(selectedContentType);
+
+        this.setState(state => Object.assign({}, state, { selectedContentType }));
     }
 
     updateFilterQuery(event) {
@@ -36,14 +65,22 @@ export default class ChooseContentTypeComponent extends Component {
     }
 
     renderItem(item, index) {
+        const isNotSelectable = this.props.allowedContentTypes.length && !this.props.allowedContentTypes.includes(item.identifier);
         const attrs = {
             className: 'c-choose-content-type__group-item',
-            onClick: this.updateSelectedItem.bind(this, item),
             key: index
         };
 
-        if (this.state.selected.identifier === item.identifier) {
+        if (this.state.selectedContentType.identifier === item.identifier) {
             attrs.className = `${attrs.className} is-selected`;
+        }
+
+        if (isNotSelectable) {
+            attrs.className = `${attrs.className} is-not-selectable`;
+        }
+
+        if (!isNotSelectable) {
+            attrs.onClick = this.updateSelectedItem.bind(this, item);
         }
 
         if (this.state.filterQuery && !item.name.toLowerCase().includes(this.state.filterQuery)) {
@@ -96,5 +133,7 @@ ChooseContentTypeComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     labels: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
-    onContentTypeSelected: PropTypes.func.isRequired
+    onContentTypeSelected: PropTypes.func.isRequired,
+    preselectedContentType: PropTypes.string.isRequired,
+    allowedContentTypes: PropTypes.array.isRequired
 };

@@ -9,6 +9,8 @@ export default class FinderTreeBranchComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.expandBranch = this.expandBranch.bind(this);
+
         this.state = {
             selectedLocations: props.selectedLocations,
             currentlyLoadingLocationId: false
@@ -45,6 +47,10 @@ export default class FinderTreeBranchComponent extends Component {
         });
     }
 
+    expandBranch() {
+        this.props.onBranchClick(this.props.parent);
+    }
+
     /**
      * Renders leaf (the single content item)
      *
@@ -67,7 +73,8 @@ export default class FinderTreeBranchComponent extends Component {
             onClick={this.updateSelectedLocations.bind(this)}
             selected={this.state.selectedLocations.includes(location.id)}
             isLoadingChildren={isLoadingChildren}
-            isSelectable={isSelectable} />
+            isSelectable={isSelectable}
+            allowedLocations={this.props.allowedLocations} />
     }
 
     /**
@@ -78,7 +85,9 @@ export default class FinderTreeBranchComponent extends Component {
      * @memberof FinderTreeBranchComponent
      */
     renderLoadMore() {
-        if (this.props.items.length === this.props.total) {
+        const { items, total } = this.props;
+
+        if (!items.length || items.length === total) {
             return null;
         }
 
@@ -92,8 +101,19 @@ export default class FinderTreeBranchComponent extends Component {
     }
 
     render() {
+        const items = this.props.items;
+        const attrs = {
+            className: 'c-finder-tree-branch',
+            style: { height: `${this.props.maxHeight}px` }
+        }
+
+        if (!items.length) {
+            attrs.className = `${attrs.className} c-finder-tree-branch--collapsed`;
+            attrs.onClick = this.expandBranch;
+        }
+
         return (
-            <div className="c-finder-tree-branch" style={{ height: `${this.props.maxHeight}px` }}>
+            <div {...attrs} >
                 <div className="c-finder-tree-branch__list-wrapper">
                     {this.props.items.map(this.renderLeaf.bind(this))}
                     {this.renderLoadMore()}
@@ -108,6 +128,7 @@ FinderTreeBranchComponent.propTypes = {
     total: PropTypes.number.isRequired,
     parent: PropTypes.number.isRequired,
     onItemClick: PropTypes.func.isRequired,
+    onBranchClick: PropTypes.func.isRequired,
     selectedLocations: PropTypes.array.isRequired,
     onLoadMore: PropTypes.func.isRequired,
     labels: PropTypes.shape({
@@ -117,5 +138,6 @@ FinderTreeBranchComponent.propTypes = {
     }).isRequired,
     maxHeight: PropTypes.number.isRequired,
     allowContainersOnly: PropTypes.bool,
-    contentTypesMap: PropTypes.object
+    contentTypesMap: PropTypes.object,
+    allowedLocations: PropTypes.array.isRequired
 };

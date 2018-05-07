@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
-import ChooseLanguageComponent from './create.choose.language.component';
-import ChooseContentTypeComponent from './create.choose.content.type.component';
+import ChooseLanguageComponent from './choose.language.component';
+import ChooseContentTypeComponent from './choose.content.type.component';
 
 import './css/create.component.css';
 
@@ -21,7 +21,11 @@ CreateComponent.propTypes = {
     contentTypes: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
-    forcedLanguage: PropTypes.string.isRequired
+    forcedLanguage: PropTypes.string.isRequired,
+    allowedLanguages: PropTypes.array.isRequired,
+    preselectedContentType: PropTypes.string.isRequired,
+    allowedContentTypes: PropTypes.array.isRequired,
+    preselectedLanguage: PropTypes.sttring.isRequired
 };
 
 export default CreateComponent;
