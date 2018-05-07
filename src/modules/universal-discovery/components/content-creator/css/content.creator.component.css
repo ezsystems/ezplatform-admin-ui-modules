@@ -5,7 +5,8 @@
 }
 
 .c-content-creator .m-ud__content {
-    padding: 0
+    padding: 0;
+    background: #eee;
 }
 
 .c-content-creator .m-ud__actions {

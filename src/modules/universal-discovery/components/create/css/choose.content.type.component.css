@@ -35,3 +35,8 @@
 .c-choose-content-type__group-item.is-selected {
     background-color: #2b84b1;
 }
+
+.c-choose-content-type__group-item.is-not-selectable {
+    background-color: #eee;
+    cursor: not-allowed;
+}

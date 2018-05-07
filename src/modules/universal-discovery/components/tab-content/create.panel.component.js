@@ -48,7 +48,10 @@ CreatePanelComponent.propTypes = {
     contentTypes: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
-    forcedLanguage: PropTypes.string.isRequired
+    forcedLanguage: PropTypes.string.isRequired,
+    preselectedLocation: PropTypes.number.isRequired,
+    allowedLocations: PropTypes.array.isRequired,
+    allowedLanguages: PropsTypes.array.isRequired
 };
 
 export default CreatePanelComponent;

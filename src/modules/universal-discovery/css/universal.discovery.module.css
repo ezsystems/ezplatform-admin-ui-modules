@@ -161,7 +161,8 @@
     grid-row: 1 / 2;
 }
 
-.m-ud__no-permission {
+.m-ud__no-permission,
+.m-ud__location-not-allowed {
     color: #d92d42;
     max-width: 21rem;
     display: inline-block;
