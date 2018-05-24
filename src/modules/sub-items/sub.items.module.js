@@ -390,7 +390,7 @@ SubItemsModule.defaultProps = {
             message: 'This location has no sub-items'
         }
     },
-    limit: 10,
+    limit: parseInt(window.eZ.adminUiConfig.subItems.limit, 10),
     offset: 0,
     contentTypesMap: {},
     totalCount: 0
