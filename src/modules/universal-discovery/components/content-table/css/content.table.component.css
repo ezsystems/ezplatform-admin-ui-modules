@@ -1,0 +1,48 @@
+.c-content-table {
+    overflow: auto;
+}
+
+.c-content-table__title {
+    font-size: 17px;
+    border-radius: 4px 4px 0 0;
+    background-color: #445A64;
+    color: #fff;
+    line-height: 50px;
+    padding: 0 16px
+}
+
+.c-content-table__list-headers,
+.c-content-table .c-content-table-item {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+[class*="c-content-table__list-header--"] {
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.c-content-table__list-header--name {
+    flex: 1 1 280px;
+}
+
+.c-content-table__list-header--type {
+    flex: 1 1 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.c-content-table__list-header--span {
+    flex: 0 0 90px;
+}
+
+.c-content-table__no-items {
+    padding-top: 7px;
+    padding-left: 39px;
+    font-style: italic;
+    font-size: 17px;
+    color: #878787;
+}

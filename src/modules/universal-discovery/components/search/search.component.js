@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import SearchResultsComponent from './search.results.component';
+import ContentTableComponent from '../content-table/content.table.component';
 
 import './css/search.component.css';
 
@@ -33,7 +33,7 @@ export default class SearchComponent extends Component {
             return;
         }
 
-        this.setState(state => Object.assign({}, state, {isSearching: true}), () => {
+        this.setState(state => ({ ...state, isSearching: true }), () => {
             const promise = new Promise(resolve => this.props.findContentBySearchQuery(
                 this.props.restInfo,
                 this._refSearchInput.value,
@@ -53,15 +53,16 @@ export default class SearchComponent extends Component {
      * @memberof SearchComponent
      */
     updateItemsState(response) {
-        this.setState(state => Object.assign({}, state, {
-            items: response.View.Result.searchHits.searchHit,
+        this.setState(state => ({
+            ...state,
+            items: response.View.Result.searchHits.searchHit.map(item => item.value),
             isSearching: false
         }));
     }
 
     renderSubmitBtn() {
         const btnAttrs = { className: 'c-search__submit' };
-        const svgAttrs = { className: 'ez-icon'};
+        const svgAttrs = { className: 'ez-icon' };
         let iconIdentifier = 'search';
 
         if (this.state.isSearching) {
@@ -83,25 +84,46 @@ export default class SearchComponent extends Component {
         );
     }
 
+    /**
+     * Get table labels
+     *
+     * @memberof SearchComponent
+     */
+    getTableLabels() {
+        const {
+            search,
+            contentTable,
+            contentTablePagination,
+            contentTableHeader,
+            contentTableItem
+        } = this.props.labels;
+
+        return {
+            title: search.tableTitle,
+            header: contentTableHeader,
+            item: contentTableItem,
+            pagination: contentTablePagination
+        };
+    }
+
     render() {
-        const {labels, onItemSelect, searchResultsPerPage, contentTypesMap, maxHeight} = this.props;
+        const { labels, onItemSelect, searchResultsPerPage, contentTypesMap, maxHeight } = this.props;
+        const tableLabels = this.getTableLabels();
 
         return (
-            <div className="c-search" style={{maxHeight:`${maxHeight - 32}px`}}>
+            <div className="c-search" style={{ maxHeight: `${maxHeight - 32}px` }}>
                 <div className="c-search__title">{labels.search.title}:</div>
                 <div className="c-search__form">
-                    <input className="c-search__input" type="text" ref={(ref) => this._refSearchInput = ref} onKeyUp={this.searchContent}/>
+                    <input className="c-search__input" type="text" ref={(ref) => this._refSearchInput = ref} onKeyUp={this.searchContent} />
                     {this.renderSubmitBtn()}
                 </div>
-                <div className="c-search__results">
-                    <SearchResultsComponent
-                        items={this.state.items}
-                        onItemSelect={onItemSelect}
-                        perPage={searchResultsPerPage}
-                        contentTypesMap={contentTypesMap}
-                        isSearching={this.state.isSearching}
-                        labels={labels} />
-                </div>
+                <ContentTableComponent
+                    items={this.state.items}
+                    onItemSelect={onItemSelect}
+                    perPage={searchResultsPerPage}
+                    contentTypesMap={contentTypesMap}
+                    labels={tableLabels}
+                />
             </div>
         );
     }

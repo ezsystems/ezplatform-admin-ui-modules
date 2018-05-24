@@ -4,6 +4,23 @@ const HEADERS_CREATE_VIEW = {
 };
 const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
+const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
+
+/**
+ * Handles request error
+ *
+ * @function handleRequestResponse
+ * @param {Response} response
+ * @returns {Error|Promise}
+ */
+const handleRequestError = (response) => {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+
+    return response;
+};
+
 /**
  * Handles request response
  *
@@ -12,11 +29,18 @@ const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
  * @returns {Error|Promise}
  */
 const handleRequestResponse = (response) => {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
+    return handleRequestError(response).json();
+};
 
-    return response.json();
+/**
+ * Handles request response; returns status if response is OK
+ *
+ * @function handleRequestResponseStatus
+ * @param {Response} response
+ * @returns {Error|Promise}
+ */
+const handleRequestResponseStatus = (response) => {
+    return handleRequestError(response).status;
 };
 
 /**
@@ -258,4 +282,122 @@ export const loadContentTypes = ({ token, siteaccess }, callback) => {
         .then(handleRequestResponse)
         .then(callback)
         .catch((error) => console.log('error:load:content:info', error));
+};
+
+/**
+ * Returns basic RequestInit object for Request
+ *
+ * @function getBasicRequestInit
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
+ * @returns {RequestInit}
+ */
+const getBasicRequestInit = ({ token, siteaccess }) => {
+    return {
+        headers: {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
+        mode: 'cors',
+        credentials: 'same-origin',
+    };
+};
+
+/**
+ * Loads bookmarks
+ *
+ * @function loadBookmarks
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
+ * @param {Function} callback
+ */
+export const loadBookmarks = (restInfo, callback) => {
+    const basicRequestInit = getBasicRequestInit(restInfo);
+
+    const request = new Request(ENDPOINT_BOOKMARK, {
+        ...basicRequestInit,
+        method: 'GET',
+        headers: {
+            ...basicRequestInit.headers,
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
+        },
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
+        .catch((error) => console.log('error:load:bookmarks', error));
+};
+
+/**
+ * Addsbookmark
+ *
+ * @function bookmark
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
+ * @param {String} path Path to location
+ * @param {Function} callback
+ */
+export const addBookmark = (restInfo, path, callback) => {
+    const basicRequestInit = getBasicRequestInit(restInfo);
+
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${path}`, {
+        ...basicRequestInit,
+        method: 'POST',
+    });
+
+    fetch(request)
+        .then(handleRequestResponseStatus)
+        .then(callback)
+        .catch((error) => console.log('error:load:bookmarks', error));
+};
+
+/**
+ * Removes bookmark
+ *
+ * @function bookmark
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
+ * @param {String} path Path to location
+ * @param {Function} callback
+ */
+export const removeBookmark = (restInfo, path, callback) => {
+    const basicRequestInit = getBasicRequestInit(restInfo);
+
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${path}`, {
+        ...basicRequestInit,
+        method: 'DELETE',
+    });
+
+    fetch(request)
+        .then(handleRequestResponseStatus)
+        .then(callback)
+        .catch((error) => console.log('error:load:bookmarks', error));
+};
+
+/**
+ * Checks if given location is bookmarked
+ *
+ * @function loadBookmarks
+ * @param {Object} restInfo REST config hash containing: token and siteaccess properties
+ * @param {String} path Path to location
+ * @param {Function} callback
+ */
+export const checkIfBookmarked = (restInfo, path, callback) => {
+    const basicRequestInit = getBasicRequestInit(restInfo);
+
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${path}`, {
+        ...basicRequestInit,
+        method: 'HEAD',
+    });
+    const bookmarkedStatusCode = 200;
+    const notBookmarkedStatusCode = 404;
+
+    fetch(request)
+        .then((response) => {
+            const { status } = response;
+            if (status === bookmarkedStatusCode || status === notBookmarkedStatusCode) {
+                return status === bookmarkedStatusCode;
+            }
+
+            handleRequestError(response);
+        })
+        .then(callback)
+        .catch((error) => console.log('error:check:if:bookmarked', error));
 };

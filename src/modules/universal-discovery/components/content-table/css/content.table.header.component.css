@@ -1,0 +1,26 @@
+.c-content-table-header__list-headers {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+[class*="c-content-table-header__list-header--"] {
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.c-content-table-header__list-header--name {
+    flex: 1 1 280px;
+}
+
+.c-content-table-header__list-header--type {
+    flex: 1 1 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.c-content-table-header__list-header--span {
+    flex: 0 0 90px;
+}

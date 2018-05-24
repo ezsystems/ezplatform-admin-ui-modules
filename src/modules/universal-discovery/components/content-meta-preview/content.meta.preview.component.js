@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './css/content.meta.preview.component.css';
-
-const TAB_CREATE = 'create';
+import { checkIfBookmarked, addBookmark, removeBookmark } from '../../services/universal.discovery.service';
+import { showErrorNotification } from '../../helpers/error.helper';
+import { TAB_CREATE } from '../../universal.discovery.module';
 
 export default class ContentMetaPreviewComponent extends Component {
     constructor() {
@@ -13,16 +14,52 @@ export default class ContentMetaPreviewComponent extends Component {
             imageUri: '',
             translations: [],
             selectContentEnabled: false,
+            bookmarked: null,
         };
 
+        this.removeBookmark = this.removeBookmark.bind(this);
+        this.addBookmark = this.addBookmark.bind(this);
         this.toggleEnabledState = this.toggleEnabledState.bind(this);
+        this.setBookmarked = this.setBookmarked.bind(this);
     }
 
     componentWillReceiveProps(props) {
+        const { pathString } = props.data;
+        const contentPathForUrl = pathString.slice(1, -1);
         const translations = this.getTranslations(props.data);
         const imageUri = this.getImageUri(props.data);
 
-        this.setState((state) => ({ ...state, translations, imageUri }));
+        this.setState((state) => ({ ...state, translations, imageUri, bookmarked: null }));
+
+        this.checkIfBookmarked(contentPathForUrl);
+    }
+
+    /**
+     * Checks if content is bookmarked
+     *
+     * @method checkIfBookmarked
+     * @param {String} contentPath
+     * @memberof ContentMetaPreviewComponent
+     */
+    checkIfBookmarked(contentPath) {
+        const { restInfo } = this.props;
+        const promise = new Promise((resolve) => checkIfBookmarked(restInfo, contentPath, resolve));
+
+        promise.then(this.setBookmarked).catch(showErrorNotification);
+    }
+
+    /**
+     * Sets bookmarked flag
+     *
+     * @method setBookmarked
+     * @param {boolean} bookmarked
+     * @memberof ContentMetaPreviewComponent
+     */
+    setBookmarked(bookmarked) {
+        this.setState((state) => ({
+            ...state,
+            bookmarked,
+        }));
     }
 
     /**
@@ -159,6 +196,70 @@ export default class ContentMetaPreviewComponent extends Component {
         return <img className="c-meta-preview__image" src={this.state.imageUri} alt="" />;
     }
 
+    /**
+     * Removes bookmark
+     *
+     * @method removeBookmark
+     * @memberof ContentMetaPreviewComponent
+     */
+    removeBookmark() {
+        const { onBookmarkRemoved, data, restInfo } = this.props;
+        const contentPathForUrl = data.pathString.slice(1, -1);
+        const unbookmarked = new Promise((resolve) => removeBookmark(restInfo, contentPathForUrl, resolve));
+
+        unbookmarked
+            .then(() => {
+                this.setBookmarked(false);
+                onBookmarkRemoved(data);
+            })
+            .catch(showErrorNotification);
+    }
+
+    /**
+     * Adds bookmark
+     *
+     * @method addBookmark
+     * @memberof ContentMetaPreviewComponent
+     */
+    addBookmark() {
+        const { onBookmarkAdded, data, restInfo } = this.props;
+        const contentPathForUrl = data.pathString.slice(1, -1);
+        const bookmarked = new Promise((resolve) => addBookmark(restInfo, contentPathForUrl, resolve));
+
+        bookmarked
+            .then(() => {
+                this.setBookmarked(true);
+                onBookmarkAdded(data);
+            })
+            .catch(showErrorNotification);
+    }
+
+    /**
+     * Renders bookmark icon
+     *
+     * @method renderBookmarkIcon
+     * @memberof ContentMetaPreviewComponent
+     */
+    renderBookmarkIcon() {
+        const { bookmarked } = this.state;
+        if (bookmarked === null) {
+            return null;
+        }
+
+        const bookmarkIconId = bookmarked ? 'bookmark-active' : 'bookmark';
+        const action = bookmarked ? 'remove' : 'add';
+        const onClick = bookmarked ? this.removeBookmark : this.addBookmark;
+        const iconHref = `/bundles/ezplatformadminui/img/ez-icons.svg#${bookmarkIconId}`;
+
+        return (
+            <div className={`ez-add-to-bookmarks__icon-wrapper ez-add-to-bookmarks__icon-wrapper--${action}`} onClick={onClick}>
+                <svg className="ez-icon ez-icon--medium">
+                    <use xlinkHref={iconHref} />
+                </svg>
+            </div>
+        );
+    }
+
     render() {
         const data = this.props.data.ContentInfo.Content;
         const labels = this.props.labels;
@@ -169,11 +270,16 @@ export default class ContentMetaPreviewComponent extends Component {
             <div className="c-meta-preview__wrapper">
                 <h1 className="c-meta-preview__title">{labels.title}</h1>
                 <div className="c-meta-preview" style={{ maxHeight: `${this.props.maxHeight - 64}px` }}>
-                    <div className="c-meta-preview__content-type">
-                        {this.renderIcon()} {contentTypeName}
+                    <div className="c-meta-preview__top-wrapper">
+                        <div className="c-meta-preview__content-type">
+                            {this.renderIcon()} {contentTypeName}
+                        </div>
+                        <div className="c-meta-preview__content-bookmark">{this.renderBookmarkIcon()}</div>
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
-                        <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
+                        <div className="c-meta-preview__image-wrapper">
+                            <img className="c-meta-preview__image" src={this.renderImagePreview()} />
+                        </div>
                         <div className="c-meta-preview__name">{data.Name}</div>
                         {this.renderSelectContentBtn()}
                         <div className="c-meta-preview__content-info">
@@ -198,6 +304,8 @@ export default class ContentMetaPreviewComponent extends Component {
 ContentMetaPreviewComponent.propTypes = {
     data: PropTypes.object.isRequired,
     onSelectContent: PropTypes.func.isRequired,
+    onBookmarkRemoved: PropTypes.func.isRequired,
+    onBookmarkAdded: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({

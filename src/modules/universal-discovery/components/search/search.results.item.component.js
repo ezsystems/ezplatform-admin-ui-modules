@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import './css/search.results.item.component.css';
 
 const SearchResultsItemComponent = (props) => {
+    console.warn('[DEPRECATED] SearchResultsItemComponent is deprecated');
+    console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
+    console.warn('[DEPRECATED] use ContentTableItemComponent instead');
+
     const item = props.data.ContentInfo.Content;
     const contentType = props.contentTypesMap ? props.contentTypesMap[item.ContentType._href] : false;
     const contentTypeName = contentType ? contentType.names.value[0]['#text'] : props.labels.notAvailable;
