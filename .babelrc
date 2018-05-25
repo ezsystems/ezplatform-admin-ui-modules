@@ -1,13 +1,14 @@
 {
-    "presets":[
+    "presets": [
         "react",
-        ["env", {
-            "targets": {
-                "browsers": ["last 1 version"]
+        [
+            "env",
+            {
+                "targets": {
+                    "browsers": ["last 1 version"]
+                }
             }
-        }]
+        ]
     ],
-    "plugins": [
-        "transform-react-remove-prop-types"
-    ]
+    "plugins": ["transform-react-remove-prop-types", "transform-object-rest-spread"]
 }
