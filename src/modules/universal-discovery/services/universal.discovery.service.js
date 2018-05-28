@@ -75,13 +75,9 @@ export const loadContentInfo = ({ token, siteaccess }, contentId, callback) => {
             'X-CSRF-Token': token,
         }),
         body,
-        mode: 'cors',
+        mode: 'same-origin',
         credentials: 'same-origin',
     });
-    console.groupCollapsed('loadContentInfo');
-    console.log(token, siteaccess);
-    console.trace();
-    console.groupEnd('loadContentInfo');
 
     fetch(request)
         .then(handleRequestResponse)
@@ -183,7 +179,7 @@ export const findLocationsByParentLocationId = ({ token, siteaccess, parentLocat
             'X-CSRF-Token': token,
         }),
         body,
-        mode: 'cors',
+        mode: 'same-origin',
         credentials: 'same-origin',
     });
 
@@ -229,7 +225,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback)
             'X-CSRF-Token': token,
         }),
         body,
-        mode: 'cors',
+        mode: 'same-origin',
         credentials: 'same-origin',
     });
 
@@ -254,7 +250,7 @@ export const loadContentTypes = ({ token, siteaccess }, callback) => {
             'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
         },
-        mode: 'cors',
+        mode: 'same-origin',
         credentials: 'same-origin',
     });
 

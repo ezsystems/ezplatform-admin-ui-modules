@@ -45,6 +45,7 @@ export default class UniversalDiscoveryModule extends Component {
         this.renderSingleTab = this.renderSingleTab.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
         this.handleCreateContent = this.handleCreateContent.bind(this);
+        this.updateContentMetaWithCurrentVersion = this.updateContentMetaWithCurrentVersion.bind(this);
 
         if (isForcedContentType) {
             selectedContentType = this.findContentType(props.cotfAllowedContentTypes[0]);
@@ -61,7 +62,7 @@ export default class UniversalDiscoveryModule extends Component {
             isCreateMode: isForcedLanguage && isForcedContentType && isForcedLocation,
             hasPermission: true,
             isLocationAllowed: true,
-            canRenderMetaPreview: false,
+            isPreviewMetaReady: false,
         };
     }
 
@@ -73,6 +74,29 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         this.setState((state) => ({ ...state, maxHeight: this._refContentContainer.clientHeight }));
+    }
+
+    componentDidUpdate() {
+        const { contentMeta, isPreviewMetaReady } = this.state;
+
+        if (!!contentMeta && !isPreviewMetaReady) {
+            this.props.loadContentInfo(this.props.restInfo, contentMeta.ContentInfo.Content._id, this.updateContentMetaWithCurrentVersion);
+        }
+    }
+
+    /**
+     * Updates selected content item meta with a current version info object
+     *
+     * @method updateContentMetaWithCurrentVersion
+     * @param {Object} response
+     */
+    updateContentMetaWithCurrentVersion(response) {
+        const contentMeta = JSON.parse(JSON.stringify(this.state.contentMeta));
+        const currentVersion = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion;
+
+        contentMeta.CurrentVersion = currentVersion;
+
+        this.setState((state) => ({ ...state, contentMeta, isPreviewMetaReady: true }));
     }
 
     findContentType(identifier) {
@@ -125,7 +149,7 @@ export default class UniversalDiscoveryModule extends Component {
             ...state,
             contentMeta,
             isLocationAllowed,
-            canRenderMetaPreview: false,
+            isPreviewMetaReady: false,
         }));
     }
 
@@ -193,19 +217,20 @@ export default class UniversalDiscoveryModule extends Component {
             return null;
         }
 
+        const { contentTypesMap, maxHeight, activeTab, contentMeta } = this.state;
+
         return (
             <div className="m-ud__preview">
                 <ContentMetaPreviewComponent
-                    data={this.addContentTypeInfo([this.state.contentMeta])[0]}
+                    data={this.addContentTypeInfo([contentMeta])[0]}
                     canSelectContent={this.canSelectContent}
                     onSelectContent={this.updateSelectedContent}
-                    loadContentInfo={this.props.loadContentInfo}
                     restInfo={this.props.restInfo}
-                    contentTypesMap={this.state.contentTypesMap}
+                    contentTypesMap={contentTypesMap}
                     languages={this.props.languages}
                     labels={this.props.labels.contentMetaPreview}
-                    maxHeight={this.state.maxHeight}
-                    activeTab={this.state.activeTab}
+                    maxHeight={maxHeight}
+                    activeTab={activeTab}
                 />
             </div>
         );
@@ -600,6 +625,7 @@ UniversalDiscoveryModule.defaultProps = {
             creationDate: 'Creation date',
             lastModified: 'Last modified',
             translations: 'Translations',
+            imagePreviewNotAvailable: 'Content preview is not available',
         },
         search: {
             title: 'Search',

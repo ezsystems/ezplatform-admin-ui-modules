@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './css/content.meta.preview.component.css';
@@ -10,60 +10,19 @@ export default class ContentMetaPreviewComponent extends Component {
         super();
 
         this.state = {
-            imageUri: null,
+            imageUri: '',
             translations: [],
             selectContentEnabled: false,
         };
 
         this.toggleEnabledState = this.toggleEnabledState.bind(this);
-        this.setImageUri = this.setImageUri.bind(this);
     }
 
-    componentDidMount() {
-        this.loadContentInfo(this.props.data.ContentInfo.Content._id);
-    }
+    componentWillReceiveProps(props) {
+        const translations = this.getTranslations(props.data);
+        const imageUri = this.getImageUri(props.data);
 
-    UNSAFE_componentWillReceiveProps(props) {
-        if (props.data.id === this.props.data.id) {
-            return;
-        }
-
-        this.setState((state) => ({ ...state, imageUri: null }));
-        this.loadContentInfo(props.data.ContentInfo.Content._id);
-    }
-
-    /**
-     * Loads content info
-     *
-     * @method loadContentInfo
-     * @param {String} contentId
-     * @memberof ContentMetaPreviewComponent
-     */
-    loadContentInfo(contentId) {
-        const promise = new Promise((resolve) => this.props.loadContentInfo(contentId, resolve));
-
-        promise.then(this.setImageUri).catch((error) => console.log('load:content:info:error', error));
-    }
-
-    /**
-     * Sets image URI to image preview
-     *
-     * @method setImageUri
-     * @param {Object} response response from REST endpoint
-     * @memberof ContentMetaPreviewComponent
-     */
-    setImageUri(response) {
-        if (!response.View.Result.count) {
-            return;
-        }
-
-        const version = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion.Version;
-        const imageField = version.Fields.field.find((field) => field.fieldTypeIdentifier === 'ezimage');
-        const versionLanguages = version.VersionInfo.VersionTranslationInfo.Language;
-        const translations = versionLanguages.map((langauge) => this.props.languages.mappings[langauge.languageCode].name);
-        const imageUri = imageField && imageField.fieldValue ? imageField.fieldValue.uri : null;
-
-        this.setState((state) => ({ ...state, imageUri, translations }));
+        this.setState((state) => ({ ...state, translations, imageUri }));
     }
 
     /**
@@ -134,6 +93,42 @@ export default class ContentMetaPreviewComponent extends Component {
     }
 
     /**
+     * Gets image URI to image preview from content meta
+     *
+     * @method getImageUri
+     * @returns {String}
+     * @memberof ContentMetaPreviewComponent
+     */
+    getImageUri(data) {
+        if (!data || !data.CurrentVersion) {
+            return '';
+        }
+
+        const version = data.CurrentVersion.Version;
+        const imageField = version.Fields.field.find((field) => field.fieldTypeIdentifier === 'ezimage');
+
+        return imageField && imageField.fieldValue ? imageField.fieldValue.uri : '';
+    }
+
+    /**
+     * Gets list of translations from content meta
+     *
+     * @method getTranslations
+     * @returns {Array}
+     * @memberof ContentMetaPreviewComponent
+     */
+    getTranslations(data) {
+        if (!data || !data.CurrentVersion) {
+            return [];
+        }
+
+        const version = data.CurrentVersion.Version;
+        const versionLanguages = version.VersionInfo.VersionTranslationInfo.Language;
+
+        return versionLanguages.map((langauge) => this.props.languages.mappings[langauge.languageCode].name);
+    }
+
+    /**
      * Renders a translation item
      *
      * @method renderTranslation
@@ -146,6 +141,22 @@ export default class ContentMetaPreviewComponent extends Component {
                 {translation}
             </span>
         );
+    }
+
+    renderImagePreview() {
+        if (!this.props.data.CurrentVersion) {
+            return (
+                <svg className="c-meta-preview__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
+                </svg>
+            );
+        }
+
+        if (!this.state.imageUri.length) {
+            return <Fragment>{this.props.labels.imagePreviewNotAvailable}</Fragment>;
+        }
+
+        return <img className="c-meta-preview__image" src={this.state.imageUri} alt="" />;
     }
 
     render() {
@@ -162,9 +173,7 @@ export default class ContentMetaPreviewComponent extends Component {
                         {this.renderIcon()} {contentTypeName}
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
-                        <div className="c-meta-preview__image-wrapper">
-                            <img className="c-meta-preview__image" src={this.state.imageUri} alt="" />
-                        </div>
+                        <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
                         <div className="c-meta-preview__name">{data.Name}</div>
                         {this.renderSelectContentBtn()}
                         <div className="c-meta-preview__content-info">
@@ -190,7 +199,6 @@ ContentMetaPreviewComponent.propTypes = {
     data: PropTypes.object.isRequired,
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
-    loadContentInfo: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
@@ -203,6 +211,7 @@ ContentMetaPreviewComponent.propTypes = {
         creationDate: PropTypes.string.isRequired,
         lastModified: PropTypes.string.isRequired,
         translations: PropTypes.string.isRequired,
+        imagePreviewNotAvailable: PropTypes.string.isRequired,
     }).isRequired,
     maxHeight: PropTypes.number.isRequired,
     activeTab: PropTypes.string.isRequired,
