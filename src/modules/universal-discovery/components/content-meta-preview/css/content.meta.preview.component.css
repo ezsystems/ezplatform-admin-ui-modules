@@ -41,6 +41,8 @@
     height: 190px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
     background: #e5e5e5;
     margin-bottom: 10px;
 }
@@ -73,7 +75,7 @@
     background: #106d95;
     color: #fff;
     cursor: pointer;
-    transition: background .3s cubic-bezier(.25, .8, .25, 1);
+    transition: background 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .c-meta-preview__btn--select[disabled] {
@@ -84,7 +86,7 @@
 
 .c-meta-preview__btn--select:not([disabled]):hover,
 .c-meta-preview__btn--select:not([disabled]):focus {
-    background: #00476F;
+    background: #00476f;
 }
 
 .c-meta-preview__icon {
