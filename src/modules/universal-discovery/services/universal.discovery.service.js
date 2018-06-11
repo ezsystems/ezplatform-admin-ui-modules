@@ -332,13 +332,13 @@ export const loadBookmarks = (restInfo, callback) => {
  *
  * @function bookmark
  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} path Path to location
+ * @param {String} locationId location id
  * @param {Function} callback
  */
-export const addBookmark = (restInfo, path, callback) => {
+export const addBookmark = (restInfo, locationId, callback) => {
     const basicRequestInit = getBasicRequestInit(restInfo);
 
-    const request = new Request(`${ENDPOINT_BOOKMARK}/${path}`, {
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
         ...basicRequestInit,
         method: 'POST',
     });
@@ -354,13 +354,13 @@ export const addBookmark = (restInfo, path, callback) => {
  *
  * @function bookmark
  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} path Path to location
+ * @param {String} locationId location id
  * @param {Function} callback
  */
-export const removeBookmark = (restInfo, path, callback) => {
+export const removeBookmark = (restInfo, locationId, callback) => {
     const basicRequestInit = getBasicRequestInit(restInfo);
 
-    const request = new Request(`${ENDPOINT_BOOKMARK}/${path}`, {
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
         ...basicRequestInit,
         method: 'DELETE',
     });
@@ -376,13 +376,13 @@ export const removeBookmark = (restInfo, path, callback) => {
  *
  * @function loadBookmarks
  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} path Path to location
+ * @param {String} locationId location id
  * @param {Function} callback
  */
-export const checkIfBookmarked = (restInfo, path, callback) => {
+export const checkIfBookmarked = (restInfo, locationId, callback) => {
     const basicRequestInit = getBasicRequestInit(restInfo);
 
-    const request = new Request(`${ENDPOINT_BOOKMARK}/${path}`, {
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
         ...basicRequestInit,
         method: 'HEAD',
     });

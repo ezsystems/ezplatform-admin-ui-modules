@@ -24,14 +24,13 @@ export default class ContentMetaPreviewComponent extends Component {
     }
 
     componentWillReceiveProps(props) {
-        const { pathString } = props.data;
-        const contentPathForUrl = pathString.slice(1, -1);
+        const { id } = props.data;
         const translations = this.getTranslations(props.data);
         const imageUri = this.getImageUri(props.data);
 
         this.setState((state) => ({ ...state, translations, imageUri, bookmarked: null }));
 
-        this.checkIfBookmarked(contentPathForUrl);
+        this.checkIfBookmarked(id);
     }
 
     /**
@@ -204,8 +203,8 @@ export default class ContentMetaPreviewComponent extends Component {
      */
     removeBookmark() {
         const { onBookmarkRemoved, data, restInfo } = this.props;
-        const contentPathForUrl = data.pathString.slice(1, -1);
-        const unbookmarked = new Promise((resolve) => removeBookmark(restInfo, contentPathForUrl, resolve));
+        const locationId = data.id;
+        const unbookmarked = new Promise((resolve) => removeBookmark(restInfo, locationId, resolve));
 
         unbookmarked
             .then(() => {
@@ -223,8 +222,8 @@ export default class ContentMetaPreviewComponent extends Component {
      */
     addBookmark() {
         const { onBookmarkAdded, data, restInfo } = this.props;
-        const contentPathForUrl = data.pathString.slice(1, -1);
-        const bookmarked = new Promise((resolve) => addBookmark(restInfo, contentPathForUrl, resolve));
+        const locationId = data.id;
+        const bookmarked = new Promise((resolve) => addBookmark(restInfo, locationId, resolve));
 
         bookmarked
             .then(() => {
@@ -277,9 +276,7 @@ export default class ContentMetaPreviewComponent extends Component {
                         <div className="c-meta-preview__content-bookmark">{this.renderBookmarkIcon()}</div>
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
-                        <div className="c-meta-preview__image-wrapper">
-                            <img className="c-meta-preview__image" src={this.renderImagePreview()} />
-                        </div>
+                        <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
                         <div className="c-meta-preview__name">{data.Name}</div>
                         {this.renderSelectContentBtn()}
                         <div className="c-meta-preview__content-info">
