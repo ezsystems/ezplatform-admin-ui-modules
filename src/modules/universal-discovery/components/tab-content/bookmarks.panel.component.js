@@ -7,8 +7,8 @@ import BookmarksComponent from '../bookmarks/bookmarks.component';
 import './css/bookmarks.panel.component.css';
 
 export default class BookmarksPanelComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this._refBookmarksComponent = null;
 
@@ -40,7 +40,7 @@ export default class BookmarksPanelComponent extends Component {
             contentTypesMap,
             bookmarksPerPage,
             labels,
-            restInfo
+            restInfo,
         } = this.props;
 
         return {
@@ -51,7 +51,7 @@ export default class BookmarksPanelComponent extends Component {
             contentTypesMap,
             bookmarksPerPage,
             labels,
-            restInfo
+            restInfo,
         };
     }
 
@@ -59,7 +59,7 @@ export default class BookmarksPanelComponent extends Component {
         const { isVisible } = this.props;
 
         return {
-            hidden: !isVisible
+            hidden: !isVisible,
         };
     }
 
@@ -68,12 +68,9 @@ export default class BookmarksPanelComponent extends Component {
         const bookmarksAttrs = this.getBookmarksAttrs();
 
         return (
-            <div className='c-bookmarks-panel' {...wrapperAttrs}>
+            <div className="c-bookmarks-panel" {...wrapperAttrs}>
                 <TabContentPanelComponent {...this.props}>
-                    <BookmarksComponent
-                        ref={this.setBookmarksComponentRef}
-                        {...bookmarksAttrs}
-                    />
+                    <BookmarksComponent ref={this.setBookmarksComponentRef} {...bookmarksAttrs} />
                 </TabContentPanelComponent>
             </div>
         );
@@ -91,6 +88,6 @@ BookmarksPanelComponent.propTypes = {
     labels: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired
+        siteaccess: PropTypes.string.isRequired,
     }).isRequired,
 };

@@ -1,47 +1,12 @@
+import { showErrorNotification } from '../../common/services/notification.service';
+import { handleRequestResponse } from '../helpers/request.helper.js';
+
 const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
 const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
-const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
-
-/**
- * Handles request error
- *
- * @function handleRequestResponse
- * @param {Response} response
- * @returns {Error|Promise}
- */
-const handleRequestError = (response) => {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-
-    return response;
-};
-
-/**
- * Handles request response
- *
- * @function handleRequestResponse
- * @param {Response} response
- * @returns {Error|Promise}
- */
-const handleRequestResponse = (response) => {
-    return handleRequestError(response).json();
-};
-
-/**
- * Handles request response; returns status if response is OK
- *
- * @function handleRequestResponseStatus
- * @param {Response} response
- * @returns {Error|Promise}
- */
-const handleRequestResponseStatus = (response) => {
-    return handleRequestError(response).status;
-};
 
 /**
  * Loads preselected location data
@@ -66,7 +31,7 @@ export const loadPreselectedLocationData = ({ startingLocationId, locationId, li
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:preselected:location:data', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -106,7 +71,7 @@ export const loadContentInfo = ({ token, siteaccess }, contentId, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -145,7 +110,7 @@ export const loadLocation = ({ token, siteaccess, locationId, limit = QUERY_LIMI
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:location:by:id', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -171,7 +136,7 @@ export const checkCreatePermission = ({ token, contentTypeIdentifier, languageCo
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:check:create:permission', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -216,7 +181,7 @@ export const findLocationsByParentLocationId = ({ token, siteaccess, parentLocat
                 data: json,
             })
         )
-        .catch((error) => console.log('error:find:locations:by:parent:location:id', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -256,7 +221,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback)
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:find:content:by:search:query', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -281,123 +246,5 @@ export const loadContentTypes = ({ token, siteaccess }, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
-};
-
-/**
- * Returns basic RequestInit object for Request
- *
- * @function getBasicRequestInit
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @returns {RequestInit}
- */
-const getBasicRequestInit = ({ token, siteaccess }) => {
-    return {
-        headers: {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        },
-        mode: 'cors',
-        credentials: 'same-origin',
-    };
-};
-
-/**
- * Loads bookmarks
- *
- * @function loadBookmarks
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {Function} callback
- */
-export const loadBookmarks = (restInfo, callback) => {
-    const basicRequestInit = getBasicRequestInit(restInfo);
-
-    const request = new Request(ENDPOINT_BOOKMARK, {
-        ...basicRequestInit,
-        method: 'GET',
-        headers: {
-            ...basicRequestInit.headers,
-            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
-        },
-    });
-
-    fetch(request)
-        .then(handleRequestResponse)
-        .then(callback)
-        .catch((error) => console.log('error:load:bookmarks', error));
-};
-
-/**
- * Addsbookmark
- *
- * @function bookmark
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} locationId location id
- * @param {Function} callback
- */
-export const addBookmark = (restInfo, locationId, callback) => {
-    const basicRequestInit = getBasicRequestInit(restInfo);
-
-    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
-        ...basicRequestInit,
-        method: 'POST',
-    });
-
-    fetch(request)
-        .then(handleRequestResponseStatus)
-        .then(callback)
-        .catch((error) => console.log('error:load:bookmarks', error));
-};
-
-/**
- * Removes bookmark
- *
- * @function bookmark
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} locationId location id
- * @param {Function} callback
- */
-export const removeBookmark = (restInfo, locationId, callback) => {
-    const basicRequestInit = getBasicRequestInit(restInfo);
-
-    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
-        ...basicRequestInit,
-        method: 'DELETE',
-    });
-
-    fetch(request)
-        .then(handleRequestResponseStatus)
-        .then(callback)
-        .catch((error) => console.log('error:load:bookmarks', error));
-};
-
-/**
- * Checks if given location is bookmarked
- *
- * @function loadBookmarks
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} locationId location id
- * @param {Function} callback
- */
-export const checkIfBookmarked = (restInfo, locationId, callback) => {
-    const basicRequestInit = getBasicRequestInit(restInfo);
-
-    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
-        ...basicRequestInit,
-        method: 'HEAD',
-    });
-    const bookmarkedStatusCode = 200;
-    const notBookmarkedStatusCode = 404;
-
-    fetch(request)
-        .then((response) => {
-            const { status } = response;
-            if (status === bookmarkedStatusCode || status === notBookmarkedStatusCode) {
-                return status === bookmarkedStatusCode;
-            }
-
-            handleRequestError(response);
-        })
-        .then(callback)
-        .catch((error) => console.log('error:check:if:bookmarked', error));
+        .catch(showErrorNotification);
 };

@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ContentTableComponent from '../content-table/content.table.component';
-import { loadBookmarks } from '../../services/universal.discovery.service';
-import { showErrorNotification } from '../../helpers/error.helper';
+import { loadBookmarks } from '../../services/bookmark.service';
+import { showErrorNotification } from '../../../common/services/notification.service';
+import { areSameLocations } from '../../../common/helpers/compare.helper';
 
 import './css/bookmarks.component.css';
 
 export default class BookmarksComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             items: [],
-            isLoading: false
+            isLoading: false,
         };
 
         this.updateItemsState = this.updateItemsState.bind(this);
@@ -53,11 +54,9 @@ export default class BookmarksComponent extends Component {
      * @memberof BookmarksComponent
      */
     removeItem(itemToRemoveLocation) {
-        const areSameItems = (a, b) => a.id === b.id;
-
-        this.setState(state => ({
+        this.setState((state) => ({
             ...state,
-            items: state.items.filter((item) => !areSameItems(item.Location, itemToRemoveLocation))
+            items: state.items.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
         }));
     }
 
@@ -69,25 +68,28 @@ export default class BookmarksComponent extends Component {
      * @memberof BookmarksComponent
      */
     addItem(itemToAddLocation) {
-        this.setState(state => ({
+        this.setState((state) => ({
             ...state,
-            items: [...state.items, { Location: itemToAddLocation }]
+            items: [...state.items, { Location: itemToAddLocation }],
         }));
     }
 
     /**
-     * Sets isLoading flag
+     * Sets isLoading state flag
      *
-     * @method setIsLoading
-     * @param {boolean} isLoading
-     * @param {function} callback
+     * @method setLoadingState
+     * @param {Boolean} isLoading
+     * @param {Function} callback
      * @memberof BookmarksComponent
      */
-    setIsLoading(isLoading, callback) {
-        this.setState(state => ({
-            ...state,
-            isLoading,
-        }), callback);
+    setLoadingState(isLoading, callback) {
+        this.setState(
+            (state) => ({
+                ...state,
+                isLoading,
+            }),
+            callback
+        );
     }
 
     /**
@@ -97,13 +99,11 @@ export default class BookmarksComponent extends Component {
      * @memberof BookmarksComponent
      */
     loadBookmarks() {
-        this.setIsLoading(true, () => {
+        this.setLoadingState(true, () => {
             const { restInfo } = this.props;
-            const bookmarksLoaded = new Promise(resolve => loadBookmarks(restInfo, resolve));
+            const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, resolve));
 
-            bookmarksLoaded
-                .then(this.updateItemsState)
-                .catch(showErrorNotification);
+            bookmarksLoaded.then(this.updateItemsState).catch(showErrorNotification);
         });
     }
 
@@ -114,39 +114,16 @@ export default class BookmarksComponent extends Component {
      * @memberof BookmarksComponent
      */
     updateItemsState(response) {
-        this.setState(state => ({
+        this.setState((state) => ({
             ...state,
             items: response.BookmarkList.items,
-            isLoading: false
+            isLoading: false,
         }));
     }
 
-    /**
-     * Get table labels
-     *
-     * @memberof BookmarksComponent
-     */
-    getTableLabels() {
-        const {
-            bookmarks,
-            contentTablePagination,
-            contentTableHeader,
-            contentTableItem
-        } = this.props.labels;
-
-        return {
-            title: bookmarks.tableTitle,
-            header: contentTableHeader,
-            item: contentTableItem,
-            pagination: contentTablePagination,
-            noItems: bookmarks.noBookmarks
-        };
-    }
-
     render() {
-        const { onItemSelect, bookmarksPerPage, contentTypesMap, maxHeight } = this.props;
+        const { onItemSelect, bookmarksPerPage, contentTypesMap, maxHeight, labels } = this.props;
         const { items, isLoading } = this.state;
-        const tableLabels = this.getTableLabels();
 
         return (
             <div className="c-bookmarks" style={{ maxHeight: `${maxHeight - 32}px` }}>
@@ -156,7 +133,9 @@ export default class BookmarksComponent extends Component {
                     onItemClick={onItemSelect}
                     perPage={bookmarksPerPage}
                     contentTypesMap={contentTypesMap}
-                    labels={tableLabels}
+                    title={labels.bookmarks.tableTitle}
+                    noItemsMessage={labels.bookmarks.noBookmarks}
+                    labels={labels}
                     showWhenNoItems={!isLoading}
                 />
             </div>
@@ -173,14 +152,14 @@ BookmarksComponent.propTypes = {
     labels: PropTypes.shape({
         bookmarks: PropTypes.shape({
             noBookmarks: PropTypes.string.isRequired,
-            tableTitle: PropTypes.string.isRequired
+            tableTitle: PropTypes.string.isRequired,
         }).isRequired,
         contentTablePagination: PropTypes.object.isRequired,
         contentTableHeader: PropTypes.object.isRequired,
-        contentTableItem: PropTypes.object.isRequired
+        contentTableItem: PropTypes.object.isRequired,
     }).isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired
-    }).isRequired
+        siteaccess: PropTypes.string.isRequired,
+    }).isRequired,
 };

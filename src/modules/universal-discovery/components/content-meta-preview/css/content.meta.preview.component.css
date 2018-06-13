@@ -34,7 +34,7 @@
     display: flex;
     align-items: center;
     width: 190px;
-    flex: 1 1;
+    flex: 1 1 auto;
 }
 
 .c-meta-preview__image-wrapper {
@@ -135,13 +135,13 @@
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add::after,
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove::after {
-    content: "";
+    content: '';
     display: block;
     width: 32px;
     height: 32px;
     margin-top: -33px;
     margin-left: -4px;
-    border-radius: 50%; 
+    border-radius: 50%;
 
     animation-direction: normal;
     animation-iteration-count: 1;
@@ -150,37 +150,18 @@
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add::after {
     background-color: transparent;
-    animation: background-to-transparent .25s ease-in;
+    animation: background-to-transparent 0.25s ease-in;
 }
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove::after {
-    background-color: #878787;
-    animation: background-to-gray .25s ease-in;
+    background-color: #106d95;
+    animation: background-to-white 0.25s ease-in;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove [class^="ez-icon"] {
-    fill: white;
+.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove [class^='ez-icon'] {
+    fill: #fff;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add [class^="ez-icon"] {
-    fill: #878787;
-}
-
-@keyframes background-to-gray {
-    0% {
-        transform: scale(1);
-        background-color: transparent;
-    }
-    50% {
-        transform: scale(0.75);
-        box-shadow: inset 10px 10px 10px 4px rgba(237, 237, 237, 0.1),
-            inset -10px -10px 10px 4px rgba(237, 237, 237, 0.1),
-            inset 10px -10px 10px 4px rgba(237, 237, 237, 0.1),
-            inset -10px 10px 10px 4px rgba(237, 237, 237, 0.1);
-        background-color: rgba(237, 237, 237, 0.1);
-    }
-    100% {
-        transform: scale(1);
-        background-color: #878787;
-    }
+.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add [class^='ez-icon'] {
+    fill: #106d95;
 }

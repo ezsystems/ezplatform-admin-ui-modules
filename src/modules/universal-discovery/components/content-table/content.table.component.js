@@ -15,7 +15,7 @@ export default class ContentTableComponent extends Component {
             items: props.items,
             perPage: props.perPage,
             activePage: 0,
-            pages: this.splitToPages(props.items, props.perPage)
+            pages: this.splitToPages(props.items, props.perPage),
         };
 
         this.setActivePage = this.setActivePage.bind(this);
@@ -23,10 +23,10 @@ export default class ContentTableComponent extends Component {
     }
 
     componentWillReceiveProps({ items, perPage }) {
-        this.setState(state => ({
+        this.setState((state) => ({
             ...state,
             items,
-            pages: this.splitToPages(items, perPage)
+            pages: this.splitToPages(items, perPage),
         }));
     }
 
@@ -57,13 +57,13 @@ export default class ContentTableComponent extends Component {
      * Sets active page index state
      *
      * @method setActivePage
-     * @param {number} activePage
+     * @param {Number} activePage
      * @memberof ContentTableComponent
      */
     setActivePage(activePage) {
-        this.setState(state => ({
+        this.setState((state) => ({
             ...state,
-            activePage
+            activePage,
         }));
     }
 
@@ -77,20 +77,22 @@ export default class ContentTableComponent extends Component {
      */
     renderItem(item) {
         const location = item.Location;
-
         const { contentTypesMap, onItemSelect, onItemClick, labels } = this.props;
 
-        return <ContentTableItemComponent
-            key={location.id}
-            data={location}
-            contentTypesMap={contentTypesMap}
-            onPreview={onItemSelect}
-            onItemClick={onItemClick}
-            labels={labels.item} />;
+        return (
+            <ContentTableItemComponent
+                key={location.id}
+                data={location}
+                contentTypesMap={contentTypesMap}
+                onPreview={onItemSelect}
+                onItemClick={onItemClick}
+                labels={labels}
+            />
+        );
     }
 
     /**
-     * Renders no items message 
+     * Renders no items message
      *
      * @method renderNoItemsMessage
      * @returns {Element}
@@ -98,18 +100,14 @@ export default class ContentTableComponent extends Component {
      */
     renderNoItemsMessage() {
         const { items } = this.state;
-        const { noItems } = this.props.labels;
-        const showMessage = items.length === 0 && !!noItems;
+        const { noItemsMessage } = this.props;
+        const showMessage = !items.length && !!noItemsMessage;
 
         if (!showMessage) {
             return null;
         }
 
-        return (
-            <div className="c-content-table__no-items">
-                {noItems}
-            </div>
-        )
+        return <div className="c-content-table__no-items">{noItemsMessage}</div>;
     }
 
     /**
@@ -121,7 +119,7 @@ export default class ContentTableComponent extends Component {
      */
     renderHeader() {
         const { items } = this.state;
-        const showHeader = items.length !== 0;
+        const showHeader = !items.length;
 
         if (!showHeader) {
             return null;
@@ -129,9 +127,7 @@ export default class ContentTableComponent extends Component {
 
         const { labels } = this.props;
 
-        return <ContentTableHeaderComponent
-            labels={labels.header}
-        />;
+        return <ContentTableHeaderComponent labels={labels} />;
     }
 
     /**
@@ -145,16 +141,15 @@ export default class ContentTableComponent extends Component {
         const { pages, activePage } = this.state;
         const { labels } = this.props;
         const pagesCount = pages.length;
-
         const paginationAttrs = {
+            labels,
             minIndex: 0,
             maxIndex: pagesCount - 1,
             activeIndex: activePage,
             onChange: this.setActivePage,
-            labels: labels.pagination
         };
 
-        if (pagesCount === 0 || paginationAttrs.minIndex === paginationAttrs.maxIndex) {
+        if (!pagesCount || paginationAttrs.minIndex === paginationAttrs.maxIndex) {
             return null;
         }
 
@@ -162,7 +157,7 @@ export default class ContentTableComponent extends Component {
     }
 
     render() {
-        const { showWhenNoItems, labels } = this.props;
+        const { showWhenNoItems, title } = this.props;
         const { pages, activePage } = this.state;
 
         if (!pages.length && !showWhenNoItems) {
@@ -170,11 +165,13 @@ export default class ContentTableComponent extends Component {
         }
 
         const itemsCount = this.state.items.length;
-        const pageToRender = itemsCount === 0 ? [] : pages[activePage];
+        const pageToRender = !itemsCount ? [] : pages[activePage];
 
         return (
             <div className="c-content-table">
-                <div className="c-content-table__title">{labels.title} ({itemsCount})</div>
+                <div className="c-content-table__title">
+                    {title} ({itemsCount})
+                </div>
                 {this.renderHeader()}
                 <div className="c-content-table__list">
                     {pageToRender.map(this.renderItem)}
@@ -193,22 +190,16 @@ ContentTableComponent.propTypes = {
     contentTypesMap: PropTypes.object.isRequired,
     onItemClick: PropTypes.func.isRequired,
     showWhenNoItems: PropTypes.bool,
-
+    title: PropTypes.string.isRequired,
+    noItemsMessage: PropTypes.string,
     labels: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        header: PropTypes.object.isRequired,
-        item: PropTypes.object.isRequired,
-        noItems: PropTypes.string.isRequired,
-        pagination: PropTypes.shape({
-            first: PropTypes.string.isRequired,
-            prev: PropTypes.string.isRequired,
-            next: PropTypes.string.isRequired,
-            last: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired
+        contentTablePagination: PropTypes.object.isRequired,
+        contentTableHeader: PropTypes.object.isRequired,
+        contentTableItem: PropTypes.object.isRequired,
+    }).isRequired,
 };
 
 ContentTableComponent.defaultProps = {
     onItemClick: null,
-    showWhenNoItems: false
-}
+    showWhenNoItems: false,
+};

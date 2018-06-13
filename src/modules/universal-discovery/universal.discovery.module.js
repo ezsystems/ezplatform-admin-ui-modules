@@ -436,7 +436,6 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
-
             ...item.attrs,
         };
 

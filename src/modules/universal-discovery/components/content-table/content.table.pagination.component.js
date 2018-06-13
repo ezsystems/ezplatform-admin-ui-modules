@@ -4,26 +4,24 @@ import PropTypes from 'prop-types';
 import './css/content.table.pagination.component.css';
 
 const ContentTablePaginationComponent = (props) => {
-    const { minIndex, activeIndex, maxIndex, onChange, labels } = props;
+    const { minIndex, activeIndex, maxIndex, onChange } = props;
+    const paginationLabels = props.labels.contentTablePagination;
     const btnClass = 'c-content-table-pagination__btn';
     const firstAttrs = {
         onClick: () => onChange(minIndex),
-        className: `${btnClass}--first`
+        className: `${btnClass}--first`,
     };
-
     const prevAttrs = {
         onClick: () => onChange(activeIndex - 1),
-        className: `${btnClass}--prev ${btnClass}--middle`
+        className: `${btnClass}--prev ${btnClass}--middle`,
     };
-
     const nextAttrs = {
         onClick: () => onChange(activeIndex + 1),
-        className: `${btnClass}--next ${btnClass}--middle`
+        className: `${btnClass}--next ${btnClass}--middle`,
     };
-
     const lastAttrs = {
         onClick: () => onChange(maxIndex),
-        className: `${btnClass}--last`
+        className: `${btnClass}--last`,
     };
 
     if (activeIndex === minIndex) {
@@ -38,13 +36,13 @@ const ContentTablePaginationComponent = (props) => {
 
     return (
         <div className="c-content-table-pagination">
-            <button {...firstAttrs}>&laquo; {labels.first}</button>
-            <button {...prevAttrs}>&lsaquo; {labels.prev}</button>
-            <button {...nextAttrs}>{labels.next} &rsaquo;</button>
-            <button {...lastAttrs}>{labels.last} &raquo;</button>
+            <button {...firstAttrs}>&laquo; {paginationLabels.first}</button>
+            <button {...prevAttrs}>&lsaquo; {paginationLabels.prev}</button>
+            <button {...nextAttrs}>{paginationLabels.next} &rsaquo;</button>
+            <button {...lastAttrs}>{paginationLabels.last} &raquo;</button>
         </div>
     );
-}
+};
 
 ContentTablePaginationComponent.propTypes = {
     minIndex: PropTypes.number.isRequired,
@@ -52,11 +50,13 @@ ContentTablePaginationComponent.propTypes = {
     activeIndex: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
     labels: PropTypes.shape({
-        first: PropTypes.string.isRequired,
-        prev: PropTypes.string.isRequired,
-        next: PropTypes.string.isRequired,
-        last: PropTypes.string.isRequired
-    }).isRequired
+        contentTablePagination: PropTypes.shape({
+            first: PropTypes.string.isRequired,
+            prev: PropTypes.string.isRequired,
+            next: PropTypes.string.isRequired,
+            last: PropTypes.string.isRequired,
+        }).isRequired,
+    }).isRequired,
 };
 
 export default ContentTablePaginationComponent;

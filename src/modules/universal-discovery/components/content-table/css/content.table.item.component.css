@@ -1,5 +1,5 @@
 .c-content-table-item {
-    flex: 1;
+    flex: 1 1 auto;
     display: flex;
     flex-wrap: nowrap;
 }
@@ -13,7 +13,7 @@
     flex-direction: column;
     font-size: 15px;
     line-height: 20px;
-    border-top: 1px solid #445A64;
+    border-top: 1px solid #445a64;
 }
 
 .c-content-table-item__name {
@@ -48,7 +48,7 @@
     fill: #0f6d95;
     width: 30px;
     height: 30px;
-    transition: fill .3s cubic-bezier(.25, .8, .25, 1);
+    transition: fill 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .c-content-table-item__btn--preview:hover .ez-icon,
