@@ -7,30 +7,6 @@ import BookmarksComponent from '../bookmarks/bookmarks.component';
 import './css/bookmarks.panel.component.css';
 
 export default class BookmarksPanelComponent extends Component {
-    constructor(props) {
-        super(props);
-
-        this._refBookmarksComponent = null;
-
-        this.setBookmarksComponentRef = this.setBookmarksComponentRef.bind(this);
-    }
-
-    onBookmarkRemoved(item) {
-        if (this._refBookmarksComponent) {
-            this._refBookmarksComponent.onBookmarkRemoved(item);
-        }
-    }
-
-    onBookmarkAdded(item) {
-        if (this._refBookmarksComponent) {
-            this._refBookmarksComponent.onBookmarkAdded(item);
-        }
-    }
-
-    setBookmarksComponentRef(bookmarksComponent) {
-        this._refBookmarksComponent = bookmarksComponent;
-    }
-
     getBookmarksAttrs() {
         const {
             multiple,
@@ -41,6 +17,8 @@ export default class BookmarksPanelComponent extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
+            userBookmarks,
+            requireBookmarksCount,
         } = this.props;
 
         return {
@@ -52,6 +30,8 @@ export default class BookmarksPanelComponent extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
+            userBookmarks,
+            requireBookmarksCount,
         };
     }
 
@@ -70,7 +50,7 @@ export default class BookmarksPanelComponent extends Component {
         return (
             <div className="c-bookmarks-panel" {...wrapperAttrs}>
                 <TabContentPanelComponent {...this.props}>
-                    <BookmarksComponent ref={this.setBookmarksComponentRef} {...bookmarksAttrs} />
+                    <BookmarksComponent {...bookmarksAttrs} />
                 </TabContentPanelComponent>
             </div>
         );
@@ -86,6 +66,8 @@ BookmarksPanelComponent.propTypes = {
     contentTypesMap: PropTypes.object.isRequired,
     bookmarksPerPage: PropTypes.number.isRequired,
     labels: PropTypes.object.isRequired,
+    userBookmarks: PropTypes.object.isRequired,
+    requireBookmarksCount: PropTypes.func.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,

@@ -154,14 +154,33 @@
 }
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove::after {
-    background-color: #106d95;
-    animation: background-to-white 0.25s ease-in;
+    background-color: #f3f3f3;
+    animation: background-to-base 0.25s ease-in;
 }
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove [class^='ez-icon'] {
-    fill: #fff;
+    fill: #106d95;
 }
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add [class^='ez-icon'] {
     fill: #106d95;
+}
+
+@keyframes background-to-base {
+    0% {
+        transform: scale(1);
+        background-color: transparent;
+    }
+    50% {
+        transform: scale(0.75);
+        box-shadow: inset 10px 10px 10px 4px rgb(237, 237, 237, 0.1)
+            inset -10px -10px 10px 4px rgba(237, 237, 237, 0.1),
+            inset 10px -10px 10px 4px rgba(237, 237, 237, 0.1),
+            inset -10px 10px 10px 4px rgba(237, 237, 237, 0.1);
+        background-color: rgba(237, 237, 237, 0.1);
+    }
+    100% {
+        transform: scale(1);
+        background-color: #f3f3f3;
+    }
 }

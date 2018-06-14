@@ -16,6 +16,7 @@ export default class SearchComponent extends Component {
 
         this.updateItemsState = this.updateItemsState.bind(this);
         this.searchContent = this.searchContent.bind(this);
+        this.onRequireItemsCount = this.onRequireItemsCount.bind(this);
     }
 
     /**
@@ -59,6 +60,14 @@ export default class SearchComponent extends Component {
         }));
     }
 
+    onRequireItemsCount(count) {
+        const { items } = this.state;
+
+        if (count > items.length) {
+            throw new Error('All items loaded.');
+        }
+    }
+
     renderSubmitBtn() {
         const btnAttrs = { className: 'c-search__submit' };
         const svgAttrs = { className: 'ez-icon' };
@@ -100,6 +109,8 @@ export default class SearchComponent extends Component {
                 </div>
                 <ContentTableComponent
                     items={this.state.items}
+                    count={this.state.items.length}
+                    requireItemsCount={this.onRequireItemsCount}
                     onItemSelect={onItemSelect}
                     perPage={searchResultsPerPage}
                     contentTypesMap={contentTypesMap}

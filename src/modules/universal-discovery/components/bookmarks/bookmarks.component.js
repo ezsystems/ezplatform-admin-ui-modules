@@ -2,142 +2,63 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ContentTableComponent from '../content-table/content.table.component';
-import { loadBookmarks } from '../../services/bookmark.service';
-import { showErrorNotification } from '../../../common/services/notification.service';
-import { areSameLocations } from '../../../common/helpers/compare.helper';
 
 import './css/bookmarks.component.css';
 
 export default class BookmarksComponent extends Component {
-    constructor(props) {
-        super(props);
+    renderTable() {
+        const { userBookmarks } = this.props;
 
-        this.state = {
-            items: [],
-            isLoading: false,
-        };
+        if (userBookmarks.count === null) {
+            return null;
+        }
 
-        this.updateItemsState = this.updateItemsState.bind(this);
-    }
+        const { onItemSelect, bookmarksPerPage, contentTypesMap, labels, requireBookmarksCount } = this.props;
 
-    componentDidMount() {
-        this.loadBookmarks();
-    }
-
-    /**
-     * Called when bookmark was removed
-     *
-     * @method onBookmarkRemoved
-     * @param {Object} itemLocation
-     * @memberof BookmarksComponent
-     */
-    onBookmarkRemoved(itemLocation) {
-        this.removeItem(itemLocation);
-    }
-
-    /**
-     * Called when bookmark was added
-     *
-     * @method onBookmarkAdded
-     * @param {Object} itemLocation
-     * @memberof BookmarksComponent
-     */
-    onBookmarkAdded(itemLocation) {
-        this.addItem(itemLocation);
-    }
-
-    /**
-     * Removes item from list
-     *
-     * @method removeItem
-     * @param {Object} itemToRemoveLocation
-     * @memberof BookmarksComponent
-     */
-    removeItem(itemToRemoveLocation) {
-        this.setState((state) => ({
-            ...state,
-            items: state.items.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
-        }));
-    }
-
-    /**
-     * Adds item to list
-     *
-     * @method addItem
-     * @param {Object} itemToAddLocation
-     * @memberof BookmarksComponent
-     */
-    addItem(itemToAddLocation) {
-        this.setState((state) => ({
-            ...state,
-            items: [...state.items, { Location: itemToAddLocation }],
-        }));
-    }
-
-    /**
-     * Sets isLoading state flag
-     *
-     * @method setLoadingState
-     * @param {Boolean} isLoading
-     * @param {Function} callback
-     * @memberof BookmarksComponent
-     */
-    setLoadingState(isLoading, callback) {
-        this.setState(
-            (state) => ({
-                ...state,
-                isLoading,
-            }),
-            callback
+        return (
+            <ContentTableComponent
+                items={userBookmarks.items}
+                count={userBookmarks.count}
+                requireItemsCount={requireBookmarksCount}
+                onItemSelect={onItemSelect}
+                onItemClick={onItemSelect}
+                perPage={bookmarksPerPage}
+                contentTypesMap={contentTypesMap}
+                title={labels.bookmarks.tableTitle}
+                noItemsMessage={labels.bookmarks.noBookmarks}
+                labels={labels}
+            />
         );
     }
 
-    /**
-     * Loads bookmarks
-     *
-     * @method loadBookmarks
-     * @memberof BookmarksComponent
-     */
-    loadBookmarks() {
-        this.setLoadingState(true, () => {
-            const { restInfo } = this.props;
-            const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, resolve));
+    renderSpinner() {
+        const { count } = this.props.userBookmarks;
 
-            bookmarksLoaded.then(this.updateItemsState).catch(showErrorNotification);
-        });
+        if (count === null) {
+            return (
+                <svg className="c-bookmarks__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
+                </svg>
+            );
+        }
     }
 
-    /**
-     * Updates items state with bookmarks results
-     *
-     * @param {Object} response content query REST endpoint response
-     * @memberof BookmarksComponent
-     */
-    updateItemsState(response) {
-        this.setState((state) => ({
-            ...state,
-            items: response.BookmarkList.items,
-            isLoading: false,
-        }));
+    renderNoBookmarksInfo() {
+        const { userBookmarks, labels } = this.props;
+
+        if (userBookmarks.count === 0) {
+            return <div className="c-bookmarks__no-bookmarks-info">{labels.bookmarks.noBookmarks}</div>;
+        }
     }
 
     render() {
-        const { onItemSelect, bookmarksPerPage, contentTypesMap, maxHeight, labels } = this.props;
-        const { items, isLoading } = this.state;
+        const { maxHeight } = this.props;
 
         return (
             <div className="c-bookmarks" style={{ maxHeight: `${maxHeight - 32}px` }}>
-                <ContentTableComponent
-                    items={items}
-                    onItemSelect={onItemSelect}
-                    onItemClick={onItemSelect}
-                    perPage={bookmarksPerPage}
-                    contentTypesMap={contentTypesMap}
-                    title={labels.bookmarks.tableTitle}
-                    noItemsMessage={labels.bookmarks.noBookmarks}
-                    labels={labels}
-                    showWhenNoItems={!isLoading}
-                />
+                {this.renderSpinner()}
+                {this.renderNoBookmarksInfo()}
+                {this.renderTable()}
             </div>
         );
     }
@@ -149,6 +70,8 @@ BookmarksComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     bookmarksPerPage: PropTypes.number.isRequired,
+    userBookmarks: PropTypes.object.isRequired,
+    requireBookmarksCount: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         bookmarks: PropTypes.shape({
             noBookmarks: PropTypes.string.isRequired,

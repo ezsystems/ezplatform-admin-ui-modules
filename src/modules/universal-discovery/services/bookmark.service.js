@@ -10,9 +10,9 @@ const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
  * @param {Function} callback
  */
-export const loadBookmarks = (restInfo, callback) => {
+export const loadBookmarks = (restInfo, limit, offset, callback) => {
     const basicRequestInit = getBasicRequestInit(restInfo);
-    const request = new Request(ENDPOINT_BOOKMARK, {
+    const request = new Request(`${ENDPOINT_BOOKMARK}?limit=${limit}&offset=${offset}`, {
         ...basicRequestInit,
         method: 'GET',
         headers: {

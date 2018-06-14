@@ -16,16 +16,25 @@ export default class ContentTableComponent extends Component {
             perPage: props.perPage,
             activePage: 0,
             pages: this.splitToPages(props.items, props.perPage),
+            count: props.count,
         };
 
         this.setActivePage = this.setActivePage.bind(this);
         this.renderItem = this.renderItem.bind(this);
     }
 
-    componentWillReceiveProps({ items, perPage }) {
+    componentWillMount() {
+        this.ensurePageItemsLoaded(0);
+    }
+
+    componentWillReceiveProps({ items, perPage, count }) {
+        const maxPage = !count ? 0 : Math.floor((count - 1) / perPage);
+
         this.setState((state) => ({
             ...state,
             items,
+            count,
+            activePage: state.activePage <= maxPage ? state.activePage : maxPage,
             pages: this.splitToPages(items, perPage),
         }));
     }
@@ -53,6 +62,14 @@ export default class ContentTableComponent extends Component {
         }, []);
     }
 
+    ensurePageItemsLoaded(activePage) {
+        const { requireItemsCount } = this.props;
+        const { count, perPage } = this.state;
+        const itemsNeededCount = Math.min(perPage * (activePage + 1), count);
+
+        requireItemsCount(itemsNeededCount);
+    }
+
     /**
      * Sets active page index state
      *
@@ -61,6 +78,8 @@ export default class ContentTableComponent extends Component {
      * @memberof ContentTableComponent
      */
     setActivePage(activePage) {
+        this.ensurePageItemsLoaded(activePage);
+
         this.setState((state) => ({
             ...state,
             activePage,
@@ -92,25 +111,6 @@ export default class ContentTableComponent extends Component {
     }
 
     /**
-     * Renders no items message
-     *
-     * @method renderNoItemsMessage
-     * @returns {Element}
-     * @memberof ContentTableComponent
-     */
-    renderNoItemsMessage() {
-        const { items } = this.state;
-        const { noItemsMessage } = this.props;
-        const showMessage = !items.length && !!noItemsMessage;
-
-        if (!showMessage) {
-            return null;
-        }
-
-        return <div className="c-content-table__no-items">{noItemsMessage}</div>;
-    }
-
-    /**
      * Renders single search results item
      *
      * @method renderHeader
@@ -119,7 +119,7 @@ export default class ContentTableComponent extends Component {
      */
     renderHeader() {
         const { items } = this.state;
-        const showHeader = !items.length;
+        const showHeader = !!items.length;
 
         if (!showHeader) {
             return null;
@@ -138,9 +138,9 @@ export default class ContentTableComponent extends Component {
      * @memberof ContentTableComponent
      */
     renderPagination() {
-        const { pages, activePage } = this.state;
+        const { activePage, count, perPage } = this.state;
         const { labels } = this.props;
-        const pagesCount = pages.length;
+        const pagesCount = !count ? 0 : Math.floor((count - 1) / perPage) + 1;
         const paginationAttrs = {
             labels,
             minIndex: 0,
@@ -156,26 +156,40 @@ export default class ContentTableComponent extends Component {
         return <ContentTablePaginationComponent {...paginationAttrs} />;
     }
 
-    render() {
-        const { showWhenNoItems, title } = this.props;
-        const { pages, activePage } = this.state;
+    renderPage() {
+        const { pages, activePage, perPage, count } = this.state;
+        const itemsCount = this.state.items.length;
+        const neededItemsCount = Math.min((activePage + 1) * perPage, count);
+        const allNeededItemsLoaded = itemsCount >= neededItemsCount;
 
-        if (!pages.length && !showWhenNoItems) {
-            return null;
+        if (!allNeededItemsLoaded) {
+            return (
+                <svg className="c-content-table__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
+                </svg>
+            );
         }
 
-        const itemsCount = this.state.items.length;
         const pageToRender = !itemsCount ? [] : pages[activePage];
+
+        return pageToRender.map(this.renderItem);
+    }
+
+    render() {
+        const { title, count } = this.props;
+
+        if (!count) {
+            return null;
+        }
 
         return (
             <div className="c-content-table">
                 <div className="c-content-table__title">
-                    {title} ({itemsCount})
+                    {title} ({count})
                 </div>
                 {this.renderHeader()}
                 <div className="c-content-table__list">
-                    {pageToRender.map(this.renderItem)}
-                    {this.renderNoItemsMessage()}
+                    {this.renderPage()}
                 </div>
                 {this.renderPagination()}
             </div>
@@ -185,13 +199,14 @@ export default class ContentTableComponent extends Component {
 
 ContentTableComponent.propTypes = {
     items: PropTypes.array.isRequired,
+    count: PropTypes.number.isRequired,
     perPage: PropTypes.number.isRequired,
     onItemSelect: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     onItemClick: PropTypes.func.isRequired,
-    showWhenNoItems: PropTypes.bool,
     title: PropTypes.string.isRequired,
     noItemsMessage: PropTypes.string,
+    requireItemsCount: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         contentTablePagination: PropTypes.object.isRequired,
         contentTableHeader: PropTypes.object.isRequired,
@@ -201,5 +216,4 @@ ContentTableComponent.propTypes = {
 
 ContentTableComponent.defaultProps = {
     onItemClick: null,
-    showWhenNoItems: false,
 };
