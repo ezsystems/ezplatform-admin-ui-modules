@@ -1,0 +1,57 @@
+.c-content-table-item {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.c-content-table-item__name,
+.c-content-table-item__type,
+.c-content-table-item__actions {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 15px;
+    line-height: 20px;
+    border-top: 1px solid #445a64;
+}
+
+.c-content-table-item__name {
+    flex: 1 1 280px;
+}
+
+.c-content-table-item__type {
+    flex: 1 1 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.c-content-table-item__actions {
+    flex: 0 0 90px;
+}
+
+.c-content-table-item__btn--preview {
+    background: none;
+    border: 0 none;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    padding: 0;
+}
+
+.c-content-table-item__btn--preview:focus {
+    outline: none;
+}
+
+.c-content-table-item__btn--preview .ez-icon {
+    fill: #0f6d95;
+    width: 30px;
+    height: 30px;
+    transition: fill 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.c-content-table-item__btn--preview:hover .ez-icon,
+.c-content-table-item__btn--preview:focus .ez-icon {
+    fill: #565e63;
+}

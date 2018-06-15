@@ -1,23 +1,12 @@
+import { showErrorNotification } from '../../common/services/notification.service';
+import { handleRequestResponse } from '../helpers/request.helper.js';
+
 const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
 const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
-/**
- * Handles request response
- *
- * @function handleRequestResponse
- * @param {Response} response
- * @returns {Error|Promise}
- */
-const handleRequestResponse = (response) => {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-
-    return response.json();
-};
 
 /**
  * Loads preselected location data
@@ -42,7 +31,7 @@ export const loadPreselectedLocationData = ({ startingLocationId, locationId, li
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:preselected:location:data', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -82,7 +71,7 @@ export const loadContentInfo = ({ token, siteaccess }, contentId, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -121,7 +110,7 @@ export const loadLocation = ({ token, siteaccess, locationId, limit = QUERY_LIMI
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:location:by:id', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -147,7 +136,7 @@ export const checkCreatePermission = ({ token, contentTypeIdentifier, languageCo
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:check:create:permission', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -192,7 +181,7 @@ export const findLocationsByParentLocationId = ({ token, siteaccess, parentLocat
                 data: json,
             })
         )
-        .catch((error) => console.log('error:find:locations:by:parent:location:id', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -232,7 +221,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback)
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:find:content:by:search:query', error));
+        .catch(showErrorNotification);
 };
 
 /**
@@ -257,5 +246,5 @@ export const loadContentTypes = ({ token, siteaccess }, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(showErrorNotification);
 };

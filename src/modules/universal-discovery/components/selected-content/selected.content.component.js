@@ -7,17 +7,17 @@ import SelectedContentPopupComponent from './selected.content.popup.component';
 import './css/selected.content.component.css';
 
 export default class SelectedContentComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             items: [],
-            isPopupVisible: false
+            isPopupVisible: false,
         };
     }
 
     componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {items: props.items}));
+        this.setState((state) => Object.assign({}, state, { items: props.items }));
     }
 
     /**
@@ -27,7 +27,7 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     togglePopup() {
-        this.setState(state => Object.assign({}, state, {isPopupVisible: !state.isPopupVisible}));
+        this.setState((state) => Object.assign({}, state, { isPopupVisible: !state.isPopupVisible }));
     }
 
     /**
@@ -37,7 +37,7 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     hidePopup() {
-        this.setState(state => Object.assign({}, state, {isPopupVisible: false}));
+        this.setState((state) => Object.assign({}, state, { isPopupVisible: false }));
     }
 
     /**
@@ -49,12 +49,15 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     renderSelectedItem(item) {
-        return <SelectedContentItemComponent
-            key={item.remoteId}
-            data={item}
-            onRemove={this.props.onItemRemove}
-            contentTypesMap={this.props.contentTypesMap}
-            labels={this.props.labels.selectedContentItem} />;
+        return (
+            <SelectedContentItemComponent
+                key={item.remoteId}
+                data={item}
+                onRemove={this.props.onItemRemove}
+                contentTypesMap={this.props.contentTypesMap}
+                labels={this.props.labels.selectedContentItem}
+            />
+        );
     }
 
     /**
@@ -89,10 +92,7 @@ export default class SelectedContentComponent extends Component {
         }
 
         return (
-            <SelectedContentPopupComponent
-                title={this.getTitle()}
-                visible={this.state.isPopupVisible}
-                onClose={this.hidePopup.bind(this)}>
+            <SelectedContentPopupComponent title={this.getTitle()} visible={this.state.isPopupVisible} onClose={this.hidePopup.bind(this)}>
                 {this.props.items.map(this.renderSelectedItem.bind(this))}
             </SelectedContentPopupComponent>
         );
@@ -117,7 +117,7 @@ export default class SelectedContentComponent extends Component {
     }
 
     render() {
-        const titles = this.props.items.map(item => item.ContentInfo.Content.Name).join(', ');
+        const titles = this.props.items.map((item) => item.ContentInfo.Content.Name).join(', ');
 
         return (
             <div className="c-selected-content">
@@ -143,7 +143,7 @@ SelectedContentComponent.propTypes = {
         selectedContent: PropTypes.shape({
             confirmedItems: PropTypes.string.isRequired,
             limit: PropTypes.string.isRequired,
-            noConfirmedContent: PropTypes.string.isRequired
-        }).isRequired
-    }).isRequired
+            noConfirmedContent: PropTypes.string.isRequired,
+        }).isRequired,
+    }).isRequired,
 };

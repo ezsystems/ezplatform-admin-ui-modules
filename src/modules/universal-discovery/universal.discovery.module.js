@@ -5,6 +5,7 @@ import TabNavItemComponent from './components/tab-nav/tab.nav.item.component';
 import FinderPanelComponent from './components/tab-content/finder.panel.component';
 import SearchPanelComponent from './components/tab-content/search.panel.component';
 import CreatePanelComponent from './components/tab-content/create.panel.component';
+import BookmarksPanelComponent from './components/tab-content/bookmarks.panel.component';
 import ContentCreatorComponent from './components/content-creator/content.creator.component';
 import SelectedContentComponent from './components/selected-content/selected.content.component';
 import ContentMetaPreviewComponent from './components/content-meta-preview/content.meta.preview.component';
@@ -15,12 +16,16 @@ import {
     findContentBySearchQuery,
     checkCreatePermission,
 } from './services/universal.discovery.service';
+import { checkIsBookmarked, loadBookmarks } from './services/bookmark.service';
+import { showErrorNotification } from '../common/services/notification.service';
+import { areSameLocations } from '../common/helpers/compare.helper';
 
 import './css/universal.discovery.module.css';
 
-const TAB_BROWSE = 'browse';
-const TAB_SEARCH = 'search';
-const TAB_CREATE = 'create';
+export const TAB_BROWSE = 'browse';
+export const TAB_SEARCH = 'search';
+export const TAB_CREATE = 'create';
+export const TAB_BOOKMARKS = 'bookmarks';
 
 export default class UniversalDiscoveryModule extends Component {
     constructor(props) {
@@ -46,6 +51,13 @@ export default class UniversalDiscoveryModule extends Component {
         this.handleConfirm = this.handleConfirm.bind(this);
         this.handleCreateContent = this.handleCreateContent.bind(this);
         this.updateContentMetaWithCurrentVersion = this.updateContentMetaWithCurrentVersion.bind(this);
+        this.onBookmarkRemoved = this.onBookmarkRemoved.bind(this);
+        this.onBookmarkAdded = this.onBookmarkAdded.bind(this);
+        this.setBookmarked = this.setBookmarked.bind(this);
+        this.requireBookmarksCount = this.requireBookmarksCount.bind(this);
+        this.onBookmarksLoaded = this.onBookmarksLoaded.bind(this);
+
+        this._refBookmarksPanelComponent = null;
 
         if (isForcedContentType) {
             selectedContentType = this.findContentType(props.cotfAllowedContentTypes[0]);
@@ -63,6 +75,13 @@ export default class UniversalDiscoveryModule extends Component {
             hasPermission: true,
             isLocationAllowed: true,
             isPreviewMetaReady: false,
+            userBookmarks: {
+                count: null,
+                items: [],
+            },
+            bookmarksRequiredCount: 0,
+            bookmarksDuringLoadingCount: 0,
+            bookmarked: {},
         };
     }
 
@@ -74,6 +93,31 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         this.setState((state) => ({ ...state, maxHeight: this._refContentContainer.clientHeight }));
+        this.initializeBookmarks();
+    }
+
+    /**
+     * Loads first 10 user's bookmarks (or less if user doesn't have that many bookmarks).
+     * Sets total count of user's bookmarks.
+     *
+     * @method initializeBookmarks
+     * @memberof UniversalDiscoveryModule
+     */
+    initializeBookmarks() {
+        const { restInfo } = this.props;
+        const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, 10, 0, resolve));
+
+        bookmarksLoaded
+            .then(({ BookmarkList }) => {
+                this.setState((state) => ({
+                    ...state,
+                    userBookmarks: {
+                        count: BookmarkList.count,
+                        items: BookmarkList.items,
+                    },
+                }));
+            })
+            .catch(showErrorNotification);
     }
 
     componentDidUpdate() {
@@ -153,6 +197,184 @@ export default class UniversalDiscoveryModule extends Component {
         }));
     }
 
+    dispatchBookmarkChangeEvent(locationId, bookmarked) {
+        const event = new CustomEvent('ez-bookmark-change', {
+            detail: {
+                bookmarked,
+                locationId,
+            },
+        });
+
+        document.body.dispatchEvent(event);
+    }
+
+    /**
+     * Checks whether location is already bookmarked
+     *
+     * @method checkIsBookmarked
+     * @param {String} locationId
+     * @memberof UniversalDiscoveryModule
+     */
+    checkIsBookmarked(locationId) {
+        const { restInfo } = this.props;
+        const checked = new Promise((resolve) => checkIsBookmarked(restInfo, locationId, resolve));
+
+        checked.then(this.setBookmarked.bind(this, locationId)).catch(showErrorNotification);
+    }
+
+    /**
+     * Sets bookmarked flag
+     *
+     * @method setBookmarked
+     * @param {String} locationId
+     * @param {Boolean} isBookmarked
+     * @memberof ContentMetaPreviewComponent
+     */
+    setBookmarked(locationId, isBookmarked) {
+        this.setState((state) => {
+            const bookmarked = {
+                ...state.bookmarked,
+            };
+            bookmarked[locationId] = isBookmarked;
+
+            return {
+                ...state,
+                bookmarked,
+            };
+        });
+    }
+
+    /**
+     * Returns true or false if locations bookmark data was cached
+     * if not, checks it and then caches it
+     *
+     * @method isBookmarked
+     * @param {String} locationId
+     * @memberof UniversalDiscoveryModule
+     */
+    isBookmarked(locationId) {
+        const { bookmarked } = this.state;
+        if (locationId in bookmarked) {
+            return bookmarked[locationId];
+        }
+
+        this.checkIsBookmarked(locationId);
+
+        return null;
+    }
+
+    /**
+     * Called on bookmarked removed
+     *
+     * @method onBookmarkRemoved
+     * @param {Object} itemToRemoveLocation
+     * @memberof UniversalDiscoveryModule
+     */
+    onBookmarkRemoved(itemToRemoveLocation) {
+        this.setState((state) => ({
+            ...state,
+            userBookmarks: {
+                count: state.userBookmarks.count - 1,
+                items: state.userBookmarks.items.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
+            },
+        }));
+        this.setBookmarked(itemToRemoveLocation.id, false);
+
+        const { activeTab } = this.state;
+
+        if (activeTab === TAB_BOOKMARKS) {
+            this.onItemSelect(null);
+        }
+
+        this.dispatchBookmarkChangeEvent(itemToRemoveLocation.id, false);
+    }
+
+    /**
+     * Called on bookmarked added
+     *
+     * @method onBookmarkAdded
+     * @param {Object} addedBookmarkLocation
+     * @memberof UniversalDiscoveryModule
+     */
+    onBookmarkAdded(addedBookmarkLocation) {
+        this.setState((state) => ({
+            ...state,
+            userBookmarks: {
+                count: state.userBookmarks.count + 1,
+                items: [{ Location: addedBookmarkLocation }, ...state.userBookmarks.items],
+            },
+        }));
+
+        this.setBookmarked(addedBookmarkLocation.id, true);
+        this.dispatchBookmarkChangeEvent(addedBookmarkLocation.id, true);
+    }
+
+    /**
+     * Called on bookmarks loaded
+     *
+     * @method onBookmarksLoaded
+     * @param {Object} { BookmarksList }
+     * @memberof UniversalDiscoveryModule
+     */
+    onBookmarksLoaded({ BookmarkList }) {
+        const { items } = BookmarkList;
+
+        this.setState((state) => ({
+            ...state,
+            bookmarksDuringLoadingCount: state.bookmarksDuringLoadingCount - items.length,
+            userBookmarks: {
+                ...state.userBookmarks,
+                items: [...items, ...state.userBookmarks.items],
+            },
+        }));
+
+        items.forEach((bookmarkLocation) => {
+            this.setBookmarked(bookmarkLocation.Location.id, true);
+        });
+    }
+
+    /**
+     * Loads bookmarks
+     *
+     * @method loadBookmarks
+     * @param {Number} itemsToLoadCount
+     * @memberof UniversalDiscoveryModule
+     */
+    loadBookmarks(itemsToLoadCount) {
+        const { restInfo } = this.props;
+        const { items } = this.state.userBookmarks;
+        const offset = items.length;
+        const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, itemsToLoadCount, offset, resolve));
+
+        bookmarksLoaded.then(this.onBookmarksLoaded).catch(showErrorNotification);
+    }
+
+    /**
+     * Ensures that enough bookmarks are loaded
+     *
+     * @method requireBookmarksCount
+     * @param {String} locationId
+     * @memberof UniversalDiscoveryModule
+     */
+    requireBookmarksCount(count) {
+        this.setState((state) => {
+            const { bookmarksRequiredCount, bookmarksDuringLoadingCount, userBookmarks } = state;
+            const loadedBookmarksCount = userBookmarks.items.length;
+            const newBookmarksRequiredCount = Math.max(count, bookmarksRequiredCount);
+            const bookmarksToLoadCount = newBookmarksRequiredCount - loadedBookmarksCount - bookmarksDuringLoadingCount;
+
+            if (!!bookmarksToLoadCount) {
+                this.loadBookmarks(bookmarksToLoadCount);
+            }
+
+            return {
+                ...state,
+                bookmarksDuringLoadingCount: bookmarksDuringLoadingCount + bookmarksToLoadCount,
+                bookmarksRequiredCount: newBookmarksRequiredCount,
+            };
+        });
+    }
+
     onLanguageSelected(selectedLanguage) {
         this.setState((state) => ({ ...state, selectedLanguage }));
     }
@@ -168,10 +390,10 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     canSelectContent(data, callback) {
-        const { selectedContent } = this.state;
+        const { selectedContent, contentTypesMap } = this.state;
         const isAlreadySelected = selectedContent.find((item) => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
         const isOverLimit = !!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit;
-        const contentTypeInfo = this.state.contentTypesMap[data.ContentInfo.Content.ContentType._href];
+        const contentTypeInfo = contentTypesMap[data.ContentInfo.Content.ContentType._href];
         const isAllowedContentType =
             !this.props.cotfAllowedContentTypes.length || this.props.cotfAllowedContentTypes.includes(contentTypeInfo.identifier);
 
@@ -218,13 +440,19 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         const { contentTypesMap, maxHeight, activeTab, contentMeta } = this.state;
+        const selectedContentDataWithMeta = this.addContentTypeInfo([contentMeta])[0];
+        const isSelectedContentBookmarked = this.isBookmarked(selectedContentDataWithMeta.id);
 
         return (
             <div className="m-ud__preview">
                 <ContentMetaPreviewComponent
-                    data={this.addContentTypeInfo([contentMeta])[0]}
+                    data={selectedContentDataWithMeta}
+                    bookmarked={isSelectedContentBookmarked}
                     canSelectContent={this.canSelectContent}
                     onSelectContent={this.updateSelectedContent}
+                    onBookmarkRemoved={this.onBookmarkRemoved}
+                    onBookmarkAdded={this.onBookmarkAdded}
+                    loadContentInfo={this.props.loadContentInfo}
                     restInfo={this.props.restInfo}
                     contentTypesMap={contentTypesMap}
                     languages={this.props.languages}
@@ -258,30 +486,25 @@ export default class UniversalDiscoveryModule extends Component {
         );
     }
 
+    getTabConfig(id, iconIdentifier) {
+        return {
+            id,
+            iconIdentifier: iconIdentifier ? iconIdentifier : id,
+            title: this.props.labels.udw[id],
+            onClick: this.togglePanel,
+            isSelected: this.state.activeTab === id,
+        };
+    }
+
     renderTabs() {
-        const browseTabConfig = {
-            id: TAB_BROWSE,
-            iconIdentifier: TAB_BROWSE,
-            title: this.props.labels.udw.browse,
-            onClick: this.togglePanel,
-            isSelected: this.state.activeTab === TAB_BROWSE,
-        };
-        const searchTabConfig = {
-            id: TAB_SEARCH,
-            iconIdentifier: TAB_SEARCH,
-            title: this.props.labels.udw.search,
-            onClick: this.togglePanel,
-            isSelected: this.state.activeTab === TAB_SEARCH,
-        };
-        const createTabConfig = {
-            id: TAB_CREATE,
-            iconIdentifier: TAB_CREATE,
-            title: this.props.labels.udw.create,
-            onClick: this.togglePanel,
-            isSelected: this.state.activeTab === TAB_CREATE,
-        };
         const { extraTabs } = this.props;
-        let tabsToRender = [browseTabConfig, searchTabConfig, createTabConfig, ...extraTabs];
+
+        const browseTabConfig = this.getTabConfig(TAB_BROWSE);
+        const searchTabConfig = this.getTabConfig(TAB_SEARCH);
+        const createTabConfig = this.getTabConfig(TAB_CREATE);
+        const bookmarksTabConfig = this.getTabConfig(TAB_BOOKMARKS, 'bookmark');
+
+        let tabsToRender = [browseTabConfig, searchTabConfig, createTabConfig, bookmarksTabConfig, ...extraTabs];
 
         // @Deprecated - `onlyContentOnTheFly` will be removed in 2.0
         if (this.props.visibleTabs.length === 1 || this.props.onlyContentOnTheFly) {
@@ -322,6 +545,14 @@ export default class UniversalDiscoveryModule extends Component {
             id: TAB_SEARCH,
             panel: SearchPanelComponent,
         };
+        const bookmarksPanelConfig = {
+            id: TAB_BOOKMARKS,
+            panel: BookmarksPanelComponent,
+            attrs: {
+                userBookmarks: this.state.userBookmarks,
+                requireBookmarksCount: this.requireBookmarksCount,
+            },
+        };
         const createPanelConfig = {
             id: TAB_CREATE,
             panel: CreatePanelComponent,
@@ -340,7 +571,7 @@ export default class UniversalDiscoveryModule extends Component {
                 allowedLocations: this.props.cotfAllowedLocations,
             },
         };
-        let panelsToRender = [browsePanelConfig, searchPanelConfig, createPanelConfig, ...extraTabs];
+        let panelsToRender = [browsePanelConfig, searchPanelConfig, createPanelConfig, bookmarksPanelConfig, ...extraTabs];
 
         if (this.props.onlyContentOnTheFly) {
             console.warn('[DEPRECATED] onlyContentOnTheFly parameter is deprecated');
@@ -367,6 +598,7 @@ export default class UniversalDiscoveryModule extends Component {
             findContentBySearchQuery,
             multiple,
             searchResultsPerPage,
+            bookmarksPerPage,
             labels,
             restInfo,
         } = this.props;
@@ -383,6 +615,7 @@ export default class UniversalDiscoveryModule extends Component {
             contentTypesMap,
             multiple,
             searchResultsPerPage,
+            bookmarksPerPage,
             labels,
             restInfo,
             ...item.attrs,
@@ -546,6 +779,7 @@ UniversalDiscoveryModule.propTypes = {
             search: PropTypes.string.isRequired,
             browse: PropTypes.string.isRequired,
             create: PropTypes.string.isRequired,
+            bookmarks: PropTypes.string.isRequired,
         }).isRequired,
         selectedContentItem: PropTypes.object.isRequired,
         contentMetaPreview: PropTypes.object.isRequired,
@@ -553,11 +787,15 @@ UniversalDiscoveryModule.propTypes = {
         searchPagination: PropTypes.object.isRequired,
         searchResults: PropTypes.object.isRequired,
         searchResultsItem: PropTypes.object.isRequired,
+        bookmarks: PropTypes.object.isRequired,
+        bookmarksTableHeader: PropTypes.object.isRequired,
+        bookmarksTableItem: PropTypes.object.isRequired,
         finderBranch: PropTypes.object.isRequired,
         contentOnTheFly: PropTypes.object.isRequired,
     }),
     maxHeight: PropTypes.number,
     searchResultsPerPage: PropTypes.number,
+    bookmarksPerPage: PropTypes.number,
     languages: PropTypes.object,
     contentTypes: PropTypes.object,
     allowContainersOnly: PropTypes.bool.isRequired,
@@ -590,6 +828,7 @@ UniversalDiscoveryModule.defaultProps = {
     startingLocationId: 1,
     maxHeight: 500,
     searchResultsPerPage: 10,
+    bookmarksPerPage: 10,
     languages: window.eZ.adminUiConfig.languages,
     contentTypes: window.eZ.adminUiConfig.contentTypes,
     allowContainersOnly: false,
@@ -609,6 +848,7 @@ UniversalDiscoveryModule.defaultProps = {
             browse: 'Browse',
             search: 'Search',
             create: 'Create',
+            bookmarks: 'Bookmarks',
         },
         selectedContent: {
             confirmedItems: 'Confirmed items',
@@ -629,6 +869,7 @@ UniversalDiscoveryModule.defaultProps = {
         },
         search: {
             title: 'Search',
+            tableTitle: 'Search results',
             searchBtnLabel: 'Search',
         },
         searchPagination: {
@@ -643,6 +884,23 @@ UniversalDiscoveryModule.defaultProps = {
             resultsTitle: 'Search results',
         },
         searchResultsItem: {
+            notAvailable: 'N/A',
+        },
+        bookmarks: {
+            noBookmarks: 'No content items. Content items you bookmark will appear here.',
+            tableTitle: 'Bookmarks',
+        },
+        contentTablePagination: {
+            first: 'First',
+            prev: 'Previous',
+            next: 'Next',
+            last: 'Last',
+        },
+        contentTableHeader: {
+            name: 'Name',
+            type: 'Content Type',
+        },
+        contentTableItem: {
             notAvailable: 'N/A',
         },
         finderBranch: {

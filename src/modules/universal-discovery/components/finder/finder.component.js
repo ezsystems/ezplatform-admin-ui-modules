@@ -7,8 +7,8 @@ import { loadPreselectedLocationData } from '../../services/universal.discovery.
 import './css/finder.component.css';
 
 export default class FinderComponent extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             locationsMap: {},

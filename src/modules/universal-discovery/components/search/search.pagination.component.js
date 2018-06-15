@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import './css/search.pagination.component.css';
 
 const SearchPaginationComponent = (props) => {
+    console.warn('[DEPRECATED] SearchPaginationComponent is deprecated');
+    console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
+    console.warn('[DEPRECATED] use ContentTablePaginationComponent instead');
+
         const {minIndex, activeIndex, maxIndex, onChange, labels} = props;
         const btnClass = 'c-search-pagination__btn';
         const firstAttrs = {

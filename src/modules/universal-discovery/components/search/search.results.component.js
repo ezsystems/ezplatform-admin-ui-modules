@@ -10,6 +10,10 @@ export default class SearchResultsComponent extends Component {
     constructor(props) {
         super(props);
 
+        console.warn('[DEPRECATED] SearchResultsComponent is deprecated');
+        console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
+        console.warn('[DEPRECATED] use ContentTableComponent instead');
+
         this.state = {
             items: props.items,
             perPage: props.perPage,
