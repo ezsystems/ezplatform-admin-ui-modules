@@ -93,26 +93,27 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         this.setState((state) => ({ ...state, maxHeight: this._refContentContainer.clientHeight }));
-        this.loadBookmarksCount();
+        this.initializeBookmarks();
     }
 
     /**
-     * Loads user bookmarks count
+     * Loads first 10 user's bookmarks (or less if user doesn't have that many bookmarks).
+     * Sets total count of user's bookmarks.
      *
-     * @method loadBookmarksCount
+     * @method initializeBookmarks
      * @memberof UniversalDiscoveryModule
      */
-    loadBookmarksCount() {
+    initializeBookmarks() {
         const { restInfo } = this.props;
-        const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, 0, 0, resolve));
+        const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, 10, 0, resolve));
 
         bookmarksLoaded
             .then(({ BookmarkList }) => {
                 this.setState((state) => ({
                     ...state,
                     userBookmarks: {
-                        ...state.userBookmarks,
                         count: BookmarkList.count,
+                        items: BookmarkList.items,
                     },
                 }));
             })

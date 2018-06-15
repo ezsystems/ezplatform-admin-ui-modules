@@ -156,6 +156,14 @@ export default class ContentTableComponent extends Component {
         return <ContentTablePaginationComponent {...paginationAttrs} />;
     }
 
+    renderPageSpinner() {
+        return (
+            <svg className="c-content-table__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
+                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
+            </svg>
+        );
+    }
+
     renderPage() {
         const { pages, activePage, perPage, count } = this.state;
         const itemsCount = this.state.items.length;
@@ -163,11 +171,7 @@ export default class ContentTableComponent extends Component {
         const allNeededItemsLoaded = itemsCount >= neededItemsCount;
 
         if (!allNeededItemsLoaded) {
-            return (
-                <svg className="c-content-table__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
-                </svg>
-            );
+            return this.renderPageSpinner();
         }
 
         const pageToRender = !itemsCount ? [] : pages[activePage];
@@ -188,9 +192,7 @@ export default class ContentTableComponent extends Component {
                     {title} ({count})
                 </div>
                 {this.renderHeader()}
-                <div className="c-content-table__list">
-                    {this.renderPage()}
-                </div>
+                <div className="c-content-table__list">{this.renderPage()}</div>
                 {this.renderPagination()}
             </div>
         );
