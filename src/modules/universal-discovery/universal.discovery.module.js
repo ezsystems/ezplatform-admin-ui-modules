@@ -19,6 +19,7 @@ import {
 import { checkIsBookmarked, loadBookmarks } from './services/bookmark.service';
 import { showErrorNotification } from '../common/services/notification.service';
 import { areSameLocations } from '../common/helpers/compare.helper';
+import { deepClone } from '../common/helpers/clone.helper';
 
 import './css/universal.discovery.module.css';
 
@@ -135,7 +136,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {Object} response
      */
     updateContentMetaWithCurrentVersion(response) {
-        const contentMeta = JSON.parse(JSON.stringify(this.state.contentMeta));
+        const contentMeta = deepClone(this.state.contentMeta);
         const currentVersion = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion;
 
         contentMeta.CurrentVersion = currentVersion;
@@ -169,13 +170,16 @@ export default class UniversalDiscoveryModule extends Component {
         this.props.onConfirm(this.addContentTypeInfo([location]));
     }
 
-    addContentTypeInfo(content) {
-        return content.map((item) => {
-            item = JSON.parse(JSON.stringify(item));
+    addContentTypeInfo(items) {
+        const { contentTypesMap } = this.state;
 
-            item.ContentInfo.Content.ContentTypeInfo = this.state.contentTypesMap[item.ContentInfo.Content.ContentType._href];
+        return items.map((item) => {
+            const clonedItem = deepClone(item);
+            const contentType = clonedItem.ContentInfo.Content.ContentType;
 
-            return item;
+            clonedItem.ContentInfo.Content.ContentTypeInfo = contentTypesMap[contentType._href];
+
+            return clonedItem;
         });
     }
 
@@ -188,10 +192,11 @@ export default class UniversalDiscoveryModule extends Component {
 
     onItemSelect(contentMeta) {
         const isLocationAllowed = !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
+        const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
 
         this.setState((state) => ({
             ...state,
-            contentMeta,
+            contentMeta: contentMetaWithContentTypeInfo,
             isLocationAllowed,
             isPreviewMetaReady: false,
         }));
@@ -440,13 +445,12 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         const { contentTypesMap, maxHeight, activeTab, contentMeta } = this.state;
-        const selectedContentDataWithMeta = this.addContentTypeInfo([contentMeta])[0];
-        const isSelectedContentBookmarked = this.isBookmarked(selectedContentDataWithMeta.id);
+        const isSelectedContentBookmarked = this.isBookmarked(contentMeta.id);
 
         return (
             <div className="m-ud__preview">
                 <ContentMetaPreviewComponent
-                    data={selectedContentDataWithMeta}
+                    data={contentMeta}
                     bookmarked={isSelectedContentBookmarked}
                     canSelectContent={this.canSelectContent}
                     onSelectContent={this.updateSelectedContent}
