@@ -170,10 +170,10 @@ export default class UniversalDiscoveryModule extends Component {
         this.props.onConfirm(this.addContentTypeInfo([location]));
     }
 
-    addContentTypeInfo(contents) {
+    addContentTypeInfo(items) {
         const { contentTypesMap } = this.state;
 
-        return contents.map((item) => {
+        return items.map((item) => {
             const clonedItem = deepClone(item);
             const contentType = clonedItem.ContentInfo.Content.ContentType;
 
@@ -192,11 +192,11 @@ export default class UniversalDiscoveryModule extends Component {
 
     onItemSelect(contentMeta) {
         const isLocationAllowed = !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
-        const contentMetaWitchContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
+        const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
 
         this.setState((state) => ({
             ...state,
-            contentMeta: contentMetaWitchContentTypeInfo,
+            contentMeta: contentMetaWithContentTypeInfo,
             isLocationAllowed,
             isPreviewMetaReady: false,
         }));
