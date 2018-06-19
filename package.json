@@ -6,8 +6,9 @@
         "react-dom": "^16.2.0"
     },
     "scripts": {
-        "build": "webpack",
-        "watch": "webpack --watch"
+        "build": "webpack --config webpack.prod.js",
+        "builddev": "webpack --config webpack.dev.js",
+        "watch": "webpack --watch --config webpack.dev.js"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",
@@ -28,6 +29,7 @@
         "prop-types": "^15.6.1",
         "style-loader": "^0.21.0",
         "uglifyjs-webpack-plugin": "^1.1.6",
-        "webpack": "3.10.0"
+        "webpack": "3.10.0",
+        "webpack-merge": "^4.1.3"
     }
 }
