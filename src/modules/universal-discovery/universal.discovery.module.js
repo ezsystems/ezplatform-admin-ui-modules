@@ -544,6 +544,10 @@ export default class UniversalDiscoveryModule extends Component {
         const browsePanelConfig = {
             id: TAB_BROWSE,
             panel: FinderPanelComponent,
+            attrs: {
+                sortFieldMappings: this.props.sortFieldMappings,
+                sortOrderMappings: this.props.sortOrderMappings,
+            },
         };
         const searchPanelConfig = {
             id: TAB_SEARCH,
@@ -573,6 +577,8 @@ export default class UniversalDiscoveryModule extends Component {
                 allowedContentTypes: this.props.cotfAllowedContentTypes,
                 preselectedLocation: this.props.cotfPreselectedLocation,
                 allowedLocations: this.props.cotfAllowedLocations,
+                sortFieldMappings: this.props.sortFieldMappings,
+                sortOrderMappings: this.props.sortOrderMappings,
             },
         };
         let panelsToRender = [browsePanelConfig, searchPanelConfig, createPanelConfig, bookmarksPanelConfig, ...extraTabs];
@@ -816,6 +822,8 @@ UniversalDiscoveryModule.propTypes = {
     cotfPreselectedLocation: PropTypes.number,
     cotfAllowedLocations: PropTypes.array,
     visibleTabs: PropTypes.array,
+    sortFieldMappings: PropTypes.object,
+    sortOrderMappings: PropTypes.object,
 };
 
 UniversalDiscoveryModule.defaultProps = {
@@ -845,6 +853,8 @@ UniversalDiscoveryModule.defaultProps = {
     cotfPreselectedLocation: null,
     cotfAllowedLocations: [],
     visibleTabs: [],
+    sortFieldMappings: window.eZ.adminUiConfig.sortFieldMappings,
+    sortOrderMappings: window.eZ.adminUiConfig.sortOrderMappings,
     labels: {
         udw: {
             confirm: 'Confirm',

@@ -34,7 +34,9 @@ FinderPanelComponent.propTypes = {
         siteaccess: PropTypes.string.isRequired
     }).isRequired,
     labels: PropTypes.object.isRequired,
-    allowContainersOnly: PropTypes.bool.isRequired
+    allowContainersOnly: PropTypes.bool.isRequired,
+    sortFieldMappings: PropTypes.object,
+    sortOrderMappings: PropTypes.object,
 };
 
 export default FinderPanelComponent;
