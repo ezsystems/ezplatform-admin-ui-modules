@@ -20,9 +20,12 @@ export default class PopupComponent extends Component {
      * Hides a popup
      *
      * @method hidePopup
+     * @param {SyntheticEvent} event
      * @memberof PopupComponent
      */
-    hidePopup() {
+    hidePopup(event) {
+        event.stopPropagation();
+
         this.setState(state => Object.assign({}, state, {visible: false}));
 
         this.props.onClose();
