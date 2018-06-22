@@ -48,7 +48,7 @@ export default class FinderTreeBranchComponent extends Component {
     }
 
     expandBranch() {
-        this.props.onBranchClick(this.props.parent);
+        this.props.onBranchClick(this.props.parentLocation);
     }
 
     /**
@@ -94,7 +94,7 @@ export default class FinderTreeBranchComponent extends Component {
         return (
             <button
                 className="c-finder-tree-branch__load-more"
-                onClick={() => this.props.onLoadMore(this.props.parent)}>
+                onClick={() => this.props.onLoadMore(this.props.parentLocation)}>
                 {this.props.labels.finderBranch.loadMore}
             </button>
         );
@@ -126,7 +126,7 @@ export default class FinderTreeBranchComponent extends Component {
 FinderTreeBranchComponent.propTypes = {
     items: PropTypes.array.isRequired,
     total: PropTypes.number.isRequired,
-    parent: PropTypes.number.isRequired,
+    parentLocation: PropTypes.object.isRequired,
     onItemClick: PropTypes.func.isRequired,
     onBranchClick: PropTypes.func.isRequired,
     selectedLocations: PropTypes.array.isRequired,

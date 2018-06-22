@@ -51,7 +51,9 @@ CreatePanelComponent.propTypes = {
     forcedLanguage: PropTypes.string.isRequired,
     preselectedLocation: PropTypes.number.isRequired,
     allowedLocations: PropTypes.array.isRequired,
-    allowedLanguages: PropTypes.array.isRequired
+    allowedLanguages: PropTypes.array.isRequired,
+    sortFieldMappings: PropTypes.object.isRequired, 
+    sortOrderMappings: PropTypes.object.isRequired, 
 };
 
 export default CreatePanelComponent;

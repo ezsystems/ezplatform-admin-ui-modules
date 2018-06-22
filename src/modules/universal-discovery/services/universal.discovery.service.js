@@ -5,7 +5,7 @@ const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
-const QUERY_LIMIT = 50;
+export const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
 
 /**
@@ -143,10 +143,13 @@ export const checkCreatePermission = ({ token, contentTypeIdentifier, languageCo
  * Finds locations related to the parent location
  *
  * @function findLocationsByParentLocationId
- * @param {Object} params params hash containing REST config: token and siteaccess properties; parentLocationId and offset
+ * @param {Object} params params hash containing REST config: token and siteaccess properties; parentLocationId and offset; sortClauses
  * @param {Function} callback
  */
-export const findLocationsByParentLocationId = ({ token, siteaccess, parentLocationId, limit = QUERY_LIMIT, offset = 0 }, callback) => {
+export const findLocationsByParentLocationId = (
+    { token, siteaccess, parentLocationId, limit = QUERY_LIMIT, offset = 0, sortClauses = { SectionIdentifier: 'ascending' } },
+    callback
+) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-parent-location-id-${parentLocationId}`,
@@ -154,7 +157,7 @@ export const findLocationsByParentLocationId = ({ token, siteaccess, parentLocat
             LocationQuery: {
                 Criteria: {},
                 FacetBuilders: {},
-                SortClauses: { SectionIdentifier: 'ascending' },
+                SortClauses: sortClauses,
                 Filter: { ParentLocationIdCriterion: parentLocationId },
                 limit,
                 offset,
