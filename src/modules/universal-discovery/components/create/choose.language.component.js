@@ -108,5 +108,5 @@ ChooseLanguageComponent.propTypes = {
     onLanguageSelected: PropTypes.func.isRequired,
     forcedLanguage: PropTypes.string.isRequired,
     allowedLanguages: PropTypes.array.isRequired,
-    preselectedLanguage: PropTypes.string.isRequired
+    preselectedLanguage: PropTypes.string,
 };

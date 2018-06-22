@@ -13,7 +13,7 @@ const NoItemsComponent = (props) => {
 
 NoItemsComponent.propTypes = {
     labels: PropTypes.shape({
-        noItems: PropTypes.object.shape({
+        noItems: PropTypes.shape({
             message: PropTypes.string.isRequired
         }).isRequired
     })

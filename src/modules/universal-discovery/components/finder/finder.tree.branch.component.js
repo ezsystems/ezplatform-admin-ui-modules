@@ -126,7 +126,7 @@ export default class FinderTreeBranchComponent extends Component {
 FinderTreeBranchComponent.propTypes = {
     items: PropTypes.array.isRequired,
     total: PropTypes.number.isRequired,
-    parentLocation: PropTypes.object.isRequired,
+    parentLocation: PropTypes.object,
     onItemClick: PropTypes.func.isRequired,
     onBranchClick: PropTypes.func.isRequired,
     selectedLocations: PropTypes.array.isRequired,

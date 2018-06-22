@@ -17,7 +17,6 @@
         ]
     ],
     "plugins": [
-        "transform-react-remove-prop-types",
         "transform-object-rest-spread"
     ]
 }

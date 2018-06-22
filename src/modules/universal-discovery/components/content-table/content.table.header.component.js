@@ -19,7 +19,7 @@ ContentTableHeaderComponent.propTypes = {
     labels: PropTypes.shape({
         contentTableHeader: PropTypes.shape({
             name: PropTypes.string.isRequired,
-            title: PropTypes.string.isRequired,
+            type: PropTypes.string.isRequired,
         }).isRequired,
     }).isRequired,
 };

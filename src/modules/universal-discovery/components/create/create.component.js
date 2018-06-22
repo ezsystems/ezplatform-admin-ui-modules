@@ -24,9 +24,9 @@ CreateComponent.propTypes = {
     onContentTypeSelected: PropTypes.func.isRequired,
     forcedLanguage: PropTypes.string.isRequired,
     allowedLanguages: PropTypes.array.isRequired,
-    preselectedContentType: PropTypes.string.isRequired,
+    preselectedContentType: PropTypes.string,
     allowedContentTypes: PropTypes.array.isRequired,
-    preselectedLanguage: PropTypes.sttring.isRequired
+    preselectedLanguage: PropTypes.string,
 };
 
 export default CreateComponent;
