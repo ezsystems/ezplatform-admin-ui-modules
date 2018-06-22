@@ -3,13 +3,24 @@
     z-index: 1;
 }
 
+.c-selected-content__info {
+    padding: 5px;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #e3e3e3;
+}
+
+.c-selected-content__info--any-item-selected {
+    cursor: pointer;
+}
+
 .c-selected-content__title {
     font-size: 15px;
     line-height: 20px;
 }
 
 .c-selected-content__content-names {
-    width: 320px;
+    max-width: 320px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

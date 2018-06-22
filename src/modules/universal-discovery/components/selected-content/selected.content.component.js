@@ -14,6 +14,8 @@ export default class SelectedContentComponent extends Component {
             items: [],
             isPopupVisible: false,
         };
+
+        this.togglePopup = this.togglePopup.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -27,7 +29,7 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     togglePopup() {
-        this.setState((state) => Object.assign({}, state, { isPopupVisible: !state.isPopupVisible }));
+        this.setState((state) => Object.assign({}, state, { isPopupVisible: !state.isPopupVisible && !!state.items.length }));
     }
 
     /**
@@ -117,15 +119,21 @@ export default class SelectedContentComponent extends Component {
     }
 
     render() {
-        const titles = this.props.items.map((item) => item.ContentInfo.Content.Name).join(', ');
+        const { items } = this.props;
+        const titles = items.map((item) => item.ContentInfo.Content.Name).join(', ');
+        const anyItemSelected = !!items.length;
+        const cssClassOnAnyItemSelected = anyItemSelected ? 'c-selected-content__info--any-item-selected' : '';
+        const infoCssClasses = `c-selected-content__info ${cssClassOnAnyItemSelected}`;
 
         return (
             <div className="c-selected-content">
                 {this.renderSelectedItems()}
-                <strong className="c-selected-content__title">{this.getTitle()}</strong>
-                {this.renderLimitLabel()}
-                <div className="c-selected-content__content-names" onClick={this.togglePopup.bind(this)}>
-                    {titles.length ? titles : this.props.labels.selectedContent.noConfirmedContent}
+                <div className={infoCssClasses} onClick={this.togglePopup}>
+                    <strong className="c-selected-content__title">{this.getTitle()}</strong>
+                    {this.renderLimitLabel()}
+                    <div className="c-selected-content__content-names">
+                        {titles.length ? titles : this.props.labels.selectedContent.noConfirmedContent}
+                    </div>
                 </div>
             </div>
         );
