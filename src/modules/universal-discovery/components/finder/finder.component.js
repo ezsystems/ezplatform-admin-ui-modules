@@ -418,8 +418,8 @@ FinderComponent.propTypes = {
     preselectedLocation: PropTypes.number,
     allowedLocations: PropTypes.array,
     isVisible: PropTypes.bool,
-    sortFieldMappings: PropTypes.object,
-    sortOrderMappings: PropTypes.object,
+    sortFieldMappings: PropTypes.object.isRequired,
+    sortOrderMappings: PropTypes.object.isRequired,
 };
 
 FinderComponent.defaultProps = {

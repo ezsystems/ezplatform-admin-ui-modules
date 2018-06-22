@@ -52,8 +52,8 @@ CreatePanelComponent.propTypes = {
     preselectedLocation: PropTypes.number.isRequired,
     allowedLocations: PropTypes.array.isRequired,
     allowedLanguages: PropTypes.array.isRequired,
-    sortFieldMappings: this.props.sortFieldMappings,
-    sortOrderMappings: this.props.sortOrderMappings,
+    sortFieldMappings: PropTypes.object.isRequired, 
+    sortOrderMappings: PropTypes.object.isRequired, 
 };
 
 export default CreatePanelComponent;

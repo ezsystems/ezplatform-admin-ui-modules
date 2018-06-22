@@ -822,8 +822,8 @@ UniversalDiscoveryModule.propTypes = {
     cotfPreselectedLocation: PropTypes.number,
     cotfAllowedLocations: PropTypes.array,
     visibleTabs: PropTypes.array,
-    sortFieldMappings: PropTypes.object,
-    sortOrderMappings: PropTypes.object,
+    sortFieldMappings: PropTypes.object.isRequired,
+    sortOrderMappings: PropTypes.object.isRequired,
 };
 
 UniversalDiscoveryModule.defaultProps = {

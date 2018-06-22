@@ -35,8 +35,8 @@ FinderPanelComponent.propTypes = {
     }).isRequired,
     labels: PropTypes.object.isRequired,
     allowContainersOnly: PropTypes.bool.isRequired,
-    sortFieldMappings: PropTypes.object,
-    sortOrderMappings: PropTypes.object,
+    sortFieldMappings: PropTypes.object.isRequired,
+    sortOrderMappings: PropTypes.object.isRequired,
 };
 
 export default FinderPanelComponent;
