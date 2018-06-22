@@ -14,6 +14,8 @@ export default class SelectedContentComponent extends Component {
             items: [],
             isPopupVisible: false,
         };
+
+        this.togglePopup = this.togglePopup.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -126,7 +128,7 @@ export default class SelectedContentComponent extends Component {
         return (
             <div className="c-selected-content">
                 {this.renderSelectedItems()}
-                <div className={infoCssClasses} onClick={this.togglePopup.bind(this)}>
+                <div className={infoCssClasses} onClick={this.togglePopup}>
                     <strong className="c-selected-content__title">{this.getTitle()}</strong>
                     {this.renderLimitLabel()}
                     <div className="c-selected-content__content-names">
