@@ -72,7 +72,7 @@ export default class SelectedContentComponent extends Component {
     renderLimitLabel() {
         let limitLabel = '';
 
-        if (this.props.itemsLimit) {
+        if (this.props.itemsLimit && this.props.multiple) {
             const limit = this.props.labels.selectedContent.limit.replace('{items}', this.props.itemsLimit);
 
             limitLabel = <small className="c-selected-content__label--limit">{limit}</small>;
