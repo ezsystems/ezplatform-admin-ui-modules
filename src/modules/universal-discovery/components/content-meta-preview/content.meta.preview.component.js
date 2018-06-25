@@ -248,7 +248,7 @@ export default class ContentMetaPreviewComponent extends Component {
 
 ContentMetaPreviewComponent.propTypes = {
     data: PropTypes.object.isRequired,
-    bookmarked: PropTypes.object.isRequired,
+    bookmarked: PropTypes.bool,
     onSelectContent: PropTypes.func.isRequired,
     onBookmarkRemoved: PropTypes.func.isRequired,
     onBookmarkAdded: PropTypes.func.isRequired,

@@ -328,7 +328,7 @@ SubItemsModule.propTypes = {
     updateLocationPriority: PropTypes.func,
     activeView: PropTypes.string,
     extraActions: PropTypes.arrayOf(PropTypes.shape({
-        component: PropTypes.element,
+        component: PropTypes.func,
         attrs: PropTypes.object
     })),
     items: PropTypes.arrayOf(PropTypes.object),

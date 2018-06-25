@@ -134,6 +134,6 @@ ChooseContentTypeComponent.propTypes = {
     labels: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
-    preselectedContentType: PropTypes.string.isRequired,
+    preselectedContentType: PropTypes.string,
     allowedContentTypes: PropTypes.array.isRequired
 };

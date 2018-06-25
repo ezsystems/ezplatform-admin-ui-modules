@@ -205,7 +205,7 @@ ContentTableComponent.propTypes = {
     perPage: PropTypes.number.isRequired,
     onItemSelect: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
-    onItemClick: PropTypes.func.isRequired,
+    onItemClick: PropTypes.func,
     title: PropTypes.string.isRequired,
     noItemsMessage: PropTypes.string,
     requireItemsCount: PropTypes.func.isRequired,
