@@ -50,13 +50,14 @@ export default class UniversalDiscoveryModule extends Component {
         this.renderSinglePanel = this.renderSinglePanel.bind(this);
         this.renderSingleTab = this.renderSingleTab.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
-        this.handleCreateContent = this.handleCreateContent.bind(this);
+        this.setCreateModeState = this.setCreateModeState.bind(this);
         this.updateContentMetaWithCurrentVersion = this.updateContentMetaWithCurrentVersion.bind(this);
         this.onBookmarkRemoved = this.onBookmarkRemoved.bind(this);
         this.onBookmarkAdded = this.onBookmarkAdded.bind(this);
         this.setBookmarked = this.setBookmarked.bind(this);
         this.requireBookmarksCount = this.requireBookmarksCount.bind(this);
         this.onBookmarksLoaded = this.onBookmarksLoaded.bind(this);
+        this.updatePermissionsState = this.updatePermissionsState.bind(this);
 
         this._refBookmarksPanelComponent = null;
 
@@ -76,10 +77,7 @@ export default class UniversalDiscoveryModule extends Component {
             hasPermission: true,
             isLocationAllowed: true,
             isPreviewMetaReady: false,
-            userBookmarks: {
-                count: null,
-                items: [],
-            },
+            userBookmarks: { count: null, items: [] },
             bookmarksRequiredCount: 0,
             bookmarksDuringLoadingCount: 0,
             bookmarked: {},
@@ -95,6 +93,14 @@ export default class UniversalDiscoveryModule extends Component {
 
         this.setState((state) => ({ ...state, maxHeight: this._refContentContainer.clientHeight }));
         this.initializeBookmarks();
+    }
+
+    componentDidUpdate() {
+        const { contentMeta, isPreviewMetaReady } = this.state;
+
+        if (!!contentMeta && !isPreviewMetaReady) {
+            this.props.loadContentInfo(this.props.restInfo, contentMeta.ContentInfo.Content._id, this.updateContentMetaWithCurrentVersion);
+        }
     }
 
     /**
@@ -121,14 +127,6 @@ export default class UniversalDiscoveryModule extends Component {
             .catch(showErrorNotification);
     }
 
-    componentDidUpdate() {
-        const { contentMeta, isPreviewMetaReady } = this.state;
-
-        if (!!contentMeta && !isPreviewMetaReady) {
-            this.props.loadContentInfo(this.props.restInfo, contentMeta.ContentInfo.Content._id, this.updateContentMetaWithCurrentVersion);
-        }
-    }
-
     /**
      * Updates selected content item meta with a current version info object
      *
@@ -144,6 +142,13 @@ export default class UniversalDiscoveryModule extends Component {
         this.setState((state) => ({ ...state, contentMeta, isPreviewMetaReady: true }));
     }
 
+    /**
+     * Finds a content type data
+     *
+     * @method findContentType
+     * @param {String} identifier
+     * @returns {Object}
+     */
     findContentType(identifier) {
         let contentType = null;
 
@@ -158,18 +163,41 @@ export default class UniversalDiscoveryModule extends Component {
         return contentType;
     }
 
+    /**
+     * Handles selection confirm action
+     *
+     * @method handleConfirm
+     */
     handleConfirm() {
         this.props.onConfirm(this.addContentTypeInfo(this.state.selectedContent));
     }
 
-    handleCreateContent() {
+    /**
+     * Handles create content action
+     *
+     * @method setCreateModeState
+     */
+    setCreateModeState() {
         this.setState((state) => ({ ...state, isCreateMode: true }));
     }
 
+    /**
+     * Handles publish content action
+     *
+     * @method handlePublish
+     * @param {Object} location
+     */
     handlePublish(location) {
         this.props.onConfirm(this.addContentTypeInfo([location]));
     }
 
+    /**
+     * Adds a content type info to a content
+     *
+     * @method addContentTypeInfo
+     * @param {Array} items
+     * @returns {Array}
+     */
     addContentTypeInfo(items) {
         const { contentTypesMap } = this.state;
 
@@ -183,6 +211,12 @@ export default class UniversalDiscoveryModule extends Component {
         });
     }
 
+    /**
+     * Handles selected contet item removal action
+     *
+     * @method onItemRemove
+     * @param {String} id
+     */
     onItemRemove(id) {
         this.setState((state) => ({
             ...state,
@@ -190,6 +224,12 @@ export default class UniversalDiscoveryModule extends Component {
         }));
     }
 
+    /**
+     * Handles item selected action
+     *
+     * @method onItemSelect
+     * @param {Object} contentMeta
+     */
     onItemSelect(contentMeta) {
         const isLocationAllowed = !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
         const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
@@ -202,13 +242,15 @@ export default class UniversalDiscoveryModule extends Component {
         }));
     }
 
+    /**
+     * Fires `ez-bookmark-change` event
+     *
+     * @method dispatchBookmarkChangeEvent
+     * @param {Number} locationId
+     * @param {Boolean} bookmarked
+     */
     dispatchBookmarkChangeEvent(locationId, bookmarked) {
-        const event = new CustomEvent('ez-bookmark-change', {
-            detail: {
-                bookmarked,
-                locationId,
-            },
-        });
+        const event = new CustomEvent('ez-bookmark-change', { detail: { bookmarked, locationId } });
 
         document.body.dispatchEvent(event);
     }
@@ -237,15 +279,10 @@ export default class UniversalDiscoveryModule extends Component {
      */
     setBookmarked(locationId, isBookmarked) {
         this.setState((state) => {
-            const bookmarked = {
-                ...state.bookmarked,
-            };
+            const bookmarked = { ...state.bookmarked };
             bookmarked[locationId] = isBookmarked;
 
-            return {
-                ...state,
-                bookmarked,
-            };
+            return { ...state, bookmarked };
         });
     }
 
@@ -380,20 +417,45 @@ export default class UniversalDiscoveryModule extends Component {
         });
     }
 
+    /**
+     * Updates language selected state
+     *
+     * @method onLanguageSelected
+     * @param {String} selectedLanguage
+     */
     onLanguageSelected(selectedLanguage) {
         this.setState((state) => ({ ...state, selectedLanguage }));
     }
 
+    /**
+     * Updates selected content type state
+     *
+     * @method onContentTypeSelected
+     * @param {Object} selectedContentType
+     */
     onContentTypeSelected(selectedContentType) {
         this.setState((state) => ({ ...state, selectedContentType }));
     }
 
+    /**
+     * Updates selected content state
+     *
+     * @method updateSelectedContent
+     */
     updateSelectedContent() {
         const selectedContent = !this.props.multiple ? [this.state.contentMeta] : [...this.state.selectedContent, this.state.contentMeta];
 
         this.setState((state) => ({ ...state, selectedContent }));
     }
 
+    /**
+     * Does checking whether a content can be selected
+     *
+     * @method canSelectContent
+     * @param {Object} data
+     * @param {Function} callback
+     * @returns {Boolean}
+     */
     canSelectContent(data, callback) {
         const { selectedContent, contentTypesMap } = this.state;
         const isAlreadySelected = selectedContent.find((item) => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
@@ -408,23 +470,25 @@ export default class UniversalDiscoveryModule extends Component {
 
         data.ContentInfo.Content.ContentTypeInfo = contentTypeInfo;
 
-        return this.props.canSelectContent(
-            {
-                item: data,
-                itemsCount: selectedContent.length,
-            },
-            callback
-        );
+        return this.props.canSelectContent({ item: data, itemsCount: selectedContent.length }, callback);
     }
 
+    /**
+     * Toggles visible panel state
+     *
+     * @method togglePanel
+     * @param {String} activeTab
+     */
     togglePanel(activeTab) {
-        this.setState((state) => ({
-            ...state,
-            activeTab,
-            contentMeta: null,
-        }));
+        this.setState((state) => ({ ...state, activeTab, contentMeta: null }));
     }
 
+    /**
+     * Sets content types map state
+     *
+     * @method setContentTypesMap
+     * @param {Object} response
+     */
     setContentTypesMap(response) {
         if (!response || !response.ContentTypeInfoList) {
             return;
@@ -436,15 +500,22 @@ export default class UniversalDiscoveryModule extends Component {
             return total;
         }, {});
 
-        return this.setState((state) => ({ ...state, contentTypesMap }));
+        this.setState((state) => ({ ...state, contentTypesMap }));
     }
 
+    /**
+     * Renders content meta preview
+     *
+     * @method renderContentMetaPreview
+     * @returns {Element}
+     */
     renderContentMetaPreview() {
         if (!this.state.contentMeta) {
             return null;
         }
 
-        const { contentTypesMap, maxHeight, activeTab, contentMeta } = this.state;
+        const { contentTypesMap, maxHeight, activeTab, contentMeta, isPreviewMetaReady } = this.state;
+        const { loadContentInfo, restInfo, languages, labels } = this.props;
         const isSelectedContentBookmarked = this.isBookmarked(contentMeta.id);
 
         return (
@@ -456,18 +527,25 @@ export default class UniversalDiscoveryModule extends Component {
                     onSelectContent={this.updateSelectedContent}
                     onBookmarkRemoved={this.onBookmarkRemoved}
                     onBookmarkAdded={this.onBookmarkAdded}
-                    loadContentInfo={this.props.loadContentInfo}
-                    restInfo={this.props.restInfo}
+                    loadContentInfo={loadContentInfo}
+                    restInfo={restInfo}
                     contentTypesMap={contentTypesMap}
-                    languages={this.props.languages}
-                    labels={this.props.labels.contentMetaPreview}
+                    languages={languages}
+                    labels={labels.contentMetaPreview}
                     maxHeight={maxHeight}
                     activeTab={activeTab}
+                    ready={isPreviewMetaReady}
                 />
             </div>
         );
     }
 
+    /**
+     * Renders selected content list
+     *
+     * @method renderSelectedContent
+     * @returns {Element}
+     */
     renderSelectedContent() {
         const items = this.state.selectedContent;
         const { selectedItemsLimit, labels, multiple } = this.props;
@@ -490,6 +568,14 @@ export default class UniversalDiscoveryModule extends Component {
         );
     }
 
+    /**
+     * Gets a specific tab config
+     *
+     * @method getTabConfig
+     * @param {String} id
+     * @param {String} iconIdentifier
+     * @returns {Object}
+     */
     getTabConfig(id, iconIdentifier) {
         return {
             id,
@@ -500,8 +586,14 @@ export default class UniversalDiscoveryModule extends Component {
         };
     }
 
+    /**
+     * Renders tabs
+     *
+     * @method renderTabs
+     * @returns {Element}
+     */
     renderTabs() {
-        const { extraTabs } = this.props;
+        const { extraTabs, visibleTabs, onlyContentOnTheFly } = this.props;
 
         const browseTabConfig = this.getTabConfig(TAB_BROWSE);
         const searchTabConfig = this.getTabConfig(TAB_SEARCH);
@@ -511,12 +603,12 @@ export default class UniversalDiscoveryModule extends Component {
         let tabsToRender = [browseTabConfig, searchTabConfig, createTabConfig, bookmarksTabConfig, ...extraTabs];
 
         // @Deprecated - `onlyContentOnTheFly` will be removed in 2.0
-        if (this.props.visibleTabs.length === 1 || this.props.onlyContentOnTheFly) {
+        if (visibleTabs.length === 1 || onlyContentOnTheFly) {
             return null;
         }
 
-        if (this.props.visibleTabs.length) {
-            tabsToRender = this.props.visibleTabs.map((tab) => {
+        if (visibleTabs.length) {
+            tabsToRender = visibleTabs.map((tab) => {
                 return tabsToRender.find((config) => config.id === tab);
             });
         }
@@ -524,13 +616,15 @@ export default class UniversalDiscoveryModule extends Component {
         return <nav className="m-ud__nav">{tabsToRender.map(this.renderSingleTab)}</nav>;
     }
 
+    /**
+     * Renders a single tabs
+     *
+     * @method renderSingleTab
+     * @param {Object} tab
+     * @returns {Element}
+     */
     renderSingleTab(tab) {
-        const attrs = {
-            id: tab.id,
-            title: tab.title,
-            onClick: this.togglePanel,
-            isSelected: this.state.activeTab === tab.id,
-        };
+        const attrs = { id: tab.id, title: tab.title, onClick: this.togglePanel, isSelected: this.state.activeTab === tab.id };
 
         if (tab.iconIdentifier) {
             attrs.iconIdentifier = tab.iconIdentifier;
@@ -539,51 +633,59 @@ export default class UniversalDiscoveryModule extends Component {
         return <TabNavItemComponent key={`panel-${tab.id}`} {...attrs} />;
     }
 
+    /**
+     * Renders panels
+     *
+     * @method renderPanels
+     * @returns {Element}
+     */
     renderPanels() {
-        const { extraTabs } = this.props;
-        const browsePanelConfig = {
-            id: TAB_BROWSE,
-            panel: FinderPanelComponent,
-            attrs: {
-                sortFieldMappings: this.props.sortFieldMappings,
-                sortOrderMappings: this.props.sortOrderMappings,
-            },
-        };
-        const searchPanelConfig = {
-            id: TAB_SEARCH,
-            panel: SearchPanelComponent,
-        };
+        const {
+            extraTabs,
+            visibleTabs,
+            sortFieldMappings,
+            sortOrderMappings,
+            languages,
+            contentTypes,
+            cotfPreselectedContentType,
+            cotfForcedLanguage,
+            cotfAllowedLanguages,
+            cotfPreselectedLanguage,
+            cotfAllowedContentTypes,
+            cotfPreselectedLocation,
+            cotfAllowedLocations,
+            onlyContentOnTheFly,
+        } = this.props;
+        const browsePanelConfig = { id: TAB_BROWSE, panel: FinderPanelComponent, attrs: { sortFieldMappings, sortOrderMappings } };
+        const searchPanelConfig = { id: TAB_SEARCH, panel: SearchPanelComponent };
         const bookmarksPanelConfig = {
             id: TAB_BOOKMARKS,
             panel: BookmarksPanelComponent,
-            attrs: {
-                userBookmarks: this.state.userBookmarks,
-                requireBookmarksCount: this.requireBookmarksCount,
-            },
+            attrs: { userBookmarks: this.state.userBookmarks, requireBookmarksCount: this.requireBookmarksCount },
         };
         const createPanelConfig = {
             id: TAB_CREATE,
             panel: CreatePanelComponent,
             attrs: {
-                languages: this.props.languages,
-                contentTypes: this.props.contentTypes,
+                languages,
+                contentTypes,
                 onLanguageSelected: this.onLanguageSelected,
                 onContentTypeSelected: this.onContentTypeSelected,
                 contentTypesMap: this.state.contentTypesMap,
-                forcedLanguage: this.props.cotfForcedLanguage,
-                preselectedLanguage: this.props.cotfPreselectedLanguage,
-                allowedLanguages: this.props.cotfAllowedLanguages,
-                preselectedContentType: this.props.cotfPreselectedContentType,
-                allowedContentTypes: this.props.cotfAllowedContentTypes,
-                preselectedLocation: this.props.cotfPreselectedLocation,
-                allowedLocations: this.props.cotfAllowedLocations,
-                sortFieldMappings: this.props.sortFieldMappings,
-                sortOrderMappings: this.props.sortOrderMappings,
+                forcedLanguage: cotfForcedLanguage,
+                preselectedLanguage: cotfPreselectedLanguage,
+                allowedLanguages: cotfAllowedLanguages,
+                preselectedContentType: cotfPreselectedContentType,
+                allowedContentTypes: cotfAllowedContentTypes,
+                preselectedLocation: cotfPreselectedLocation,
+                allowedLocations: cotfAllowedLocations,
+                sortFieldMappings,
+                sortOrderMappings,
             },
         };
         let panelsToRender = [browsePanelConfig, searchPanelConfig, createPanelConfig, bookmarksPanelConfig, ...extraTabs];
 
-        if (this.props.onlyContentOnTheFly) {
+        if (onlyContentOnTheFly) {
             console.warn('[DEPRECATED] onlyContentOnTheFly parameter is deprecated');
             console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
             console.warn('[DEPRECATED] use visibleTabs instead');
@@ -591,15 +693,20 @@ export default class UniversalDiscoveryModule extends Component {
             return <div className="m-ud__panels">{this.renderSinglePanel(createPanelConfig)}</div>;
         }
 
-        if (this.props.visibleTabs.length) {
-            panelsToRender = this.props.visibleTabs.map((tab) => {
-                return panelsToRender.find((config) => config.id === tab);
-            });
+        if (visibleTabs.length) {
+            panelsToRender = visibleTabs.map((tab) => panelsToRender.find((config) => config.id === tab));
         }
 
         return <div className="m-ud__panels">{panelsToRender.map(this.renderSinglePanel)}</div>;
     }
 
+    /**
+     * Renders a single panel
+     *
+     * @method renderSinglePanel
+     * @param {Object} item
+     * @returns {Element}
+     */
     renderSinglePanel(item) {
         const Panel = item.panel;
         const {
@@ -611,6 +718,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
+            allowContainersOnly,
         } = this.props;
         const { activeTab, maxHeight, contentTypesMap } = this.state;
         const attrs = {
@@ -618,7 +726,7 @@ export default class UniversalDiscoveryModule extends Component {
             onItemSelect: this.onItemSelect,
             maxHeight: maxHeight - 32,
             id: item.id,
-            allowContainersOnly: this.props.allowContainersOnly,
+            allowContainersOnly,
             startingLocationId,
             findLocationsByParentLocationId,
             findContentBySearchQuery,
@@ -634,11 +742,14 @@ export default class UniversalDiscoveryModule extends Component {
         return <Panel key={`panel-${item.id}`} {...attrs} />;
     }
 
+    /**
+     * Renders a confirm button
+     *
+     * @method renderConfirmBtn
+     * @returns {Element}
+     */
     renderConfirmBtn() {
-        const attrs = {
-            className: 'm-ud__action--confirm',
-            onClick: this.handleConfirm,
-        };
+        const attrs = { className: 'm-ud__action--confirm', onClick: this.handleConfirm };
 
         if (this.state.activeTab === TAB_CREATE) {
             return null;
@@ -651,6 +762,13 @@ export default class UniversalDiscoveryModule extends Component {
         return <button {...attrs}>{this.props.labels.udw.confirm}</button>;
     }
 
+    /**
+     * Does a permission checking
+     *
+     * @method renderSinglePanel
+     * @param {Object} item
+     * @returns {Element}
+     */
     checkPermission() {
         checkCreatePermission(
             {
@@ -659,19 +777,31 @@ export default class UniversalDiscoveryModule extends Component {
                 languageCode: this.state.selectedLanguage.languageCode,
                 locationId: this.state.contentMeta.id,
             },
-            (response) => {
-                if (this.state.hasPermission !== response.access) {
-                    this.setState((state) => ({ ...state, hasPermission: response.access }));
-                }
-            }
+            this.updatePermissionsState
         );
     }
 
+    /**
+     * Updates a permission state
+     *
+     * @method updatePermissionsState
+     * @param {Object} response
+     */
+    updatePermissionsState(response) {
+        this.setState((state) => ({ ...state, hasPermission: response.access }));
+    }
+
+    /**
+     * Renders a create content button
+     *
+     * @method renderCreateBtn
+     * @returns {Element}
+     */
     renderCreateBtn() {
         const isDataSelected = this.state.selectedLanguage && this.state.selectedContentType.identifier && this.state.contentMeta;
         const attrs = {
             className: 'm-ud__action--create-content',
-            onClick: this.handleCreateContent,
+            onClick: this.setCreateModeState,
             disabled: !this.state.hasPermission || !isDataSelected || !this.state.isLocationAllowed,
         };
 
@@ -686,6 +816,12 @@ export default class UniversalDiscoveryModule extends Component {
         return <button {...attrs}>{this.props.labels.contentOnTheFly.createContent}</button>;
     }
 
+    /**
+     * Renders permission error
+     *
+     * @method renderPermissionError
+     * @returns {Element}
+     */
     renderPermissionError() {
         const isDataSelected = this.state.selectedLanguage && this.state.selectedContentType && this.state.contentMeta;
 
@@ -696,6 +832,12 @@ export default class UniversalDiscoveryModule extends Component {
         return <span className="m-ud__no-permission">{this.props.labels.contentOnTheFly.noPermission}</span>;
     }
 
+    /**
+     * Renders not allowed location error
+     *
+     * @method renderNotAllowedLocationError
+     * @returns {Element}
+     */
     renderNotAllowedLocationError() {
         const isDataSelected = this.state.selectedLanguage && this.state.selectedContentType && this.state.contentMeta;
 
