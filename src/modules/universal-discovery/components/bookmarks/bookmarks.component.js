@@ -70,8 +70,8 @@ BookmarksComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     bookmarksPerPage: PropTypes.number.isRequired,
-    userBookmarksCount: PropTypes.number.isRequired,
-    userBookmarksItems: PropTypes.array.isRequired,
+    userBookmarksCount: PropTypes.number,
+    userBookmarksItems: PropTypes.array,
     requireBookmarksCount: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         bookmarks: PropTypes.shape({

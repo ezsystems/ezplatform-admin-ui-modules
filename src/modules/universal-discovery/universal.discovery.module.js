@@ -16,7 +16,7 @@ import {
     findContentBySearchQuery,
     checkCreatePermission,
 } from './services/universal.discovery.service';
-import { checkIsBookmarked, loadBookmarks } from './services/bookmark.service';
+import { checkIsBookmarked, loadBookmarks, addBookmark, removeBookmark } from './services/bookmark.service';
 import { showErrorNotification } from '../common/services/notification.service';
 import { areSameLocations } from '../common/helpers/compare.helper';
 import deepClone from '../common/helpers/deep.clone.helper';
@@ -57,14 +57,15 @@ export default class UniversalDiscoveryModule extends Component {
         this.handleConfirm = this.handleConfirm.bind(this);
         this.setCreateModeState = this.setCreateModeState.bind(this);
         this.updateContentMetaWithCurrentVersion = this.updateContentMetaWithCurrentVersion.bind(this);
-        this.onBookmarkRemoved = this.onBookmarkRemoved.bind(this);
+        this.toggleBookmark = this.toggleBookmark.bind(this);
         this.onBookmarkAdded = this.onBookmarkAdded.bind(this);
-        this.setBookmarked = this.setBookmarked.bind(this);
+        this.onBookmarkRemoved = this.onBookmarkRemoved.bind(this);
+        this.setBookmarkLoadingStatus = this.setBookmarkLoadingStatus.bind(this);
         this.requireBookmarksCount = this.requireBookmarksCount.bind(this);
         this.onBookmarksLoaded = this.onBookmarksLoaded.bind(this);
         this.updatePermissionsState = this.updatePermissionsState.bind(this);
 
-        this._refBookmarksPanelComponent = null;
+        this.loadingBookmarksLocationsIds = {};
 
         if (isForcedContentType) {
             selectedContentType = this.findContentType(props.cotfAllowedContentTypes[0]);
@@ -255,28 +256,62 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     /**
-     * Checks whether location is already bookmarked
+     * Sets loading status of bookmark
      *
-     * @method checkIsBookmarked
+     * @method setBookmarkLoadingStatus
      * @param {String} locationId
+     * @param {Boolean} isLoading
      * @memberof UniversalDiscoveryModule
      */
-    checkIsBookmarked(locationId) {
-        const { restInfo } = this.props;
-        const checked = new Promise((resolve) => checkIsBookmarked(restInfo, locationId, resolve));
-
-        checked.then(this.setBookmarked.bind(this, locationId)).catch(showErrorNotification);
+    setBookmarkLoadingStatus(locationId, isLoading) {
+        this.loadingBookmarksLocationsIds[locationId] = isLoading;
     }
 
     /**
-     * Sets bookmarked flag
+     * Returns true if bookmark is loading, otherwise returns false
      *
-     * @method setBookmarked
+     * @method isBookmarkLoading
+     * @param {String} locationId
+     * @memberof UniversalDiscoveryModule
+     */
+    isBookmarkLoading(locationId) {
+        return !!this.loadingBookmarksLocationsIds[locationId];
+    }
+
+    /**
+     * Checks whether location is already bookmarked
+     *
+     * @method fetchBookmarkStatus
+     * @param {String} locationId
+     * @memberof UniversalDiscoveryModule
+     */
+    fetchBookmarkStatus(locationId) {
+        if (this.isBookmarkLoading(locationId)) {
+            return;
+        }
+
+        this.setBookmarkLoadingStatus(locationId, true);
+
+        const { restInfo } = this.props;
+        const checked = new Promise((resolve) => checkIsBookmarked(restInfo, locationId, resolve));
+
+        checked
+            .then((isBookmarked) => {
+                this.setIsBookmarked(locationId, isBookmarked);
+                this.setBookmarkLoadingStatus(locationId, false);
+            })
+            .catch(showErrorNotification);
+    }
+
+    /**
+     * Sets bookmark value in the state
+     *
+     * @method setIsBookmarked
      * @param {String} locationId
      * @param {Boolean} isBookmarked
      * @memberof ContentMetaPreviewComponent
      */
-    setBookmarked(locationId, isBookmarked) {
+    setIsBookmarked(locationId, isBookmarked) {
         this.setState((state) => {
             const bookmarked = { ...state.bookmarked };
 
@@ -287,23 +322,53 @@ export default class UniversalDiscoveryModule extends Component {
     }
 
     /**
-     * Returns true or false if locations bookmark data was cached
-     * if not, checks it and then caches it
+     * Removes or adds bookmark depending on if it exists or not
+     *
+     * @method toggleBookmark
+     * @param {Object} location
+     * @memberof UniversalDiscoveryModule
+     */
+    toggleBookmark(location) {
+        const locationId = location.id;
+        const isBookmarked = this.isBookmarked(locationId);
+
+        if (this.isBookmarkLoading(locationId)) {
+            return;
+        }
+
+        this.setBookmarkLoadingStatus(locationId, true);
+
+        const { restInfo } = this.props;
+        const toggleBookmark = isBookmarked ? removeBookmark : addBookmark;
+        const onBookmarkToggled = isBookmarked ? this.onBookmarkRemoved : this.onBookmarkAdded;
+        const bookmarkToggled = new Promise((resolve) => toggleBookmark(restInfo, locationId, resolve));
+
+        bookmarkToggled
+            .then(() => {
+                onBookmarkToggled(location);
+                this.setBookmarkLoadingStatus(locationId, false);
+            })
+            .catch(showErrorNotification);
+    }
+
+    /**
+     * Returns
      *
      * @method isBookmarked
      * @param {String} locationId
+     * @returns {Boolean}
      * @memberof UniversalDiscoveryModule
      */
     isBookmarked(locationId) {
         const { bookmarked } = this.state;
+        const locationBookmarkChecked = locationId in bookmarked;
 
-        if (locationId in bookmarked) {
-            return bookmarked[locationId];
+        if (!locationBookmarkChecked) {
+            this.fetchBookmarkStatus(locationId);
+            return null;
         }
 
-        this.checkIsBookmarked(locationId);
-
-        return null;
+        return bookmarked[locationId];
     }
 
     /**
@@ -321,7 +386,7 @@ export default class UniversalDiscoveryModule extends Component {
                 userBookmarksItems: state.userBookmarksItems.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
             }),
             () => {
-                this.setBookmarked(itemToRemoveLocation.id, false);
+                this.setIsBookmarked(itemToRemoveLocation.id, false);
 
                 const { activeTab } = this.state;
 
@@ -349,7 +414,7 @@ export default class UniversalDiscoveryModule extends Component {
                 userBookmarksItems: [{ Location: addedBookmarkLocation }, ...state.userBookmarksItems],
             }),
             () => {
-                this.setBookmarked(addedBookmarkLocation.id, true);
+                this.setIsBookmarked(addedBookmarkLocation.id, true);
                 this.dispatchBookmarkChangeEvent(addedBookmarkLocation.id, true);
             }
         );
@@ -371,7 +436,7 @@ export default class UniversalDiscoveryModule extends Component {
                 bookmarksDuringLoadingCount: state.bookmarksDuringLoadingCount - items.length,
                 userBookmarksItems: [...items, ...state.userBookmarksItems],
             }),
-            () => items.forEach((bookmarkLocation) => this.setBookmarked(bookmarkLocation.Location.id, true))
+            () => items.forEach((bookmarkLocation) => this.setIsBookmarked(bookmarkLocation.Location.id, true))
         );
     }
 
@@ -524,17 +589,16 @@ export default class UniversalDiscoveryModule extends Component {
 
         const { contentTypesMap, maxHeight, activeTab, contentMeta, isPreviewMetaReady } = this.state;
         const { loadContentInfo, restInfo, languages, labels } = this.props;
-        const isSelectedContentBookmarked = this.isBookmarked(contentMeta.id);
+        const isContentBookmarked = this.isBookmarked(contentMeta.id);
 
         return (
             <div className="m-ud__preview">
                 <ContentMetaPreviewComponent
                     data={contentMeta}
-                    bookmarked={isSelectedContentBookmarked}
+                    isBookmarked={isContentBookmarked}
                     canSelectContent={this.canSelectContent}
                     onSelectContent={this.updateSelectedContent}
-                    onBookmarkRemoved={this.onBookmarkRemoved}
-                    onBookmarkAdded={this.onBookmarkAdded}
+                    toggleBookmark={this.toggleBookmark}
                     loadContentInfo={loadContentInfo}
                     restInfo={restInfo}
                     contentTypesMap={contentTypesMap}

@@ -68,8 +68,8 @@ BookmarksPanelComponent.propTypes = {
     contentTypesMap: PropTypes.object.isRequired,
     bookmarksPerPage: PropTypes.number.isRequired,
     labels: PropTypes.object.isRequired,
-    userBookmarksItems: PropTypes.array.isRequired,
-    userBookmarksCount: PropTypes.number.isRequired,
+    userBookmarksItems: PropTypes.array,
+    userBookmarksCount: PropTypes.number,
     requireBookmarksCount: PropTypes.func.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,

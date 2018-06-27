@@ -2,8 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './css/content.meta.preview.component.css';
-import { addBookmark, removeBookmark } from '../../services/bookmark.service';
-import { showErrorNotification } from '../../../common/services/notification.service';
 import { TAB_CREATE } from '../../universal.discovery.module';
 
 export default class ContentMetaPreviewComponent extends Component {
@@ -126,7 +124,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const version = data.CurrentVersion.Version;
         const versionLanguages = version.VersionInfo.VersionTranslationInfo.Language;
 
-        return versionLanguages.map((langauge) => this.props.languages.mappings[langauge.languageCode].name);
+        return versionLanguages.map((language) => this.props.languages.mappings[language.languageCode].name);
     }
 
     /**
@@ -172,19 +170,15 @@ export default class ContentMetaPreviewComponent extends Component {
     }
 
     /**
-     * Removes or adds bookmark depending on if it exists or not
+     * Toggles bookmark
      *
      * @method toggleBookmark
      * @memberof ContentMetaPreviewComponent
      */
     toggleBookmark() {
-        const { onBookmarkRemoved, onBookmarkAdded, data, restInfo, bookmarked } = this.props;
-        const toggleBookmark = bookmarked ? removeBookmark : addBookmark;
-        const onBookmarkToggled = bookmarked ? onBookmarkRemoved : onBookmarkAdded;
-        const locationId = data.id;
-        const bookmarkToggled = new Promise((resolve) => toggleBookmark(restInfo, locationId, resolve));
+        const { toggleBookmark, data } = this.props;
 
-        bookmarkToggled.then(() => onBookmarkToggled(data)).catch(showErrorNotification);
+        toggleBookmark(data);
     }
 
     /**
@@ -194,14 +188,10 @@ export default class ContentMetaPreviewComponent extends Component {
      * @memberof ContentMetaPreviewComponent
      */
     renderBookmarkIcon() {
-        const { bookmarked } = this.props;
+        const { isBookmarked } = this.props;
 
-        if (bookmarked === null) {
-            return null;
-        }
-
-        const bookmarkIconId = bookmarked ? 'bookmark-active' : 'bookmark';
-        const action = bookmarked ? 'remove' : 'add';
+        const bookmarkIconId = isBookmarked ? 'bookmark-active' : 'bookmark';
+        const action = isBookmarked ? 'remove' : 'add';
         const iconHref = `/bundles/ezplatformadminui/img/ez-icons.svg#${bookmarkIconId}`;
         const wrapperClassName = `ez-add-to-bookmarks__icon-wrapper ez-add-to-bookmarks__icon-wrapper--${action}`;
 
@@ -256,10 +246,9 @@ export default class ContentMetaPreviewComponent extends Component {
 
 ContentMetaPreviewComponent.propTypes = {
     data: PropTypes.object.isRequired,
-    bookmarked: PropTypes.bool,
+    isBookmarked: PropTypes.bool,
     onSelectContent: PropTypes.func.isRequired,
-    onBookmarkRemoved: PropTypes.func.isRequired,
-    onBookmarkAdded: PropTypes.func.isRequired,
+    toggleBookmark: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({
@@ -282,5 +271,5 @@ ContentMetaPreviewComponent.propTypes = {
 };
 
 ContentMetaPreviewComponent.defaultProps = {
-    bookmarked: null,
+    isBookmarked: null,
 };
