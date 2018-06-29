@@ -325,7 +325,7 @@ export default class UniversalDiscoveryModule extends Component {
         const { activeTab } = this.state;
 
         if (activeTab === TAB_BOOKMARKS) {
-            this.onItemSelect(null);
+            this.closeCMP();
         }
 
         this.dispatchBookmarkChangeEvent(itemToRemoveLocation.id, false);
@@ -481,6 +481,18 @@ export default class UniversalDiscoveryModule extends Component {
      */
     togglePanel(activeTab) {
         this.setState((state) => ({ ...state, activeTab, contentMeta: null }));
+    }
+
+    /**
+     * Closes CMP (Content Meta Preview)
+     *
+     * @method closeCMP
+     */
+    closeCMP() {
+        this.setState((state) => ({
+            ...state,
+            contentMeta: null,
+        }));
     }
 
     /**
