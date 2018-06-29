@@ -10,21 +10,10 @@ export default class ContentMetaPreviewComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            imageUri: '',
-            translations: [],
-            selectContentEnabled: false,
-        };
+        this.state = { imageUri: '', translations: [], selectContentEnabled: false };
 
         this.toggleBookmark = this.toggleBookmark.bind(this);
         this.toggleEnabledState = this.toggleEnabledState.bind(this);
-    }
-
-    componentWillReceiveProps(props) {
-        const translations = this.getTranslations(props.data);
-        const imageUri = this.getImageUri(props.data);
-
-        this.setState((state) => ({ ...state, translations, imageUri }));
     }
 
     /**
@@ -34,12 +23,12 @@ export default class ContentMetaPreviewComponent extends Component {
      * @param {Boolean} disabled The disabled state
      * @memberof ContentMetaPreviewComponent
      */
-    toggleEnabledState(enabled) {
-        if (this.state.selectContentEnabled === enabled) {
+    toggleEnabledState(selectContentEnabled) {
+        if (this.state.selectContentEnabled === selectContentEnabled) {
             return;
         }
 
-        this.setState((state) => ({ ...state, selectContentEnabled: enabled }));
+        this.setState((state) => ({ ...state, selectContentEnabled }));
     }
 
     /**
@@ -54,15 +43,12 @@ export default class ContentMetaPreviewComponent extends Component {
             return null;
         }
 
-        const { data, canSelectContent, onSelectContent, labels } = this.props;
-        const attrs = {
-            className: 'c-meta-preview__btn--select',
-            onClick: onSelectContent,
-        };
+        const { data, canSelectContent, onSelectContent, labels, ready } = this.props;
+        const attrs = { className: 'c-meta-preview__btn--select', onClick: onSelectContent };
 
         canSelectContent(data, this.toggleEnabledState);
 
-        if (!this.state.selectContentEnabled) {
+        if (!this.state.selectContentEnabled || !ready) {
             attrs.disabled = true;
         }
 
@@ -145,8 +131,17 @@ export default class ContentMetaPreviewComponent extends Component {
         );
     }
 
+    /**
+     * Renders image preview
+     *
+     * @method renderImagePreview
+     * @returns {Element}
+     * @memberof ContentMetaPreviewComponent
+     */
     renderImagePreview() {
-        if (!this.props.data.CurrentVersion) {
+        const { data, labels } = this.props;
+
+        if (!data.CurrentVersion) {
             return (
                 <svg className="c-meta-preview__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
@@ -154,11 +149,13 @@ export default class ContentMetaPreviewComponent extends Component {
             );
         }
 
-        if (!this.state.imageUri.length) {
-            return <Fragment>{this.props.labels.imagePreviewNotAvailable}</Fragment>;
+        const imageUri = this.getImageUri(data);
+
+        if (!imageUri.length) {
+            return <Fragment>{labels.imagePreviewNotAvailable}</Fragment>;
         }
 
-        return <img className="c-meta-preview__image" src={this.state.imageUri} alt="" />;
+        return <img className="c-meta-preview__image" src={imageUri} alt="" />;
     }
 
     /**
@@ -174,11 +171,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const locationId = data.id;
         const bookmarkToggled = new Promise((resolve) => toggleBookmark(restInfo, locationId, resolve));
 
-        bookmarkToggled
-            .then(() => {
-                onBookmarkToggled(data);
-            })
-            .catch(showErrorNotification);
+        bookmarkToggled.then(() => onBookmarkToggled(data)).catch(showErrorNotification);
     }
 
     /**
@@ -197,9 +190,10 @@ export default class ContentMetaPreviewComponent extends Component {
         const bookmarkIconId = bookmarked ? 'bookmark-active' : 'bookmark';
         const action = bookmarked ? 'remove' : 'add';
         const iconHref = `/bundles/ezplatformadminui/img/ez-icons.svg#${bookmarkIconId}`;
+        const wrapperClassName = `ez-add-to-bookmarks__icon-wrapper ez-add-to-bookmarks__icon-wrapper--${action}`;
 
         return (
-            <div className={`ez-add-to-bookmarks__icon-wrapper ez-add-to-bookmarks__icon-wrapper--${action}`} onClick={this.toggleBookmark}>
+            <div className={wrapperClassName} onClick={this.toggleBookmark}>
                 <svg className="ez-icon ez-icon--medium">
                     <use xlinkHref={iconHref} />
                 </svg>
@@ -208,15 +202,16 @@ export default class ContentMetaPreviewComponent extends Component {
     }
 
     render() {
-        const { labels } = this.props;
-        const data = this.props.data.ContentInfo.Content;
-        const contentTypeIdentifier = data.ContentTypeInfo.identifier;
-        const contentTypeName = eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+        const { labels, data, maxHeight } = this.props;
+        const content = data.ContentInfo.Content;
+        const contentTypeIdentifier = content.ContentTypeInfo.identifier;
+        const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+        const translations = this.getTranslations(data);
 
         return (
             <div className="c-meta-preview__wrapper">
                 <h1 className="c-meta-preview__title">{labels.title}</h1>
-                <div className="c-meta-preview" style={{ maxHeight: `${this.props.maxHeight - 64}px` }}>
+                <div className="c-meta-preview" style={{ maxHeight: `${maxHeight - 64}px` }}>
                     <div className="c-meta-preview__top-wrapper">
                         <div className="c-meta-preview__content-type">
                             {this.renderIcon()} {contentTypeName}
@@ -225,19 +220,19 @@ export default class ContentMetaPreviewComponent extends Component {
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
                         <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
-                        <div className="c-meta-preview__name">{data.Name}</div>
+                        <div className="c-meta-preview__name">{content.Name}</div>
                         {this.renderSelectContentBtn()}
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{labels.lastModified}:</h3>
-                            {new Date(data.lastModificationDate).toLocaleString()}
+                            {new Date(content.lastModificationDate).toLocaleString()}
                         </div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{labels.creationDate}:</h3>
-                            {new Date(data.publishedDate).toLocaleString()}
+                            {new Date(content.publishedDate).toLocaleString()}
                         </div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{labels.translations}:</h3>
-                            {this.state.translations.map(this.renderTranslation)}
+                            {translations.map(this.renderTranslation)}
                         </div>
                     </div>
                 </div>
@@ -270,6 +265,7 @@ ContentMetaPreviewComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     activeTab: PropTypes.string.isRequired,
     languages: PropTypes.object.isRequired,
+    ready: PropTypes.bool.isRequired,
 };
 
 ContentMetaPreviewComponent.defaultProps = {
