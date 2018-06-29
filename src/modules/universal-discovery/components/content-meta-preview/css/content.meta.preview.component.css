@@ -130,6 +130,7 @@
 }
 
 .c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper {
+    padding: 0;
     cursor: pointer;
 }
 
