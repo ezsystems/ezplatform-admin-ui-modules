@@ -7,9 +7,9 @@ import './css/bookmarks.component.css';
 
 export default class BookmarksComponent extends Component {
     renderTable() {
-        const { userBookmarks } = this.props;
+        const { userBookmarksCount, userBookmarksItems } = this.props;
 
-        if (userBookmarks.count === null) {
+        if (userBookmarksCount === null) {
             return null;
         }
 
@@ -17,8 +17,8 @@ export default class BookmarksComponent extends Component {
 
         return (
             <ContentTableComponent
-                items={userBookmarks.items}
-                count={userBookmarks.count}
+                items={userBookmarksItems}
+                count={userBookmarksCount}
                 requireItemsCount={requireBookmarksCount}
                 onItemSelect={onItemSelect}
                 onItemClick={onItemSelect}
@@ -32,9 +32,9 @@ export default class BookmarksComponent extends Component {
     }
 
     renderSpinner() {
-        const { count } = this.props.userBookmarks;
+        const { userBookmarksCount } = this.props;
 
-        if (count === null) {
+        if (userBookmarksCount === null) {
             return (
                 <svg className="c-bookmarks__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
@@ -44,9 +44,9 @@ export default class BookmarksComponent extends Component {
     }
 
     renderNoBookmarksInfo() {
-        const { userBookmarks, labels } = this.props;
+        const { userBookmarksCount, labels } = this.props;
 
-        if (userBookmarks.count === 0) {
+        if (!userBookmarksCount) {
             return <div className="c-bookmarks__no-bookmarks-info">{labels.bookmarks.noBookmarks}</div>;
         }
     }
@@ -70,7 +70,8 @@ BookmarksComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     bookmarksPerPage: PropTypes.number.isRequired,
-    userBookmarks: PropTypes.object.isRequired,
+    userBookmarksCount: PropTypes.number.isRequired,
+    userBookmarksItems: PropTypes.array.isRequired,
     requireBookmarksCount: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         bookmarks: PropTypes.shape({

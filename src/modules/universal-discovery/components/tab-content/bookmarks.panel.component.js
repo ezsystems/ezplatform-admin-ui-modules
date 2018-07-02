@@ -17,7 +17,8 @@ export default class BookmarksPanelComponent extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
-            userBookmarks,
+            userBookmarksItems,
+            userBookmarksCount,
             requireBookmarksCount,
         } = this.props;
 
@@ -30,8 +31,9 @@ export default class BookmarksPanelComponent extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
-            userBookmarks,
-            requireBookmarksCount,
+            userBookmarksItems,
+            userBookmarksCount,
+            requireBookmarksCount
         };
     }
 
@@ -66,7 +68,8 @@ BookmarksPanelComponent.propTypes = {
     contentTypesMap: PropTypes.object.isRequired,
     bookmarksPerPage: PropTypes.number.isRequired,
     labels: PropTypes.object.isRequired,
-    userBookmarks: PropTypes.object.isRequired,
+    userBookmarksItems: PropTypes.array.isRequired,
+    userBookmarksCount: PropTypes.number.isRequired,
     requireBookmarksCount: PropTypes.func.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
