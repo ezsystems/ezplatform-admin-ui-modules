@@ -14,6 +14,21 @@ export default class ContentMetaPreviewComponent extends Component {
 
         this.toggleBookmark = this.toggleBookmark.bind(this);
         this.toggleEnabledState = this.toggleEnabledState.bind(this);
+        this.checkCanSelectContent = this.checkCanSelectContent.bind(this);
+    }
+
+    componentDidMount() {
+        this.checkCanSelectContent();
+    }
+
+    componentDidUpdate() {
+        this.checkCanSelectContent();
+    }
+
+    checkCanSelectContent() {
+        const { data, canSelectContent } = this.props;
+
+        canSelectContent(data, this.toggleEnabledState);
     }
 
     /**
@@ -43,10 +58,8 @@ export default class ContentMetaPreviewComponent extends Component {
             return null;
         }
 
-        const { data, canSelectContent, onSelectContent, labels, ready } = this.props;
+        const { onSelectContent, labels, ready } = this.props;
         const attrs = { className: 'c-meta-preview__btn--select', onClick: onSelectContent };
-
-        canSelectContent(data, this.toggleEnabledState);
 
         if (!this.state.selectContentEnabled || !ready) {
             attrs.disabled = true;
