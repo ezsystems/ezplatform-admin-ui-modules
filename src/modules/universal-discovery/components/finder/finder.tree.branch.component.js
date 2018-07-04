@@ -10,18 +10,24 @@ export default class FinderTreeBranchComponent extends Component {
         super(props);
 
         this.expandBranch = this.expandBranch.bind(this);
+        this.renderLeaf = this.renderLeaf.bind(this);
+        this.updateSelectedLocations = this.updateSelectedLocations.bind(this);
+        this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
+        this.removeLoadingState = this.removeLoadingState.bind(this);
 
         this.state = {
-            selectedLocations: props.selectedLocations,
-            currentlyLoadingLocationId: false
+            selectedLocationId: null,
+            currentlyLoadingLocationId: null,
         };
     }
 
-    componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {
-            selectedLocations: props.selectedLocations,
-            currentlyLoadingLocationId: false
-        }));
+    /**
+     * Removes the loading state from the container
+     *
+     * @method removeLoadingState
+     */
+    removeLoadingState() {
+        this.setState((state) => ({ ...state, currentlyLoadingLocationId: null }));
     }
 
     /**
@@ -32,21 +38,31 @@ export default class FinderTreeBranchComponent extends Component {
      * @memberof FinderTreeBranchComponent
      */
     updateSelectedLocations(location) {
-        this.setState(state => {
-            const locations = [...state.selectedLocations, location.id];
-
-            return Object.assign({}, state, {
-                selectedLocations: [...new Set(locations)],
-                currentlyLoadingLocationId: location.id
-            });
-        });
-
-        this.props.onItemClick({
-            parent: location.id,
-            location
-        });
+        this.setState(
+            (state) => {
+                return {
+                    ...state,
+                    selectedLocationId: location.id,
+                    currentlyLoadingLocationId: location.id,
+                };
+            },
+            () => {
+                this.props.onItemClick(
+                    {
+                        parentLocationId: location.id,
+                        location,
+                    },
+                    this.removeLoadingState
+                );
+            }
+        );
     }
 
+    /**
+     * Expands the branch
+     *
+     * @method expandBranch
+     */
     expandBranch() {
         this.props.onBranchClick(this.props.parentLocation);
     }
@@ -61,20 +77,31 @@ export default class FinderTreeBranchComponent extends Component {
      */
     renderLeaf(data) {
         const location = data.value.Location;
-        const isLoadingChildren = location.id === this.state.currentlyLoadingLocationId;
         const contentTypesMap = this.props.contentTypesMap;
         const contentTypeHref = location.ContentInfo.Content.ContentType._href;
         const isContainer = contentTypesMap && contentTypesMap[contentTypeHref] && contentTypesMap[contentTypeHref].isContainer;
         const isSelectable = !(this.props.allowContainersOnly && !isContainer);
 
-        return <FinderTreeLeafComponent
-            key={location.remoteId}
-            location={location}
-            onClick={this.updateSelectedLocations.bind(this)}
-            selected={this.state.selectedLocations.includes(location.id)}
-            isLoadingChildren={isLoadingChildren}
-            isSelectable={isSelectable}
-            allowedLocations={this.props.allowedLocations} />
+        return (
+            <FinderTreeLeafComponent
+                key={location.remoteId}
+                location={location}
+                onClick={this.updateSelectedLocations}
+                selected={location.id === this.state.selectedLocationId}
+                isLoadingChildren={location.id === this.state.currentlyLoadingLocationId}
+                isSelectable={isSelectable}
+                allowedLocations={this.props.allowedLocations}
+            />
+        );
+    }
+
+    /**
+     * Handles a click event on the Load More button
+     *
+     * @method handleLoadMoreClick
+     */
+    handleLoadMoreClick() {
+        this.props.onLoadMore(this.props.parentLocation);
     }
 
     /**
@@ -85,37 +112,38 @@ export default class FinderTreeBranchComponent extends Component {
      * @memberof FinderTreeBranchComponent
      */
     renderLoadMore() {
-        const { items, total } = this.props;
+        const { items, total, labels } = this.props;
 
         if (!items.length || items.length === total) {
             return null;
         }
 
         return (
-            <button
-                className="c-finder-tree-branch__load-more"
-                onClick={() => this.props.onLoadMore(this.props.parentLocation)}>
-                {this.props.labels.finderBranch.loadMore}
+            <button className="c-finder-tree-branch__load-more" onClick={this.handleLoadMoreClick}>
+                {labels.finderBranch.loadMore}
             </button>
         );
     }
 
     render() {
-        const items = this.props.items;
-        const attrs = {
-            className: 'c-finder-tree-branch',
-            style: { height: `${this.props.maxHeight}px` }
-        }
+        const { items, isLoading } = this.props;
+        const branchClassName = 'c-finder-tree-branch';
+        const attrs = { className: branchClassName, style: { height: `${this.props.maxHeight}px` } };
 
         if (!items.length) {
-            attrs.className = `${attrs.className} c-finder-tree-branch--collapsed`;
+            attrs.className = `${attrs.className} ${branchClassName}--collapsed`;
             attrs.onClick = this.expandBranch;
         }
 
+        if (isLoading) {
+            attrs.className = `${attrs.className} ${branchClassName}--loading`;
+            attrs.onClick = undefined;
+        }
+
         return (
-            <div {...attrs} >
+            <div {...attrs}>
                 <div className="c-finder-tree-branch__list-wrapper">
-                    {this.props.items.map(this.renderLeaf.bind(this))}
+                    {items.map(this.renderLeaf)}
                     {this.renderLoadMore()}
                 </div>
             </div>
@@ -129,15 +157,15 @@ FinderTreeBranchComponent.propTypes = {
     parentLocation: PropTypes.object,
     onItemClick: PropTypes.func.isRequired,
     onBranchClick: PropTypes.func.isRequired,
-    selectedLocations: PropTypes.array.isRequired,
     onLoadMore: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         finderBranch: PropTypes.shape({
-            loadMore: PropTypes.string.isRequired
-        }).isRequired
+            loadMore: PropTypes.string.isRequired,
+        }).isRequired,
     }).isRequired,
     maxHeight: PropTypes.number.isRequired,
     allowContainersOnly: PropTypes.bool,
     contentTypesMap: PropTypes.object,
-    allowedLocations: PropTypes.array.isRequired
+    allowedLocations: PropTypes.array.isRequired,
+    isLoading: PropTypes.bool.isRequired,
 };

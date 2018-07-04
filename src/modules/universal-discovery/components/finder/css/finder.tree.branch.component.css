@@ -5,6 +5,7 @@
     flex: 0 0 24ch;
     border-radius: 4px;
     overflow: auto;
+    transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .c-finder-tree-branch__list-wrapper {
@@ -21,7 +22,7 @@
     width: 80%;
     border-radius: 4px;
     margin: 0 auto 10px;
-    transition: background .3s cubic-bezier(.25, .8, .25, 1), color .3s cubic-bezier(.25, .8, .25, 1);
+    transition: background 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
 }
 
@@ -35,4 +36,9 @@
 .c-finder-tree-branch--collapsed {
     flex: 0 0 3ch;
     cursor: pointer;
+}
+
+.c-finder-tree-branch--loading {
+    pointer-events: none;
+    opacity: 0.75;
 }
