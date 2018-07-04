@@ -39,13 +39,11 @@ export default class FinderTreeBranchComponent extends Component {
      */
     updateSelectedLocations(location) {
         this.setState(
-            (state) => {
-                return {
-                    ...state,
-                    selectedLocationId: location.id,
-                    currentlyLoadingLocationId: location.id,
-                };
-            },
+            (state) => ({
+                ...state,
+                selectedLocationId: location.id,
+                currentlyLoadingLocationId: location.id,
+            }),
             () => {
                 this.props.onItemClick(
                     {
