@@ -1,5 +1,5 @@
 import { showErrorNotification } from '../../common/services/notification.service';
-import { getBasicRequestInit, handleRequestResponse, handleRequestResponseStatus } from '../helpers/request.helper.js';
+import { getBasicRequestInit, handleRequestResponse, handleRequestError, handleRequestResponseStatus } from '../helpers/request.helper.js';
 
 const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 
@@ -94,7 +94,7 @@ export const checkIsBookmarked = (restInfo, locationId, callback) => {
                 return status === bookmarkedStatusCode;
             }
 
-            handleRequestError(response);
+            return handleRequestError(response);
         })
         .then(callback)
         .catch(showErrorNotification);
