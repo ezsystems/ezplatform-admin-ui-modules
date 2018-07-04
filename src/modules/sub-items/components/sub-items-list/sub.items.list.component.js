@@ -14,19 +14,19 @@ export default class SubItemsListComponent extends Component {
             activeView: props.activeView,
             views: {
                 table: TableViewComponent,
-                grid: GridViewComponent
-            }
-        }
+                grid: GridViewComponent,
+            },
+        };
     }
 
-    componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {activeView: props.activeView}));
+    UNSAFE_componentWillReceiveProps(props) {
+        this.setState((state) => ({ ...state, activeView: props.activeView }));
     }
 
     render() {
         const Component = this.state.views[this.state.activeView];
 
-        return <Component {...this.props} />
+        return <Component {...this.props} />;
     }
 }
 
@@ -37,7 +37,7 @@ SubItemsListComponent.propTypes = {
     handleItemPriorityUpdate: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         tableView: PropTypes.object.isRequired,
-        tableViewItem: PropTypes.object.isRequired
+        tableViewItem: PropTypes.object.isRequired,
     }).isRequired,
-    languages: PropTypes.object.isRequired
+    languages: PropTypes.object.isRequired,
 };

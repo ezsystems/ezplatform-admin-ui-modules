@@ -1,6 +1,6 @@
 const HEADERS_CREATE_VIEW = {
-    'Accept':'application/vnd.ez.api.View+json; version=1.1',
-    'Content-Type':'application/vnd.ez.api.ViewInput+json; version=1.1'
+    Accept: 'application/vnd.ez.api.View+json; version=1.1',
+    'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
 /**
@@ -10,7 +10,7 @@ const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
  * @param {Response} response
  * @returns {String|Response}
  */
-const handleRequestResponse = response => {
+const handleRequestResponse = (response) => {
     if (!response.ok) {
         throw Error(response.statusText);
     }
@@ -32,7 +32,7 @@ const handleRequestResponse = response => {
  * @param {Object} queryConfig.sortClauses
  * @param {Function} callback
  */
-export const loadLocation = ({token, siteaccess}, {locationId = 2, limit = 10, offset = 0, sortClauses}, callback) => {
+export const loadLocation = ({ token, siteaccess }, { locationId = 2, limit = 10, offset = 0, sortClauses }, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `subitems-load-location-${locationId}`,
@@ -41,27 +41,28 @@ export const loadLocation = ({token, siteaccess}, {locationId = 2, limit = 10, o
                 Criteria: {},
                 FacetBuilders: {},
                 SortClauses: sortClauses,
-                Filter: {ParentLocationIdCriterion: locationId},
+                Filter: { ParentLocationIdCriterion: locationId },
                 limit,
-                offset
-            }
-        }
+                offset,
+            },
+        },
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+        headers: {
+            ...HEADERS_CREATE_VIEW,
             'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token
-        }),
+            'X-CSRF-Token': token,
+        },
         body,
         mode: 'cors',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
     });
 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(error => console.log('error:load:location', error));
+        .catch((error) => console.log('error:load:location', error));
 };
 
 /**
@@ -71,7 +72,7 @@ export const loadLocation = ({token, siteaccess}, {locationId = 2, limit = 10, o
  * @param {Array} contentIds
  * @param {Function} callback
  */
-export const loadContentInfo = ({token, siteaccess}, contentIds, callback) => {
+export const loadContentInfo = ({ token, siteaccess }, contentIds, callback) => {
     const ids = contentIds.join();
     const body = JSON.stringify({
         ViewInput: {
@@ -81,27 +82,28 @@ export const loadContentInfo = ({token, siteaccess}, contentIds, callback) => {
                 Criteria: {},
                 FacetBuilders: {},
                 SortClauses: {},
-                Filter: {ContentIdCriterion: `${ids}`},
+                Filter: { ContentIdCriterion: `${ids}` },
                 limit: contentIds.length,
-                offset: 0
-            }
-        }
+                offset: 0,
+            },
+        },
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+        headers: {
+            ...HEADERS_CREATE_VIEW,
             'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token
-        }),
+            'X-CSRF-Token': token,
+        },
         body,
         mode: 'cors',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
     });
 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(error => console.log('error:load:content:info', error));
+        .catch((error) => console.log('error:load:content:info', error));
 };
 
 /**
@@ -110,22 +112,22 @@ export const loadContentInfo = ({token, siteaccess}, contentIds, callback) => {
  * @function loadContentTypes
  * @param {Function} callback
  */
-export const loadContentTypes = ({token, siteaccess}, callback) => {
+export const loadContentTypes = ({ token, siteaccess }, callback) => {
     const request = new Request('/api/ezp/v2/content/types', {
         method: 'GET',
         headers: {
-            'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json',
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
             'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token
+            'X-CSRF-Token': token,
         },
         mode: 'cors',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
     });
 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(error => console.log('error:load:content:info', error));
+        .catch((error) => console.log('error:load:content:info', error));
 };
 
 /**
@@ -138,18 +140,18 @@ export const loadContentType = (id, { token, siteaccess }, callback) => {
     const request = new Request(id, {
         method: 'GET',
         headers: {
-            'Accept': 'application/vnd.ez.api.ContentType+json',
+            Accept: 'application/vnd.ez.api.ContentType+json',
             'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token
+            'X-CSRF-Token': token,
         },
         mode: 'cors',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
     });
 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(error => console.log('error:load:content:info', error));
+        .catch((error) => console.log('error:load:content:info', error));
 };
 
 /**
@@ -159,15 +161,15 @@ export const loadContentType = (id, { token, siteaccess }, callback) => {
  * @param {Object} params params hash containing: priority, location, token, siteaccess properties
  * @param {Function} callback
  */
-export const updateLocationPriority = ({priority, location, token, siteaccess}, callback) => {
+export const updateLocationPriority = ({ priority, location, token, siteaccess }, callback) => {
     const request = new Request(location, {
         method: 'POST',
         headers: {
-            'Accept': 'application/vnd.ez.api.Location+json',
+            Accept: 'application/vnd.ez.api.Location+json',
             'Content-Type': 'application/vnd.ez.api.LocationUpdate+json',
             'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
-            'X-HTTP-Method-Override': 'PATCH'
+            'X-HTTP-Method-Override': 'PATCH',
         },
         credentials: 'same-origin',
         mode: 'cors',
@@ -175,13 +177,13 @@ export const updateLocationPriority = ({priority, location, token, siteaccess}, 
             LocationUpdate: {
                 priority: priority,
                 sortField: 'PATH',
-                sortOrder: 'ASC'
-            }
-        })
+                sortOrder: 'ASC',
+            },
+        }),
     });
 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(error => console.log('error:update:location:priority', error));
+        .catch((error) => console.log('error:update:location:priority', error));
 };

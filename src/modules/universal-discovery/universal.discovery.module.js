@@ -119,11 +119,13 @@ export default class UniversalDiscoveryModule extends Component {
         const bookmarksLoaded = new Promise((resolve) => loadBookmarks(restInfo, 10, 0, resolve));
 
         bookmarksLoaded
-            .then(({ BookmarkList }) => this.setState((state) => ({
-                ...state,
-                userBookmarksCount: BookmarkList.count,
-                userBookmarksItems: BookmarkList.items,
-            })))
+            .then(({ BookmarkList }) =>
+                this.setState((state) => ({
+                    ...state,
+                    userBookmarksCount: BookmarkList.count,
+                    userBookmarksItems: BookmarkList.items,
+                }))
+            )
             .catch(showErrorNotification);
     }
 
@@ -312,21 +314,24 @@ export default class UniversalDiscoveryModule extends Component {
      * @memberof UniversalDiscoveryModule
      */
     onBookmarkRemoved(itemToRemoveLocation) {
-        this.setState((state) => ({
-            ...state,
-            userBookmarksCount: state.userBookmarksCount - 1,
-            userBookmarksItems: state.userBookmarksItems.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
-        }), () => {
-            this.setBookmarked(itemToRemoveLocation.id, false);
+        this.setState(
+            (state) => ({
+                ...state,
+                userBookmarksCount: state.userBookmarksCount - 1,
+                userBookmarksItems: state.userBookmarksItems.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
+            }),
+            () => {
+                this.setBookmarked(itemToRemoveLocation.id, false);
 
-            const { activeTab } = this.state;
+                const { activeTab } = this.state;
 
-            if (activeTab === TAB_BOOKMARKS) {
-                this.closeContentMetaPreview();
+                if (activeTab === TAB_BOOKMARKS) {
+                    this.closeContentMetaPreview();
+                }
+
+                this.dispatchBookmarkChangeEvent(itemToRemoveLocation.id, false);
             }
-
-            this.dispatchBookmarkChangeEvent(itemToRemoveLocation.id, false);
-        });
+        );
     }
 
     /**
@@ -337,14 +342,17 @@ export default class UniversalDiscoveryModule extends Component {
      * @memberof UniversalDiscoveryModule
      */
     onBookmarkAdded(addedBookmarkLocation) {
-        this.setState((state) => ({
-            ...state,
-            userBookmarksCount: state.userBookmarksCount + 1,
-            userBookmarksItems: [{ Location: addedBookmarkLocation }, ...state.userBookmarksItems],
-        }), () => {
-            this.setBookmarked(addedBookmarkLocation.id, true);
-            this.dispatchBookmarkChangeEvent(addedBookmarkLocation.id, true);
-        });
+        this.setState(
+            (state) => ({
+                ...state,
+                userBookmarksCount: state.userBookmarksCount + 1,
+                userBookmarksItems: [{ Location: addedBookmarkLocation }, ...state.userBookmarksItems],
+            }),
+            () => {
+                this.setBookmarked(addedBookmarkLocation.id, true);
+                this.dispatchBookmarkChangeEvent(addedBookmarkLocation.id, true);
+            }
+        );
     }
 
     /**
@@ -403,7 +411,7 @@ export default class UniversalDiscoveryModule extends Component {
             return {
                 ...state,
                 bookmarksDuringLoadingCount: bookmarksDuringLoadingCount + bookmarksToLoadCount,
-                bookmarksRequiredCount: newBookmarksRequiredCount
+                bookmarksRequiredCount: newBookmarksRequiredCount,
             };
         });
     }

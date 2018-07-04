@@ -8,47 +8,47 @@ const SearchPaginationComponent = (props) => {
     console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
     console.warn('[DEPRECATED] use ContentTablePaginationComponent instead');
 
-        const {minIndex, activeIndex, maxIndex, onChange, labels} = props;
-        const btnClass = 'c-search-pagination__btn';
-        const firstAttrs = {
-            onClick: () => onChange(minIndex),
-            className: `${btnClass}--first`
-        };
+    const { minIndex, activeIndex, maxIndex, onChange, labels } = props;
+    const btnClass = 'c-search-pagination__btn';
+    const firstAttrs = {
+        onClick: () => onChange(minIndex),
+        className: `${btnClass}--first`,
+    };
 
-        const prevAttrs = {
-            onClick: () => onChange(activeIndex - 1),
-            className: `${btnClass}--prev ${btnClass}--middle`
-        };
+    const prevAttrs = {
+        onClick: () => onChange(activeIndex - 1),
+        className: `${btnClass}--prev ${btnClass}--middle`,
+    };
 
-        const nextAttrs = {
-            onClick: () => onChange(activeIndex + 1),
-            className: `${btnClass}--next ${btnClass}--middle`
-        };
+    const nextAttrs = {
+        onClick: () => onChange(activeIndex + 1),
+        className: `${btnClass}--next ${btnClass}--middle`,
+    };
 
-        const lastAttrs = {
-            onClick: () => onChange(maxIndex),
-            className: `${btnClass}--last`
-        };
+    const lastAttrs = {
+        onClick: () => onChange(maxIndex),
+        className: `${btnClass}--last`,
+    };
 
-        if (activeIndex === minIndex) {
-            firstAttrs.disabled = true;
-            prevAttrs.disabled = true;
-        }
+    if (activeIndex === minIndex) {
+        firstAttrs.disabled = true;
+        prevAttrs.disabled = true;
+    }
 
-        if (activeIndex === maxIndex) {
-            nextAttrs.disabled = true;
-            lastAttrs.disabled = true;
-        }
+    if (activeIndex === maxIndex) {
+        nextAttrs.disabled = true;
+        lastAttrs.disabled = true;
+    }
 
-        return (
-            <div className="c-search-pagination">
-                <button {...firstAttrs}>&laquo; {labels.first}</button>
-                <button {...prevAttrs}>&lsaquo; {labels.prev}</button>
-                <button {...nextAttrs}>{labels.next} &rsaquo;</button>
-                <button {...lastAttrs}>{labels.last} &raquo;</button>
-            </div>
-        );
-}
+    return (
+        <div className="c-search-pagination">
+            <button {...firstAttrs}>&laquo; {labels.first}</button>
+            <button {...prevAttrs}>&lsaquo; {labels.prev}</button>
+            <button {...nextAttrs}>{labels.next} &rsaquo;</button>
+            <button {...lastAttrs}>{labels.last} &raquo;</button>
+        </div>
+    );
+};
 
 SearchPaginationComponent.propTypes = {
     minIndex: PropTypes.number.isRequired,
@@ -59,8 +59,8 @@ SearchPaginationComponent.propTypes = {
         first: PropTypes.string.isRequired,
         prev: PropTypes.string.isRequired,
         next: PropTypes.string.isRequired,
-        last: PropTypes.string.isRequired
-    }).isRequired
+        last: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 export default SearchPaginationComponent;
