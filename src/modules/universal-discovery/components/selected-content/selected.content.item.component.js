@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 
 import './css/selected.content.item.component.css';
 
-const SelectedContentItemComponent = ({ data, onRemove, labels }) => {
+const SelectedContentItemComponent = ({ data, onRemove }) => {
     const contentTypeInfo = data.ContentInfo.Content.ContentTypeInfo;
-    const contentTypeName = contentTypeInfo ? contentTypeInfo.names.value[0]['#text'] : labels.notAvailable;
+    const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'select_content.not_available.label', {}, 'universal_discovery_widget');
+    const contentTypeName = contentTypeInfo ? contentTypeInfo.names.value[0]['#text'] : notAvailableLabel;
     let icon;
 
     if (contentTypeInfo) {
@@ -36,9 +37,6 @@ const SelectedContentItemComponent = ({ data, onRemove, labels }) => {
 SelectedContentItemComponent.propTypes = {
     data: PropTypes.object.isRequired,
     onRemove: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        notAvailable: PropTypes.string.isRequired,
-    }).isRequired,
 };
 
 export default SelectedContentItemComponent;

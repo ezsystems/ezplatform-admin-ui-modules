@@ -39,16 +39,14 @@ export default class UploadPopupModule extends Component {
         const listAttrs = Object.assign({}, this.props, {
             itemsToUpload: this.state.itemsToUpload,
         });
+        const title = Translator.trans(/*@Desc("Multi-file upload")*/ 'upload_popup.title', {}, 'multi_file_upload');
 
         return (
             <div className="c-upload-popup">
-                <Popup title={this.props.popupTitle} {...this.props}>
+                <Popup title={title} {...this.props}>
                     <DropAreaComponent
                         onDrop={this.uploadFiles.bind(this)}
                         maxFileSize={this.props.adminUiConfig.multiFileUpload.maxFileSize}
-                        maxFileSizeMessage={this.props.maxFileSizeMessage}
-                        dropActionMessage={this.props.dropActionMessage}
-                        uploadBtnLabel={this.props.uploadBtnLabel}
                         preventDefaultAction={this.props.preventDefaultAction}
                         proccessUploadedFiles={this.props.proccessUploadedFiles}
                     />
@@ -90,10 +88,6 @@ UploadPopupModule.propTypes = {
         locationPath: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired,
     }).isRequired,
-    uploadBtnLabel: PropTypes.string.isRequired,
-    dropActionMessage: PropTypes.string.isRequired,
-    maxFileSizeMessage: PropTypes.string.isRequired,
-    uploadedItemsListTitle: PropTypes.string.isRequired,
     preventDefaultAction: PropTypes.func.isRequired,
     proccessUploadedFiles: PropTypes.func.isRequired,
 };

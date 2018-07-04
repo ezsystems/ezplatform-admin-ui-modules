@@ -42,14 +42,25 @@ export default class DropAreaComponent extends Component {
     }
 
     render() {
+        const maxFileSizeMessage = Translator.trans(/*@Desc("Max file size:")*/ 'max_file_size.message', {}, 'multi_file_upload');
+        const dropActionMessage = Translator.trans(
+            /*@Desc("Drag and drop your files on browser window or upload them")*/ 'drop_action.message',
+            {},
+            'multi_file_upload'
+        );
+        const uploadBtnLabel = Translator.trans(/*@Desc("Upload sub-items")*/ 'upload_btn.label', {}, 'multi_file_upload');
+
         return (
             <form className="c-drop-area" multiple onDrop={this.handleUpload.bind(this)}>
-                <div className="c-drop-area__message--main">{this.props.dropActionMessage}</div>
+                <div className="c-drop-area__message--main">{dropActionMessage}</div>
                 <div className="c-drop-area__btn--select" onClick={this.openFileSelector.bind(this)}>
                     <svg className="ez-icon">
                         <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
                     </svg>
-                    {this.props.uploadBtnLabel}
+                    {uploadBtnLabel}
+                </div>
+                <div className="c-drop-area__message--filesize">
+                    ({maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})
                 </div>
                 <div className="c-drop-area__message--filesize">
                     ({this.props.maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})
@@ -72,9 +83,6 @@ export default class DropAreaComponent extends Component {
 DropAreaComponent.propTypes = {
     onDrop: PropTypes.func.isRequired,
     maxFileSize: PropTypes.number.isRequired,
-    maxFileSizeMessage: PropTypes.string.isRequired,
-    dropActionMessage: PropTypes.string.isRequired,
-    uploadBtnLabel: PropTypes.string.isRequired,
     proccessUploadedFiles: PropTypes.func.isRequired,
     preventDefaultAction: PropTypes.func.isRequired,
 };

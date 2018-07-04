@@ -99,7 +99,12 @@ export default class SubItemsModule extends Component {
      */
     loadContentItems(response) {
         if (!response || !response.View) {
-            throw new Error(this.props.labels.subItems.invalidResponseFormat);
+            const invalidResponseFormatMessage = Translator.trans(
+                /*@Desc("Invalid response format")*/ 'load_content_items.invalid_response_format.error.message',
+                {},
+                'sub_items'
+            );
+            throw new Error(invalidResponseFormatMessage);
         }
 
         const locations = response.View.Result.searchHits.searchHit;
@@ -284,7 +289,6 @@ export default class SubItemsModule extends Component {
                 totalCount={this.state.totalCount}
                 loadedCount={this.state.items.length}
                 limit={this.state.limit}
-                labels={this.props.labels.loadMore}
                 onLoadMore={this.handleLoadMore}
             />
         );
@@ -297,11 +301,13 @@ export default class SubItemsModule extends Component {
             listClassName = `${listClassName} ${listClassName}--loading`;
         }
 
+        const listTitle = Translator.trans(/*@Desc("Sub-items")*/ 'items_list.title', {}, 'sub_items');
+
         return (
             <div className="m-sub-items">
                 <div className="m-sub-items__header">
                     <div className="m-sub-items__title">
-                        {this.props.labels.subItems.listTitle} ({this.state.totalCount})
+                        {listTitle} ({this.state.totalCount})
                     </div>
                     <div className="m-sub-items__actions">{this.props.extraActions.map(this.renderExtraActions)}</div>
                     <ViewSwitcherComponent
@@ -316,7 +322,6 @@ export default class SubItemsModule extends Component {
                         contentTypesMap={this.state.contentTypesMap}
                         handleItemPriorityUpdate={this.handleItemPriorityUpdate}
                         items={this.state.items}
-                        labels={this.props.labels}
                         languages={this.props.languages}
                         handleEditItem={this.props.handleEditItem}
                         generateLink={this.props.generateLink}
@@ -350,17 +355,6 @@ SubItemsModule.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object),
     limit: PropTypes.number,
     offset: PropTypes.number,
-    labels: PropTypes.shape({
-        subItems: PropTypes.shape({
-            listTitle: PropTypes.string.isRequired,
-            invalidResponseFormat: PropTypes.string.isRequired,
-        }),
-        tableView: PropTypes.object.isRequired,
-        tableViewItem: PropTypes.object.isRequired,
-        loadMore: PropTypes.object.isRequired,
-        gridViewItem: PropTypes.object.isRequired,
-        noItems: PropTypes.object.isRequired,
-    }),
     handleEditItem: PropTypes.func.isRequired,
     generateLink: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object,
@@ -379,33 +373,6 @@ SubItemsModule.defaultProps = {
     extraActions: [],
     languages: window.eZ.adminUiConfig.languages,
     items: [],
-    labels: {
-        subItems: {
-            listTitle: 'Sub-items',
-            invalidResponseFormat: 'Invalid response format',
-        },
-        tableView: {
-            headerName: 'Name',
-            headerModified: 'Modified',
-            headerContentType: 'Content type',
-            headerPriority: 'Priority',
-            headerTranslations: 'Translations',
-        },
-        tableViewItem: {
-            edit: 'Edit',
-            notAvailable: 'N/A',
-        },
-        loadMore: {
-            info: 'Viewing <strong>{{loaded}}</strong> out of <strong>{{total}}</strong> sub-items',
-            action: 'Show {{limit}} more results',
-        },
-        gridViewItem: {
-            noImage: 'No image',
-        },
-        noItems: {
-            message: 'This location has no sub-items',
-        },
-    },
     limit: parseInt(window.eZ.adminUiConfig.subItems.limit, 10),
     offset: 0,
     contentTypesMap: {},

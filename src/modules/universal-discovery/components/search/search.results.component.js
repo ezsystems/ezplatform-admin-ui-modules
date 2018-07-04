@@ -79,17 +79,9 @@ export default class SearchResultsComponent extends Component {
     renderItem(item) {
         item = item.value.Location;
 
-        const { contentTypesMap, onItemSelect, labels } = this.props;
+        const { contentTypesMap, onItemSelect } = this.props;
 
-        return (
-            <SearchResultsItemComponent
-                key={item.id}
-                data={item}
-                contentTypesMap={contentTypesMap}
-                onPreview={onItemSelect}
-                labels={labels.searchResultsItem}
-            />
-        );
+        return <SearchResultsItemComponent key={item.id} data={item} contentTypesMap={contentTypesMap} onPreview={onItemSelect} />;
     }
 
     /**
@@ -105,7 +97,6 @@ export default class SearchResultsComponent extends Component {
             maxIndex: this.state.pages.length - 1,
             activeIndex: this.state.activePage,
             onChange: this.setActivePage,
-            labels: this.props.labels.searchPagination,
         };
 
         if (paginationAttrs.minIndex === paginationAttrs.maxIndex) {
@@ -120,16 +111,22 @@ export default class SearchResultsComponent extends Component {
             return null;
         }
 
-        const { labels } = this.props;
+        const resultsTitle = Translator.trans(/*@Desc("Search results")*/ 'search.results_table.title', {}, 'universal_discovery_widget');
+        const headerNameLabel = Translator.trans(/*@Desc("Name")*/ 'search.results_table.header.name', {}, 'universal_discovery_widget');
+        const headerTypeLabel = Translator.trans(
+            /*@Desc("Content Type")*/ 'search.results_table.header.type',
+            {},
+            'universal_discovery_widget'
+        );
 
         return (
             <div className="c-search-results">
                 <div className="c-search-results__title">
-                    {labels.searchResults.resultsTitle} ({this.state.items.length})
+                    {resultsTitle} ({this.state.items.length})
                 </div>
                 <div className="c-search-results__list-headers">
-                    <div className="c-search-results__list-header--name">{labels.searchResults.headerName}</div>
-                    <div className="c-search-results__list-header--type">{labels.searchResults.headerType}</div>
+                    <div className="c-search-results__list-header--name">{headerNameLabel}</div>
+                    <div className="c-search-results__list-header--type">{headerTypeLabel}</div>
                     <div className="c-search-results__list-header--span" />
                 </div>
                 <div className="c-search-results__list">{this.state.pages[this.state.activePage].map(this.renderItem)}</div>
@@ -144,13 +141,4 @@ SearchResultsComponent.propTypes = {
     perPage: PropTypes.number.isRequired,
     onItemSelect: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
-    labels: PropTypes.shape({
-        searchResults: PropTypes.shape({
-            headerName: PropTypes.string.isRequired,
-            headerType: PropTypes.string.isRequired,
-            resultsTitle: PropTypes.string.isRequired,
-        }).isRequired,
-        searchPagination: PropTypes.object.isRequired,
-        searchResultsItem: PropTypes.object.isRequired,
-    }).isRequired,
 };

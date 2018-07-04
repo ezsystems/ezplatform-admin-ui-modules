@@ -35,7 +35,6 @@ export default class GridViewComponent extends Component {
                 key={data.location.id}
                 {...data}
                 contentTypesMap={this.props.contentTypesMap}
-                labels={this.props.labels.gridViewItem}
                 generateLink={this.props.generateLink}
             />
         );
@@ -49,7 +48,7 @@ export default class GridViewComponent extends Component {
      * @memberof GridViewComponent
      */
     renderNoItems() {
-        return <NoItemsComponent labels={this.props.labels} />;
+        return <NoItemsComponent />;
     }
 
     render() {
@@ -62,9 +61,5 @@ export default class GridViewComponent extends Component {
 GridViewComponent.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object),
     contentTypesMap: PropTypes.object,
-    labels: PropTypes.shape({
-        gridViewItem: PropTypes.object.isRequired,
-        noItems: PropTypes.object.isRequired,
-    }),
     generateLink: PropTypes.func.isRequired,
 };

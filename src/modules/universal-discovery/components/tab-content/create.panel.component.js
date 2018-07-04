@@ -12,6 +12,16 @@ const CreatePanelComponent = (props) => {
     const maxHeight = props.maxHeight - 24;
     const componentProps = { ...props, maxHeight, allowContainersOnly: true };
     const finderProps = { ...componentProps, multiple: false };
+    const chooseLanguageAndContentTypeTitle = Translator.trans(
+        /*@Desc("Choose Language and Content Type")*/ 'content_on_the_fly.choose_language_and_content_type.title',
+        {},
+        'universal_discovery_widget'
+    );
+    const selectLocationTitle = Translator.trans(
+        /*@Desc("Select Location")*/ 'content_on_the_fly.select_location.title',
+        {},
+        'universal_discovery_widget'
+    );
 
     if (!props.isVisible) {
         wrapperAttrs.hidden = true;
@@ -21,11 +31,11 @@ const CreatePanelComponent = (props) => {
         <div {...wrapperAttrs}>
             <TabContentPanelComponent {...props}>
                 <div className="c-create-panel__first-step">
-                    <div className="c-create-panel__step-title">1) {props.labels.contentOnTheFly.chooseLangaugeAndContentType}</div>
+                    <div className="c-create-panel__step-title">1) {chooseLanguageAndContentTypeTitle}</div>
                     <CreateComponent {...componentProps} />
                 </div>
                 <div className="c-create-panel__second-step">
-                    <div className="c-create-panel__step-title">2) {props.labels.contentOnTheFly.selectLocation}</div>
+                    <div className="c-create-panel__step-title">2) {selectLocationTitle}</div>
                     <FinderComponent {...finderProps} />
                 </div>
             </TabContentPanelComponent>
@@ -44,7 +54,6 @@ CreatePanelComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
-    labels: PropTypes.object.isRequired,
     languages: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,

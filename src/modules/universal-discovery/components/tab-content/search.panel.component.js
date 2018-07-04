@@ -15,7 +15,6 @@ const SearchPanelComponent = (props) => {
         maxHeight,
         contentTypesMap,
         searchResultsPerPage,
-        labels,
         restInfo,
         selectedContent,
         onSelectContent,
@@ -31,7 +30,6 @@ const SearchPanelComponent = (props) => {
             maxHeight,
             contentTypesMap,
             searchResultsPerPage,
-            labels,
             restInfo,
             selectedContent,
             onSelectContent,
@@ -61,7 +59,6 @@ SearchPanelComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     searchResultsPerPage: PropTypes.number.isRequired,
-    labels: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,

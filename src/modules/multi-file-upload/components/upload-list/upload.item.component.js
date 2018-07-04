@@ -359,14 +359,25 @@ export default class UploadItemComponent extends Component {
     renderErrorMessage() {
         const { uploaded, aborted, disallowedType, disallowedSize, failed, uploading } = this.state;
         const isError = !uploaded && !aborted && (disallowedSize || disallowedType) && failed && !uploading;
-        let msg = 'Cannot upload file';
+        const cannotUploadMessage = Translator.trans(/*@Desc("Cannot upload file")*/ 'cannot_upload.message', {}, 'multi_file_upload');
+        const disallowedTypeMessage = Translator.trans(
+            /*@Desc("File type is not allowed")*/ 'disallowed_type.message',
+            {},
+            'multi_file_upload'
+        );
+        const disallowedSizeMessage = Translator.trans(
+            /*@Desc("File size is not allowed")*/ 'disallowed_size.message',
+            {},
+            'multi_file_upload'
+        );
+        let msg = cannotUploadMessage;
 
         if (disallowedType) {
-            msg = 'File type is not allowed';
+            msg = disallowedTypeMessage;
         }
 
         if (disallowedSize) {
-            msg = 'File size is not allowed';
+            msg = disallowedSizeMessage;
         }
 
         return isError ? <div className="c-upload-list-item__message--error">{msg}</div> : null;
@@ -382,8 +393,9 @@ export default class UploadItemComponent extends Component {
     renderSuccessMessage() {
         const { uploaded, aborted, disallowedSize, disallowedType, failed, uploading } = this.state;
         const isSuccess = uploaded && !aborted && !(disallowedSize || disallowedType) && !failed && !uploading;
+        const message = Translator.trans(/*@Desc("Uploaded")*/ 'upload.success.message', {}, 'multi_file_upload');
 
-        return isSuccess ? <div className="c-upload-list-item__message--success">Uploaded</div> : null;
+        return isSuccess ? <div className="c-upload-list-item__message--success">{message}</div> : null;
     }
 
     /**
@@ -401,8 +413,10 @@ export default class UploadItemComponent extends Component {
             return null;
         }
 
+        const label = Translator.trans(/*@Desc("Abort")*/ 'abort.label', {}, 'multi_file_upload');
+
         return (
-            <div className="c-upload-list-item__action--abort" onClick={this.abortUploading} title="Abort">
+            <div className="c-upload-list-item__action--abort" onClick={this.abortUploading} title={label}>
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#circle-close" />
                 </svg>
@@ -448,8 +462,10 @@ export default class UploadItemComponent extends Component {
             return null;
         }
 
+        const label = Translator.trans(/*@Desc("Edit")*/ 'edit.label', {}, 'multi_file_upload');
+
         return (
-            <div className="c-upload-list-item__action--edit" title="Edit" onClick={this.handleEditBtnClick}>
+            <div className="c-upload-list-item__action--edit" title={label} onClick={this.handleEditBtnClick}>
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit" />
                 </svg>
@@ -472,8 +488,10 @@ export default class UploadItemComponent extends Component {
             return null;
         }
 
+        const label = Translator.trans(/*@Desc("Delete")*/ 'delete.label', {}, 'multi_file_upload');
+
         return (
-            <div className="c-upload-list-item__action--delete" onClick={this.deleteFile} title="Delete">
+            <div className="c-upload-list-item__action--delete" onClick={this.deleteFile} title={label}>
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#trash" />
                 </svg>

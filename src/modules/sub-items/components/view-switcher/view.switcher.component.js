@@ -63,6 +63,8 @@ export default class ViewSwitcherComponent extends Component {
     }
 
     render() {
+        const listViewBtnLabel = Translator.trans(/*@Desc("View as list")*/ 'switch_to_list_view.btn.label', {}, 'sub_items');
+        const gridViewBtnLabel = Translator.trans(/*@Desc("View as grid")*/ 'switch_to_grid_view.btn.label', {}, 'sub_items');
         let componentClassName = 'c-grid-switcher';
 
         if (this.props.isDisabled) {
@@ -71,8 +73,8 @@ export default class ViewSwitcherComponent extends Component {
 
         return (
             <div className={componentClassName}>
-                {this.renderButton('table', 'view-list', this.props.labels.listViewTitle)}
-                {this.renderButton('grid', 'view-grid', this.props.labels.gridViewTitle)}
+                {this.renderButton('table', 'view-list', listViewBtnLabel)}
+                {this.renderButton('grid', 'view-grid', gridViewBtnLabel)}
             </div>
         );
     }
@@ -82,15 +84,4 @@ ViewSwitcherComponent.propTypes = {
     onViewChange: PropTypes.func.isRequired,
     activeView: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool.isRequired,
-    labels: PropTypes.shape({
-        listViewTitle: PropTypes.string.isRequired,
-        gridViewTitle: PropTypes.string.isRequired,
-    }).isRequired,
-};
-
-ViewSwitcherComponent.defaultProps = {
-    labels: {
-        listViewTitle: 'View as list',
-        gridViewTitle: 'View as grid',
-    },
 };

@@ -9,6 +9,10 @@ const SearchPaginationComponent = (props) => {
     console.warn('[DEPRECATED] use ContentTablePaginationComponent instead');
 
     const { minIndex, activeIndex, maxIndex, onChange, labels } = props;
+    const btnFirstLabel = Translator.trans(/*@Desc("First")*/ 'pagination.first', {}, 'universal_discovery_widget');
+    const btnPrevLabel = Translator.trans(/*@Desc("Previous")*/ 'pagination.prev', {}, 'universal_discovery_widget');
+    const btnNextLabel = Translator.trans(/*@Desc("Next")*/ 'pagination.next', {}, 'universal_discovery_widget');
+    const btnLastLabel = Translator.trans(/*@Desc("Last")*/ 'pagination.last', {}, 'universal_discovery_widget');
     const btnClass = 'c-search-pagination__btn';
     const firstAttrs = {
         onClick: () => onChange(minIndex),
@@ -42,10 +46,10 @@ const SearchPaginationComponent = (props) => {
 
     return (
         <div className="c-search-pagination">
-            <button {...firstAttrs}>&laquo; {labels.first}</button>
-            <button {...prevAttrs}>&lsaquo; {labels.prev}</button>
-            <button {...nextAttrs}>{labels.next} &rsaquo;</button>
-            <button {...lastAttrs}>{labels.last} &raquo;</button>
+            <button {...firstAttrs}>&laquo; {btnFirstLabel}</button>
+            <button {...prevAttrs}>&lsaquo; {btnPrevLabel}</button>
+            <button {...nextAttrs}>{btnNextLabel} &rsaquo;</button>
+            <button {...lastAttrs}>{btnLastLabel} &raquo;</button>
         </div>
     );
 };
@@ -55,12 +59,6 @@ SearchPaginationComponent.propTypes = {
     maxIndex: PropTypes.number.isRequired,
     activeIndex: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        first: PropTypes.string.isRequired,
-        prev: PropTypes.string.isRequired,
-        next: PropTypes.string.isRequired,
-        last: PropTypes.string.isRequired,
-    }).isRequired,
 };
 
 export default SearchPaginationComponent;

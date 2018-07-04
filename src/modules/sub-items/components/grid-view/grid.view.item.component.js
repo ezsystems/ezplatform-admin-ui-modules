@@ -41,9 +41,6 @@ GridViewItemComponent.propTypes = {
     content: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
-    labels: PropTypes.shape({
-        noImage: PropTypes.string.isRequired,
-    }).isRequired,
     generateLink: PropTypes.func.isRequired,
 };
 

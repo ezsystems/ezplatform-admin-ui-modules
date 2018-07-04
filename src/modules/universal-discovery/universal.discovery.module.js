@@ -73,6 +73,13 @@ export default class UniversalDiscoveryModule extends Component {
             selectedContentType = this.findContentType(props.cotfAllowedContentTypes[0]);
         }
 
+        this.tabsLabels = {
+            browse: Translator.trans(/*@Desc("Browse")*/ 'browse.tab.label', {}, 'universal_discovery_widget'),
+            search: Translator.trans(/*@Desc("Search")*/ 'search.tab.label', {}, 'universal_discovery_widget'),
+            create: Translator.trans(/*@Desc("Create")*/ 'create.tab.label', {}, 'universal_discovery_widget'),
+            bookmarks: Translator.trans(/*@Desc("Bookmarks")*/ 'bookmarks.tab.label', {}, 'universal_discovery_widget'),
+        };
+
         this.state = {
             activeTab: props.activeTab,
             contentTypesMap: {},
@@ -621,7 +628,7 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         const { contentTypesMap, maxHeight, activeTab, contentMeta, isPreviewMetaReady } = this.state;
-        const { loadContentInfo, restInfo, languages, labels } = this.props;
+        const { loadContentInfo, restInfo, languages } = this.props;
         const isContentBookmarked = this.isBookmarked(contentMeta.id);
 
         return (
@@ -635,7 +642,6 @@ export default class UniversalDiscoveryModule extends Component {
                     restInfo={restInfo}
                     contentTypesMap={contentTypesMap}
                     languages={languages}
-                    labels={labels.contentMetaPreview}
                     maxHeight={maxHeight}
                     activeTab={activeTab}
                     ready={isPreviewMetaReady}
@@ -652,7 +658,7 @@ export default class UniversalDiscoveryModule extends Component {
      */
     renderSelectedContent() {
         const items = this.state.selectedContent;
-        const { selectedItemsLimit, labels, multiple } = this.props;
+        const { selectedItemsLimit, multiple } = this.props;
 
         if (this.state.activeTab === TAB_CREATE) {
             return null;
@@ -666,7 +672,6 @@ export default class UniversalDiscoveryModule extends Component {
                     onItemRemove={this.onItemRemove}
                     multiple={multiple}
                     contentTypesMap={this.state.contentTypesMap}
-                    labels={labels}
                 />
             </div>
         );
@@ -684,7 +689,7 @@ export default class UniversalDiscoveryModule extends Component {
         return {
             id,
             iconIdentifier: iconIdentifier ? iconIdentifier : id,
-            title: this.props.labels.udw[id],
+            title: this.tabsLabels[id],
             onClick: this.togglePanel,
             isSelected: this.state.activeTab === id,
         };
@@ -825,7 +830,6 @@ export default class UniversalDiscoveryModule extends Component {
             multiple,
             searchResultsPerPage,
             bookmarksPerPage,
-            labels,
             restInfo,
             allowContainersOnly,
         } = this.props;
@@ -843,7 +847,6 @@ export default class UniversalDiscoveryModule extends Component {
             multiple,
             searchResultsPerPage,
             bookmarksPerPage,
-            labels,
             restInfo,
             selectedContent,
             onSelectContent: this.updateSelectedContent,
@@ -876,7 +879,9 @@ export default class UniversalDiscoveryModule extends Component {
             attrs.title = 'The Content Type is not allowed for selection';
         }
 
-        return <button {...attrs}>{this.props.labels.udw.confirm}</button>;
+        const confirmBtnLabel = Translator.trans(/*@Desc("Confirm")*/ 'confirm.label', {}, 'universal_discovery_widget');
+
+        return <button {...attrs}>{confirmBtnLabel}</button>;
     }
 
     /**
@@ -930,7 +935,13 @@ export default class UniversalDiscoveryModule extends Component {
             this.checkPermission();
         }
 
-        return <button {...attrs}>{this.props.labels.contentOnTheFly.createContent}</button>;
+        const createContentLabel = Translator.trans(
+            /*@Desc("Create content")*/ 'content_on_the_fly.create_content.label',
+            {},
+            'universal_discovery_widget'
+        );
+
+        return <button {...attrs}>{createContentLabel}</button>;
     }
 
     /**
@@ -946,7 +957,13 @@ export default class UniversalDiscoveryModule extends Component {
             return null;
         }
 
-        return <span className="m-ud__no-permission">{this.props.labels.contentOnTheFly.noPermission}</span>;
+        const noPermissionMessage = Translator.trans(
+            /*@Desc("Sorry, but you don't have permission for this action. Please contact your site Admin.")*/ 'content_on_the_fly.no_permission.message',
+            {},
+            'universal_discovery_widget'
+        );
+
+        return <span className="m-ud__no-permission">{noPermissionMessage}</span>;
     }
 
     /**
@@ -962,7 +979,13 @@ export default class UniversalDiscoveryModule extends Component {
             return null;
         }
 
-        return <span className="m-ud__location-not-allowed">{this.props.labels.contentOnTheFly.locationNotAllowed}</span>;
+        const locationNotAllowedMessage = Translator.trans(
+            /*@Desc("Sorry, but this location is not selectable.")*/ 'content_on_the_fly.location_not_allowed.message',
+            {},
+            'universal_discovery_widget'
+        );
+
+        return <span className="m-ud__location-not-allowed">{locationNotAllowedMessage}</span>;
     }
 
     render() {
@@ -976,7 +999,6 @@ export default class UniversalDiscoveryModule extends Component {
             return (
                 <ContentCreatorComponent
                     maxHeight={this.state.maxHeight}
-                    labels={this.props.labels}
                     selectedLanguage={this.state.selectedLanguage}
                     selectedContentType={this.state.selectedContentType}
                     selectedLocationId={this.state.contentMeta.id}
@@ -986,6 +1008,9 @@ export default class UniversalDiscoveryModule extends Component {
                 />
             );
         }
+
+        const cancelBtnLabel = Translator.trans(/*@Desc("Cancel")*/ 'cancel.label', {}, 'universal_discovery_widget');
+
         return (
             <div className="m-ud__wrapper">
                 <div className={containerClassName}>
@@ -1002,7 +1027,7 @@ export default class UniversalDiscoveryModule extends Component {
                                 {this.renderPermissionError()}
                                 {this.renderNotAllowedLocationError()}
                                 <button className="m-ud__action--cancel" onClick={this.props.onCancel}>
-                                    {this.props.labels.udw.cancel}
+                                    {cancelBtnLabel}
                                 </button>
                                 {this.renderConfirmBtn()}
                                 {this.renderCreateBtn()}
@@ -1040,28 +1065,6 @@ UniversalDiscoveryModule.propTypes = {
             attrs: PropTypes.object,
         })
     ),
-    labels: PropTypes.shape({
-        udw: PropTypes.shape({
-            confirm: PropTypes.string.isRequired,
-            cancel: PropTypes.string.isRequired,
-            search: PropTypes.string.isRequired,
-            browse: PropTypes.string.isRequired,
-            create: PropTypes.string.isRequired,
-            bookmarks: PropTypes.string.isRequired,
-        }).isRequired,
-        selectedContentItem: PropTypes.object.isRequired,
-        contentMetaPreview: PropTypes.object.isRequired,
-        search: PropTypes.object.isRequired,
-        searchPagination: PropTypes.object.isRequired,
-        searchResults: PropTypes.object.isRequired,
-        searchResultsItem: PropTypes.object.isRequired,
-        bookmarks: PropTypes.object.isRequired,
-        contentTablePagination: PropTypes.object.isRequired,
-        contentTableHeader: PropTypes.object.isRequired,
-        contentTableItem: PropTypes.object.isRequired,
-        finderBranch: PropTypes.object.isRequired,
-        contentOnTheFly: PropTypes.object.isRequired,
-    }),
     maxHeight: PropTypes.number,
     searchResultsPerPage: PropTypes.number,
     bookmarksPerPage: PropTypes.number,
@@ -1114,82 +1117,4 @@ UniversalDiscoveryModule.defaultProps = {
     visibleTabs: [],
     sortFieldMappings: window.eZ.adminUiConfig.sortFieldMappings,
     sortOrderMappings: window.eZ.adminUiConfig.sortOrderMappings,
-    labels: {
-        udw: {
-            confirm: 'Confirm',
-            cancel: 'Cancel',
-            browse: 'Browse',
-            search: 'Search',
-            create: 'Create',
-            bookmarks: 'Bookmarks',
-        },
-        selectedContent: {
-            confirmedItems: 'Confirmed items',
-            limit: 'Limit {items} max',
-            noConfirmedContent: 'No confirmed content yet',
-        },
-        selectedContentItem: {
-            notAvailable: 'N/A',
-        },
-        contentMetaPreview: {
-            title: 'Content Meta Preview',
-            selectContent: 'Select content',
-            notAvailable: 'N/A',
-            creationDate: 'Creation date',
-            lastModified: 'Last modified',
-            translations: 'Translations',
-            imagePreviewNotAvailable: 'Content preview is not available',
-        },
-        search: {
-            title: 'Search',
-            tableTitle: 'Search results',
-            searchBtnLabel: 'Search',
-        },
-        searchPagination: {
-            first: 'First',
-            prev: 'Previous',
-            next: 'Next',
-            last: 'Last',
-        },
-        searchResults: {
-            headerName: 'Name',
-            headerType: 'Content Type',
-            resultsTitle: 'Search results',
-        },
-        searchResultsItem: {
-            notAvailable: 'N/A',
-        },
-        bookmarks: {
-            noBookmarks: 'No content items. Content items you bookmark will appear here.',
-            tableTitle: 'Bookmarks',
-        },
-        contentTablePagination: {
-            first: 'First',
-            prev: 'Previous',
-            next: 'Next',
-            last: 'Last',
-        },
-        contentTableHeader: {
-            name: 'Name',
-            type: 'Content Type',
-        },
-        contentTableItem: {
-            notAvailable: 'N/A',
-        },
-        finderBranch: {
-            loadMore: 'Load more',
-        },
-        contentOnTheFly: {
-            chooseLangaugeAndContentType: 'Choose Language and Content Type',
-            selectLocation: 'Select Location',
-            selectLanguage: 'Select a language',
-            selectContentType: 'Select a Content Type',
-            creatingContent: 'Creating - {contentType} in {language}',
-            publish: 'Publish',
-            createContent: 'Create content',
-            noPermission: "Sorry, but you don't have permission for this action. Please contact your site Admin.",
-            locationNotAllowed: 'Sorry, but this location is not selectable.',
-            typeToRefine: 'Type to refine',
-        },
-    },
 };
