@@ -109,6 +109,7 @@ export default class TableViewItemComponent extends Component {
 
         if (!this.state.priorityInputEnabled) {
             inputAttrs.disabled = true;
+            inputAttrs.value = this.state.priorityValue;
             priorityWrapperAttrs.onClick = this.enablePriorityInput.bind(this);
             priorityWrapperAttrs.className = 'c-table-view-item__inner-wrapper--disabled';
             innerWrapperAttrs.hidden = true;
