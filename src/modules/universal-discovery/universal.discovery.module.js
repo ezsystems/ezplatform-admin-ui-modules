@@ -19,7 +19,7 @@ import {
 import { checkIsBookmarked, loadBookmarks } from './services/bookmark.service';
 import { showErrorNotification } from '../common/services/notification.service';
 import { areSameLocations } from '../common/helpers/compare.helper';
-import { deepClone } from '../common/helpers/clone.helper';
+import deepClone from '../common/helpers/deep.clone.helper';
 
 import './css/universal.discovery.module.css';
 
@@ -31,7 +31,7 @@ export const TAB_BOOKMARKS = 'bookmarks';
 const CONTENT_META_PREVIEW_BASE_STATE = {
     contentMeta: null,
     isPreviewMetaReady: false,
-    isLocationAllowed: true
+    isLocationAllowed: true,
 };
 
 export default class UniversalDiscoveryModule extends Component {
@@ -84,7 +84,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksRequiredCount: 0,
             bookmarksDuringLoadingCount: 0,
             bookmarked: {},
-            ...CONTENT_META_PREVIEW_BASE_STATE
+            ...CONTENT_META_PREVIEW_BASE_STATE,
         };
     }
 
@@ -662,7 +662,7 @@ export default class UniversalDiscoveryModule extends Component {
         const bookmarksPanelConfig = {
             id: TAB_BOOKMARKS,
             panel: BookmarksPanelComponent,
-            attrs: { userBookmarksItems, userBookmarksCount, requireBookmarksCount: this.requireBookmarksCount }
+            attrs: { userBookmarksItems, userBookmarksCount, requireBookmarksCount: this.requireBookmarksCount },
         };
         const createPanelConfig = {
             id: TAB_CREATE,
@@ -870,7 +870,6 @@ export default class UniversalDiscoveryModule extends Component {
                 />
             );
         }
-
         return (
             <div className="m-ud__wrapper">
                 <div className={containerClassName}>
