@@ -7,18 +7,21 @@ import SearchComponent from '../search/search.component';
 import './css/search.panel.component.css';
 
 const SearchPanelComponent = (props) => {
-    const wrapperAttrs = {className: 'c-search-panel'};
-    const {multiple, findContentBySearchQuery, onItemSelect, maxHeight, contentTypesMap, searchResultsPerPage, labels, restInfo} = props;
-    const searchAttrs = Object.assign({}, {
-        multiple,
-        findContentBySearchQuery,
-        onItemSelect,
-        maxHeight,
-        contentTypesMap,
-        searchResultsPerPage,
-        labels,
-        restInfo
-    });
+    const wrapperAttrs = { className: 'c-search-panel' };
+    const { multiple, findContentBySearchQuery, onItemSelect, maxHeight, contentTypesMap, searchResultsPerPage, labels, restInfo } = props;
+    const searchAttrs = Object.assign(
+        {},
+        {
+            multiple,
+            findContentBySearchQuery,
+            onItemSelect,
+            maxHeight,
+            contentTypesMap,
+            searchResultsPerPage,
+            labels,
+            restInfo,
+        }
+    );
 
     if (!props.isVisible) {
         wrapperAttrs.hidden = true;
@@ -44,7 +47,7 @@ SearchPanelComponent.propTypes = {
     labels: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired
+        siteaccess: PropTypes.string.isRequired,
     }).isRequired,
 };
 

@@ -18,7 +18,7 @@ export default class SelectedContentComponent extends Component {
         this.togglePopup = this.togglePopup.bind(this);
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState((state) => Object.assign({}, state, { items: props.items }));
     }
 

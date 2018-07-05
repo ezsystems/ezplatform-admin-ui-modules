@@ -7,7 +7,7 @@ import FinderComponent from '../finder/finder.component';
 import './css/finder.panel.component.css';
 
 const FinderPanelComponent = (props) => {
-    const wrapperAttrs = {className: 'c-finder-panel'};
+    const wrapperAttrs = { className: 'c-finder-panel' };
 
     if (!props.isVisible) {
         wrapperAttrs.hidden = true;
@@ -31,7 +31,7 @@ FinderPanelComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired
+        siteaccess: PropTypes.string.isRequired,
     }).isRequired,
     labels: PropTypes.object.isRequired,
     allowContainersOnly: PropTypes.bool.isRequired,

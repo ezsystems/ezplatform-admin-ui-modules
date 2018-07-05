@@ -4,19 +4,15 @@ import PropTypes from 'prop-types';
 import './css/no.items.component.css';
 
 const NoItemsComponent = (props) => {
-    return (
-        <div className="c-no-items">
-            {props.labels.noItems.message}
-        </div>
-    );
-}
+    return <div className="c-no-items">{props.labels.noItems.message}</div>;
+};
 
 NoItemsComponent.propTypes = {
     labels: PropTypes.shape({
         noItems: PropTypes.shape({
-            message: PropTypes.string.isRequired
-        }).isRequired
-    })
+            message: PropTypes.string.isRequired,
+        }).isRequired,
+    }),
 };
 
 export default NoItemsComponent;

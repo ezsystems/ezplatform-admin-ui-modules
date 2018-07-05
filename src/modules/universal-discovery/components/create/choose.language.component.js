@@ -29,7 +29,7 @@ export default class ChooseLanguageComponent extends Component {
         }
 
         this.state = {
-            selectedLanguage: props.languages.mappings[selectedLanguageCode]
+            selectedLanguage: props.languages.mappings[selectedLanguageCode],
         };
     }
 
@@ -43,38 +43,34 @@ export default class ChooseLanguageComponent extends Component {
 
         this.props.onLanguageSelected(selectedLanguage);
 
-        this.setState(state => Object.assign({}, state, { selectedLanguage }));
+        this.setState((state) => Object.assign({}, state, { selectedLanguage }));
     }
 
     renderOption(languageCode, index) {
         const language = this.props.languages.mappings[languageCode];
         const attrs = {
             key: index,
-            value: language.languageCode
+            value: language.languageCode,
         };
 
         if (this.state.selectedLanguage.languageCode === languageCode) {
             attrs.selected = true;
         }
 
-        return (
-            <option {...attrs}>{language.name}</option>
-        );
+        return <option {...attrs}>{language.name}</option>;
     }
 
     renderOptions() {
         const { allowedLanguages, languages } = this.props;
         const languagesList = allowedLanguages.length ? allowedLanguages : languages.priority;
 
-        return (
-            languagesList.map(this.renderOption)
-        );
+        return languagesList.map(this.renderOption);
     }
 
     render() {
         const selectAttrs = {
             className: 'form-control',
-            onChange: this.updateSelection
+            onChange: this.updateSelection,
         };
 
         if (this.props.forcedLanguage) {
@@ -92,9 +88,7 @@ export default class ChooseLanguageComponent extends Component {
             <div className="c-choose-language">
                 <p className="c-choose-language__title">{this.props.labels.contentOnTheFly.selectLanguage}</p>
                 <div className="c-choose-lagauge__select-wrapper">
-                    <select {...selectAttrs}>
-                        {this.renderOptions()}
-                    </select>
+                    <select {...selectAttrs}>{this.renderOptions()}</select>
                 </div>
             </div>
         );

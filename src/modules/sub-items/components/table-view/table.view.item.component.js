@@ -7,10 +7,16 @@ export default class TableViewItemComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.storePriorityValue = this.storePriorityValue.bind(this);
+        this.enablePriorityInput = this.enablePriorityInput.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+
         this.state = {
             priorityValue: props.location.priority,
             priorityInputEnabled: false,
-            startingPriorityValue: props.location.priority
+            startingPriorityValue: props.location.priority,
         };
     }
 
@@ -25,7 +31,7 @@ export default class TableViewItemComponent extends Component {
      * @memberof TableViewItemComponent
      */
     enablePriorityInput() {
-        this.setState(state => Object.assign({}, state, {priorityInputEnabled: true}));
+        this.setState((state) => ({ ...state, priorityInputEnabled: true }));
     }
 
     /**
@@ -39,9 +45,10 @@ export default class TableViewItemComponent extends Component {
     handleCancel(event) {
         event.preventDefault();
 
-        this.setState(state => Object.assign({}, state, {
+        this.setState((state) => ({
+            ...state,
             priorityInputEnabled: false,
-            priorityValue: state.startingPriorityValue
+            priorityValue: state.startingPriorityValue,
         }));
     }
 
@@ -58,13 +65,14 @@ export default class TableViewItemComponent extends Component {
 
         this.props.onItemPriorityUpdate({
             location: this.props.location._href,
-            priority: this._refPriorityInput.value
+            priority: this._refPriorityInput.value,
         });
 
-        this.setState(state => Object.assign({}, state, {
+        this.setState((state) => ({
+            ...state,
             priorityValue: this._refPriorityInput.value,
             priorityInputEnabled: false,
-            startingPriorityValue: this._refPriorityInput.value
+            startingPriorityValue: this._refPriorityInput.value,
         }));
     }
 
@@ -78,7 +86,7 @@ export default class TableViewItemComponent extends Component {
     storePriorityValue(event) {
         event.preventDefault();
 
-        this.setState(state => Object.assign({}, state, {priorityValue: this._refPriorityInput.value}))
+        this.setState((state) => ({ ...state, priorityValue: this._refPriorityInput.value }));
     }
 
     /**
@@ -102,7 +110,7 @@ export default class TableViewItemComponent extends Component {
         const inputAttrs = {
             type: 'number',
             defaultValue: this.state.priorityValue,
-            onChange: this.storePriorityValue.bind(this)
+            onChange: this.storePriorityValue,
         };
         const priorityWrapperAttrs = {};
         const innerWrapperAttrs = {};
@@ -110,7 +118,7 @@ export default class TableViewItemComponent extends Component {
         if (!this.state.priorityInputEnabled) {
             inputAttrs.disabled = true;
             inputAttrs.value = this.state.priorityValue;
-            priorityWrapperAttrs.onClick = this.enablePriorityInput.bind(this);
+            priorityWrapperAttrs.onClick = this.enablePriorityInput;
             priorityWrapperAttrs.className = 'c-table-view-item__inner-wrapper--disabled';
             innerWrapperAttrs.hidden = true;
         }
@@ -119,17 +127,21 @@ export default class TableViewItemComponent extends Component {
             <td className="c-table-view-item__cell--priority">
                 <div className="c-table-view-item__priority-wrapper" {...priorityWrapperAttrs}>
                     <div className="c-table-view-item__inner-wrapper c-table-view-item__inner-wrapper--input">
-                        <input className="c-table-view-item__priority-value" ref={ref => this._refPriorityInput = ref} {...inputAttrs} />
+                        <input
+                            className="c-table-view-item__priority-value"
+                            ref={(ref) => (this._refPriorityInput = ref)}
+                            {...inputAttrs}
+                        />
                     </div>
                     <div className="c-table-view-item__priority-actions" {...innerWrapperAttrs}>
-                        <button className="c-table-view-item__btn--submit" onClick={this.handleSubmit.bind(this)}>
+                        <button className="c-table-view-item__btn--submit" onClick={this.handleSubmit}>
                             <svg className="ez-icon">
-                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#checkmark"></use>
+                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#checkmark" />
                             </svg>
                         </button>
-                        <button className="c-table-view-item__btn--cancel" onClick={this.handleCancel.bind(this)}>
+                        <button className="c-table-view-item__btn--cancel" onClick={this.handleCancel}>
                             <svg className="ez-icon">
-                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard"></use>
+                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard" />
                             </svg>
                         </button>
                     </div>
@@ -147,7 +159,9 @@ export default class TableViewItemComponent extends Component {
      */
     renderTranslation(translation, index) {
         return (
-            <span key={index} className="c-table-view-item__translation">{translation}</span>
+            <span key={index} className="c-table-view-item__translation">
+                {translation}
+            </span>
         );
     }
 
@@ -159,9 +173,9 @@ export default class TableViewItemComponent extends Component {
         const linkAttrs = {
             className: 'c-table-view-item__link c-table-view-item__text-wrapper',
             title: content.Name,
-            href: generateLink(location.id)
+            href: generateLink(location.id),
         };
-        const translations = content.CurrentVersion.Version.VersionInfo.VersionTranslationInfo.Language.map(langauge => {
+        const translations = content.CurrentVersion.Version.VersionInfo.VersionTranslationInfo.Language.map((langauge) => {
             return languages.mappings[langauge.languageCode].name;
         });
 
@@ -171,7 +185,11 @@ export default class TableViewItemComponent extends Component {
                     <a {...linkAttrs}>{content.Name}</a>
                 </td>
                 <td className="c-table-view-item__cell--modified">
-                    <div className="c-table-view-item__text-wrapper">{date.toLocaleDateString()}<br/>{date.toLocaleTimeString()}</div>
+                    <div className="c-table-view-item__text-wrapper">
+                        {date.toLocaleDateString()}
+                        <br />
+                        {date.toLocaleTimeString()}
+                    </div>
                 </td>
                 <td className="c-table-view-item__cell--content-type">
                     <div className="c-table-view-item__text-wrapper">{contentTypeName}</div>
@@ -180,13 +198,13 @@ export default class TableViewItemComponent extends Component {
                 <td className="c-table-view-item__cell--translations">{translations.map(this.renderTranslation)}</td>
                 <td className="c-table-view-item__cell--actions">
                     <div>
-                    <span title={labels.edit} onClick={this.handleEdit.bind(this)} className="c-table-view-item__btn--edit">
-                        <div className="c-table-view-item__btn-inner">
-                            <svg className="ez-icon">
-                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit"></use>
-                            </svg>
-                        </div>
-                    </span>
+                        <span title={labels.edit} onClick={this.handleEdit} className="c-table-view-item__btn--edit">
+                            <div className="c-table-view-item__btn-inner">
+                                <svg className="ez-icon">
+                                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit" />
+                                </svg>
+                            </div>
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -201,9 +219,9 @@ TableViewItemComponent.propTypes = {
     onItemPriorityUpdate: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         edit: PropTypes.string.isRequired,
-        notAvailable: PropTypes.string.isRequired
+        notAvailable: PropTypes.string.isRequired,
     }).isRequired,
     handleEditItem: PropTypes.func.isRequired,
     generateLink: PropTypes.func.isRequired,
-    languages: PropTypes.object.isRequired
+    languages: PropTypes.object.isRequired,
 };

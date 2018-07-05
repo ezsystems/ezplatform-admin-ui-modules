@@ -10,13 +10,15 @@ export default class GridViewComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.renderItem = this.renderItem.bind(this);
+
         this.state = {
-            items: props.items
+            items: props.items,
         };
     }
 
-    componentWillReceiveProps({items}) {
-        this.setState(state => Object.assign({}, state, {items}));
+    UNSAFE_componentWillReceiveProps({ items }) {
+        this.setState((state) => ({ ...state, items }));
     }
 
     /**
@@ -28,12 +30,15 @@ export default class GridViewComponent extends Component {
      * @memberof GridViewComponent
      */
     renderItem(data) {
-        return <GridViewItemComponent
-            key={data.location.id}
-            {...data}
-            contentTypesMap={this.props.contentTypesMap}
-            labels={this.props.labels.gridViewItem}
-            generateLink={this.props.generateLink} />
+        return (
+            <GridViewItemComponent
+                key={data.location.id}
+                {...data}
+                contentTypesMap={this.props.contentTypesMap}
+                labels={this.props.labels.gridViewItem}
+                generateLink={this.props.generateLink}
+            />
+        );
     }
 
     /**
@@ -44,17 +49,13 @@ export default class GridViewComponent extends Component {
      * @memberof GridViewComponent
      */
     renderNoItems() {
-        return <NoItemsComponent labels={this.props.labels} />
+        return <NoItemsComponent labels={this.props.labels} />;
     }
 
     render() {
-        const content = this.state.items.length ? this.state.items.map(this.renderItem.bind(this)) : this.renderNoItems();
+        const content = this.state.items.length ? this.state.items.map(this.renderItem) : this.renderNoItems();
 
-        return (
-            <div className="c-grid-view">
-                {content}
-            </div>
-        );
+        return <div className="c-grid-view">{content}</div>;
     }
 }
 
@@ -63,7 +64,7 @@ GridViewComponent.propTypes = {
     contentTypesMap: PropTypes.object,
     labels: PropTypes.shape({
         gridViewItem: PropTypes.object.isRequired,
-        noItems: PropTypes.object.isRequired
+        noItems: PropTypes.object.isRequired,
     }),
-    generateLink: PropTypes.func.isRequired
+    generateLink: PropTypes.func.isRequired,
 };

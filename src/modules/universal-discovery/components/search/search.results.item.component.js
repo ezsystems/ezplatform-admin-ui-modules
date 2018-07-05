@@ -14,12 +14,16 @@ const SearchResultsItemComponent = (props) => {
 
     return (
         <div className="c-search-results-item">
-            <div className="c-search-results-item__name" title={item.Name}>{item.Name}</div>
-            <div className="c-search-results-item__type" title={contentTypeName}>{contentTypeName}</div>
+            <div className="c-search-results-item__name" title={item.Name}>
+                {item.Name}
+            </div>
+            <div className="c-search-results-item__type" title={contentTypeName}>
+                {contentTypeName}
+            </div>
             <div className="c-search-results-item__actions">
                 <button className="c-search-results-item__btn--preview" onClick={() => props.onPreview(props.data)}>
                     <svg className="ez-icon">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#view"></use>
+                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#view" />
                     </svg>
                 </button>
             </div>
@@ -32,8 +36,8 @@ SearchResultsItemComponent.propTypes = {
     onPreview: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     labels: PropTypes.shape({
-        notAvailable: PropTypes.string.isRequired
-    }).isRequired
+        notAvailable: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 export default SearchResultsItemComponent;

@@ -23,11 +23,11 @@ export default class ContentTableComponent extends Component {
         this.renderItem = this.renderItem.bind(this);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.ensurePageItemsLoaded(0);
     }
 
-    componentWillReceiveProps({ items, perPage, count }) {
+    UNSAFE_componentWillReceiveProps({ items, perPage, count }) {
         const maxPage = !count ? 0 : Math.floor((count - 1) / perPage);
 
         this.setState((state) => ({

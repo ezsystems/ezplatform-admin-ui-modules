@@ -14,14 +14,19 @@ export default class TableViewComponent extends Component {
     constructor(props) {
         super(props);
 
+        this.sortByName = this.sortByName.bind(this);
+        this.sortByDate = this.sortByDate.bind(this);
+        this.sortByPriority = this.sortByPriority.bind(this);
+        this.renderItem = this.renderItem.bind(this);
+
         this.state = {
             items: props.items,
             isAscSort: false,
-            sortKey: false
+            sortKey: false,
         };
     }
 
-    componentWillReceiveProps({items}) {
+    UNSAFE_componentWillReceiveProps({ items }) {
         this.sortItems(items);
     }
 
@@ -36,7 +41,7 @@ export default class TableViewComponent extends Component {
         const sortKey = this.state.sortKey;
 
         if (!sortKey) {
-            this.setState(state => Object.assign({}, state, {items}));
+            this.setState((state) => ({ ...state, items }));
         }
 
         if (sortKey === SORTKEY_NAME) {
@@ -46,7 +51,7 @@ export default class TableViewComponent extends Component {
         } else if (sortKey === SORTKEY_PRIORITY) {
             this.sortByPriority(items);
         } else {
-            this.setState(state => Object.assign({}, state, {items}));
+            this.setState((state) => ({ ...state, items }));
         }
     }
 
@@ -58,7 +63,7 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     sortByName(items) {
-        this.setState(state => {
+        this.setState((state) => {
             const isOnClick = !Array.isArray(items);
             const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
 
@@ -72,11 +77,12 @@ export default class TableViewComponent extends Component {
                 return b.content.Name.localeCompare(a.content.Name);
             });
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 items,
                 isAscSort,
-                sortKey: SORTKEY_NAME
-            });
+                sortKey: SORTKEY_NAME,
+            };
         });
     }
 
@@ -88,7 +94,7 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     sortByDate(items) {
-        this.setState(state => {
+        this.setState((state) => {
             const isOnClick = !Array.isArray(items);
             const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
 
@@ -99,14 +105,15 @@ export default class TableViewComponent extends Component {
                     return new Date(a.content.lastModificationDate) - new Date(b.content.lastModificationDate);
                 }
 
-                return (new Date(b.content.lastModificationDate) - new Date(a.content.lastModificationDate));
+                return new Date(b.content.lastModificationDate) - new Date(a.content.lastModificationDate);
             });
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 items,
                 isAscSort,
-                sortKey: SORTKEY_DATE
-            });
+                sortKey: SORTKEY_DATE,
+            };
         });
     }
 
@@ -118,7 +125,7 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     sortByPriority(items) {
-        this.setState(state => {
+        this.setState((state) => {
             const isOnClick = !Array.isArray(items);
             const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
 
@@ -129,14 +136,15 @@ export default class TableViewComponent extends Component {
                     return a.location.priority - b.location.priority;
                 }
 
-                return (- a.location.priority + b.location.priority);
+                return b.location.priority - a.location.priority;
             });
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 items,
                 isAscSort,
-                sortKey: SORTKEY_PRIORITY
-            });
+                sortKey: SORTKEY_PRIORITY,
+            };
         });
     }
 
@@ -151,15 +159,18 @@ export default class TableViewComponent extends Component {
     renderItem(data) {
         const { contentTypesMap, handleItemPriorityUpdate, labels, handleEditItem, generateLink, languages } = this.props;
 
-        return <TableViewItemComponent
-            key={data.location.id}
-            {...data}
-            contentTypesMap={contentTypesMap}
-            onItemPriorityUpdate={handleItemPriorityUpdate}
-            labels={labels.tableViewItem}
-            languages={languages}
-            handleEditItem={handleEditItem}
-            generateLink={generateLink} />;
+        return (
+            <TableViewItemComponent
+                key={data.location.id}
+                {...data}
+                contentTypesMap={contentTypesMap}
+                onItemPriorityUpdate={handleItemPriorityUpdate}
+                labels={labels.tableViewItem}
+                languages={languages}
+                handleEditItem={handleEditItem}
+                generateLink={generateLink}
+            />
+        );
     }
 
     /**
@@ -170,7 +181,13 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     renderNoItems() {
-        return (<tr><td><NoItemsComponent labels={this.props.labels} /></td></tr>);
+        return (
+            <tr>
+                <td>
+                    <NoItemsComponent labels={this.props.labels} />
+                </td>
+            </tr>
+        );
     }
 
     /**
@@ -201,16 +218,16 @@ export default class TableViewComponent extends Component {
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
-                    <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName.bind(this)}>
+                    <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
                         <span className="c-table-view__label">{labels.tableView.headerName}</span>
                     </td>
-                    <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate.bind(this)}>
+                    <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate}>
                         <span className="c-table-view__label">{labels.tableView.headerModified}</span>
                     </td>
                     <td className={cellHeadClass}>
                         <span className="c-table-view__label">{labels.tableView.headerContentType}</span>
                     </td>
-                    <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority.bind(this)}>
+                    <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority}>
                         <span className="c-table-view__label">{labels.tableView.headerPriority}</span>
                     </td>
                     <td className={cellHeadClass} colSpan="2">
@@ -222,15 +239,13 @@ export default class TableViewComponent extends Component {
     }
 
     render() {
-        const {items} = this.props;
-        const content = items.length ? items.map(this.renderItem.bind(this)) : this.renderNoItems();
+        const { items } = this.props;
+        const content = items.length ? items.map(this.renderItem) : this.renderNoItems();
 
         return (
             <table className="c-table-view">
                 {this.renderHead()}
-                <tbody className="c-table-view__body">
-                    {content}
-                </tbody>
+                <tbody className="c-table-view__body">{content}</tbody>
             </table>
         );
     }
@@ -246,12 +261,12 @@ TableViewComponent.propTypes = {
             headerContentType: PropTypes.string.isRequired,
             headerModified: PropTypes.string.isRequired,
             headerPriority: PropTypes.string.isRequired,
-            headerTranslations: PropTypes.string.isRequired
+            headerTranslations: PropTypes.string.isRequired,
         }),
         tableViewItem: PropTypes.object.isRequired,
-        noItems: PropTypes.object.isRequired
+        noItems: PropTypes.object.isRequired,
     }).isRequired,
     generateLink: PropTypes.func.isRequired,
     handleEditItem: PropTypes.func.isRequired,
-    languages: PropTypes.object.isRequired
+    languages: PropTypes.object.isRequired,
 };
