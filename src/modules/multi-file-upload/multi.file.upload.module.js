@@ -21,7 +21,7 @@ export default class MultiFileUploadModule extends Component {
         this.state = {
             popupVisible,
             itemsToUpload: props.itemsToUpload,
-            allowDropOnWindow: true
+            allowDropOnWindow: true,
         };
     }
 
@@ -55,7 +55,7 @@ export default class MultiFileUploadModule extends Component {
      * @memberof MultiFileUploadModule
      */
     hidePopup() {
-        this.setState(state => Object.assign({}, state, {popupVisible: false}));
+        this.setState((state) => Object.assign({}, state, { popupVisible: false }));
 
         this.props.onPopupClose(this._itemsUploaded);
     }
@@ -68,10 +68,12 @@ export default class MultiFileUploadModule extends Component {
      * @memberof MultiFileUploadModule
      */
     showUploadPopup(itemsToUpload) {
-        this.setState(state => Object.assign({}, state, {
-            popupVisible: true,
-            itemsToUpload
-        }));
+        this.setState((state) =>
+            Object.assign({}, state, {
+                popupVisible: true,
+                itemsToUpload,
+            })
+        );
     }
 
     /**
@@ -108,11 +110,13 @@ export default class MultiFileUploadModule extends Component {
         window.removeEventListener('drop', this._handleDropOnWindow, false);
         window.removeEventListener('dragover', this.preventDefaultAction, false);
 
-        this.setState(state => Object.assign({}, state, {
-            itemsToUpload,
-            popupVisible: true,
-            allowDropOnWindow: false
-        }));
+        this.setState((state) =>
+            Object.assign({}, state, {
+                itemsToUpload,
+                popupVisible: true,
+                allowDropOnWindow: false,
+            })
+        );
     }
 
     /**
@@ -146,9 +150,9 @@ export default class MultiFileUploadModule extends Component {
     proccessUploadedFiles(event) {
         const list = this.extractDroppedFilesList(event);
 
-        return [...list.files].map(file => ({
-            id: (Math.floor(Math.random() * Date.now())),
-            file
+        return [...list.files].map((file) => ({
+            id: Math.floor(Math.random() * Date.now()),
+            file,
         }));
     }
 
@@ -180,7 +184,7 @@ export default class MultiFileUploadModule extends Component {
         return (
             <div className="m-mfu__btn--upload" title={this.props.uploadBtnLabel} onClick={this.showUploadPopup.bind(this, [])}>
                 <svg className="ez-icon">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload"></use>
+                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
                 </svg>
             </div>
         );
@@ -204,8 +208,8 @@ export default class MultiFileUploadModule extends Component {
             itemsToUpload: this.state.itemsToUpload,
             onAfterUpload: this.handleAfterUpload.bind(this),
             preventDefaultAction: this.preventDefaultAction,
-            proccessUploadedFiles: this.proccessUploadedFiles.bind(this)
-        })
+            proccessUploadedFiles: this.proccessUploadedFiles.bind(this),
+        });
 
         return <UploadPopupComponent {...attrs} />;
     }
@@ -226,16 +230,16 @@ MultiFileUploadModule.propTypes = {
             defaultMappings: PropTypes.arrayOf(PropTypes.object).isRequired,
             fallbackContentType: PropTypes.object.isRequired,
             locationMappings: PropTypes.arrayOf(PropTypes.object).isRequired,
-            maxFileSize: PropTypes.number.isRequired
+            maxFileSize: PropTypes.number.isRequired,
         }).isRequired,
         token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired
+        siteaccess: PropTypes.string.isRequired,
     }).isRequired,
     parentInfo: PropTypes.shape({
         contentTypeIdentifier: PropTypes.string.isRequired,
         contentTypeId: PropTypes.number.isRequired,
         locationPath: PropTypes.string.isRequired,
-        language: PropTypes.string.isRequired
+        language: PropTypes.string.isRequired,
     }).isRequired,
     checkCanUpload: PropTypes.func,
     createFileStruct: PropTypes.func,
@@ -248,7 +252,7 @@ MultiFileUploadModule.propTypes = {
     popupTitle: PropTypes.string,
     uploadBtnLabel: PropTypes.string,
     uploadedItemsListTitle: PropTypes.string,
-    withUploadButton: PropTypes.bool
+    withUploadButton: PropTypes.bool,
 };
 
 MultiFileUploadModule.defaultProps = {
@@ -263,5 +267,5 @@ MultiFileUploadModule.defaultProps = {
     popupTitle: 'Multi-file upload',
     uploadBtnLabel: 'Upload sub-items',
     uploadedItemsListTitle: 'Uploaded',
-    withUploadButton: true
+    withUploadButton: true,
 };

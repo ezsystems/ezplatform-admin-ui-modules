@@ -18,18 +18,20 @@ export default class SearchResultsComponent extends Component {
             items: props.items,
             perPage: props.perPage,
             activePage: 0,
-            pages: this.splitToPages(props.items, props.perPage)
+            pages: this.splitToPages(props.items, props.perPage),
         };
 
         this.setActivePage = this.setActivePage.bind(this);
         this.renderItem = this.renderItem.bind(this);
     }
 
-    componentWillReceiveProps({items, perPage}) {
-        this.setState(state => Object.assign({}, state, {
-            items,
-            pages: this.splitToPages(items, perPage)
-        }));
+    componentWillReceiveProps({ items, perPage }) {
+        this.setState((state) =>
+            Object.assign({}, state, {
+                items,
+                pages: this.splitToPages(items, perPage),
+            })
+        );
     }
 
     /**
@@ -63,7 +65,7 @@ export default class SearchResultsComponent extends Component {
      * @memberof SearchResultsComponent
      */
     setActivePage(activePage) {
-        this.setState(state => Object.assign({}, state, {activePage}));
+        this.setState((state) => Object.assign({}, state, { activePage }));
     }
 
     /**
@@ -77,14 +79,17 @@ export default class SearchResultsComponent extends Component {
     renderItem(item) {
         item = item.value.Location;
 
-        const {contentTypesMap, onItemSelect, labels} = this.props;
+        const { contentTypesMap, onItemSelect, labels } = this.props;
 
-        return <SearchResultsItemComponent
-            key={item.id}
-            data={item}
-            contentTypesMap={contentTypesMap}
-            onPreview={onItemSelect}
-            labels={labels.searchResultsItem} />;
+        return (
+            <SearchResultsItemComponent
+                key={item.id}
+                data={item}
+                contentTypesMap={contentTypesMap}
+                onPreview={onItemSelect}
+                labels={labels.searchResultsItem}
+            />
+        );
     }
 
     /**
@@ -100,7 +105,7 @@ export default class SearchResultsComponent extends Component {
             maxIndex: this.state.pages.length - 1,
             activeIndex: this.state.activePage,
             onChange: this.setActivePage,
-            labels: this.props.labels.searchPagination
+            labels: this.props.labels.searchPagination,
         };
 
         if (paginationAttrs.minIndex === paginationAttrs.maxIndex) {
@@ -115,19 +120,19 @@ export default class SearchResultsComponent extends Component {
             return null;
         }
 
-        const {labels} = this.props;
+        const { labels } = this.props;
 
         return (
             <div className="c-search-results">
-                <div className="c-search-results__title">{labels.searchResults.resultsTitle} ({this.state.items.length})</div>
+                <div className="c-search-results__title">
+                    {labels.searchResults.resultsTitle} ({this.state.items.length})
+                </div>
                 <div className="c-search-results__list-headers">
                     <div className="c-search-results__list-header--name">{labels.searchResults.headerName}</div>
                     <div className="c-search-results__list-header--type">{labels.searchResults.headerType}</div>
-                    <div className="c-search-results__list-header--span"></div>
+                    <div className="c-search-results__list-header--span" />
                 </div>
-                <div className="c-search-results__list">
-                    {this.state.pages[this.state.activePage].map(this.renderItem)}
-                </div>
+                <div className="c-search-results__list">{this.state.pages[this.state.activePage].map(this.renderItem)}</div>
                 {this.renderPagination()}
             </div>
         );
@@ -143,9 +148,9 @@ SearchResultsComponent.propTypes = {
         searchResults: PropTypes.shape({
             headerName: PropTypes.string.isRequired,
             headerType: PropTypes.string.isRequired,
-            resultsTitle: PropTypes.string.isRequired
+            resultsTitle: PropTypes.string.isRequired,
         }).isRequired,
         searchPagination: PropTypes.object.isRequired,
-        searchResultsItem: PropTypes.object.isRequired
-    }).isRequired
+        searchResultsItem: PropTypes.object.isRequired,
+    }).isRequired,
 };

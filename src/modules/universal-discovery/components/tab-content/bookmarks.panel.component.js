@@ -33,7 +33,7 @@ export default class BookmarksPanelComponent extends Component {
             restInfo,
             userBookmarksItems,
             userBookmarksCount,
-            requireBookmarksCount
+            requireBookmarksCount,
         };
     }
 

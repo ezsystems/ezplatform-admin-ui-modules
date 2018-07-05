@@ -11,15 +11,17 @@ export default class FinderTreeLeafComponent extends Component {
 
         this.state = {
             selected: props.selected,
-            isLoadingChildren: props.isLoadingChildren
+            isLoadingChildren: props.isLoadingChildren,
         };
     }
 
-    componentWillReceiveProps({selected, isLoadingChildren}) {
-        this.setState(state => Object.assign({}, state, {
-            selected,
-            isLoadingChildren
-        }));
+    componentWillReceiveProps({ selected, isLoadingChildren }) {
+        this.setState((state) =>
+            Object.assign({}, state, {
+                selected,
+                isLoadingChildren,
+            })
+        );
     }
 
     /**
@@ -29,17 +31,18 @@ export default class FinderTreeLeafComponent extends Component {
      * @memberof FinderTreeLeafComponent
      */
     handleClick() {
-        const {location} = this.props;
+        const { location } = this.props;
 
         if (!this.props.isSelectable) {
             return;
         }
 
         this.setState(
-            (state) => Object.assign({}, state, {
-                selected: true,
-                isLoadingChildren: !!location.childCount
-            }),
+            (state) =>
+                Object.assign({}, state, {
+                    selected: true,
+                    isLoadingChildren: !!location.childCount,
+                }),
             () => this.props.onClick(location)
         );
     }
@@ -58,7 +61,7 @@ export default class FinderTreeLeafComponent extends Component {
 
         return (
             <svg className="ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner"></use>
+                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
             </svg>
         );
     }
@@ -81,7 +84,7 @@ export default class FinderTreeLeafComponent extends Component {
         }
 
         return (
-            <div { ...attrs }>
+            <div {...attrs}>
                 {location.ContentInfo.Content.Name}
                 {this.renderLoadingIcon()}
             </div>
@@ -95,5 +98,5 @@ FinderTreeLeafComponent.propTypes = {
     selected: PropTypes.bool.isRequired,
     isLoadingChildren: PropTypes.bool.isRequired,
     isSelectable: PropTypes.bool.isRequired,
-    allowedLocations: PropTypes.array.isRequired
+    allowedLocations: PropTypes.array.isRequired,
 };
