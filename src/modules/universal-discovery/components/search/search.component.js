@@ -12,11 +12,14 @@ export default class SearchComponent extends Component {
         this.state = {
             items: [],
             isSearching: false,
+            submitDisabled: true,
         };
 
         this.updateItemsState = this.updateItemsState.bind(this);
         this.searchContent = this.searchContent.bind(this);
         this.onRequireItemsCount = this.onRequireItemsCount.bind(this);
+        this.toggleSubmitButtonState = this.toggleSubmitButtonState.bind(this);
+        this.setSearchInputRef = this.setSearchInputRef.bind(this);
     }
 
     /**
@@ -30,7 +33,7 @@ export default class SearchComponent extends Component {
         const isClickEvent = event.nativeEvent.type === 'click';
         const isEnterKeyEvent = event.nativeEvent.type === 'keyup' && event.nativeEvent.keyCode === 13;
 
-        if (!isClickEvent && !isEnterKeyEvent) {
+        if (this.state.submitDisabled || (!isClickEvent && !isEnterKeyEvent)) {
             return;
         }
 
@@ -41,7 +44,9 @@ export default class SearchComponent extends Component {
                     this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve)
                 );
 
-                promise.then(this.updateItemsState).catch((error) => console.log('search:component:search', error));
+                promise
+                    .then(this.updateItemsState)
+                    .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot find content'));
             }
         );
     }
@@ -60,6 +65,12 @@ export default class SearchComponent extends Component {
         }));
     }
 
+    /**
+     * Checks whether a requested amount items fits the actual number of items.
+     *
+     * @method onRequireItemsCount
+     * @param {Number} count
+     */
     onRequireItemsCount(count) {
         const { items } = this.state;
 
@@ -68,6 +79,11 @@ export default class SearchComponent extends Component {
         }
     }
 
+    /**
+     * Renders the submit button
+     *
+     * @method renderSubmitBtn
+     */
     renderSubmitBtn() {
         const btnAttrs = { className: 'c-search__submit' };
         const svgAttrs = { className: 'ez-icon' };
@@ -78,6 +94,8 @@ export default class SearchComponent extends Component {
             btnAttrs.disabled = true;
             svgAttrs.className = `${svgAttrs.className} ez-spin ez-icon-x2 ez-icon-spinner`;
             iconIdentifier = 'spinner';
+        } else if (this.state.submitDisabled) {
+            btnAttrs.disabled = true;
         } else {
             btnAttrs.onClick = this.searchContent;
         }
@@ -92,6 +110,26 @@ export default class SearchComponent extends Component {
         );
     }
 
+    /**
+     * Toggles the submit button state.
+     * Disables it when the search query is empty.
+     *
+     * @method toggleSubmitButtonState
+     */
+    toggleSubmitButtonState() {
+        this.setState((state) => ({ ...state, submitDisabled: !this._refSearchInput.value.trim().length }));
+    }
+
+    /**
+     * Set a reference to the search input HTMLElement node
+     *
+     * @method setSearchInputRef
+     * @param {HTMLElement} ref
+     */
+    setSearchInputRef(ref) {
+        this._refSearchInput = ref;
+    }
+
     render() {
         const { labels, onItemSelect, searchResultsPerPage, contentTypesMap, maxHeight } = this.props;
 
@@ -102,8 +140,9 @@ export default class SearchComponent extends Component {
                     <input
                         className="c-search__input"
                         type="text"
-                        ref={(ref) => (this._refSearchInput = ref)}
+                        ref={this.setSearchInputRef}
                         onKeyUp={this.searchContent}
+                        onChange={this.toggleSubmitButtonState}
                     />
                     {this.renderSubmitBtn()}
                 </div>
