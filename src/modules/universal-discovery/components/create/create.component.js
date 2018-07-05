@@ -8,12 +8,12 @@ import './css/create.component.css';
 
 const CreateComponent = (props) => {
     return (
-        <div className="c-create" style={{maxHeight:`${props.maxHeight}px`}}>
+        <div className="c-create" style={{ maxHeight: `${props.maxHeight}px` }}>
             <ChooseLanguageComponent {...props} />
             <ChooseContentTypeComponent {...props} />
         </div>
     );
-}
+};
 
 CreateComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,

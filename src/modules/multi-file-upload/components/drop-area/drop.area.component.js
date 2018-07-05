@@ -47,20 +47,23 @@ export default class DropAreaComponent extends Component {
                 <div className="c-drop-area__message--main">{this.props.dropActionMessage}</div>
                 <div className="c-drop-area__btn--select" onClick={this.openFileSelector.bind(this)}>
                     <svg className="ez-icon">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload"></use>
+                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
                     </svg>
                     {this.props.uploadBtnLabel}
                 </div>
-                <div className="c-drop-area__message--filesize">({this.props.maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})</div>
+                <div className="c-drop-area__message--filesize">
+                    ({this.props.maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})
+                </div>
                 <input
                     className="c-drop-area__input--hidden"
-                    ref={ref => this._refFileInput = ref }
+                    ref={(ref) => (this._refFileInput = ref)}
                     id="mfu-files"
                     type="file"
                     name="files[]"
                     hidden
                     multiple
-                    onChange={this.handleUpload.bind(this)} />
+                    onChange={this.handleUpload.bind(this)}
+                />
             </form>
         );
     }
@@ -73,5 +76,5 @@ DropAreaComponent.propTypes = {
     dropActionMessage: PropTypes.string.isRequired,
     uploadBtnLabel: PropTypes.string.isRequired,
     proccessUploadedFiles: PropTypes.func.isRequired,
-    preventDefaultAction: PropTypes.func.isRequired
+    preventDefaultAction: PropTypes.func.isRequired,
 };

@@ -8,12 +8,12 @@ export default class PopupComponent extends Component {
         super(props);
 
         this.state = {
-            visible: props.visible
+            visible: props.visible,
         };
     }
 
     componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {visible: props.visible}));
+        this.setState((state) => Object.assign({}, state, { visible: props.visible }));
     }
 
     /**
@@ -23,7 +23,7 @@ export default class PopupComponent extends Component {
      * @memberof PopupComponent
      */
     hidePopup() {
-        this.setState(state => Object.assign({}, state, {visible: false}));
+        this.setState((state) => Object.assign({}, state, { visible: false }));
 
         this.props.onClose();
     }
@@ -31,7 +31,7 @@ export default class PopupComponent extends Component {
     render() {
         const attrs = {
             className: 'c-popup',
-            hidden: !this.state.visible
+            hidden: !this.state.visible,
         };
 
         return (
@@ -40,7 +40,7 @@ export default class PopupComponent extends Component {
                     <div className="c-popup__title">{this.props.title}</div>
                     <div className="c-popup__close" onClick={this.hidePopup.bind(this)}>
                         <svg className="ez-icon">
-                            <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard"></use>
+                            <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard" />
                         </svg>
                     </div>
                 </div>
@@ -54,9 +54,9 @@ PopupComponent.propTypes = {
     title: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
     visible: PropTypes.bool.isRequired,
-    onClose: PropTypes.func
+    onClose: PropTypes.func,
 };
 
 PopupComponent.defaultProps = {
-    onClose: () => {}
+    onClose: () => {},
 };

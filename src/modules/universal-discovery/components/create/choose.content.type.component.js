@@ -9,7 +9,8 @@ export default class ChooseContentTypeComponent extends Component {
 
         let selectedContentType = {};
         const isForcedContentType = props.allowedContentTypes.length === 1;
-        const hasPreselectedAllowedContentType = !props.allowedContentTypes.length || props.allowedContentTypes.includes(props.preselectedContentType);
+        const hasPreselectedAllowedContentType =
+            !props.allowedContentTypes.length || props.allowedContentTypes.includes(props.preselectedContentType);
         const isPreselectedContentType = props.preselectedContentType && hasPreselectedAllowedContentType;
 
         this._filterTimeout = null;
@@ -26,7 +27,7 @@ export default class ChooseContentTypeComponent extends Component {
 
         this.state = {
             selectedContentType,
-            filterQuery: ''
+            filterQuery: '',
         };
     }
 
@@ -37,8 +38,8 @@ export default class ChooseContentTypeComponent extends Component {
     findContentType(identifier) {
         let contentType = null;
 
-        Object.values(this.props.contentTypes).forEach(group => {
-            const result = group.find(contentType => contentType.identifier === identifier);
+        Object.values(this.props.contentTypes).forEach((group) => {
+            const result = group.find((contentType) => contentType.identifier === identifier);
 
             if (result) {
                 contentType = result;
@@ -51,7 +52,7 @@ export default class ChooseContentTypeComponent extends Component {
     updateSelectedItem(selectedContentType) {
         this.props.onContentTypeSelected(selectedContentType);
 
-        this.setState(state => Object.assign({}, state, { selectedContentType }));
+        this.setState((state) => Object.assign({}, state, { selectedContentType }));
     }
 
     updateFilterQuery(event) {
@@ -60,7 +61,7 @@ export default class ChooseContentTypeComponent extends Component {
         window.clearTimeout(this._filterTimeout);
 
         this._filterTimeout = window.setTimeout(() => {
-            this.setState(state => Object.assign({}, state, { filterQuery }));
+            this.setState((state) => Object.assign({}, state, { filterQuery }));
         }, 200);
     }
 
@@ -68,7 +69,7 @@ export default class ChooseContentTypeComponent extends Component {
         const isNotSelectable = this.props.allowedContentTypes.length && !this.props.allowedContentTypes.includes(item.identifier);
         const attrs = {
             className: 'c-choose-content-type__group-item',
-            key: index
+            key: index,
         };
 
         if (this.state.selectedContentType.identifier === item.identifier) {
@@ -87,18 +88,14 @@ export default class ChooseContentTypeComponent extends Component {
             attrs.hidden = true;
         }
 
-        return (
-            <div {...attrs}>
-                {item.name}
-            </div>
-        );
+        return <div {...attrs}>{item.name}</div>;
     }
 
     renderGroup(groupName, index) {
         const items = this.props.contentTypes[groupName];
         const groupAttrs = {};
 
-        if (this.state.filterQuery && items.every(item => !item.name.toLowerCase().includes(this.state.filterQuery))) {
+        if (this.state.filterQuery && items.every((item) => !item.name.toLowerCase().includes(this.state.filterQuery))) {
             groupAttrs.hidden = true;
         }
 
@@ -113,14 +110,19 @@ export default class ChooseContentTypeComponent extends Component {
     }
 
     render() {
-        const {labels, maxHeight, contentTypes} = this.props;
+        const { labels, maxHeight, contentTypes } = this.props;
 
         return (
             <div className="c-choose-content-type">
                 <p className="c-choose-content-type__title">{labels.contentOnTheFly.selectContentType}</p>
                 <div className="c-choose-content-type__list-wrapper">
-                    <input className="form-control" type="text" placeholder={labels.contentOnTheFly.typeToRefine} onChange={this.updateFilterQuery} />
-                    <div className="c-choose-content-type__list" style={{maxHeight:`${maxHeight - 232}px`}}>
+                    <input
+                        className="form-control"
+                        type="text"
+                        placeholder={labels.contentOnTheFly.typeToRefine}
+                        onChange={this.updateFilterQuery}
+                    />
+                    <div className="c-choose-content-type__list" style={{ maxHeight: `${maxHeight - 232}px` }}>
                         {Object.keys(contentTypes).map(this.renderGroup)}
                     </div>
                 </div>
@@ -135,5 +137,5 @@ ChooseContentTypeComponent.propTypes = {
     contentTypes: PropTypes.object.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
     preselectedContentType: PropTypes.string,
-    allowedContentTypes: PropTypes.array.isRequired
+    allowedContentTypes: PropTypes.array.isRequired,
 };

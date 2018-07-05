@@ -32,7 +32,7 @@ const handleOnReadyStateChange = (xhr, onSuccess, onError) => {
  * @param {Response} response
  * @returns {String|Response}
  */
-const handleRequestResponse = response => {
+const handleRequestResponse = (response) => {
     if (!response.ok) {
         throw Error(response.text());
     }
@@ -48,11 +48,11 @@ const handleRequestResponse = response => {
  * @param {Function} resolve
  * @param {Function} reject
  */
-const readFile = function (file, resolve, reject) {
-    this.addEventListener('load', () => resolve({fileReader: this, file}), false);
+const readFile = function(file, resolve, reject) {
+    this.addEventListener('load', () => resolve({ fileReader: this, file }), false);
     this.addEventListener('error', () => reject(), false);
     this.readAsDataURL(file);
-}
+};
 
 /**
  * Finds a content type mapping based on a file type
@@ -62,7 +62,7 @@ const readFile = function (file, resolve, reject) {
  * @param {File} file
  * @returns {Object|undefined}
  */
-const findFileTypeMapping = (mappings, file) => mappings.find(item => item.mimeTypes.find(type => type === file.type));
+const findFileTypeMapping = (mappings, file) => mappings.find((item) => item.mimeTypes.find((type) => type === file.type));
 
 /**
  * Checks if file's MIME Type is allowed
@@ -82,7 +82,7 @@ const isMimeTypeAllowed = (mappings, file) => !!findFileTypeMapping(mappings, fi
  * @param {Object} locationMapping
  * @returns {Boolean}
  */
-const checkFileTypeAllowed = (file, locationMapping) => !locationMapping ? true : isMimeTypeAllowed(locationMapping.mappings, file);
+const checkFileTypeAllowed = (file, locationMapping) => (!locationMapping ? true : isMimeTypeAllowed(locationMapping.mappings, file));
 
 /**
  * Detects a content type for a given file
@@ -94,7 +94,7 @@ const checkFileTypeAllowed = (file, locationMapping) => !locationMapping ? true 
  * @returns {Object} detected content type config
  */
 const detectContentTypeMapping = (file, parentInfo, config) => {
-    const locationMapping = config.locationMappings.find(item => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
+    const locationMapping = config.locationMappings.find((item) => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
     const mappings = locationMapping ? locationMapping.mappings : config.defaultMappings;
 
     return findFileTypeMapping(mappings, file) || config.fallbackContentType;
@@ -108,16 +108,16 @@ const detectContentTypeMapping = (file, parentInfo, config) => {
  * @param {String} identifier content type identifier
  * @returns {Promise}
  */
-const getContentTypeByIdentifier = ({token, siteaccess}, identifier) => {
+const getContentTypeByIdentifier = ({ token, siteaccess }, identifier) => {
     const request = new Request(`/api/ezp/v2/content/types?identifier=${identifier}`, {
         method: 'GET',
         headers: {
-            'Accept': 'application/vnd.ez.api.ContentTypeInfoList+json',
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
             'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token
+            'X-CSRF-Token': token,
         },
         credentials: 'same-origin',
-        mode: 'cors'
+        mode: 'cors',
     });
 
     return fetch(request).then(handleRequestResponse);
@@ -131,7 +131,7 @@ const getContentTypeByIdentifier = ({token, siteaccess}, identifier) => {
  * @param {Object} data file data containing File object and FileReader object
  * @returns {Promise}
  */
-const prepareStruct = ({parentInfo, config}, data) => {
+const prepareStruct = ({ parentInfo, config }, data) => {
     let parentLocation = `/api/ezp/v2/content/locations${parentInfo.locationPath}`;
 
     parentLocation = parentLocation.endsWith('/') ? parentLocation.slice(0, -1) : parentLocation;
@@ -139,40 +139,43 @@ const prepareStruct = ({parentInfo, config}, data) => {
     const mapping = detectContentTypeMapping(data.file, parentInfo, config.multiFileUpload);
 
     return getContentTypeByIdentifier(config, mapping.contentTypeIdentifier)
-        .then(response => response.json())
-        .catch(error => console.log('get:content:type:error', error))
-        .then(response => {
-            const fields = [{
-                fieldDefinitionIdentifier: mapping.nameFieldIdentifier,
-                fieldValue: data.file.name
-            }, {
-                fieldDefinitionIdentifier: mapping.contentFieldIdentifier,
-                fieldValue: {
-                    fileName: data.file.name,
-                    data: data.fileReader.result.replace(/^.*;base64,/, '')
-                }
-            }];
+        .then((response) => response.json())
+        .catch((error) => console.log('get:content:type:error', error))
+        .then((response) => {
+            const fields = [
+                {
+                    fieldDefinitionIdentifier: mapping.nameFieldIdentifier,
+                    fieldValue: data.file.name,
+                },
+                {
+                    fieldDefinitionIdentifier: mapping.contentFieldIdentifier,
+                    fieldValue: {
+                        fileName: data.file.name,
+                        data: data.fileReader.result.replace(/^.*;base64,/, ''),
+                    },
+                },
+            ];
 
             const struct = {
                 ContentCreate: {
-                    ContentType: {'_href': response.ContentTypeInfoList.ContentType[0]._href},
+                    ContentType: { _href: response.ContentTypeInfoList.ContentType[0]._href },
                     mainLanguageCode: parentInfo.language,
                     LocationCreate: {
-                        ParentLocation: {'_href': parentLocation},
+                        ParentLocation: { _href: parentLocation },
                         sortField: 'PATH',
-                        sortOrder: 'ASC'
+                        sortOrder: 'ASC',
                     },
                     Section: null,
                     alwaysAvailable: true,
                     remoteId: null,
-                    modificationDate: (new Date()).toISOString(),
-                    fields: {field: fields}
-                }
+                    modificationDate: new Date().toISOString(),
+                    fields: { field: fields },
+                },
             };
 
             return struct;
         })
-        .catch(error => console.log('create:struct:error', error));
+        .catch((error) => console.log('create:struct:error', error));
 };
 
 /**
@@ -183,14 +186,14 @@ const prepareStruct = ({parentInfo, config}, data) => {
  * @param {Object} requestEventHandlers object containing a list of callbacks
  * @returns {Promise}
  */
-const createDraft = ({struct, token, siteaccess}, requestEventHandlers) => {
+const createDraft = ({ struct, token, siteaccess }, requestEventHandlers) => {
     const xhr = new XMLHttpRequest();
     const body = JSON.stringify(struct);
     const headers = {
-        'Accept': 'application/vnd.ez.api.Content+json',
+        Accept: 'application/vnd.ez.api.Content+json',
         'Content-Type': 'application/vnd.ez.api.ContentCreate+json',
         'X-CSRF-Token': token,
-        'X-Siteaccess': siteaccess
+        'X-Siteaccess': siteaccess,
     };
 
     return new Promise((resolve, reject) => {
@@ -231,7 +234,7 @@ const createDraft = ({struct, token, siteaccess}, requestEventHandlers) => {
  * @param {Object} response object containing created draft struct
  * @returns {Promise}
  */
-const publishDraft = ({token, siteaccess}, response) => {
+const publishDraft = ({ token, siteaccess }, response) => {
     if (!response || !response.hasOwnProperty('Content')) {
         return Promise.reject('Cannot publish content based on an uploaded file');
     }
@@ -241,10 +244,10 @@ const publishDraft = ({token, siteaccess}, response) => {
         headers: {
             'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
-            'X-HTTP-Method-Override': 'PUBLISH'
+            'X-HTTP-Method-Override': 'PUBLISH',
         },
         mode: 'cors',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
     });
 
     return fetch(request).then(handleRequestResponse);
@@ -261,7 +264,7 @@ const publishDraft = ({token, siteaccess}, response) => {
  * @returns {Boolean}
  */
 export const checkCanUpload = (file, parentInfo, config, callbacks) => {
-    const locationMapping = config.locationMappings.find(item => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
+    const locationMapping = config.locationMappings.find((item) => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
 
     if (!checkFileTypeAllowed(file, locationMapping)) {
         callbacks.fileTypeNotAllowedCallback();
@@ -300,7 +303,7 @@ export const publishFile = (data, requestEventHandlers, callback) => {
     createDraft(data, requestEventHandlers)
         .then(publishDraft.bind(null, data))
         .then(callback)
-        .catch(error => console.log('publish:file:error', error));
+        .catch((error) => console.log('publish:file:error', error));
 };
 
 /**
@@ -311,19 +314,19 @@ export const publishFile = (data, requestEventHandlers, callback) => {
  * @param {Object} struct Content struct
  * @param {Function} callback file deleted callback
  */
-export const deleteFile = ({token, siteaccess}, struct, callback) => {
+export const deleteFile = ({ token, siteaccess }, struct, callback) => {
     const request = new Request(struct.Content._href, {
         method: 'DELETE',
         headers: {
             'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token
+            'X-CSRF-Token': token,
         },
         mode: 'cors',
-        credentials: 'same-origin'
+        credentials: 'same-origin',
     });
 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(error => console.log('delete:file:error', error));
+        .catch((error) => console.log('delete:file:error', error));
 };

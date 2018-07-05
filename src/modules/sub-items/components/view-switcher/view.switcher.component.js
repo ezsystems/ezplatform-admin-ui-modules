@@ -8,12 +8,12 @@ export default class ViewSwitcherComponent extends Component {
         super(props);
 
         this.state = {
-            activeView: props.activeView
+            activeView: props.activeView,
         };
     }
 
     componentWillReceiveProps(props) {
-        this.setState(state => Object.assign({}, state, {activeView: props.activeView}));
+        this.setState((state) => Object.assign({}, state, { activeView: props.activeView }));
     }
 
     /**
@@ -23,8 +23,8 @@ export default class ViewSwitcherComponent extends Component {
      * @param {String} id
      * @memberof ViewSwitcherComponent
      */
-	toggleListView(id) {
-		this.props.onViewChange(id);
+    toggleListView(id) {
+        this.props.onViewChange(id);
     }
 
     /**
@@ -42,7 +42,7 @@ export default class ViewSwitcherComponent extends Component {
             id,
             onClick: this.toggleListView.bind(this, id),
             className: baseClassName,
-            title
+            title,
         };
 
         if (this.state.activeView === id) {
@@ -50,13 +50,13 @@ export default class ViewSwitcherComponent extends Component {
         }
 
         if (this.props.isDisabled) {
-            attrs.className = `${attrs.className} ${baseClassName}--disabled`
+            attrs.className = `${attrs.className} ${baseClassName}--disabled`;
         }
 
         return (
             <div {...attrs}>
                 <svg className="ez-icon">
-                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${icon}`}></use>
+                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${icon}`} />
                 </svg>
             </div>
         );
@@ -66,7 +66,7 @@ export default class ViewSwitcherComponent extends Component {
         let componentClassName = 'c-grid-switcher';
 
         if (this.props.isDisabled) {
-            componentClassName = `${componentClassName} ${componentClassName}--disabled`
+            componentClassName = `${componentClassName} ${componentClassName}--disabled`;
         }
 
         return (
@@ -84,13 +84,13 @@ ViewSwitcherComponent.propTypes = {
     isDisabled: PropTypes.bool.isRequired,
     labels: PropTypes.shape({
         listViewTitle: PropTypes.string.isRequired,
-        gridViewTitle: PropTypes.string.isRequired
-    }).isRequired
+        gridViewTitle: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 ViewSwitcherComponent.defaultProps = {
     labels: {
-        listViewTitle: "View as list",
-        gridViewTitle: "View as grid"
-    }
+        listViewTitle: 'View as list',
+        gridViewTitle: 'View as grid',
+    },
 };

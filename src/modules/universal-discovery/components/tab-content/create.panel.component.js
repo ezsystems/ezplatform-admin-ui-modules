@@ -8,7 +8,7 @@ import CreateComponent from '../create/create.component';
 import './css/create.panel.component.css';
 
 const CreatePanelComponent = (props) => {
-    const wrapperAttrs = {className: 'c-create-panel'};
+    const wrapperAttrs = { className: 'c-create-panel' };
     const maxHeight = props.maxHeight - 24;
     const componentProps = Object.assign({}, props, { maxHeight, allowContainersOnly: true });
 
@@ -41,7 +41,7 @@ CreatePanelComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired
+        siteaccess: PropTypes.string.isRequired,
     }).isRequired,
     labels: PropTypes.object.isRequired,
     languages: PropTypes.object.isRequired,
@@ -52,8 +52,8 @@ CreatePanelComponent.propTypes = {
     preselectedLocation: PropTypes.number,
     allowedLocations: PropTypes.array.isRequired,
     allowedLanguages: PropTypes.array.isRequired,
-    sortFieldMappings: PropTypes.object.isRequired, 
-    sortOrderMappings: PropTypes.object.isRequired, 
+    sortFieldMappings: PropTypes.object.isRequired,
+    sortOrderMappings: PropTypes.object.isRequired,
 };
 
 export default CreatePanelComponent;

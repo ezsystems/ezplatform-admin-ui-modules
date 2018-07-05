@@ -10,12 +10,12 @@ export default class LoadMoreComponent extends Component {
         this.state = {
             totalCount: props.totalCount,
             loadedCount: props.loadedCount,
-            limit: props.limit
+            limit: props.limit,
         };
     }
 
-    componentWillReceiveProps({totalCount, loadedCount, limit}) {
-        this.setState(state => Object.assign({}, state, {totalCount, loadedCount, limit}));
+    componentWillReceiveProps({ totalCount, loadedCount, limit }) {
+        this.setState((state) => Object.assign({}, state, { totalCount, loadedCount, limit }));
     }
 
     /**
@@ -36,25 +36,25 @@ export default class LoadMoreComponent extends Component {
     render() {
         const btnAttrs = {
             className: 'c-load-more__btn--load',
-            onClick: this.loadMore.bind(this)
+            onClick: this.loadMore.bind(this),
         };
-        const {totalCount, loadedCount, limit} = this.state;
+        const { totalCount, loadedCount, limit } = this.state;
 
         if (!totalCount || loadedCount >= totalCount) {
             btnAttrs.disabled = true;
         }
 
-        const loadMoreText = this.props.labels.info
-            .replace('{{loaded}}', loadedCount)
-            .replace('{{total}}', totalCount);
+        const loadMoreText = this.props.labels.info.replace('{{loaded}}', loadedCount).replace('{{total}}', totalCount);
         const delta = totalCount - loadedCount;
         const loadMoreLimit = delta > limit ? limit : delta;
         const actionText = this.props.labels.action.replace('{{limit}}', loadMoreLimit);
 
         return (
             <div className="c-load-more">
-                <div className="c-load-more__message" dangerouslySetInnerHTML={{__html: loadMoreText}}></div>
-                <div {...btnAttrs} ref={ref => this._refLoadMore = ref}>{actionText}</div>
+                <div className="c-load-more__message" dangerouslySetInnerHTML={{ __html: loadMoreText }} />
+                <div {...btnAttrs} ref={(ref) => (this._refLoadMore = ref)}>
+                    {actionText}
+                </div>
             </div>
         );
     }
@@ -67,11 +67,11 @@ LoadMoreComponent.propTypes = {
     onLoadMore: PropTypes.func.isRequired,
     labels: PropTypes.shape({
         info: PropTypes.string.isRequired,
-        action: PropTypes.string.isRequired
-    })
+        action: PropTypes.string.isRequired,
+    }),
 };
 
 LoadMoreComponent.defaultProps = {
     totalCount: 0,
-    loadedCount: 0
+    loadedCount: 0,
 };
