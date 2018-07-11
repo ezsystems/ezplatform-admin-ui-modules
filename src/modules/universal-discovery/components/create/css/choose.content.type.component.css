@@ -34,6 +34,7 @@
 
 .c-choose-content-type__group-item.is-selected {
     background-color: #2b84b1;
+    color: #fff;
 }
 
 .c-choose-content-type__group-item.is-not-selectable {
