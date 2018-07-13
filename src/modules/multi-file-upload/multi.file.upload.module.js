@@ -18,6 +18,8 @@ export default class MultiFileUploadModule extends Component {
             popupVisible = false;
         }
 
+        this.handleDropOnWindow = this.handleDropOnWindow.bind(this);
+
         this.state = {
             popupVisible,
             itemsToUpload: props.itemsToUpload,
@@ -41,9 +43,7 @@ export default class MultiFileUploadModule extends Component {
      */
     manageDropEvent() {
         if (!this.state.popupVisible && !this.state.itemsToUpload.length) {
-            this._handleDropOnWindow = this.handleDropOnWindow.bind(this);
-
-            window.addEventListener('drop', this._handleDropOnWindow, false);
+            window.addEventListener('drop', this.handleDropOnWindow, false);
             window.addEventListener('dragover', this.preventDefaultAction, false);
         }
     }
@@ -107,7 +107,7 @@ export default class MultiFileUploadModule extends Component {
             return;
         }
 
-        window.removeEventListener('drop', this._handleDropOnWindow, false);
+        window.removeEventListener('drop', this.handleDropOnWindow, false);
         window.removeEventListener('dragover', this.preventDefaultAction, false);
 
         this.setState((state) =>

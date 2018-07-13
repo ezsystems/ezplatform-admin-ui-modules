@@ -17,7 +17,7 @@ export default class FinderTreeLeafComponent extends Component {
         };
     }
 
-    componentWillReceiveProps({ selected, isLoadingChildren }) {
+    UNSAFE_componentWillReceiveProps({ selected, isLoadingChildren }) {
         this.setState((state) =>
             Object.assign({}, state, {
                 selected,

@@ -49,7 +49,7 @@ export default class FinderComponent extends Component {
         this.updateBranchesContainerScroll();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const isShowingUp = nextProps.isVisible && nextProps.isVisible !== this.props.isVisible;
 
         if (this.preselectedItem && this.locationsMap && this.activeLocations && isShowingUp) {
