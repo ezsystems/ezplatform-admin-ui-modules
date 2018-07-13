@@ -134,7 +134,7 @@ export default class UniversalDiscoveryModule extends Component {
             return;
         }
 
-        this.setState((state) => ({ canSelectContent }));
+        this.setState(() => ({ canSelectContent }));
     }
 
     /**
@@ -256,7 +256,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {String} id
      */
     onItemRemove(id) {
-        this.setState(() => ({ selectedContent: state.selectedContent.filter((item) => item.id !== id) }));
+        this.setState((state) => ({ selectedContent: state.selectedContent.filter((item) => item.id !== id) }));
     }
 
     /**
@@ -269,7 +269,7 @@ export default class UniversalDiscoveryModule extends Component {
         const isLocationAllowed = !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
         const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
 
-        this.setState((state) => ({
+        this.setState(() => ({
             contentMeta: contentMetaWithContentTypeInfo,
             isLocationAllowed,
             isPreviewMetaReady: false,
@@ -859,7 +859,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @returns {Element}
      */
     renderConfirmBtn() {
-        const { activeTab, selectedContent, contentMeta, canSelectContent, isPreviewMetaReady } = this.state;
+        const { activeTab, selectedContent, canSelectContent, isPreviewMetaReady } = this.state;
         const { multiple } = this.props;
         const onClick = multiple ? this.handleConfirm : this.handleSingleConfirm;
         const attrs = { className: 'm-ud__action--confirm', onClick };
