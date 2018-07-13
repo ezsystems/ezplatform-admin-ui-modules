@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import './css/content.meta.preview.component.css';
-import { TAB_CREATE } from '../../universal.discovery.module';
 
 export default class ContentMetaPreviewComponent extends Component {
     constructor(props) {

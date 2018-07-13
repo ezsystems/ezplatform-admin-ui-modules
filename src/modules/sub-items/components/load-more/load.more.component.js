@@ -17,7 +17,7 @@ export default class LoadMoreComponent extends Component {
     }
 
     UNSAFE_componentWillReceiveProps({ totalCount, loadedCount, limit }) {
-        this.setState((state) => ({ ...state, totalCount, loadedCount, limit }));
+        this.setState((state) => ({ totalCount, loadedCount, limit }));
     }
 
     /**

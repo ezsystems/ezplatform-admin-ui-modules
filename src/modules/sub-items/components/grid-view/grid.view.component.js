@@ -18,7 +18,7 @@ export default class GridViewComponent extends Component {
     }
 
     UNSAFE_componentWillReceiveProps({ items }) {
-        this.setState((state) => ({ ...state, items }));
+        this.setState(() => ({ items }));
     }
 
     /**

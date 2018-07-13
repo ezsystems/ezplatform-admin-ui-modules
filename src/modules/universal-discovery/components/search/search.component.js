@@ -38,7 +38,7 @@ export default class SearchComponent extends Component {
         }
 
         this.setState(
-            (state) => ({ ...state, isSearching: true }),
+            () => ({ isSearching: true }),
             () => {
                 const promise = new Promise((resolve) =>
                     this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve)
@@ -58,8 +58,7 @@ export default class SearchComponent extends Component {
      * @memberof SearchComponent
      */
     updateItemsState(response) {
-        this.setState((state) => ({
-            ...state,
+        this.setState(() => ({
             items: response.View.Result.searchHits.searchHit.map((item) => item.value),
             isSearching: false,
         }));
@@ -118,7 +117,7 @@ export default class SearchComponent extends Component {
      * @method toggleSubmitButtonState
      */
     toggleSubmitButtonState() {
-        this.setState((state) => ({ ...state, submitDisabled: !this._refSearchInput.value.trim().length }));
+        this.setState(() => ({ submitDisabled: !this._refSearchInput.value.trim().length }));
     }
 
     /**

@@ -20,7 +20,7 @@ export default class SubItemsListComponent extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        this.setState((state) => ({ ...state, activeView: props.activeView }));
+        this.setState(() => ({ activeView: props.activeView }));
     }
 
     render() {

@@ -20,7 +20,7 @@ export default class UploadPopupModule extends Component {
                 (stateItem) => !props.itemsToUpload.find((propItem) => propItem.id === stateItem.id)
             );
 
-            return Object.assign({}, state, { itemsToUpload: [...stateItems, ...props.itemsToUpload] });
+            return { itemsToUpload: [...stateItems, ...props.itemsToUpload] };
         });
     }
 

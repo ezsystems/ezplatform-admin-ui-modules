@@ -21,7 +21,7 @@ export default class UploadListComponent extends Component {
                 (stateItem) => !props.itemsToUpload.find((propItem) => propItem.id === stateItem.id)
             );
 
-            return Object.assign({}, state, { itemsToUpload: [...stateItems, ...props.itemsToUpload] });
+            return { itemsToUpload: [...stateItems, ...props.itemsToUpload] };
         });
     }
 
@@ -37,12 +37,10 @@ export default class UploadListComponent extends Component {
      * @memberof UploadListComponent
      */
     handleAfterUpload(item) {
-        this.setState((state) => {
-            return Object.assign({}, state, {
-                itemsToUpload: state.itemsToUpload.filter((data) => data.id !== item.id),
-                items: [...state.items, item],
-            });
-        });
+        this.setState((state) => ({
+            itemsToUpload: state.itemsToUpload.filter((data) => data.id !== item.id),
+            items: [...state.items, item],
+        }));
     }
 
     /**

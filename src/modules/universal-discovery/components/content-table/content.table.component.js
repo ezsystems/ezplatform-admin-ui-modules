@@ -31,7 +31,6 @@ export default class ContentTableComponent extends Component {
         const maxPage = !count ? 0 : Math.floor((count - 1) / perPage);
 
         this.setState((state) => ({
-            ...state,
             items,
             count,
             activePage: state.activePage <= maxPage ? state.activePage : maxPage,
@@ -80,10 +79,7 @@ export default class ContentTableComponent extends Component {
     setActivePage(activePage) {
         this.ensurePageItemsLoaded(activePage);
 
-        this.setState((state) => ({
-            ...state,
-            activePage,
-        }));
+        this.setState(() => ({ activePage }));
     }
 
     /**

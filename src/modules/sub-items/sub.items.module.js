@@ -39,7 +39,7 @@ export default class SubItemsModule extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        this.setState((state) => ({ ...state, items: [...state.items, ...props.items] }));
+        this.setState((state) => ({ items: [...state.items, ...props.items] }));
     }
 
     /**
@@ -49,7 +49,7 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     handleLoadMore() {
-        this.setState((state) => ({ ...state, offset: state.offset + state.limit }));
+        this.setState((state) => ({ offset: state.offset + state.limit }));
     }
 
     /**
@@ -61,7 +61,7 @@ export default class SubItemsModule extends Component {
     loadItems() {
         const parentLocationId = this.props.parentLocationId;
 
-        this.setState((state) => ({ ...state, isLoading: true }));
+        this.setState(() => ({ isLoading: true }));
 
         this.loadLocation(parentLocationId)
             .then(this.loadContentItems)
@@ -177,7 +177,6 @@ export default class SubItemsModule extends Component {
         }, []);
 
         this.setState((state) => ({
-            ...state,
             items: [...state.items, ...items],
             isLoading: false,
             totalCount,
@@ -244,7 +243,7 @@ export default class SubItemsModule extends Component {
 
         items.sort((a, b) => a.location.priority - b.location.priority);
 
-        return { ...state, items };
+        return { items };
     }
 
     /**
@@ -255,7 +254,7 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     switchView(activeView) {
-        this.setState((state) => ({ ...state, activeView }));
+        this.setState(() => ({ activeView }));
     }
 
     /**

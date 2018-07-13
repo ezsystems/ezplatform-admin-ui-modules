@@ -41,7 +41,7 @@ export default class TableViewComponent extends Component {
         const sortKey = this.state.sortKey;
 
         if (!sortKey) {
-            this.setState((state) => ({ ...state, items }));
+            this.setState(() => ({ items }));
         }
 
         if (sortKey === SORTKEY_NAME) {
@@ -51,7 +51,7 @@ export default class TableViewComponent extends Component {
         } else if (sortKey === SORTKEY_PRIORITY) {
             this.sortByPriority(items);
         } else {
-            this.setState((state) => ({ ...state, items }));
+            this.setState(() => ({ items }));
         }
     }
 
@@ -78,7 +78,6 @@ export default class TableViewComponent extends Component {
             });
 
             return {
-                ...state,
                 items,
                 isAscSort,
                 sortKey: SORTKEY_NAME,
@@ -109,7 +108,6 @@ export default class TableViewComponent extends Component {
             });
 
             return {
-                ...state,
                 items,
                 isAscSort,
                 sortKey: SORTKEY_DATE,
@@ -140,7 +138,6 @@ export default class TableViewComponent extends Component {
             });
 
             return {
-                ...state,
                 items,
                 isAscSort,
                 sortKey: SORTKEY_PRIORITY,
