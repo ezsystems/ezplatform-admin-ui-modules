@@ -1,23 +1,19 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import './css/load.more.component.css';
 
-export default class LoadMoreComponent extends Component {
+export default class LoadMoreComponent extends PureComponent {
     constructor(props) {
         super(props);
 
+        this._refLoadMore = null;
         this.loadMore = this.loadMore.bind(this);
-
-        this.state = {
-            totalCount: props.totalCount,
-            loadedCount: props.loadedCount,
-            limit: props.limit,
-        };
+        this.setLoadMoreRef = this.setLoadMoreRef.bind(this);
     }
 
-    UNSAFE_componentWillReceiveProps({ totalCount, loadedCount, limit }) {
-        this.setState((state) => ({ totalCount, loadedCount, limit }));
+    setLoadMoreRef(ref) {
+        this._refLoadMore = ref;
     }
 
     /**
@@ -36,11 +32,11 @@ export default class LoadMoreComponent extends Component {
     }
 
     render() {
+        const { totalCount, loadedCount, limit } = this.props;
         const btnAttrs = {
             className: 'c-load-more__btn--load',
             onClick: this.loadMore,
         };
-        const { totalCount, loadedCount, limit } = this.state;
 
         if (!totalCount || loadedCount >= totalCount) {
             btnAttrs.disabled = true;
@@ -67,7 +63,7 @@ export default class LoadMoreComponent extends Component {
         return (
             <div className="c-load-more">
                 <div className="c-load-more__message" dangerouslySetInnerHTML={{ __html: loadMoreText }} />
-                <div {...btnAttrs} ref={(ref) => (this._refLoadMore = ref)}>
+                <div {...btnAttrs} ref={this.setLoadMoreRef}>
                     {actionText}
                 </div>
             </div>
