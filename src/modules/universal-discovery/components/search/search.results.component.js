@@ -15,8 +15,6 @@ export default class SearchResultsComponent extends Component {
         console.warn('[DEPRECATED] use ContentTableComponent instead');
 
         this.state = {
-            items: props.items,
-            perPage: props.perPage,
             activePage: 0,
             pages: this.splitToPages(props.items, props.perPage),
         };
@@ -26,12 +24,7 @@ export default class SearchResultsComponent extends Component {
     }
 
     UNSAFE_componentWillReceiveProps({ items, perPage }) {
-        this.setState((state) =>
-            Object.assign({}, state, {
-                items,
-                pages: this.splitToPages(items, perPage),
-            })
-        );
+        this.setState(() => ({ pages: this.splitToPages(items, perPage) }));
     }
 
     /**
@@ -65,7 +58,7 @@ export default class SearchResultsComponent extends Component {
      * @memberof SearchResultsComponent
      */
     setActivePage(activePage) {
-        this.setState((state) => Object.assign({}, state, { activePage }));
+        this.setState(() => ({ activePage }));
     }
 
     /**
