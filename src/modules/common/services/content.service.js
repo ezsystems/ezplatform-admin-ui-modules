@@ -27,7 +27,7 @@ export const loadContentInfo = (contentIds, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load content info'));
 };
 
 export const findContentBySearchQuery = (query, callback) => {
@@ -57,5 +57,5 @@ export const findContentBySearchQuery = (query, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:find:content:by:search:query', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot find content by a search query'));
 };

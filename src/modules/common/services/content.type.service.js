@@ -11,5 +11,5 @@ export const loadContentTypes = (contentTypeIds, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load content types'));
 };

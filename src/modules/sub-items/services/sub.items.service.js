@@ -62,7 +62,7 @@ export const loadLocation = ({ token, siteaccess }, { locationId = 2, limit = 10
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:location', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load location'));
 };
 
 /**
@@ -103,7 +103,7 @@ export const loadContentInfo = ({ token, siteaccess }, contentIds, callback) => 
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load content info'));
 };
 
 /**
@@ -127,7 +127,7 @@ export const loadContentTypes = ({ token, siteaccess }, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load content types'));
 };
 
 /**
@@ -151,7 +151,7 @@ export const loadContentType = (id, { token, siteaccess }, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:content:info', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load a content type'));
 };
 
 /**
@@ -185,5 +185,5 @@ export const updateLocationPriority = ({ priority, location, token, siteaccess }
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:update:location:priority', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('An error occurred while updating location priority'));
 };

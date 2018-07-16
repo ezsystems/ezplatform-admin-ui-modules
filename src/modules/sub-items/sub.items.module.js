@@ -66,7 +66,9 @@ export default class SubItemsModule extends Component {
             .then(this.loadContentItems)
             .then(this.loadContentTypes)
             .then(this.updateItemsState)
-            .catch((error) => console.log('sub:items:load:items:error', error));
+            .catch(() =>
+                window.eZ.helpers.notification.showErrorNotification('An error occurred while loading items in the Sub Items module')
+            );
     }
 
     /**
