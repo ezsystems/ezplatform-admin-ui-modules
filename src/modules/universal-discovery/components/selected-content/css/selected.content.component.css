@@ -7,6 +7,7 @@
     padding: 5px;
     display: inline-block;
     border-radius: 4px;
+    background-color: #e3e3e3;
 }
 
 .c-selected-content__info--any-item-selected {
