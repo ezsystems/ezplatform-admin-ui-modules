@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
+
 import './css/finder.tree.leaf.component.css';
 
 export default class FinderTreeLeafComponent extends Component {
@@ -11,15 +13,17 @@ export default class FinderTreeLeafComponent extends Component {
 
         this.state = {
             selected: props.selected,
-            isLoadingChildren: props.isLoadingChildren
+            isLoadingChildren: props.isLoadingChildren,
         };
     }
 
-    componentWillReceiveProps({selected, isLoadingChildren}) {
-        this.setState(state => Object.assign({}, state, {
-            selected,
-            isLoadingChildren
-        }));
+    componentWillReceiveProps({ selected, isLoadingChildren }) {
+        this.setState((state) =>
+            Object.assign({}, state, {
+                selected,
+                isLoadingChildren,
+            })
+        );
     }
 
     /**
@@ -28,18 +32,19 @@ export default class FinderTreeLeafComponent extends Component {
      * @method handleClick
      * @memberof FinderTreeLeafComponent
      */
-    handleClick() {
-        const {location} = this.props;
+    handleClick(event) {
+        const { location } = this.props;
 
-        if (!this.props.isSelectable) {
+        if (!this.props.isSelectable || event.target.closest('.c-finder-tree-leaf__btn--toggle-selection')) {
             return;
         }
 
         this.setState(
-            (state) => Object.assign({}, state, {
-                selected: true,
-                isLoadingChildren: !!location.childCount
-            }),
+            (state) =>
+                Object.assign({}, state, {
+                    selected: true,
+                    isLoadingChildren: !!location.childCount,
+                }),
             () => this.props.onClick(location)
         );
     }
@@ -58,8 +63,27 @@ export default class FinderTreeLeafComponent extends Component {
 
         return (
             <svg className="ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner"></use>
+                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
             </svg>
+        );
+    }
+
+    renderSelectContentBtn() {
+        const { isSelectable, multiple, selectedContent, location, onSelectContent, onItemRemove, canSelectContent } = this.props;
+
+        if (!isSelectable || this.state.isLoadingChildren) {
+            return null;
+        }
+
+        return (
+            <SelectContentButtonComponent
+                multiple={multiple}
+                selectedContent={selectedContent}
+                location={location}
+                onSelectContent={onSelectContent}
+                onItemRemove={onItemRemove}
+                canSelectContent={canSelectContent}
+            />
         );
     }
 
@@ -81,9 +105,10 @@ export default class FinderTreeLeafComponent extends Component {
         }
 
         return (
-            <div { ...attrs }>
+            <div {...attrs}>
                 {location.ContentInfo.Content.Name}
                 {this.renderLoadingIcon()}
+                {this.renderSelectContentBtn()}
             </div>
         );
     }
@@ -95,5 +120,10 @@ FinderTreeLeafComponent.propTypes = {
     selected: PropTypes.bool.isRequired,
     isLoadingChildren: PropTypes.bool.isRequired,
     isSelectable: PropTypes.bool.isRequired,
-    allowedLocations: PropTypes.array.isRequired
+    allowedLocations: PropTypes.array.isRequired,
+    multiple: PropTypes.bool.isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
 };

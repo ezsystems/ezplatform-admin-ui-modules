@@ -55,6 +55,7 @@ export default class UniversalDiscoveryModule extends Component {
         this.renderSinglePanel = this.renderSinglePanel.bind(this);
         this.renderSingleTab = this.renderSingleTab.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
+        this.handleSingleConfirm = this.handleSingleConfirm.bind(this);
         this.setCreateModeState = this.setCreateModeState.bind(this);
         this.updateContentMetaWithCurrentVersion = this.updateContentMetaWithCurrentVersion.bind(this);
         this.toggleBookmark = this.toggleBookmark.bind(this);
@@ -85,6 +86,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksRequiredCount: 0,
             bookmarksDuringLoadingCount: 0,
             bookmarked: {},
+            canSelectContent: false,
             ...CONTENT_META_PREVIEW_BASE_STATE,
         };
     }
@@ -105,6 +107,16 @@ export default class UniversalDiscoveryModule extends Component {
 
         if (!!contentMeta && !isPreviewMetaReady) {
             this.props.loadContentInfo(this.props.restInfo, contentMeta.ContentInfo.Content._id, this.updateContentMetaWithCurrentVersion);
+        }
+
+        if (!this.props.multiple) {
+            this.canSelectContent(contentMeta, (canSelectContent) => {
+                if (this.state.canSelectContent === canSelectContent) {
+                    return;
+                }
+
+                this.setState((state) => ({ ...state, canSelectContent }));
+            });
         }
     }
 
@@ -173,6 +185,13 @@ export default class UniversalDiscoveryModule extends Component {
      */
     handleConfirm() {
         this.props.onConfirm(this.addContentTypeInfo(this.state.selectedContent));
+    }
+
+    handleSingleConfirm() {
+        this.setState(
+            (state) => ({ ...state, selectedContent: [this.state.contentMeta] }),
+            () => this.props.onConfirm(this.addContentTypeInfo(this.state.selectedContent))
+        );
     }
 
     /**
@@ -506,8 +525,8 @@ export default class UniversalDiscoveryModule extends Component {
      *
      * @method updateSelectedContent
      */
-    updateSelectedContent() {
-        const selectedContent = !this.props.multiple ? [this.state.contentMeta] : [...this.state.selectedContent, this.state.contentMeta];
+    updateSelectedContent(location) {
+        const selectedContent = !this.props.multiple ? [location] : [...this.state.selectedContent, location];
 
         this.setState((state) => ({ ...state, selectedContent }));
     }
@@ -521,6 +540,10 @@ export default class UniversalDiscoveryModule extends Component {
      * @returns {Boolean}
      */
     canSelectContent(data, callback) {
+        if (!data) {
+            return callback(false);
+        }
+
         const { selectedContent, contentTypesMap } = this.state;
         const isAlreadySelected = selectedContent.find((item) => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
         const isOverLimit = !!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit;
@@ -597,7 +620,6 @@ export default class UniversalDiscoveryModule extends Component {
                     data={contentMeta}
                     isBookmarked={isContentBookmarked}
                     canSelectContent={this.canSelectContent}
-                    onSelectContent={this.updateSelectedContent}
                     toggleBookmark={this.toggleBookmark}
                     loadContentInfo={loadContentInfo}
                     restInfo={restInfo}
@@ -793,7 +815,7 @@ export default class UniversalDiscoveryModule extends Component {
             restInfo,
             allowContainersOnly,
         } = this.props;
-        const { activeTab, maxHeight, contentTypesMap } = this.state;
+        const { activeTab, maxHeight, contentTypesMap, selectedContent } = this.state;
         const attrs = {
             isVisible: activeTab === item.id,
             onItemSelect: this.onItemSelect,
@@ -809,6 +831,10 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             labels,
             restInfo,
+            selectedContent,
+            onSelectContent: this.updateSelectedContent,
+            canSelectContent: this.canSelectContent,
+            onItemRemove: this.onItemRemove,
             ...item.attrs,
         };
 
@@ -822,13 +848,16 @@ export default class UniversalDiscoveryModule extends Component {
      * @returns {Element}
      */
     renderConfirmBtn() {
-        const attrs = { className: 'm-ud__action--confirm', onClick: this.handleConfirm };
+        const { activeTab, selectedContent, contentMeta, canSelectContent, isPreviewMetaReady } = this.state;
+        const { multiple } = this.props;
+        const onClick = multiple ? this.handleConfirm : this.handleSingleConfirm;
+        const attrs = { className: 'm-ud__action--confirm', onClick };
 
-        if (this.state.activeTab === TAB_CREATE) {
+        if (activeTab === TAB_CREATE) {
             return null;
         }
 
-        if (!this.state.selectedContent.length) {
+        if ((multiple && !selectedContent.length) || (!multiple && (!isPreviewMetaReady || !canSelectContent))) {
             attrs.disabled = true;
         }
 

@@ -10,7 +10,8 @@ import './css/create.panel.component.css';
 const CreatePanelComponent = (props) => {
     const wrapperAttrs = { className: 'c-create-panel' };
     const maxHeight = props.maxHeight - 24;
-    const componentProps = Object.assign({}, props, { maxHeight, allowContainersOnly: true });
+    const componentProps = { ...props, maxHeight, allowContainersOnly: true };
+    const finderProps = { ...componentProps, multiple: false };
 
     if (!props.isVisible) {
         wrapperAttrs.hidden = true;
@@ -25,7 +26,7 @@ const CreatePanelComponent = (props) => {
                 </div>
                 <div className="c-create-panel__second-step">
                     <div className="c-create-panel__step-title">2) {props.labels.contentOnTheFly.selectLocation}</div>
-                    <FinderComponent {...componentProps} />
+                    <FinderComponent {...finderProps} />
                 </div>
             </TabContentPanelComponent>
         </div>

@@ -1,10 +1,10 @@
 .c-finder-tree-leaf {
-    padding: 0 16px;
+    padding: 0 40px 0 16px;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: background .2s cubic-bezier(.25, .8, .25, 1);
+    transition: background 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
     background: #fff;
     line-height: 25px;
@@ -26,7 +26,7 @@
     border-left: 8px solid #646464;
     border-bottom: 5px solid transparent;
     position: absolute;
-    right: 16px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -67,4 +67,25 @@
     position: absolute;
     right: 12px;
     top: 5px;
+}
+
+.c-finder-tree-leaf--selected .c-select-content-button {
+    background: #fff;
+}
+
+.c-finder-tree-leaf--selected .c-select-content-button .ez-icon {
+    fill: #106d95;
+}
+
+.c-finder-tree-leaf .c-select-content-button {
+    display: none;
+    padding: 2px;
+}
+
+.c-finder-tree-leaf:hover .c-select-content-button,
+.c-finder-tree-leaf:focus .c-select-content-button,
+.c-finder-tree-leaf .c-select-content-button--selected {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

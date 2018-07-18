@@ -2,6 +2,12 @@
     flex: 1 1 auto;
     display: flex;
     flex-wrap: nowrap;
+    cursor: pointer;
+}
+
+.c-content-table-item:hover,
+.c-content-table-item:focus {
+    background-color: #e1f5ff;
 }
 
 .c-content-table-item__name,
@@ -29,6 +35,7 @@
 
 .c-content-table-item__actions {
     flex: 0 0 90px;
+    position: relative;
 }
 
 .c-content-table-item__btn--preview {
