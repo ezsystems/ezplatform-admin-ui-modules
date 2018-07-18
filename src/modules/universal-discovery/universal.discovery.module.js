@@ -189,7 +189,7 @@ export default class UniversalDiscoveryModule extends Component {
 
     handleSingleConfirm() {
         this.setState(
-            (state) => ({ ...state, selectedContent: [this.state.contentMeta] }),
+            (state) => ({ selectedContent: [state.contentMeta] }),
             () => this.props.onConfirm(this.addContentTypeInfo(this.state.selectedContent))
         );
     }

@@ -5,44 +5,42 @@ import SelectContentButtonComponent from '../select-content-button/select.conten
 
 import './css/content.table.item.component.css';
 
-export default class ContentTableItemComponent extends Component {
-    renderSelectContentBtn() {
-        const { multiple, selectedContent, data, onSelectContent, onItemRemove, canSelectContent } = this.props;
+const renderSelectContentBtn = (props) => {
+    const { multiple, selectedContent, data, onSelectContent, onItemRemove, canSelectContent } = props;
 
-        return (
-            <SelectContentButtonComponent
-                multiple={multiple}
-                selectedContent={selectedContent}
-                location={data}
-                onSelectContent={onSelectContent}
-                onItemRemove={onItemRemove}
-                canSelectContent={canSelectContent}
-            />
-        );
-    }
+    return (
+        <SelectContentButtonComponent
+            multiple={multiple}
+            selectedContent={selectedContent}
+            location={data}
+            onSelectContent={onSelectContent}
+            onItemRemove={onItemRemove}
+            canSelectContent={canSelectContent}
+        />
+    );
+};
 
-    render() {
-        const { onItemClick, onPreview, data, contentTypesMap, labels, multiple, selectedContent } = this.props;
-        const item = data.ContentInfo.Content;
-        const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : false;
-        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.contentTableItem.notAvailable;
-        const onClick = !!onItemClick ? onItemClick.bind(null, data) : null;
-        const isSelectedContent = selectedContent.find((content) => content.id === data.id);
-        const iconId = isSelectedContent ? 'checkmark' : 'create';
+const ContentTableItemComponent = (props) => {
+    const { onItemClick, onPreview, data, contentTypesMap, labels, multiple, selectedContent } = props;
+    const item = data.ContentInfo.Content;
+    const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : false;
+    const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.contentTableItem.notAvailable;
+    const onClick = !!onItemClick ? onItemClick.bind(null, data) : null;
+    const isSelectedContent = selectedContent.find((content) => content.id === data.id);
+    const iconId = isSelectedContent ? 'checkmark' : 'create';
 
-        return (
-            <div className="c-content-table-item" onClick={() => onPreview(data)}>
-                <div className="c-content-table-item__name" title={item.Name}>
-                    {item.Name}
-                </div>
-                <div className="c-content-table-item__type" title={contentTypeName}>
-                    {contentTypeName}
-                </div>
-                <div className="c-content-table-item__actions">{this.renderSelectContentBtn()}</div>
+    return (
+        <div className="c-content-table-item" onClick={() => onPreview(data)}>
+            <div className="c-content-table-item__name" title={item.Name}>
+                {item.Name}
             </div>
-        );
-    }
-}
+            <div className="c-content-table-item__type" title={contentTypeName}>
+                {contentTypeName}
+            </div>
+            <div className="c-content-table-item__actions">{renderSelectContentBtn(props)}</div>
+        </div>
+    );
+};
 
 ContentTableItemComponent.propTypes = {
     data: PropTypes.object.isRequired,
@@ -60,3 +58,5 @@ ContentTableItemComponent.propTypes = {
     onItemRemove: PropTypes.func.isRequired,
     multiple: PropTypes.bool.isRequired,
 };
+
+export default ContentTableItemComponent;

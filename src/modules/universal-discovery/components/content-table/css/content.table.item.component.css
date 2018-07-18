@@ -62,3 +62,10 @@
 .c-content-table-item__btn--preview:focus .ez-icon {
     fill: #565e63;
 }
+
+.c-content-table-item .c-select-content-button {
+    position: absolute;
+    right: 1.3rem;
+    top: 50%;
+    transform: translateY(-50%);
+}

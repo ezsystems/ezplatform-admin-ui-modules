@@ -80,6 +80,10 @@
 .c-finder-tree-leaf .c-select-content-button {
     display: none;
     padding: 2px;
+    position: absolute;
+    right: 1.3rem;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .c-finder-tree-leaf:hover .c-select-content-button,

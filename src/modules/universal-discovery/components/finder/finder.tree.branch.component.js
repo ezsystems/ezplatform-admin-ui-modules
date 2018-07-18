@@ -10,6 +10,7 @@ export default class FinderTreeBranchComponent extends Component {
         super(props);
 
         this.expandBranch = this.expandBranch.bind(this);
+        this.onLoadMore = this.onLoadMore.bind(this);
 
         this.state = {
             selectedLocations: props.selectedLocations,
@@ -87,6 +88,10 @@ export default class FinderTreeBranchComponent extends Component {
         );
     }
 
+    onLoadMore() {
+        this.props.onLoadMore(this.props.parentLocation);
+    }
+
     /**
      * Render load more button
      *
@@ -102,7 +107,7 @@ export default class FinderTreeBranchComponent extends Component {
         }
 
         return (
-            <button className="c-finder-tree-branch__load-more" onClick={() => this.props.onLoadMore(this.props.parentLocation)}>
+            <button className="c-finder-tree-branch__load-more" onClick={onLoadMore}>
                 {this.props.labels.finderBranch.loadMore}
             </button>
         );
