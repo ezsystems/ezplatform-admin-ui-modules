@@ -1,27 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
 
 import './css/content.table.item.component.css';
 
-const renderSelectContentBtn = (props) => {
-    const { multiple, selectedContent, data, onSelectContent, onItemRemove, canSelectContent } = props;
-
-    return (
-        <SelectContentButtonComponent
-            multiple={multiple}
-            selectedContent={selectedContent}
-            location={data}
-            onSelectContent={onSelectContent}
-            onItemRemove={onItemRemove}
-            canSelectContent={canSelectContent}
-        />
-    );
-};
-
 const ContentTableItemComponent = (props) => {
-    const { onItemClick, onPreview, data, contentTypesMap, labels, multiple, selectedContent } = props;
+    const {
+        onItemClick,
+        onPreview,
+        data,
+        contentTypesMap,
+        labels,
+        multiple,
+        selectedContent,
+        onSelectContent,
+        onItemRemove,
+        canSelectContent,
+    } = props;
     const item = data.ContentInfo.Content;
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : false;
     const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.contentTableItem.notAvailable;
@@ -37,7 +33,16 @@ const ContentTableItemComponent = (props) => {
             <div className="c-content-table-item__type" title={contentTypeName}>
                 {contentTypeName}
             </div>
-            <div className="c-content-table-item__actions">{renderSelectContentBtn(props)}</div>
+            <div className="c-content-table-item__actions">
+                <SelectContentButtonComponent
+                    multiple={multiple}
+                    selectedContent={selectedContent}
+                    location={data}
+                    onSelectContent={onSelectContent}
+                    onItemRemove={onItemRemove}
+                    canSelectContent={canSelectContent}
+                />
+            </div>
         </div>
     );
 };

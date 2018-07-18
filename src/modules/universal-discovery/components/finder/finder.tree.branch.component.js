@@ -107,7 +107,7 @@ export default class FinderTreeBranchComponent extends Component {
         }
 
         return (
-            <button className="c-finder-tree-branch__load-more" onClick={onLoadMore}>
+            <button className="c-finder-tree-branch__load-more" onClick={this.onLoadMore}>
                 {this.props.labels.finderBranch.loadMore}
             </button>
         );
