@@ -65,6 +65,7 @@ export default class UniversalDiscoveryModule extends Component {
         this.requireBookmarksCount = this.requireBookmarksCount.bind(this);
         this.onBookmarksLoaded = this.onBookmarksLoaded.bind(this);
         this.updatePermissionsState = this.updatePermissionsState.bind(this);
+        this.setCanSelectContentState = this.setCanSelectContentState.bind(this);
 
         this.loadingBookmarksLocationsIds = {};
 
@@ -110,14 +111,23 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         if (!this.props.multiple) {
-            this.canSelectContent(contentMeta, (canSelectContent) => {
-                if (this.state.canSelectContent === canSelectContent) {
-                    return;
-                }
-
-                this.setState((state) => ({ ...state, canSelectContent }));
-            });
+            this.canSelectContent(contentMeta, this.setCanSelectContentState);
         }
+    }
+
+    /**
+     * Sets the can select content state.
+     *
+     * @method setCanSelectContentState
+     * @param {Boolean} canSelectContent
+     * @memberof UniversalDiscoveryModule
+     */
+    setCanSelectContentState(canSelectContent) {
+        if (this.state.canSelectContent === canSelectContent) {
+            return;
+        }
+
+        this.setState((state) => ({ canSelectContent }));
     }
 
     /**
