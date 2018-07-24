@@ -71,7 +71,7 @@ export default class FinderTreeLeafComponent extends Component {
     renderSelectContentBtn() {
         const { isSelectable, multiple, selectedContent, location, onSelectContent, onItemRemove, canSelectContent } = this.props;
 
-        if (!isSelectable || this.state.isLoadingChildren) {
+        if (!isSelectable || this.state.isLoadingChildren || !multiple) {
             return null;
         }
 

@@ -760,7 +760,7 @@ export default class UniversalDiscoveryModule extends Component {
             cotfAllowedLocations,
             onlyContentOnTheFly,
         } = this.props;
-        const { userBookmarksItems, userBookmarksCount } = this.state;
+        const { userBookmarksItems, userBookmarksCount, contentTypesMap } = this.state;
         const browsePanelConfig = { id: TAB_BROWSE, panel: FinderPanelComponent, attrs: { sortFieldMappings, sortOrderMappings } };
         const searchPanelConfig = { id: TAB_SEARCH, panel: SearchPanelComponent };
         const bookmarksPanelConfig = {
@@ -789,6 +789,10 @@ export default class UniversalDiscoveryModule extends Component {
             },
         };
         let panelsToRender = [browsePanelConfig, searchPanelConfig, createPanelConfig, bookmarksPanelConfig, ...extraTabs];
+
+        if (!Object.keys(contentTypesMap).length) {
+            return null;
+        }
 
         if (onlyContentOnTheFly) {
             console.warn('[DEPRECATED] onlyContentOnTheFly parameter is deprecated');
@@ -869,6 +873,7 @@ export default class UniversalDiscoveryModule extends Component {
 
         if ((multiple && !selectedContent.length) || (!multiple && (!isPreviewMetaReady || !canSelectContent))) {
             attrs.disabled = true;
+            attrs.title = 'The Content Type is not allowed for selection';
         }
 
         return <button {...attrs}>{this.props.labels.udw.confirm}</button>;
