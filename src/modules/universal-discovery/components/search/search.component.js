@@ -131,7 +131,18 @@ export default class SearchComponent extends Component {
     }
 
     render() {
-        const { labels, onItemSelect, searchResultsPerPage, contentTypesMap, maxHeight } = this.props;
+        const {
+            labels,
+            onItemSelect,
+            searchResultsPerPage,
+            contentTypesMap,
+            maxHeight,
+            selectedContent,
+            onSelectContent,
+            canSelectContent,
+            onItemRemove,
+            multiple,
+        } = this.props;
 
         return (
             <div className="c-search" style={{ maxHeight: `${maxHeight - 32}px` }}>
@@ -155,6 +166,11 @@ export default class SearchComponent extends Component {
                     contentTypesMap={contentTypesMap}
                     title={labels.search.tableTitle}
                     labels={labels}
+                    selectedContent={selectedContent}
+                    onSelectContent={onSelectContent}
+                    canSelectContent={canSelectContent}
+                    onItemRemove={onItemRemove}
+                    multiple={multiple}
                 />
             </div>
         );
@@ -178,4 +194,9 @@ SearchComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
+    multiple: PropTypes.bool.isRequired,
 };

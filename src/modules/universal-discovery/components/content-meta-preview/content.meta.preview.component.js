@@ -8,66 +8,9 @@ export default class ContentMetaPreviewComponent extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { imageUri: '', translations: [], selectContentEnabled: false };
+        this.state = { imageUri: '', translations: [] };
 
         this.toggleBookmark = this.toggleBookmark.bind(this);
-        this.toggleEnabledState = this.toggleEnabledState.bind(this);
-        this.checkCanSelectContent = this.checkCanSelectContent.bind(this);
-    }
-
-    componentDidMount() {
-        this.checkCanSelectContent();
-    }
-
-    componentDidUpdate() {
-        this.checkCanSelectContent();
-    }
-
-    checkCanSelectContent() {
-        const { data, canSelectContent } = this.props;
-
-        canSelectContent(data, this.toggleEnabledState);
-    }
-
-    /**
-     * Toggles the enabled state on select content button
-     *
-     * @method toggleEnabledState
-     * @param {Boolean} disabled The disabled state
-     * @memberof ContentMetaPreviewComponent
-     */
-    toggleEnabledState(selectContentEnabled) {
-        if (this.state.selectContentEnabled === selectContentEnabled) {
-            return;
-        }
-
-        this.setState((state) => ({ ...state, selectContentEnabled }));
-    }
-
-    /**
-     * Renders a select content button
-     *
-     * @method renderSelectContentBtn
-     * @returns {Element}
-     * @memberof ContentMetaPreviewComponent
-     */
-    renderSelectContentBtn() {
-        if (this.props.activeTab === TAB_CREATE) {
-            return null;
-        }
-
-        const { onSelectContent, labels, ready } = this.props;
-        const attrs = { className: 'c-meta-preview__btn--select', onClick: onSelectContent };
-
-        if (!this.state.selectContentEnabled || !ready) {
-            attrs.disabled = true;
-        }
-
-        return (
-            <div className="c-meta-preview__btn-wrapper">
-                <button {...attrs}>{labels.selectContent}</button>
-            </div>
-        );
     }
 
     /**
@@ -224,7 +167,6 @@ export default class ContentMetaPreviewComponent extends Component {
                     <div className="c-meta-preview__meta-wrapper">
                         <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
                         <div className="c-meta-preview__name">{content.Name}</div>
-                        {this.renderSelectContentBtn()}
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{labels.lastModified}:</h3>
                             {new Date(content.lastModificationDate).toLocaleString()}
@@ -247,9 +189,7 @@ export default class ContentMetaPreviewComponent extends Component {
 ContentMetaPreviewComponent.propTypes = {
     data: PropTypes.object.isRequired,
     isBookmarked: PropTypes.bool,
-    onSelectContent: PropTypes.func.isRequired,
     toggleBookmark: PropTypes.func.isRequired,
-    canSelectContent: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,

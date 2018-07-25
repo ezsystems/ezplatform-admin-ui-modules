@@ -96,7 +96,17 @@ export default class ContentTableComponent extends Component {
      */
     renderItem(item) {
         const location = item.Location;
-        const { contentTypesMap, onItemSelect, onItemClick, labels } = this.props;
+        const {
+            contentTypesMap,
+            onItemSelect,
+            onItemClick,
+            labels,
+            selectedContent,
+            onSelectContent,
+            canSelectContent,
+            onItemRemove,
+            multiple,
+        } = this.props;
 
         return (
             <ContentTableItemComponent
@@ -106,6 +116,11 @@ export default class ContentTableComponent extends Component {
                 onPreview={onItemSelect}
                 onItemClick={onItemClick}
                 labels={labels}
+                selectedContent={selectedContent}
+                onSelectContent={onSelectContent}
+                canSelectContent={canSelectContent}
+                onItemRemove={onItemRemove}
+                multiple={multiple}
             />
         );
     }
@@ -214,6 +229,11 @@ ContentTableComponent.propTypes = {
         contentTableHeader: PropTypes.object.isRequired,
         contentTableItem: PropTypes.object.isRequired,
     }).isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
+    multiple: PropTypes.bool.isRequired,
 };
 
 ContentTableComponent.defaultProps = {

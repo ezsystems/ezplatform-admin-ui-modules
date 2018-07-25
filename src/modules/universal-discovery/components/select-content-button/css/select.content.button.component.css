@@ -1,0 +1,10 @@
+.c-select-content-button {
+    background: #106d95;
+    border: none;
+    border-radius: 50%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

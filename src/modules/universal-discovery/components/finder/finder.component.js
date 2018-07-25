@@ -391,6 +391,11 @@ export default class FinderComponent extends Component {
                 allowContainersOnly={this.props.allowContainersOnly}
                 contentTypesMap={this.props.contentTypesMap}
                 allowedLocations={this.props.allowedLocations}
+                multiple={this.props.multiple}
+                selectedContent={this.props.selectedContent}
+                onSelectContent={this.props.onSelectContent}
+                canSelectContent={this.props.canSelectContent}
+                onItemRemove={this.props.onItemRemove}
             />
         );
     }
@@ -430,6 +435,10 @@ FinderComponent.propTypes = {
     isVisible: PropTypes.bool,
     sortFieldMappings: PropTypes.object.isRequired,
     sortOrderMappings: PropTypes.object.isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
 };
 
 FinderComponent.defaultProps = {

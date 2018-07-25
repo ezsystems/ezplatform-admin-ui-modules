@@ -13,7 +13,18 @@ export default class BookmarksComponent extends Component {
             return null;
         }
 
-        const { onItemSelect, bookmarksPerPage, contentTypesMap, labels, requireBookmarksCount } = this.props;
+        const {
+            onItemSelect,
+            bookmarksPerPage,
+            contentTypesMap,
+            labels,
+            requireBookmarksCount,
+            selectedContent,
+            onSelectContent,
+            canSelectContent,
+            onItemRemove,
+            multiple,
+        } = this.props;
 
         return (
             <ContentTableComponent
@@ -27,6 +38,11 @@ export default class BookmarksComponent extends Component {
                 title={labels.bookmarks.tableTitle}
                 noItemsMessage={labels.bookmarks.noBookmarks}
                 labels={labels}
+                selectedContent={selectedContent}
+                onSelectContent={onSelectContent}
+                canSelectContent={canSelectContent}
+                onItemRemove={onItemRemove}
+                multiple={multiple}
             />
         );
     }
@@ -86,4 +102,9 @@ BookmarksComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
+    multiple: PropTypes.bool.isRequired,
 };

@@ -20,6 +20,10 @@ export default class BookmarksPanelComponent extends Component {
             userBookmarksItems,
             userBookmarksCount,
             requireBookmarksCount,
+            selectedContent,
+            onSelectContent,
+            canSelectContent,
+            onItemRemove,
         } = this.props;
 
         return {
@@ -34,6 +38,10 @@ export default class BookmarksPanelComponent extends Component {
             userBookmarksItems,
             userBookmarksCount,
             requireBookmarksCount,
+            selectedContent,
+            onSelectContent,
+            canSelectContent,
+            onItemRemove,
         };
     }
 
@@ -75,4 +83,8 @@ BookmarksPanelComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
 };

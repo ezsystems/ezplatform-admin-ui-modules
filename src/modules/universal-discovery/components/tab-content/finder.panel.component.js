@@ -37,6 +37,10 @@ FinderPanelComponent.propTypes = {
     allowContainersOnly: PropTypes.bool.isRequired,
     sortFieldMappings: PropTypes.object.isRequired,
     sortOrderMappings: PropTypes.object.isRequired,
+    selectedContent: PropTypes.array.isRequired,
+    onSelectContent: PropTypes.func.isRequired,
+    canSelectContent: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
 };
 
 export default FinderPanelComponent;
