@@ -1,18 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './css/no.items.component.css';
 
-const NoItemsComponent = (props) => {
-    return <div className="c-no-items">{props.labels.noItems.message}</div>;
-};
+const NoItemsComponent = () => {
+    const noItemsMessage = Translator.trans(/*@Desc("This location has no sub-items")*/ 'no_items.message', {}, 'sub_items');
 
-NoItemsComponent.propTypes = {
-    labels: PropTypes.shape({
-        noItems: PropTypes.shape({
-            message: PropTypes.string.isRequired,
-        }).isRequired,
-    }),
+    return <div className="c-no-items">{noItemsMessage}</div>;
 };
 
 export default NoItemsComponent;

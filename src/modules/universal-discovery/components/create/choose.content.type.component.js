@@ -110,18 +110,23 @@ export default class ChooseContentTypeComponent extends Component {
     }
 
     render() {
-        const { labels, maxHeight, contentTypes } = this.props;
+        const { maxHeight, contentTypes } = this.props;
+        const selectContentTypeTitle = Translator.trans(
+            /*@Desc("Select a Content Type")*/ 'content_on_the_fly.select_a_content_type.title',
+            {},
+            'universal_discovery_widget'
+        );
+        const typeToRefinePlaceholder = Translator.trans(
+            /*@Desc("Type to refine")*/ 'content_on_the_fly.type_to_refine.placeholder',
+            {},
+            'universal_discovery_widget'
+        );
 
         return (
             <div className="c-choose-content-type">
-                <p className="c-choose-content-type__title">{labels.contentOnTheFly.selectContentType}</p>
+                <p className="c-choose-content-type__title">{selectContentTypeTitle}</p>
                 <div className="c-choose-content-type__list-wrapper">
-                    <input
-                        className="form-control"
-                        type="text"
-                        placeholder={labels.contentOnTheFly.typeToRefine}
-                        onChange={this.updateFilterQuery}
-                    />
+                    <input className="form-control" type="text" placeholder={typeToRefinePlaceholder} onChange={this.updateFilterQuery} />
                     <div className="c-choose-content-type__list" style={{ maxHeight: `${maxHeight - 232}px` }}>
                         {Object.keys(contentTypes).map(this.renderGroup)}
                     </div>
@@ -133,7 +138,6 @@ export default class ChooseContentTypeComponent extends Component {
 
 ChooseContentTypeComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
-    labels: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
     preselectedContentType: PropTypes.string,

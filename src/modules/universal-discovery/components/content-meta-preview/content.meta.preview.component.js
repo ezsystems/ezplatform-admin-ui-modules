@@ -93,7 +93,7 @@ export default class ContentMetaPreviewComponent extends Component {
      * @memberof ContentMetaPreviewComponent
      */
     renderImagePreview() {
-        const { data, labels } = this.props;
+        const { data } = this.props;
 
         if (!data.CurrentVersion) {
             return (
@@ -104,9 +104,14 @@ export default class ContentMetaPreviewComponent extends Component {
         }
 
         const imageUri = this.getImageUri(data);
+        const imagePreviewNotAvailableLabel = Translator.trans(
+            /*@Desc("Content preview is not available")*/ 'content_meta_preview.image_preview_not_available.info',
+            {},
+            'universal_discovery_widget'
+        );
 
         if (!imageUri.length) {
-            return <Fragment>{labels.imagePreviewNotAvailable}</Fragment>;
+            return <Fragment>{imagePreviewNotAvailableLabel}</Fragment>;
         }
 
         return <img className="c-meta-preview__image" src={imageUri} alt="" />;
@@ -148,15 +153,31 @@ export default class ContentMetaPreviewComponent extends Component {
     }
 
     render() {
-        const { labels, data, maxHeight } = this.props;
+        const { data, maxHeight } = this.props;
         const content = data.ContentInfo.Content;
         const contentTypeIdentifier = content.ContentTypeInfo.identifier;
         const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
         const translations = this.getTranslations(data);
+        const title = Translator.trans(/*@Desc("Content Meta Preview")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');
+        const lastModifiedLabel = Translator.trans(
+            /*@Desc("Last modified")*/ 'content_meta_preview.last_modified.label',
+            {},
+            'universal_discovery_widget'
+        );
+        const creationDateLabel = Translator.trans(
+            /*@Desc("Creation date")*/ 'content_meta_preview.creation_date.label',
+            {},
+            'universal_discovery_widget'
+        );
+        const translationsLabel = Translator.trans(
+            /*@Desc("Translations")*/ 'content_meta_preview.translations.label',
+            {},
+            'universal_discovery_widget'
+        );
 
         return (
             <div className="c-meta-preview__wrapper">
-                <h1 className="c-meta-preview__title">{labels.title}</h1>
+                <h1 className="c-meta-preview__title">{title}</h1>
                 <div className="c-meta-preview" style={{ maxHeight: `${maxHeight - 64}px` }}>
                     <div className="c-meta-preview__top-wrapper">
                         <div className="c-meta-preview__content-type">
@@ -168,15 +189,15 @@ export default class ContentMetaPreviewComponent extends Component {
                         <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
                         <div className="c-meta-preview__name">{content.Name}</div>
                         <div className="c-meta-preview__content-info">
-                            <h3 className="c-meta-preview__subtitle">{labels.lastModified}:</h3>
+                            <h3 className="c-meta-preview__subtitle">{lastModifiedLabel}:</h3>
                             {new Date(content.lastModificationDate).toLocaleString()}
                         </div>
                         <div className="c-meta-preview__content-info">
-                            <h3 className="c-meta-preview__subtitle">{labels.creationDate}:</h3>
+                            <h3 className="c-meta-preview__subtitle">{creationDateLabel}:</h3>
                             {new Date(content.publishedDate).toLocaleString()}
                         </div>
                         <div className="c-meta-preview__content-info">
-                            <h3 className="c-meta-preview__subtitle">{labels.translations}:</h3>
+                            <h3 className="c-meta-preview__subtitle">{translationsLabel}:</h3>
                             {translations.map(this.renderTranslation)}
                         </div>
                     </div>
@@ -194,15 +215,6 @@ ContentMetaPreviewComponent.propTypes = {
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
-    }).isRequired,
-    labels: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        selectContent: PropTypes.string.isRequired,
-        notAvailable: PropTypes.string.isRequired,
-        creationDate: PropTypes.string.isRequired,
-        lastModified: PropTypes.string.isRequired,
-        translations: PropTypes.string.isRequired,
-        imagePreviewNotAvailable: PropTypes.string.isRequired,
     }).isRequired,
     maxHeight: PropTypes.number.isRequired,
     activeTab: PropTypes.string.isRequired,

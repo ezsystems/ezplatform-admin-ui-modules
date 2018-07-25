@@ -72,6 +72,11 @@ export default class ChooseLanguageComponent extends Component {
             className: 'form-control',
             onChange: this.updateSelection,
         };
+        const selectLanguageTitle = Translator.trans(
+            /*@Desc("Select a language")*/ 'content_on_the_fly.select_language.title',
+            {},
+            'universal_discovery_widget'
+        );
 
         if (this.props.forcedLanguage) {
             console.warn('[DEPRECATED] forcedLanguage parameter is deprecated');
@@ -86,7 +91,7 @@ export default class ChooseLanguageComponent extends Component {
 
         return (
             <div className="c-choose-language">
-                <p className="c-choose-language__title">{this.props.labels.contentOnTheFly.selectLanguage}</p>
+                <p className="c-choose-language__title">{selectLanguageTitle}</p>
                 <div className="c-choose-lagauge__select-wrapper">
                     <select {...selectAttrs}>{this.renderOptions()}</select>
                 </div>
@@ -97,7 +102,6 @@ export default class ChooseLanguageComponent extends Component {
 
 ChooseLanguageComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
-    labels: PropTypes.object.isRequired,
     languages: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     forcedLanguage: PropTypes.string.isRequired,

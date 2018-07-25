@@ -106,9 +106,11 @@ export default class FinderTreeBranchComponent extends Component {
             return null;
         }
 
+        const loadMoreLabel = Translator.trans(/*@Desc("Load more")*/ 'finder.branch.load_more.label', {}, 'universal_discovery_widget');
+
         return (
             <button className="c-finder-tree-branch__load-more" onClick={this.onLoadMore}>
-                {this.props.labels.finderBranch.loadMore}
+                {loadMoreLabel}
             </button>
         );
     }
@@ -144,11 +146,6 @@ FinderTreeBranchComponent.propTypes = {
     onBranchClick: PropTypes.func.isRequired,
     selectedLocations: PropTypes.array.isRequired,
     onLoadMore: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        finderBranch: PropTypes.shape({
-            loadMore: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
     maxHeight: PropTypes.number.isRequired,
     allowContainersOnly: PropTypes.bool,
     contentTypesMap: PropTypes.object,

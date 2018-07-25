@@ -48,5 +48,5 @@ module.exports = {
             amd: 'prop-types',
         }
     },
-    plugins: [new CleanWebpackPlugin(['Resources'])],
+    plugins: [new CleanWebpackPlugin(['Resources/public/'])],
 };

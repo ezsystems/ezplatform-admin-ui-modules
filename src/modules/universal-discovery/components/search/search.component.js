@@ -87,6 +87,7 @@ export default class SearchComponent extends Component {
     renderSubmitBtn() {
         const btnAttrs = { className: 'c-search__submit' };
         const svgAttrs = { className: 'ez-icon' };
+        const btnLabel = Translator.trans(/*@Desc("Search")*/ 'search.submit.label', {}, 'universal_discovery_widget');
         let iconIdentifier = 'search';
 
         if (this.state.isSearching) {
@@ -105,7 +106,7 @@ export default class SearchComponent extends Component {
                 <svg {...svgAttrs}>
                     <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${iconIdentifier}`} />
                 </svg>
-                {!this.state.isSearching && this.props.labels.search.searchBtnLabel}
+                {!this.state.isSearching && btnLabel}
             </button>
         );
     }
@@ -132,7 +133,6 @@ export default class SearchComponent extends Component {
 
     render() {
         const {
-            labels,
             onItemSelect,
             searchResultsPerPage,
             contentTypesMap,
@@ -143,10 +143,12 @@ export default class SearchComponent extends Component {
             onItemRemove,
             multiple,
         } = this.props;
+        const title = Translator.trans(/*@Desc("Search")*/ 'search.title', {}, 'universal_discovery_widget');
+        const tableTitle = Translator.trans(/*@Desc("Search results")*/ 'search.content_table.title', {}, 'universal_discovery_widget');
 
         return (
             <div className="c-search" style={{ maxHeight: `${maxHeight - 32}px` }}>
-                <div className="c-search__title">{labels.search.title}:</div>
+                <div className="c-search__title">{title}:</div>
                 <div className="c-search__form">
                     <input
                         className="c-search__input"
@@ -164,8 +166,7 @@ export default class SearchComponent extends Component {
                     onItemSelect={onItemSelect}
                     perPage={searchResultsPerPage}
                     contentTypesMap={contentTypesMap}
-                    title={labels.search.tableTitle}
-                    labels={labels}
+                    title={tableTitle}
                     selectedContent={selectedContent}
                     onSelectContent={onSelectContent}
                     canSelectContent={canSelectContent}
@@ -183,13 +184,6 @@ SearchComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     searchResultsPerPage: PropTypes.number.isRequired,
-    labels: PropTypes.shape({
-        search: PropTypes.shape({
-            title: PropTypes.string.isRequired,
-            searchBtnLabel: PropTypes.string.isRequired,
-        }).isRequired,
-        searchPagination: PropTypes.object.isRequired,
-    }).isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,

@@ -46,10 +46,23 @@ export default class LoadMoreComponent extends Component {
             btnAttrs.disabled = true;
         }
 
-        const loadMoreText = this.props.labels.info.replace('{{loaded}}', loadedCount).replace('{{total}}', totalCount);
+        const loadMoreText = Translator.trans(
+            /*@Desc("Viewing <strong>%loaded%</strong> out of <strong>%total%</strong> sub-items")*/ 'load_more.info.text',
+            {
+                loaded: loadedCount,
+                total: totalCount,
+            },
+            'sub_items'
+        );
         const delta = totalCount - loadedCount;
         const loadMoreLimit = delta > limit ? limit : delta;
-        const actionText = this.props.labels.action.replace('{{limit}}', loadMoreLimit);
+        const actionText = Translator.trans(
+            /*@Desc("Show %limit% more results")*/ 'load_more.action.text',
+            {
+                limit: loadMoreLimit,
+            },
+            'sub_items'
+        );
 
         return (
             <div className="c-load-more">
@@ -67,10 +80,6 @@ LoadMoreComponent.propTypes = {
     loadedCount: PropTypes.number.isRequired,
     limit: PropTypes.number.isRequired,
     onLoadMore: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        info: PropTypes.string.isRequired,
-        action: PropTypes.string.isRequired,
-    }),
 };
 
 LoadMoreComponent.defaultProps = {

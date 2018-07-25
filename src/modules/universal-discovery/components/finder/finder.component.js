@@ -383,7 +383,6 @@ export default class FinderComponent extends Component {
                 items={data}
                 total={count}
                 selectedLocations={selectedLocations}
-                labels={this.props.labels}
                 onItemClick={this.findLocationChildren}
                 onBranchClick={this.loadBranchLeaves}
                 onLoadMore={this.onLoadMore}
@@ -427,7 +426,6 @@ FinderComponent.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
-    labels: PropTypes.object.isRequired,
     allowContainersOnly: PropTypes.bool,
     contentTypesMap: PropTypes.object,
     preselectedLocation: PropTypes.number,

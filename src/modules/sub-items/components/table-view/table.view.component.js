@@ -157,7 +157,7 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     renderItem(data) {
-        const { contentTypesMap, handleItemPriorityUpdate, labels, handleEditItem, generateLink, languages } = this.props;
+        const { contentTypesMap, handleItemPriorityUpdate, handleEditItem, generateLink, languages } = this.props;
 
         return (
             <TableViewItemComponent
@@ -165,7 +165,6 @@ export default class TableViewComponent extends Component {
                 {...data}
                 contentTypesMap={contentTypesMap}
                 onItemPriorityUpdate={handleItemPriorityUpdate}
-                labels={labels.tableViewItem}
                 languages={languages}
                 handleEditItem={handleEditItem}
                 generateLink={generateLink}
@@ -184,7 +183,7 @@ export default class TableViewComponent extends Component {
         return (
             <tr>
                 <td>
-                    <NoItemsComponent labels={this.props.labels} />
+                    <NoItemsComponent />
                 </td>
             </tr>
         );
@@ -201,7 +200,7 @@ export default class TableViewComponent extends Component {
         const cellClass = 'c-table-view__cell';
         const cellHeadClass = `${cellClass}--head`;
         const cellSortClass = `${cellClass}--sortable`;
-        const { labels, items } = this.props;
+        const { items } = this.props;
         let headClass = 'c-table-view__head';
 
         if (!items.length) {
@@ -215,23 +214,29 @@ export default class TableViewComponent extends Component {
             headClass = `${headClass} ${headSortClass} ${headSortByClass}`;
         }
 
+        const headerNameLabel = Translator.trans(/*@Desc("Name")*/ 'items_table.header.name', {}, 'sub_items');
+        const headerModifiedLabel = Translator.trans(/*@Desc("Modified")*/ 'items_table.header.modified', {}, 'sub_items');
+        const headerContentTypeLabel = Translator.trans(/*@Desc("Content type")*/ 'items_table.header.content_type', {}, 'sub_items');
+        const headerPriorityLabel = Translator.trans(/*@Desc("Priority")*/ 'items_table.header.priority', {}, 'sub_items');
+        const headerTranslationsLabel = Translator.trans(/*@Desc("Translations")*/ 'items_table.header.translations', {}, 'sub_items');
+
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
                     <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
-                        <span className="c-table-view__label">{labels.tableView.headerName}</span>
+                        <span className="c-table-view__label">{headerNameLabel}</span>
                     </td>
                     <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate}>
-                        <span className="c-table-view__label">{labels.tableView.headerModified}</span>
+                        <span className="c-table-view__label">{headerModifiedLabel}</span>
                     </td>
                     <td className={cellHeadClass}>
-                        <span className="c-table-view__label">{labels.tableView.headerContentType}</span>
+                        <span className="c-table-view__label">{headerContentTypeLabel}</span>
                     </td>
                     <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority}>
-                        <span className="c-table-view__label">{labels.tableView.headerPriority}</span>
+                        <span className="c-table-view__label">{headerPriorityLabel}</span>
                     </td>
                     <td className={cellHeadClass} colSpan="2">
-                        <span className="c-table-view__label">{labels.tableView.headerTranslations}</span>
+                        <span className="c-table-view__label">{headerTranslationsLabel}</span>
                     </td>
                 </tr>
             </thead>
@@ -255,17 +260,6 @@ TableViewComponent.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object).isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     handleItemPriorityUpdate: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        tableView: PropTypes.shape({
-            headerName: PropTypes.string.isRequired,
-            headerContentType: PropTypes.string.isRequired,
-            headerModified: PropTypes.string.isRequired,
-            headerPriority: PropTypes.string.isRequired,
-            headerTranslations: PropTypes.string.isRequired,
-        }),
-        tableViewItem: PropTypes.object.isRequired,
-        noItems: PropTypes.object.isRequired,
-    }).isRequired,
     generateLink: PropTypes.func.isRequired,
     handleEditItem: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,

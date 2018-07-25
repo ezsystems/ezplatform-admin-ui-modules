@@ -9,8 +9,13 @@ const SearchResultsItemComponent = (props) => {
     console.warn('[DEPRECATED] use ContentTableItemComponent instead');
 
     const item = props.data.ContentInfo.Content;
+    const notAvailableLabel = Translator.trans(
+        /*@Desc("N/A")*/ 'search.results_table.not_available.label',
+        {},
+        'universal_discovery_widget'
+    );
     const contentType = props.contentTypesMap ? props.contentTypesMap[item.ContentType._href] : false;
-    const contentTypeName = contentType ? contentType.names.value[0]['#text'] : props.labels.notAvailable;
+    const contentTypeName = contentType ? contentType.names.value[0]['#text'] : notAvailableLabel;
 
     return (
         <div className="c-search-results-item">
@@ -35,9 +40,6 @@ SearchResultsItemComponent.propTypes = {
     data: PropTypes.object.isRequired,
     onPreview: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
-    labels: PropTypes.shape({
-        notAvailable: PropTypes.string.isRequired,
-    }).isRequired,
 };
 
 export default SearchResultsItemComponent;

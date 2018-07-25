@@ -100,7 +100,6 @@ export default class ContentTableComponent extends Component {
             contentTypesMap,
             onItemSelect,
             onItemClick,
-            labels,
             selectedContent,
             onSelectContent,
             canSelectContent,
@@ -115,7 +114,6 @@ export default class ContentTableComponent extends Component {
                 contentTypesMap={contentTypesMap}
                 onPreview={onItemSelect}
                 onItemClick={onItemClick}
-                labels={labels}
                 selectedContent={selectedContent}
                 onSelectContent={onSelectContent}
                 canSelectContent={canSelectContent}
@@ -140,9 +138,7 @@ export default class ContentTableComponent extends Component {
             return null;
         }
 
-        const { labels } = this.props;
-
-        return <ContentTableHeaderComponent labels={labels} />;
+        return <ContentTableHeaderComponent />;
     }
 
     /**
@@ -154,10 +150,8 @@ export default class ContentTableComponent extends Component {
      */
     renderPagination() {
         const { activePage, count, perPage } = this.state;
-        const { labels } = this.props;
         const pagesCount = !count ? 0 : Math.floor((count - 1) / perPage) + 1;
         const paginationAttrs = {
-            labels,
             minIndex: 0,
             maxIndex: pagesCount - 1,
             activeIndex: activePage,
@@ -224,11 +218,6 @@ ContentTableComponent.propTypes = {
     title: PropTypes.string.isRequired,
     noItemsMessage: PropTypes.string,
     requireItemsCount: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        contentTablePagination: PropTypes.object.isRequired,
-        contentTableHeader: PropTypes.object.isRequired,
-        contentTableItem: PropTypes.object.isRequired,
-    }).isRequired,
     selectedContent: PropTypes.array.isRequired,
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,

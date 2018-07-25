@@ -166,10 +166,12 @@ export default class TableViewItemComponent extends Component {
     }
 
     render() {
-        const { content, location, contentTypesMap, labels, generateLink, languages } = this.props;
+        const { content, location, contentTypesMap, generateLink, languages } = this.props;
+        const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_type.not_available.label', {}, 'sub_items');
+        const editLabel = Translator.trans(/*@Desc("Edit")*/ 'edit_item_btn.label', {}, 'sub_items');
         const date = new Date(content.lastModificationDate);
         const contentType = contentTypesMap[content.ContentType._href];
-        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.notAvailable;
+        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : notAvailableLabel;
         const linkAttrs = {
             className: 'c-table-view-item__link c-table-view-item__text-wrapper',
             title: content.Name,
@@ -198,7 +200,7 @@ export default class TableViewItemComponent extends Component {
                 <td className="c-table-view-item__cell--translations">{translations.map(this.renderTranslation)}</td>
                 <td className="c-table-view-item__cell--actions">
                     <div>
-                        <span title={labels.edit} onClick={this.handleEdit} className="c-table-view-item__btn--edit">
+                        <span title={editLabel} onClick={this.handleEdit} className="c-table-view-item__btn--edit">
                             <div className="c-table-view-item__btn-inner">
                                 <svg className="ez-icon">
                                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit" />
@@ -217,10 +219,6 @@ TableViewItemComponent.propTypes = {
     location: PropTypes.object.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     onItemPriorityUpdate: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        edit: PropTypes.string.isRequired,
-        notAvailable: PropTypes.string.isRequired,
-    }).isRequired,
     handleEditItem: PropTypes.func.isRequired,
     generateLink: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,

@@ -11,16 +11,16 @@ const ContentTableItemComponent = (props) => {
         onPreview,
         data,
         contentTypesMap,
-        labels,
         multiple,
         selectedContent,
         onSelectContent,
         onItemRemove,
         canSelectContent,
     } = props;
+    const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_table.not_available.label', {}, 'universal_discovery_widget');
     const item = data.ContentInfo.Content;
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : false;
-    const contentTypeName = contentType ? contentType.names.value[0]['#text'] : labels.contentTableItem.notAvailable;
+    const contentTypeName = contentType ? contentType.names.value[0]['#text'] : notAvailableLabel;
     const onClick = !!onItemClick ? onItemClick.bind(null, data) : null;
     const isSelectedContent = selectedContent.find((content) => content.id === data.id);
     const iconId = isSelectedContent ? 'checkmark' : 'create';
@@ -52,11 +52,6 @@ ContentTableItemComponent.propTypes = {
     onPreview: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     onItemClick: PropTypes.func,
-    labels: PropTypes.shape({
-        contentTableItem: PropTypes.shape({
-            notAvailable: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
     selectedContent: PropTypes.array.isRequired,
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,

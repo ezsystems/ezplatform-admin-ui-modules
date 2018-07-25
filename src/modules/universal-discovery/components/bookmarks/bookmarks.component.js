@@ -17,7 +17,6 @@ export default class BookmarksComponent extends Component {
             onItemSelect,
             bookmarksPerPage,
             contentTypesMap,
-            labels,
             requireBookmarksCount,
             selectedContent,
             onSelectContent,
@@ -25,6 +24,12 @@ export default class BookmarksComponent extends Component {
             onItemRemove,
             multiple,
         } = this.props;
+        const noBookmarksMessage = Translator.trans(
+            /*@Desc("No content items. Content items you bookmark will appear here.")*/ 'bookmarks_table.no_bookmarks.message',
+            {},
+            'universal_discovery_widget'
+        );
+        const tableTitle = Translator.trans(/*@Desc("Bookmarks")*/ 'bookmarks_table.title', {}, 'universal_discovery_widget');
 
         return (
             <ContentTableComponent
@@ -35,9 +40,8 @@ export default class BookmarksComponent extends Component {
                 onItemClick={onItemSelect}
                 perPage={bookmarksPerPage}
                 contentTypesMap={contentTypesMap}
-                title={labels.bookmarks.tableTitle}
-                noItemsMessage={labels.bookmarks.noBookmarks}
-                labels={labels}
+                title={tableTitle}
+                noItemsMessage={noBookmarksMessage}
                 selectedContent={selectedContent}
                 onSelectContent={onSelectContent}
                 canSelectContent={canSelectContent}
@@ -60,10 +64,15 @@ export default class BookmarksComponent extends Component {
     }
 
     renderNoBookmarksInfo() {
-        const { userBookmarksCount, labels } = this.props;
+        const { userBookmarksCount } = this.props;
+        const noBookmarksMessage = Translator.trans(
+            /*@Desc("No content items. Content items you bookmark will appear here.")*/ 'bookmarks_table.no_bookmarks.message',
+            {},
+            'universal_discovery_widget'
+        );
 
         if (!userBookmarksCount) {
-            return <div className="c-bookmarks__no-bookmarks-info">{labels.bookmarks.noBookmarks}</div>;
+            return <div className="c-bookmarks__no-bookmarks-info">{noBookmarksMessage}</div>;
         }
     }
 
@@ -89,15 +98,6 @@ BookmarksComponent.propTypes = {
     userBookmarksCount: PropTypes.number,
     userBookmarksItems: PropTypes.array,
     requireBookmarksCount: PropTypes.func.isRequired,
-    labels: PropTypes.shape({
-        bookmarks: PropTypes.shape({
-            noBookmarks: PropTypes.string.isRequired,
-            tableTitle: PropTypes.string.isRequired,
-        }).isRequired,
-        contentTablePagination: PropTypes.object.isRequired,
-        contentTableHeader: PropTypes.object.isRequired,
-        contentTableItem: PropTypes.object.isRequired,
-    }).isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,

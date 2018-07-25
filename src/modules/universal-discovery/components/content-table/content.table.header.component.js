@@ -1,27 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './css/content.table.header.component.css';
 
-const ContentTableHeaderComponent = (props) => {
-    const { name, type } = props.labels.contentTableHeader;
+const ContentTableHeaderComponent = () => {
+    const nameLabel = Translator.trans(/*@Desc("Name")*/ 'content_table.header.name', {}, 'universal_discovery_widget');
+    const typeLabel = Translator.trans(/*@Desc("Content Type")*/ 'content_table.header.type', {}, 'universal_discovery_widget');
 
     return (
         <div className="c-content-table-header__list-headers">
-            <div className="c-content-table-header__list-header--name">{name}</div>
-            <div className="c-content-table-header__list-header--type">{type}</div>
+            <div className="c-content-table-header__list-header--name">{nameLabel}</div>
+            <div className="c-content-table-header__list-header--type">{typeLabel}</div>
             <div className="c-content-table-header__list-header--span" />
         </div>
     );
-};
-
-ContentTableHeaderComponent.propTypes = {
-    labels: PropTypes.shape({
-        contentTableHeader: PropTypes.shape({
-            name: PropTypes.string.isRequired,
-            type: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
 };
 
 export default ContentTableHeaderComponent;

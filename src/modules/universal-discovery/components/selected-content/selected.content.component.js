@@ -57,7 +57,6 @@ export default class SelectedContentComponent extends Component {
                 data={item}
                 onRemove={this.props.onItemRemove}
                 contentTypesMap={this.props.contentTypesMap}
-                labels={this.props.labels.selectedContentItem}
             />
         );
     }
@@ -73,9 +72,15 @@ export default class SelectedContentComponent extends Component {
         let limitLabel = '';
 
         if (this.props.itemsLimit && this.props.multiple) {
-            const limit = this.props.labels.selectedContent.limit.replace('{items}', this.props.itemsLimit);
+            const limitLabel = Translator.trans(
+                /*@Desc("Limit %items% max")*/ 'select_content.limit.label',
+                {
+                    items: this.props.itemsLimit,
+                },
+                'universal_discovery_widget'
+            );
 
-            limitLabel = <small className="c-selected-content__label--limit">{limit}</small>;
+            limitLabel = <small className="c-selected-content__label--limit">{limitLabel}</small>;
         }
 
         return limitLabel;
@@ -108,7 +113,7 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     getTitle() {
-        let title = this.props.labels.selectedContent.confirmedItems;
+        let title = Translator.trans(/*@Desc("Confirmed items")*/ 'select_content.confirmed_items.title', {}, 'universal_discovery_widget');
         const total = this.props.items.length;
 
         if (total) {
@@ -124,6 +129,11 @@ export default class SelectedContentComponent extends Component {
         const anyItemSelected = !!items.length;
         const cssClassOnAnyItemSelected = anyItemSelected ? 'c-selected-content__info--any-item-selected' : '';
         const infoCssClasses = `c-selected-content__info ${cssClassOnAnyItemSelected}`;
+        const noConfirmedContentTitle = Translator.trans(
+            /*@Desc("No confirmed content yet")*/ 'select_content.no_confirmed_content.title',
+            {},
+            'universal_discovery_widget'
+        );
 
         return (
             <div className="c-selected-content">
@@ -131,9 +141,7 @@ export default class SelectedContentComponent extends Component {
                 <div className={infoCssClasses} onClick={this.togglePopup}>
                     <strong className="c-selected-content__title">{this.getTitle()}</strong>
                     {this.renderLimitLabel()}
-                    <div className="c-selected-content__content-names">
-                        {titles.length ? titles : this.props.labels.selectedContent.noConfirmedContent}
-                    </div>
+                    <div className="c-selected-content__content-names">{titles.length ? titles : noConfirmedContentTitle}</div>
                 </div>
             </div>
         );
@@ -146,12 +154,4 @@ SelectedContentComponent.propTypes = {
     itemsLimit: PropTypes.number.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
-    labels: PropTypes.shape({
-        selectedContentItem: PropTypes.object.isRequired,
-        selectedContent: PropTypes.shape({
-            confirmedItems: PropTypes.string.isRequired,
-            limit: PropTypes.string.isRequired,
-            noConfirmedContent: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
 };

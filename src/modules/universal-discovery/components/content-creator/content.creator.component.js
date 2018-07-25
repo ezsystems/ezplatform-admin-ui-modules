@@ -85,10 +85,17 @@ export default class ContentCreatorComponent extends Component {
     }
 
     render() {
-        const { labels, selectedContentType, selectedLanguage, maxHeight, onCancel } = this.props;
-        const title = labels.contentOnTheFly.creatingContent
-            .replace('{contentType}', selectedContentType.name)
-            .replace('{language}', selectedLanguage.name);
+        const { selectedContentType, selectedLanguage, maxHeight, onCancel } = this.props;
+        const title = Translator.trans(
+            /*@Desc("Creating - %contentType% in %language%")*/ 'content_on_the_fly.creating_content.title',
+            {
+                contentType: selectedContentType.name,
+                language: selectedLanguage.name,
+            },
+            'universal_discovery_widget'
+        );
+        const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'cancel.label', {}, 'universal_discovery_widget');
+        const publishLabel = Translator.trans(/*@Desc("Publish")*/ 'content_on_the_fly.publish.label', {}, 'universal_discovery_widget');
         const iframeUrl = this.generateIframeUrl();
         const contentClass = this.state.iframeLoading ? 'm-ud__content is-loading' : 'm-ud__content';
 
@@ -110,10 +117,10 @@ export default class ContentCreatorComponent extends Component {
                         <div className="m-ud__actions">
                             <div className="m-ud__btns">
                                 <button className="m-ud__action--cancel" onClick={onCancel}>
-                                    {labels.udw.cancel}
+                                    {cancelLabel}
                                 </button>
                                 <button className="m-ud__action--publish" onClick={this.handlePublish}>
-                                    {labels.contentOnTheFly.publish}
+                                    {publishLabel}
                                 </button>
                             </div>
                         </div>
@@ -126,7 +133,6 @@ export default class ContentCreatorComponent extends Component {
 
 ContentCreatorComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
-    labels: PropTypes.object.isRequired,
     selectedLanguage: PropTypes.object.isRequired,
     selectedContentType: PropTypes.object.isRequired,
     selectedLocationId: PropTypes.number.isRequired,

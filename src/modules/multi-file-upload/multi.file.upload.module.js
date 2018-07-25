@@ -181,8 +181,10 @@ export default class MultiFileUploadModule extends Component {
             return null;
         }
 
+        const label = Translator.trans(/*@Desc("Upload sub-items")*/ 'multi_file_upload_open_btn.label', {}, 'multi_file_upload');
+
         return (
-            <div className="m-mfu__btn--upload" title={this.props.uploadBtnLabel} onClick={this.showUploadPopup.bind(this, [])}>
+            <div className="m-mfu__btn--upload" title={label} onClick={this.showUploadPopup.bind(this, [])}>
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
                 </svg>
@@ -246,12 +248,7 @@ MultiFileUploadModule.propTypes = {
     deleteFile: PropTypes.func,
     onPopupClose: PropTypes.func,
     publishFile: PropTypes.func,
-    dropActionMessage: PropTypes.string,
     itemsToUpload: PropTypes.array,
-    maxFileSizeMessage: PropTypes.string,
-    popupTitle: PropTypes.string,
-    uploadBtnLabel: PropTypes.string,
-    uploadedItemsListTitle: PropTypes.string,
     withUploadButton: PropTypes.bool,
 };
 
@@ -261,11 +258,6 @@ MultiFileUploadModule.defaultProps = {
     deleteFile,
     onPopupClose: () => {},
     publishFile,
-    dropActionMessage: 'Drag and drop your files on browser window or upload them',
     itemsToUpload: [],
-    maxFileSizeMessage: 'Max file size:',
-    popupTitle: 'Multi-file upload',
-    uploadBtnLabel: 'Upload sub-items',
-    uploadedItemsListTitle: 'Uploaded',
     withUploadButton: true,
 };
