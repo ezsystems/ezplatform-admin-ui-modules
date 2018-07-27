@@ -660,7 +660,7 @@ export default class UniversalDiscoveryModule extends Component {
         const items = this.state.selectedContent;
         const { selectedItemsLimit, multiple } = this.props;
 
-        if (this.state.activeTab === TAB_CREATE) {
+        if (this.state.activeTab === TAB_CREATE || !multiple) {
             return null;
         }
 
