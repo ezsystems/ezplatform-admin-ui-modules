@@ -3,7 +3,7 @@
     border: 0 none;
     font-size: 16px;
     line-height: 30px;
-    padding: 4px 6px;
+    padding: 4px 16px;
     outline: none;
     cursor: pointer;
     transition: background .3s cubic-bezier(.25, .8, .25, 1);
@@ -31,5 +31,5 @@
 .c-tab-nav-item__icon {
     width: 18px;
     height: 18px;
-    margin-right: 8px;
+    margin-right: 4px;
 }
