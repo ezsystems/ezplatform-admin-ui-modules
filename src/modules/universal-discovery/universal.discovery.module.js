@@ -794,8 +794,14 @@ export default class UniversalDiscoveryModule extends Component {
             allowContainersOnly,
         } = this.props;
         const { activeTab, maxHeight, contentTypesMap } = this.state;
+        const isVisible = activeTab === item.id;
+
+        if (!isVisible) {
+            return null;
+        }
+
         const attrs = {
-            isVisible: activeTab === item.id,
+            isVisible,
             onItemSelect: this.onItemSelect,
             maxHeight: maxHeight - 32,
             id: item.id,
