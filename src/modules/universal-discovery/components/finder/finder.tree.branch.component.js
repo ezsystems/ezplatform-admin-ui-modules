@@ -18,7 +18,7 @@ export default class FinderTreeBranchComponent extends Component {
         };
     }
 
-    componentWillReceiveProps(props) {
+    UNSAFE_componentWillReceiveProps(props) {
         this.setState((state) =>
             Object.assign({}, state, {
                 selectedLocations: props.selectedLocations,

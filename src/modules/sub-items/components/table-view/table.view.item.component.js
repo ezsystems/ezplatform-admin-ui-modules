@@ -31,7 +31,7 @@ export default class TableViewItemComponent extends Component {
      * @memberof TableViewItemComponent
      */
     enablePriorityInput() {
-        this.setState((state) => ({ ...state, priorityInputEnabled: true }));
+        this.setState(() => ({ priorityInputEnabled: true }));
     }
 
     /**
@@ -46,7 +46,6 @@ export default class TableViewItemComponent extends Component {
         event.preventDefault();
 
         this.setState((state) => ({
-            ...state,
             priorityInputEnabled: false,
             priorityValue: state.startingPriorityValue,
         }));
@@ -68,8 +67,7 @@ export default class TableViewItemComponent extends Component {
             priority: this._refPriorityInput.value,
         });
 
-        this.setState((state) => ({
-            ...state,
+        this.setState(() => ({
             priorityValue: this._refPriorityInput.value,
             priorityInputEnabled: false,
             startingPriorityValue: this._refPriorityInput.value,
@@ -86,7 +84,7 @@ export default class TableViewItemComponent extends Component {
     storePriorityValue(event) {
         event.preventDefault();
 
-        this.setState((state) => ({ ...state, priorityValue: this._refPriorityInput.value }));
+        this.setState(() => ({ priorityValue: this._refPriorityInput.value }));
     }
 
     /**

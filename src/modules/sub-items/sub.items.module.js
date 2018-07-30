@@ -26,7 +26,6 @@ export default class SubItemsModule extends Component {
             items: props.items,
             contentTypesMap: props.contentTypesMap,
             totalCount: props.totalCount,
-            limit: props.limit,
             offset: props.offset,
             isLoading: false,
         };
@@ -39,7 +38,7 @@ export default class SubItemsModule extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(props) {
-        this.setState((state) => ({ ...state, items: [...state.items, ...props.items] }));
+        this.setState((state) => ({ items: [...state.items, ...props.items] }));
     }
 
     /**
@@ -49,7 +48,7 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     handleLoadMore() {
-        this.setState((state) => ({ ...state, offset: state.offset + state.limit }));
+        this.setState((state) => ({ offset: state.offset + this.props.limit }));
     }
 
     /**
@@ -61,13 +60,15 @@ export default class SubItemsModule extends Component {
     loadItems() {
         const parentLocationId = this.props.parentLocationId;
 
-        this.setState((state) => ({ ...state, isLoading: true }));
+        this.setState(() => ({ isLoading: true }));
 
         this.loadLocation(parentLocationId)
             .then(this.loadContentItems)
             .then(this.loadContentTypes)
             .then(this.updateItemsState)
-            .catch((error) => console.log('sub:items:load:items:error', error));
+            .catch(() =>
+                window.eZ.helpers.notification.showErrorNotification('An error occurred while loading items in the Sub Items module')
+            );
     }
 
     /**
@@ -79,14 +80,10 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadLocation(locationId) {
-        const queryConfig = {
-            locationId,
-            limit: this.state.limit,
-            offset: this.state.offset,
-            sortClauses: this.props.sortClauses,
-        };
+        const { limit, sortClauses, loadLocation, restInfo } = this.props;
+        const queryConfig = { locationId, limit, sortClauses, offset: this.state.offset };
 
-        return new Promise((resolve) => this.props.loadLocation(this.props.restInfo, queryConfig, resolve));
+        return new Promise((resolve) => loadLocation(restInfo, queryConfig, resolve));
     }
 
     /**
@@ -98,6 +95,8 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadContentItems(response) {
+        const { loadContentInfo, restInfo } = this.props;
+
         if (!response || !response.View) {
             const invalidResponseFormatMessage = Translator.trans(
                 /*@Desc("Invalid response format")*/ 'load_content_items.invalid_response_format.error.message',
@@ -114,7 +113,7 @@ export default class SubItemsModule extends Component {
             new Promise((resolve) => {
                 const contentIds = locations.map((item) => item.value.Location.ContentInfo.Content._id);
 
-                this.props.loadContentInfo(this.props.restInfo, contentIds, resolve);
+                loadContentInfo(restInfo, contentIds, resolve);
             }).then((contentInfo) => ({
                 locations,
                 totalCount: response.View.Result.count,
@@ -177,7 +176,6 @@ export default class SubItemsModule extends Component {
         }, []);
 
         this.setState((state) => ({
-            ...state,
             items: [...state.items, ...items],
             isLoading: false,
             totalCount,
@@ -244,7 +242,7 @@ export default class SubItemsModule extends Component {
 
         items.sort((a, b) => a.location.priority - b.location.priority);
 
-        return { ...state, items };
+        return { items };
     }
 
     /**
@@ -255,7 +253,7 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     switchView(activeView) {
-        this.setState((state) => ({ ...state, activeView }));
+        this.setState(() => ({ activeView }));
     }
 
     /**

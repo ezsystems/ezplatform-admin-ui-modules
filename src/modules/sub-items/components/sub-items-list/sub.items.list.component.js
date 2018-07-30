@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import TableViewComponent from '../table-view/table.view.component.js';
@@ -6,29 +6,16 @@ import GridViewComponent from '../grid-view/grid.view.component.js';
 
 import './css/sub.items.list.component.css';
 
-export default class SubItemsListComponent extends Component {
-    constructor(props) {
-        super(props);
+const views = {
+    table: TableViewComponent,
+    grid: GridViewComponent,
+};
 
-        this.state = {
-            activeView: props.activeView,
-            views: {
-                table: TableViewComponent,
-                grid: GridViewComponent,
-            },
-        };
-    }
+const SubItemsListComponent = (props) => {
+    const Component = views[props.activeView];
 
-    UNSAFE_componentWillReceiveProps(props) {
-        this.setState((state) => ({ ...state, activeView: props.activeView }));
-    }
-
-    render() {
-        const Component = this.state.views[this.state.activeView];
-
-        return <Component {...this.props} />;
-    }
-}
+    return <Component {...props} />;
+};
 
 SubItemsListComponent.propTypes = {
     activeView: PropTypes.string.isRequired,
@@ -37,3 +24,5 @@ SubItemsListComponent.propTypes = {
     handleItemPriorityUpdate: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,
 };
+
+export default SubItemsListComponent;

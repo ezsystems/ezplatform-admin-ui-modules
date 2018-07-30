@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import SelectedContentItemComponent from './selected.content.item.component';
@@ -6,20 +6,17 @@ import SelectedContentPopupComponent from './selected.content.popup.component';
 
 import './css/selected.content.component.css';
 
-export default class SelectedContentComponent extends Component {
+export default class SelectedContentComponent extends PureComponent {
     constructor(props) {
         super(props);
 
         this.state = {
-            items: [],
             isPopupVisible: false,
         };
 
+        this.hidePopup = this.hidePopup.bind(this);
         this.togglePopup = this.togglePopup.bind(this);
-    }
-
-    UNSAFE_componentWillReceiveProps(props) {
-        this.setState((state) => Object.assign({}, state, { items: props.items }));
+        this.renderSelectedItem = this.renderSelectedItem.bind(this);
     }
 
     /**
@@ -29,7 +26,7 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     togglePopup() {
-        this.setState((state) => Object.assign({}, state, { isPopupVisible: !state.isPopupVisible && !!state.items.length }));
+        this.setState((state) => ({ isPopupVisible: !state.isPopupVisible && !!state.items.length }));
     }
 
     /**
@@ -39,7 +36,7 @@ export default class SelectedContentComponent extends Component {
      * @memberof SelectedContentComponent
      */
     hidePopup() {
-        this.setState((state) => Object.assign({}, state, { isPopupVisible: false }));
+        this.setState(() => ({ isPopupVisible: false }));
     }
 
     /**
@@ -99,8 +96,8 @@ export default class SelectedContentComponent extends Component {
         }
 
         return (
-            <SelectedContentPopupComponent title={this.getTitle()} visible={this.state.isPopupVisible} onClose={this.hidePopup.bind(this)}>
-                {this.props.items.map(this.renderSelectedItem.bind(this))}
+            <SelectedContentPopupComponent title={this.getTitle()} visible={this.state.isPopupVisible} onClose={this.hidePopup}>
+                {this.props.items.map(this.renderSelectedItem)}
             </SelectedContentPopupComponent>
         );
     }
@@ -154,4 +151,8 @@ SelectedContentComponent.propTypes = {
     itemsLimit: PropTypes.number.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
+};
+
+SelectedContentComponent.defaultProps = {
+    items: [],
 };

@@ -8,7 +8,8 @@
     "scripts": {
         "build": "webpack --config webpack.prod.js",
         "builddev": "webpack --config webpack.dev.js",
-        "watch": "webpack --watch --config webpack.dev.js"
+        "watch": "webpack --watch --config webpack.dev.js",
+        "watchprod": "webpack --watch --config webpack.prod.js"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",

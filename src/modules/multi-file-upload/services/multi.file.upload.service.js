@@ -140,19 +140,13 @@ const prepareStruct = ({ parentInfo, config }, data) => {
 
     return getContentTypeByIdentifier(config, mapping.contentTypeIdentifier)
         .then((response) => response.json())
-        .catch((error) => console.log('get:content:type:error', error))
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot get content type by identifier'))
         .then((response) => {
             const fields = [
-                {
-                    fieldDefinitionIdentifier: mapping.nameFieldIdentifier,
-                    fieldValue: data.file.name,
-                },
+                { fieldDefinitionIdentifier: mapping.nameFieldIdentifier, fieldValue: data.file.name },
                 {
                     fieldDefinitionIdentifier: mapping.contentFieldIdentifier,
-                    fieldValue: {
-                        fileName: data.file.name,
-                        data: data.fileReader.result.replace(/^.*;base64,/, ''),
-                    },
+                    fieldValue: { fileName: data.file.name, data: data.fileReader.result.replace(/^.*;base64,/, '') },
                 },
             ];
 
@@ -160,11 +154,7 @@ const prepareStruct = ({ parentInfo, config }, data) => {
                 ContentCreate: {
                     ContentType: { _href: response.ContentTypeInfoList.ContentType[0]._href },
                     mainLanguageCode: parentInfo.language,
-                    LocationCreate: {
-                        ParentLocation: { _href: parentLocation },
-                        sortField: 'PATH',
-                        sortOrder: 'ASC',
-                    },
+                    LocationCreate: { ParentLocation: { _href: parentLocation }, sortField: 'PATH', sortOrder: 'ASC' },
                     Section: null,
                     alwaysAvailable: true,
                     remoteId: null,
@@ -175,7 +165,7 @@ const prepareStruct = ({ parentInfo, config }, data) => {
 
             return struct;
         })
-        .catch((error) => console.log('create:struct:error', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot create content structure'));
 };
 
 /**
@@ -303,7 +293,7 @@ export const publishFile = (data, requestEventHandlers, callback) => {
     createDraft(data, requestEventHandlers)
         .then(publishDraft.bind(null, data))
         .then(callback)
-        .catch((error) => console.log('publish:file:error', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('An error occurred while publishing a file'));
 };
 
 /**
@@ -328,5 +318,5 @@ export const deleteFile = ({ token, siteaccess }, struct, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('delete:file:error', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('An error occurred while deleting a file'));
 };

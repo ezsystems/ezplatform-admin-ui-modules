@@ -106,7 +106,7 @@ export default class UniversalDiscoveryModule extends Component {
             return null;
         }
 
-        this.setState((state) => ({ ...state, maxHeight: this._refContentContainer.clientHeight }));
+        this.setState(() => ({ maxHeight: this._refContentContainer.clientHeight }));
         this.initializeBookmarks();
     }
 
@@ -134,7 +134,7 @@ export default class UniversalDiscoveryModule extends Component {
             return;
         }
 
-        this.setState((state) => ({ canSelectContent }));
+        this.setState(() => ({ canSelectContent }));
     }
 
     /**
@@ -150,8 +150,7 @@ export default class UniversalDiscoveryModule extends Component {
 
         bookmarksLoaded
             .then(({ BookmarkList }) =>
-                this.setState((state) => ({
-                    ...state,
+                this.setState(() => ({
                     userBookmarksCount: BookmarkList.count,
                     userBookmarksItems: BookmarkList.items,
                 }))
@@ -171,7 +170,7 @@ export default class UniversalDiscoveryModule extends Component {
 
         contentMeta.CurrentVersion = currentVersion;
 
-        this.setState((state) => ({ ...state, contentMeta, isPreviewMetaReady: true }));
+        this.setState(() => ({ contentMeta, isPreviewMetaReady: true }));
     }
 
     /**
@@ -217,7 +216,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @method setCreateModeState
      */
     setCreateModeState() {
-        this.setState((state) => ({ ...state, isCreateMode: true }));
+        this.setState(() => ({ isCreateMode: true }));
     }
 
     /**
@@ -257,7 +256,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {String} id
      */
     onItemRemove(id) {
-        this.setState((state) => ({ ...state, selectedContent: state.selectedContent.filter((item) => item.id !== id) }));
+        this.setState((state) => ({ selectedContent: state.selectedContent.filter((item) => item.id !== id) }));
     }
 
     /**
@@ -270,8 +269,7 @@ export default class UniversalDiscoveryModule extends Component {
         const isLocationAllowed = !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
         const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
 
-        this.setState((state) => ({
-            ...state,
+        this.setState(() => ({
             contentMeta: contentMetaWithContentTypeInfo,
             isLocationAllowed,
             isPreviewMetaReady: false,
@@ -353,7 +351,7 @@ export default class UniversalDiscoveryModule extends Component {
 
             bookmarked[locationId] = isBookmarked;
 
-            return { ...state, bookmarked };
+            return { bookmarked };
         });
     }
 
@@ -417,7 +415,6 @@ export default class UniversalDiscoveryModule extends Component {
     onBookmarkRemoved(itemToRemoveLocation) {
         this.setState(
             (state) => ({
-                ...state,
                 userBookmarksCount: state.userBookmarksCount - 1,
                 userBookmarksItems: state.userBookmarksItems.filter((item) => !areSameLocations(item.Location, itemToRemoveLocation)),
             }),
@@ -445,7 +442,6 @@ export default class UniversalDiscoveryModule extends Component {
     onBookmarkAdded(addedBookmarkLocation) {
         this.setState(
             (state) => ({
-                ...state,
                 userBookmarksCount: state.userBookmarksCount + 1,
                 userBookmarksItems: [{ Location: addedBookmarkLocation }, ...state.userBookmarksItems],
             }),
@@ -468,7 +464,6 @@ export default class UniversalDiscoveryModule extends Component {
 
         this.setState(
             (state) => ({
-                ...state,
                 bookmarksDuringLoadingCount: state.bookmarksDuringLoadingCount - items.length,
                 userBookmarksItems: [...items, ...state.userBookmarksItems],
             }),
@@ -510,7 +505,6 @@ export default class UniversalDiscoveryModule extends Component {
             }
 
             return {
-                ...state,
                 bookmarksDuringLoadingCount: bookmarksDuringLoadingCount + bookmarksToLoadCount,
                 bookmarksRequiredCount: newBookmarksRequiredCount,
             };
@@ -524,7 +518,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {String} selectedLanguage
      */
     onLanguageSelected(selectedLanguage) {
-        this.setState((state) => ({ ...state, selectedLanguage }));
+        this.setState(() => ({ selectedLanguage }));
     }
 
     /**
@@ -534,7 +528,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {Object} selectedContentType
      */
     onContentTypeSelected(selectedContentType) {
-        this.setState((state) => ({ ...state, selectedContentType }));
+        this.setState(() => ({ selectedContentType }));
     }
 
     /**
@@ -545,7 +539,7 @@ export default class UniversalDiscoveryModule extends Component {
     updateSelectedContent(location) {
         const selectedContent = !this.props.multiple ? [location] : [...this.state.selectedContent, location];
 
-        this.setState((state) => ({ ...state, selectedContent }));
+        this.setState(() => ({ selectedContent }));
     }
 
     /**
@@ -584,7 +578,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {String} activeTab
      */
     togglePanel(activeTab) {
-        this.setState((state) => ({ ...state, activeTab, ...CONTENT_META_PREVIEW_BASE_STATE }));
+        this.setState(() => ({ activeTab, ...CONTENT_META_PREVIEW_BASE_STATE }));
     }
 
     /**
@@ -593,7 +587,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @method closeContentMetaPreview
      */
     closeContentMetaPreview() {
-        this.setState((state) => ({ ...state, ...CONTENT_META_PREVIEW_BASE_STATE }));
+        this.setState(() => ({ ...CONTENT_META_PREVIEW_BASE_STATE }));
     }
 
     /**
@@ -613,7 +607,7 @@ export default class UniversalDiscoveryModule extends Component {
             return total;
         }, {});
 
-        this.setState((state) => ({ ...state, contentTypesMap }));
+        this.setState(() => ({ contentTypesMap }));
     }
 
     /**
@@ -865,7 +859,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @returns {Element}
      */
     renderConfirmBtn() {
-        const { activeTab, selectedContent, contentMeta, canSelectContent, isPreviewMetaReady } = this.state;
+        const { activeTab, selectedContent, canSelectContent, isPreviewMetaReady } = this.state;
         const { multiple } = this.props;
         const onClick = multiple ? this.handleConfirm : this.handleSingleConfirm;
         const attrs = { className: 'm-ud__action--confirm', onClick };
@@ -910,7 +904,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {Object} response
      */
     updatePermissionsState(response) {
-        this.setState((state) => ({ ...state, hasPermission: response.access }));
+        this.setState(() => ({ hasPermission: response.access }));
     }
 
     /**

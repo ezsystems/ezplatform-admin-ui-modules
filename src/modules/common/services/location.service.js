@@ -27,7 +27,7 @@ export const loadLocation = (locationId = 2, limit = 10, offset = 0, callback) =
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch((error) => console.log('error:load:location', error));
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot load location'));
 };
 
 export const findLocationsByParentLocationId = (parentLocationId, callback) => {
@@ -56,11 +56,6 @@ export const findLocationsByParentLocationId = (parentLocationId, callback) => {
 
     fetch(request)
         .then(handleRequestResponse)
-        .then((json) =>
-            callback({
-                parentLocationId,
-                data: json,
-            })
-        )
-        .catch((error) => console.log('error:find:locations:by:parent:location:id', error));
+        .then((json) => callback({ parentLocationId, data: json }))
+        .catch(() => window.eZ.helpers.notification.showErrorNotification('Cannot find children locations by a parent location id'));
 };
