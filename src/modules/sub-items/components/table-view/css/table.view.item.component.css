@@ -37,7 +37,7 @@
 .c-table-view-item__priority-actions {
     position: absolute;
     left: 7ch;
-    top: 1px;
+    top: 2px;
     width: 90px;
 }
 
@@ -64,7 +64,7 @@
     max-width: 100%;
     height: 40px;
     border: 1px solid #b1d2e0;
-    margin-top: 3px;
+    margin: 2px 0;
     padding: 0 10px;
 }
 
@@ -79,14 +79,13 @@
     border: 1px solid transparent;
     height: 40px;
     min-width: 40px;
-    padding: 0 8px;
+    padding: 7px 8px;
     transition: background .3s ease-in-out;
     cursor: pointer;
-    padding: 0;
 }
 
 .c-table-view-item__btn--submit {
-    background: #f15a10;
+    background: #106d95;
 }
 
 .c-table-view-item__btn--edit .c-table-view-item__btn-inner {
@@ -98,16 +97,16 @@
 
 .c-table-view-item__btn--submit:hover,
 .c-table-view-item__btn--submit:focus {
-    background: #c3480b;
+    background: #093a50;
 }
 
 .c-table-view-item__btn--cancel {
-    background: #cb2540;
+    background: #646464;
 }
 
 .c-table-view-item__btn--cancel:hover,
 .c-table-view-item__btn--cancel:focus {
-    background: #a01d32;
+    background: #3e3e3e;
 }
 
 .c-table-view-item__btn--edit {
