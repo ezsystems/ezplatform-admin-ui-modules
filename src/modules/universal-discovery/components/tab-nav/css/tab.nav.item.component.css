@@ -22,7 +22,7 @@
 .c-tab-nav-item--selected,
 .c-tab-nav-item--selected:hover,
 .c-tab-nav-item--selected:focus {
-    background: #e3e3e3;
+    background: #e5e3e3;
     color: #333;
     font-weight: 700;
     border-radius: 4px 4px 0 0;
