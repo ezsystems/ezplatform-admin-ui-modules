@@ -1,13 +1,13 @@
 export const NOTIFICATION_INFO_LABEL = 'info';
 export const NOTIFICATION_SUCCESS_LABEL = 'success';
 export const NOTIFICATION_WARNING_LABEL = 'warning';
-export const NOTIFICATION_DANGER_LABEL = 'danger';
+export const NOTIFICATION_ERROR_LABEL = 'danger';
 
 /**
  * Dispatches notification event
  *
  * @method showNotification
- * @param {Object} detail
+ * @param {{message: string, label: string}} detail
  */
 export const showNotification = (detail) => {
     const event = new CustomEvent('ez-notify', {
@@ -57,24 +57,17 @@ export const showWarningNotification = (message) => {
 };
 
 /**
- * Dispatches danger notification event
- *
- * @method showDangerNotification
- * @param {String} message
- */
-export const showDangerNotification = (message) => {
-    showNotification({
-        message,
-        label: NOTIFICATION_DANGER_LABEL,
-    });
-};
-
-/**
- * Dispatches danger notification event
+ * Dispatches error notification event
  *
  * @method showErrorNotification
- * @param {Error} error
+ * @param {(string|Error)} error
  */
 export const showErrorNotification = (error) => {
-    showDangerNotification(error.message);
+    const isErrorObj = error instanceof Error;
+    const message = isErrorObj ? error.message : error;
+
+    showNotification({
+        message,
+        label: NOTIFICATION_ERROR_LABEL,
+    });
 };
