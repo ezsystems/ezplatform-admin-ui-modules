@@ -1,5 +1,5 @@
 .c-select-content-button {
-    background: #106d95;
+    background: #e5e3e3;
     border: none;
     border-radius: 50%;
     padding: 5px;
@@ -7,4 +7,16 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+.c-select-content-button .ez-icon {
+	fill: #878787;
+}
+
+.c-select-content-button--selected {
+	background: #00825c;
+}
+
+.c-select-content-button--selected .ez-icon {
+	fill: #fff;
 }
