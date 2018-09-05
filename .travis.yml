@@ -1,0 +1,41 @@
+language: php
+
+cache:
+    directories:
+      - $HOME/.composer/cache
+
+env:
+  global:
+    # For acceptance tests
+    - EZPLATFORM_REPO="https://github.com/ezsystems/ezplatform.git"
+    - COMPOSE_FILE="doc/docker/base-dev.yml:doc/docker/selenium.yml"
+    - BEHAT_OPTS="--profile=adminuimodules --no-interaction -vv"
+    - SYMFONY_ENV=behat
+
+# test only master and stable branches (+ Pull requests)
+branches:
+    only:
+        - master
+        - /^\d+\.\d+$/
+
+notifications:
+  slack:
+    rooms:
+      - secure: kCYSDmzs1tK5n02Az0gyiGXEPzMw7bLnQ2h2mXWSoysGllLJA55360IJIveDx55+P/XZr8r9FFkZ6es76dESbNubetGkVPxNyZ+Nyxs2FE80GH28e8OihjFL880ZW5Ud/pWqBwzYyNU6XhW82lLBE8pcEnOIDBkFeHLTq3aNhur+6vY2m7tAdP93chGDjMjSTy01qzD02F4B3YrnyQmTZPDdEPaZerpfxrE62Msj7rMIF0WwdJcSEVmIXG/+3CMiqoZSHfU9JGcpn94xBJOqTDHU1QqB5sTT45udEH5d/2+6Yh3kLrCm/zi+h/WK6YSmknUHQAxf4keRQ0DJ5LCwfG2gexcqyhLFf/YESPb6PP49/vaKmmy7i1T4jhhEe0G/X9ucOcfUZ7hLGxE1bkrwADy9h3+YxOKOqEn24sEv7zWYDDL6pVHt3N5gcwCnSwZKp3mBXW6v4dhiYBspcNEODj+rI13CP82H/zjtp/dhCIjJv2TsL03Ei84Fzqc05El1/aykONzkYfEJDHbab2yS0ioiQJdo5ZzyAXQkHjOuHCR0bSPNx6c8vhfSVFPSwSah53OYLrpB3+hURFWbo15zfiEBnRZ0moq8eiVEHT2G8RdgSvb8nD6EtsjhCKKlEawreTjqYcgmxdcJVvJ7s8ym9Hv3isYfmwZgsv9Hll3Mt60=
+    on_success: change
+    on_failure: always
+    on_pull_requests: false
+
+install:
+    # Disable XDebug for performance
+    - phpenv config-rm xdebug.ini
+    # Get latest composer build
+    - travis_retry composer selfupdate
+    # Avoid memory issues on composer install
+    - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+    # Prepare Behat environment
+    - ./.travis/prepare_ezplatform.sh
+
+script:
+    - cd "$HOME/build/ezplatform"; 
+    - docker-compose exec --user www-data app sh -c "./bin/behat $BEHAT_OPTS"
