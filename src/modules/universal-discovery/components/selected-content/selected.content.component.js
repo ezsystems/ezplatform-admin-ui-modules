@@ -26,7 +26,7 @@ export default class SelectedContentComponent extends PureComponent {
      * @memberof SelectedContentComponent
      */
     togglePopup() {
-        this.setState((state) => ({ isPopupVisible: !state.isPopupVisible && !!state.items.length }));
+        this.setState((state, props) => ({ isPopupVisible: !state.isPopupVisible && !!props.items.length }));
     }
 
     /**
