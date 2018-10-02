@@ -156,6 +156,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const content = data.ContentInfo.Content;
         const contentTypeIdentifier = content.ContentTypeInfo.identifier;
         const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+        const { formatShortDateWithTimezone } = window.eZ.helpers.timezone;
         const translations = this.getTranslations(data);
         const title = Translator.trans(/*@Desc("Content Meta Preview")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');
         const lastModifiedLabel = Translator.trans(
@@ -189,11 +190,11 @@ export default class ContentMetaPreviewComponent extends Component {
                         <div className="c-meta-preview__name">{content.Name}</div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{lastModifiedLabel}:</h3>
-                            {new Date(content.lastModificationDate).toLocaleString()}
+                            {formatShortDateWithTimezone(new Date(content.lastModificationDate))}
                         </div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{creationDateLabel}:</h3>
-                            {new Date(content.publishedDate).toLocaleString()}
+                            {formatShortDateWithTimezone(new Date(content.publishedDate))}
                         </div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{translationsLabel}:</h3>
