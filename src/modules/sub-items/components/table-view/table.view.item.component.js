@@ -167,7 +167,7 @@ export default class TableViewItemComponent extends Component {
         const { content, location, contentTypesMap, generateLink, languages } = this.props;
         const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_type.not_available.label', {}, 'sub_items');
         const editLabel = Translator.trans(/*@Desc("Edit")*/ 'edit_item_btn.label', {}, 'sub_items');
-        const date = new Date(content.lastModificationDate);
+        const { formatShortDateWithTimezone } = window.eZ.helpers.timezone;
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeName = contentType ? contentType.names.value[0]['#text'] : notAvailableLabel;
         const linkAttrs = {
@@ -186,9 +186,7 @@ export default class TableViewItemComponent extends Component {
                 </td>
                 <td className="c-table-view-item__cell--modified">
                     <div className="c-table-view-item__text-wrapper">
-                        {date.toLocaleDateString()}
-                        <br />
-                        {date.toLocaleTimeString()}
+                        {formatShortDateWithTimezone(new Date(content.lastModificationDate))}
                     </div>
                 </td>
                 <td className="c-table-view-item__cell--content-type">
