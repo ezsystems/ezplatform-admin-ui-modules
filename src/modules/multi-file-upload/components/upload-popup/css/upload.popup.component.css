@@ -9,7 +9,7 @@
     color: #333;
 }
 
-.c-upload-popup .c-popup {
+.c-upload-popup .c-tooltip-popup {
     width: 100%;
     max-width: 774px;
     position: absolute;
@@ -20,7 +20,7 @@
     padding: 0;
 }
 
-.c-upload-popup .c-popup__title {
+.c-upload-popup .c-tooltip-popup__title {
     background: #dbdbdb;
     height: 60px;
     margin: 0;

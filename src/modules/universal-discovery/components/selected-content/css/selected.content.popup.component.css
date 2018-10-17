@@ -1,25 +1,25 @@
-.c-selected-content-popup .c-popup {
+.c-selected-content-popup .c-tooltip-popup {
     padding: 8px;
     min-width: 400px;
 }
 
-.c-selected-content-popup .c-popup__content {
+.c-selected-content-popup .c-tooltip-popup__content {
     display: flex;
     flex-wrap: wrap;
 }
 
-.c-selected-content-popup .c-popup__header {
+.c-selected-content-popup .c-tooltip-popup__header {
     margin-bottom: 4px;
     margin-left: 6px;
 }
 
-.c-selected-content-popup .c-popup__title {
+.c-selected-content-popup .c-tooltip-popup__title {
     color: #2b84b1;
     font-size: 17px;
     line-height: 20px;
 }
 
-.c-selected-content-popup .c-popup__close {
+.c-selected-content-popup .c-tooltip-popup__close {
     right: 0;
 }
 

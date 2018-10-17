@@ -1,5 +1,5 @@
 import { showErrorNotification } from '../../common/services/notification.service';
-import { handleRequestResponse } from '../helpers/request.helper.js';
+import { handleRequestResponse } from '../../common/helpers/request.helper.js';
 
 const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',

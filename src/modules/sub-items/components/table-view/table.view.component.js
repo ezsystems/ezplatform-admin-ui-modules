@@ -150,11 +150,11 @@ export default class TableViewComponent extends Component {
      *
      * @method renderItem
      * @param {Object} data
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof TableViewComponent
      */
     renderItem(data) {
-        const { contentTypesMap, handleItemPriorityUpdate, handleEditItem, generateLink, languages } = this.props;
+        const { contentTypesMap, handleItemPriorityUpdate, handleEditItem, generateLink, languages, onItemSelect } = this.props;
 
         return (
             <TableViewItemComponent
@@ -165,6 +165,7 @@ export default class TableViewComponent extends Component {
                 languages={languages}
                 handleEditItem={handleEditItem}
                 generateLink={generateLink}
+                onItemSelect={onItemSelect}
             />
         );
     }
@@ -173,7 +174,7 @@ export default class TableViewComponent extends Component {
      * Renders no items message
      *
      * @method renderNoItems
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof TableViewComponent
      */
     renderNoItems() {
@@ -190,7 +191,7 @@ export default class TableViewComponent extends Component {
      * Renders table's head
      *
      * @method renderHead
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof GridViewComponent
      */
     renderHead() {
@@ -220,6 +221,7 @@ export default class TableViewComponent extends Component {
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
+                    <td />
                     <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
                         <span className="c-table-view__label">{headerNameLabel}</span>
                     </td>
@@ -260,4 +262,5 @@ TableViewComponent.propTypes = {
     generateLink: PropTypes.func.isRequired,
     handleEditItem: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
 };

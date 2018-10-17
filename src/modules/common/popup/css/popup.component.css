@@ -1,39 +1,90 @@
-.c-popup {
-    background: #ededed;
-    padding: 16px;
-    box-shadow: 0 0 30px 0 rgba(0,0,0,.35);
+body.ezs-non-scrollable {
+    overflow: hidden;
     position: relative;
-    border-radius: 4px;
+}
+
+/* .c-popup__dialog {
+    z-index: 1000000;
+    height: 80vh;
+} */
+
+.c-popup__content {
+    width: 100%;
+    height: 100%;
+}
+
+.c-popup__btn--close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 56px;
+    height: 56px;
 }
 
 .c-popup__header {
+    display: block;
+    background: #dbdbdb;
+    font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    padding: 8px 16px;
+}
+
+.c-popup__header--plain {
+    border-bottom: none;
+    padding: 15px 15px 0 15px;
     position: relative;
+    min-height: 2.5rem;
+    background: #ededed;
+}
+
+.c-popup__footer--plain {
+    border-top: none;
+}
+
+.c-popup__body {
+    /* height: calc(100% - 60px); */
+    padding: 16px 0 0;
+}
+
+.c-popup__body .modal-body {
+    padding: 0;
+}
+
+.c-popup__headline {
+    max-width: calc(100% - 56px);
 }
 
 .c-popup__title {
-    margin-top: 0;
+    line-height: 1;
+    display: block;
+    font-size: 24px;
 }
 
-.c-popup__close {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    top: 0;
-    bottom: 0;
-    right: 16px;
+.c-popup__subtitle {
+    display: inline-block;
+    color: #646464;
+    font-size: 14px;
     font-weight: 400;
-    font-size: 32px;
-    cursor: pointer;
+    position: relative;
+    top: -4px;
+    left: 1px;
 }
 
-.c-popup__close .ez-icon {
-    width: 24px;
-    height: 24px;
-    fill: #333;
-    opacity: .5;
-    transition: opacity .3s cubic-bezier(.25, .8, .25, 1);
+/* .c-popup--airtime .c-popup__btns {
+    display: flex;
+    justify-content: center;
+    margin: 16px;
 }
 
-.c-popup__close .ez-icon:hover {
-    opacity: 1;
+.c-popup--airtime .c-popup__btns .btn {
+    margin-right: 16px;
 }
+
+.c-popup--airtime .c-popup__body {
+    padding: 16px;
+}
+
+.c-popup--airtime .c-popup__dialog {
+    height: auto;
+    width: 342px;
+} */

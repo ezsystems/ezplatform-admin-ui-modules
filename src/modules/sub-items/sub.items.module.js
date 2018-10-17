@@ -8,6 +8,8 @@ import LoadMoreComponent from './components/load-more/load.more.component.js';
 import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
 
 import './css/sub.items.module.css';
+import BulkMoveButton from './components/bulk-move/bulk.move.btn.js';
+import BulkDeleteButton from './components/bulk-delete/bulk.delete.btn.js';
 
 export default class SubItemsModule extends Component {
     constructor(props) {
@@ -20,10 +22,13 @@ export default class SubItemsModule extends Component {
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.switchView = this.switchView.bind(this);
         this.handleItemPriorityUpdate = this.handleItemPriorityUpdate.bind(this);
+        this.onItemSelect = this.onItemSelect.bind(this);
+        this.getSelectedItems = this.getSelectedItems.bind(this);
+        this.removeItemsFromList = this.removeItemsFromList.bind(this);
 
         this.state = {
             activeView: props.activeView,
-            items: props.items,
+            items: props.items.map((item) => ({ ...item, isSelected: false })),
             contentTypesMap: props.contentTypesMap,
             totalCount: props.totalCount,
             offset: props.offset,
@@ -81,7 +86,8 @@ export default class SubItemsModule extends Component {
      */
     loadLocation(locationId) {
         const { limit, sortClauses, loadLocation, restInfo } = this.props;
-        const queryConfig = { locationId, limit, sortClauses, offset: this.state.offset };
+        const { items } = this.state;
+        const queryConfig = { locationId, limit, sortClauses, offset: items.length };
 
         return new Promise((resolve) => loadLocation(restInfo, queryConfig, resolve));
     }
@@ -159,7 +165,7 @@ export default class SubItemsModule extends Component {
      * Updates module state by updating items list
      *
      * @method updateItemsState
-     * @param {Array} responses
+     * @param {Object} responses
      * @memberof SubItemsModule
      */
     updateItemsState({ locations, content, totalCount, contentTypes }) {
@@ -171,6 +177,7 @@ export default class SubItemsModule extends Component {
                 {
                     location: itemLocation,
                     content: content.find((item) => item.value.Content._id === itemLocation.ContentInfo.Content._id).value.Content,
+                    isSelected: false,
                 },
             ];
         }, []);
@@ -179,7 +186,10 @@ export default class SubItemsModule extends Component {
             items: [...state.items, ...items],
             isLoading: false,
             totalCount,
-            contentTypesMap: this.buildContentTypesMap(contentTypes),
+            contentTypesMap: {
+                ...state.contentTypesMap,
+                ...this.buildContentTypesMap(contentTypes),
+            },
         }));
     }
 
@@ -256,12 +266,44 @@ export default class SubItemsModule extends Component {
         this.setState(() => ({ activeView }));
     }
 
+    onItemSelect(contentId, isSelected) {
+        const { items } = this.state;
+        const itemIdx = items.findIndex((item) => item.content._id == contentId);
+        const item = items[itemIdx];
+        const updatedItems = [...items];
+
+        updatedItems.splice(itemIdx, 1, { ...item, isSelected });
+
+        this.setState(() => ({
+            items: updatedItems,
+        }));
+    }
+
+    getSelectedItems() {
+        const { items } = this.state;
+
+        return items.filter((item) => item.isSelected);
+    }
+
+    removeItemsFromList(predicate) {
+        this.setState((state) => {
+            const { items } = state;
+            const nextItems = items.filter((item) => !predicate(item));
+            const removedItemsCount = items.length - nextItems.length;
+
+            return {
+                items: nextItems,
+                totalCount: state.totalCount - removedItemsCount,
+            };
+        });
+    }
+
     /**
      * Renders extra actions
      *
      * @method renderExtraActions
      * @param {Object} action
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof SubItemsModule
      */
     renderExtraActions(action, index) {
@@ -274,7 +316,7 @@ export default class SubItemsModule extends Component {
      * Renders load more button
      *
      * @method renderLoadMore
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof SubItemsModule
      */
     renderLoadMore() {
@@ -292,6 +334,32 @@ export default class SubItemsModule extends Component {
         );
     }
 
+    renderBulkMoveBtn(selectedItems) {
+        const { restInfo, parentLocationId } = this.props;
+
+        return (
+            <BulkMoveButton
+                selectedItems={selectedItems}
+                removeItemsFromList={this.removeItemsFromList}
+                parentLocationId={parentLocationId}
+                restInfo={restInfo}
+            />
+        );
+    }
+
+    renderBulkDeleteBtn(selectedItems) {
+        const { restInfo, parentLocationId } = this.props;
+
+        return (
+            <BulkDeleteButton
+                selectedItems={selectedItems}
+                removeItemsFromList={this.removeItemsFromList}
+                parentLocationId={parentLocationId}
+                restInfo={restInfo}
+            />
+        );
+    }
+
     render() {
         let listClassName = 'm-sub-items__list';
 
@@ -300,6 +368,7 @@ export default class SubItemsModule extends Component {
         }
 
         const listTitle = Translator.trans(/*@Desc("Sub-items")*/ 'items_list.title', {}, 'sub_items');
+        const selectedItems = this.getSelectedItems();
 
         return (
             <div className="m-sub-items">
@@ -307,7 +376,11 @@ export default class SubItemsModule extends Component {
                     <div className="m-sub-items__title">
                         {listTitle} ({this.state.totalCount})
                     </div>
-                    <div className="m-sub-items__actions">{this.props.extraActions.map(this.renderExtraActions)}</div>
+                    <div className="m-sub-items__actions">
+                        {this.props.extraActions.map(this.renderExtraActions)}
+                        {this.renderBulkMoveBtn(selectedItems)}
+                        {this.renderBulkDeleteBtn(selectedItems)}
+                    </div>
                     <ViewSwitcherComponent
                         onViewChange={this.switchView}
                         activeView={this.state.activeView}
@@ -323,6 +396,7 @@ export default class SubItemsModule extends Component {
                         languages={this.props.languages}
                         handleEditItem={this.props.handleEditItem}
                         generateLink={this.props.generateLink}
+                        onItemSelect={this.onItemSelect}
                     />
                 </div>
                 {this.renderLoadMore()}

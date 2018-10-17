@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import './css/table.view.item.component.css';
 
-export default class TableViewItemComponent extends Component {
+export default class TableViewItemComponent extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -12,16 +12,13 @@ export default class TableViewItemComponent extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.onSelectCheckboxChange = this.onSelectCheckboxChange.bind(this);
 
         this.state = {
             priorityValue: props.location.priority,
             priorityInputEnabled: false,
             startingPriorityValue: props.location.priority,
         };
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.state.priorityInputEnabled !== nextState.priorityInputEnabled;
     }
 
     /**
@@ -101,7 +98,7 @@ export default class TableViewItemComponent extends Component {
      * Renders a priority cell with input field
      *
      * @method renderPriorityCell
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof TableViewItemComponent
      */
     renderPriorityCell() {
@@ -115,9 +112,10 @@ export default class TableViewItemComponent extends Component {
 
         if (!this.state.priorityInputEnabled) {
             inputAttrs.disabled = true;
+            delete inputAttrs.defaultValue;
             inputAttrs.value = this.state.priorityValue;
             priorityWrapperAttrs.onClick = this.enablePriorityInput;
-            priorityWrapperAttrs.className = 'c-table-view-item__inner-wrapper--disabled';
+            priorityWrapperAttrs.className = 'c-table-view-item__inner-wrapper c-table-view-item__inner-wrapper--disabled';
             innerWrapperAttrs.hidden = true;
         }
 
@@ -152,7 +150,7 @@ export default class TableViewItemComponent extends Component {
      * Renders a translation item
      *
      * @method renderTranslation
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof TableViewItemComponent
      */
     renderTranslation(translation, index) {
@@ -163,8 +161,19 @@ export default class TableViewItemComponent extends Component {
         );
     }
 
+    /**
+     *
+     * @param {Event} event
+     */
+    onSelectCheckboxChange(event) {
+        const { content, onItemSelect } = this.props;
+        const isSelected = event.target.checked;
+
+        onItemSelect(content._id, isSelected);
+    }
+
     render() {
-        const { content, location, contentTypesMap, generateLink, languages } = this.props;
+        const { content, location, isSelected, contentTypesMap, generateLink, languages } = this.props;
         const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_type.not_available.label', {}, 'sub_items');
         const editLabel = Translator.trans(/*@Desc("Edit")*/ 'edit_item_btn.label', {}, 'sub_items');
         const { formatShortDateWithTimezone } = window.eZ.helpers.timezone;
@@ -181,6 +190,9 @@ export default class TableViewItemComponent extends Component {
 
         return (
             <tr className="c-table-view-item">
+                <td className="c-table-view-item__cell--checkbox">
+                    <input type="checkbox" checked={isSelected} onChange={this.onSelectCheckboxChange} />
+                </td>
                 <td className="c-table-view-item__cell--name">
                     <a {...linkAttrs}>{content.Name}</a>
                 </td>
@@ -213,9 +225,11 @@ export default class TableViewItemComponent extends Component {
 TableViewItemComponent.propTypes = {
     content: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
+    isSelected: PropTypes.bool.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     onItemPriorityUpdate: PropTypes.func.isRequired,
     handleEditItem: PropTypes.func.isRequired,
     generateLink: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
 };

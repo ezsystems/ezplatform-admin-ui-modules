@@ -23,6 +23,7 @@ SubItemsListComponent.propTypes = {
     contentTypesMap: PropTypes.object.isRequired,
     handleItemPriorityUpdate: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
 };
 
 export default SubItemsListComponent;
