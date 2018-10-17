@@ -221,7 +221,7 @@ export default class TableViewComponent extends Component {
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
-                    <td />
+                    <td className={cellHeadClass} />
                     <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
                         <span className="c-table-view__label">{headerNameLabel}</span>
                     </td>
@@ -234,7 +234,7 @@ export default class TableViewComponent extends Component {
                     <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority}>
                         <span className="c-table-view__label">{headerPriorityLabel}</span>
                     </td>
-                    <td className={cellHeadClass} colSpan="2">
+                    <td className={cellHeadClass} colSpan={2}>
                         <span className="c-table-view__label">{headerTranslationsLabel}</span>
                     </td>
                 </tr>
