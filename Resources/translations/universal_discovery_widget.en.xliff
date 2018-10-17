@@ -156,6 +156,11 @@
         <target state="new">Previous</target>
         <note>key: pagination.prev</note>
       </trans-unit>
+      <trans-unit id="fde645e6790429ce2f904099b7aa2712224be9aa" resname="popup.close.label">
+        <source>Close</source>
+        <target state="new">Close</target>
+        <note>key: popup.close.label</note>
+      </trans-unit>
       <trans-unit id="446c59c15f6d865a1d0ddd1c86711a7fc276cbb8" resname="search.content_table.title">
         <source>Search results</source>
         <target state="new">Search results</target>
