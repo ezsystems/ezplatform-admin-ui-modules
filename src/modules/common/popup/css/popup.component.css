@@ -1,13 +1,3 @@
-body.ezs-non-scrollable {
-    overflow: hidden;
-    position: relative;
-}
-
-/* .c-popup__dialog {
-    z-index: 1000000;
-    height: 80vh;
-} */
-
 .c-popup__content {
     width: 100%;
     height: 100%;
@@ -29,20 +19,7 @@ body.ezs-non-scrollable {
     padding: 8px 16px;
 }
 
-.c-popup__header--plain {
-    border-bottom: none;
-    padding: 15px 15px 0 15px;
-    position: relative;
-    min-height: 2.5rem;
-    background: #ededed;
-}
-
-.c-popup__footer--plain {
-    border-top: none;
-}
-
 .c-popup__body {
-    /* height: calc(100% - 60px); */
     padding: 16px 0 0;
 }
 
@@ -70,21 +47,14 @@ body.ezs-non-scrollable {
     left: 1px;
 }
 
-/* .c-popup--airtime .c-popup__btns {
-    display: flex;
-    justify-content: center;
-    margin: 16px;
+.c-popup--no-header .c-popup__header {
+    border-bottom: none;
+    padding: 15px 15px 0 15px;
+    position: relative;
+    min-height: 2.5rem;
+    background: #ededed;
 }
 
-.c-popup--airtime .c-popup__btns .btn {
-    margin-right: 16px;
+.c-popup--no-header .c-popup__footer {
+    border-top: none;
 }
-
-.c-popup--airtime .c-popup__body {
-    padding: 16px;
-}
-
-.c-popup--airtime .c-popup__dialog {
-    height: auto;
-    width: 342px;
-} */

@@ -71,5 +71,9 @@ const makeBulkRequest = ({ token, siteaccess }, body, callback) => {
     fetch(request)
         .then(handleRequestResponse)
         .then(callback)
-        .catch(() => window.eZ.helpers.notification.showErrorNotification('Bulk request failed'));
+        .catch(() => {
+            const message = Translator.trans(/*@Desc("Bulk request failed")*/ 'bulk_request.error.message', {}, 'sub_items');
+
+            window.eZ.helpers.notification.showErrorNotification(message);
+        });
 };

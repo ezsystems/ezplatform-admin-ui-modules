@@ -268,11 +268,11 @@ export default class SubItemsModule extends Component {
 
     onItemSelect(contentId, isSelected) {
         const { items } = this.state;
-        const itemIdx = items.findIndex((item) => item.content._id == contentId);
-        const item = items[itemIdx];
+        const itemIndex = items.findIndex((item) => item.content._id == contentId);
+        const item = items[itemIndex];
         const updatedItems = [...items];
 
-        updatedItems.splice(itemIdx, 1, { ...item, isSelected });
+        updatedItems.splice(itemIndex, 1, { ...item, isSelected });
 
         this.setState(() => ({
             items: updatedItems,
@@ -285,14 +285,17 @@ export default class SubItemsModule extends Component {
         return items.filter((item) => item.isSelected);
     }
 
-    removeItemsFromList(predicate) {
+    /**
+     * @param {Function} shouldItemStay
+     */
+    removeItemsFromList(shouldItemStay) {
         this.setState((state) => {
             const { items } = state;
-            const nextItems = items.filter((item) => !predicate(item));
-            const removedItemsCount = items.length - nextItems.length;
+            const filteredItems = items.filter((item) => !shouldItemStay(item));
+            const removedItemsCount = items.length - filteredItems.length;
 
             return {
-                items: nextItems,
+                items: filteredItems,
                 totalCount: state.totalCount - removedItemsCount,
             };
         });

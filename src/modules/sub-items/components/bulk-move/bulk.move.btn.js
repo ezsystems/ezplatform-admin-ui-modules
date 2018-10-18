@@ -28,34 +28,37 @@ class BulkMoveButton extends PureComponent {
     }
 
     bulkMove(location) {
-        const { restInfo, selectedItems: itemsToMove, removeItemsFromList } = this.props;
+        const { restInfo, selectedItems: itemsToMove } = this.props;
         const contentsToMove = itemsToMove.map((item) => item.location);
 
-        bulkMoveLocations(restInfo, contentsToMove, location, (movedLocations, notMoved) => {
-            const movedContentsIds = movedLocations.map((content) => content.id);
+        bulkMoveLocations(restInfo, contentsToMove, location, this.afterBulkMove.bind(this, location));
+    }
 
-            removeItemsFromList((item) => movedContentsIds.includes(item.location.id));
+    afterBulkMove(location, movedLocations, notMoved) {
+        const { removeItemsFromList } = this.props;
+        const movedContentsIds = movedLocations.map((content) => content.id);
 
-            if (notMoved.length > 0) {
-                const message = Translator.trans(
-                    /*@Desc("You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
-                    {},
-                    'sub_items'
-                );
+        removeItemsFromList((item) => movedContentsIds.includes(item.location.id));
 
-                window.eZ.helpers.notification.showErrorNotification(message);
-            }
+        if (notMoved.length) {
+            const message = Translator.trans(
+                /*@Desc("You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
+                {},
+                'sub_items'
+            );
 
-            if (movedLocations.length > 0) {
-                const message = Translator.trans(
-                    /*@Desc("The selected content item(s) have been sent to <i>%location_name%</i>")*/ 'bulk_move.success.message',
-                    { location_name: location.ContentInfo.Content.Name },
-                    'sub_items'
-                );
+            window.eZ.helpers.notification.showErrorNotification(message);
+        }
 
-                window.eZ.helpers.notification.showSuccessNotification(message);
-            }
-        });
+        if (movedLocations.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected content item(s) have been sent to <u>%location_name%</u>")*/ 'bulk_move.success.message',
+                { location_name: location.ContentInfo.Content.Name },
+                'sub_items'
+            );
+
+            window.eZ.helpers.notification.showSuccessNotification(message);
+        }
     }
 
     toggleUdw(show) {
@@ -112,7 +115,7 @@ class BulkMoveButton extends PureComponent {
         return (
             <Fragment>
                 <div className={className} title={label} onClick={this.onBtnClick}>
-                    <svg className="ez-icon">
+                    <svg className="ez-icon ez-icon--medium">
                         <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#move" />
                     </svg>
                 </div>

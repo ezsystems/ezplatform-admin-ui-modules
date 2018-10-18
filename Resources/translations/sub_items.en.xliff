@@ -22,8 +22,8 @@
         <note>key: bulk_delete.popup.confirm</note>
       </trans-unit>
       <trans-unit id="02d93b03435046c6bcf08ce15ae7970f7ff8f746" resname="bulk_delete.popup.message">
-        <source>Are you sure you want to send the selected content item(s) to the trash?</source>
-        <target state="new">Are you sure you want to send the selected content item(s) to the trash?</target>
+        <source>Are you sure you want to send the selected content item(s) to trash?</source>
+        <target state="new">Are you sure you want to send the selected content item(s) to trash?</target>
         <note>key: bulk_delete.popup.message</note>
       </trans-unit>
       <trans-unit id="684c07e2248d815e6eb6bc3f92d3cd49c6952cbe" resname="bulk_delete.success.message">
@@ -37,9 +37,14 @@
         <note>key: bulk_move.error.message</note>
       </trans-unit>
       <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
-        <source><![CDATA[The selected content item(s) have been sent to <i>%location_name%</i>]]></source>
-        <target state="new"><![CDATA[The selected content item(s) have been sent to <i>%location_name%</i>]]></target>
+        <source><![CDATA[The selected content item(s) have been sent to <u>%location_name%</u>]]></source>
+        <target state="new"><![CDATA[The selected content item(s) have been sent to <u>%location_name%</u>]]></target>
         <note>key: bulk_move.success.message</note>
+      </trans-unit>
+      <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">
+        <source>Bulk request failed</source>
+        <target state="new">Bulk request failed</target>
+        <note>key: bulk_request.error.message</note>
       </trans-unit>
       <trans-unit id="e95c7e2e8f7a1a4bb1f64cc48ca2eae0b0af78b6" resname="content_type.not_available.label">
         <source>N/A</source>

@@ -82,13 +82,8 @@ class Popup extends Component {
     renderHeader() {
         const closeBtnLabel = Translator.trans(/*@Desc("Close")*/ 'popup.close.label', {}, 'universal_discovery_widget');
 
-        const { plain } = this.props;
-        let className = 'modal-header c-popup__header';
-
-        className = plain ? `${className} c-popup__header--plain` : className;
-
         return (
-            <div className={className}>
+            <div className={'modal-header c-popup__header'}>
                 {this.renderHeadline()}
                 <button
                     type="button"
@@ -135,17 +130,12 @@ class Popup extends Component {
             return;
         }
 
-        const { plain } = this.props;
-        let className = 'modal-footer c-popup__footer';
-
-        className = plain ? `${className} c-popup__footer--plain` : className;
-
-        return <div className={className}>{footerChildren}</div>;
+        return <div className={'modal-footer c-popup__footer'}>{footerChildren}</div>;
     }
 
     render() {
         const { isVisible } = this.state;
-        const { additionalClasses, size } = this.props;
+        const { additionalClasses, size, noHeader } = this.props;
         const modalAttrs = {
             className: 'c-popup modal fade',
             ref: this.setModalRef,
@@ -158,6 +148,8 @@ class Popup extends Component {
         if (additionalClasses) {
             modalAttrs.className = `${modalAttrs.className} ${additionalClasses}`;
         }
+
+        modalAttrs.className = noHeader ? `${modalAttrs.className} c-popup--no-header` : modalAttrs.className;
 
         return (
             <div {...modalAttrs}>
@@ -185,7 +177,7 @@ Popup.propTypes = {
     additionalClasses: PropTypes.string,
     footerChildren: PropTypes.element,
     size: PropTypes.string,
-    plain: PropTypes.bool,
+    noHeader: PropTypes.bool,
 };
 
 Popup.defaultProps = {
@@ -193,7 +185,7 @@ Popup.defaultProps = {
     isLoading: true,
     hasFocus: true,
     size: 'large',
-    plain: false,
+    noHeader: false,
 };
 
 export default Popup;

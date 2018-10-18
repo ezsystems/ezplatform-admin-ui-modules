@@ -6,3 +6,8 @@
 .c-bulk-delete-btn__modal-body {
     padding: 0 2rem;
 }
+
+.c-bulk-delete-btn__cancel-btn {
+    background-color: #646464;
+    border-color: #646464;
+}

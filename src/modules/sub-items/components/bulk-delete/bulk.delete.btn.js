@@ -14,6 +14,9 @@ class BulkDeleteButton extends PureComponent {
         this.onBtnClick = this.onBtnClick.bind(this);
         this.closePopup = this.closePopup.bind(this);
         this.onPopupConfirm = this.onPopupConfirm.bind(this);
+        this.afterBulkDelete = this.afterBulkDelete.bind(this);
+
+        this.modalContainer = null;
 
         this.state = {
             isPopupVisible: false,
@@ -35,34 +38,37 @@ class BulkDeleteButton extends PureComponent {
     }
 
     bulkDelete() {
-        const { restInfo, selectedItems: itemsToDelete, removeItemsFromList } = this.props;
+        const { restInfo, selectedItems: itemsToDelete } = this.props;
         const contentsToDelete = itemsToDelete.map((item) => item.content);
 
-        bulkDeleteContents(restInfo, contentsToDelete, (deletedContents, notDeleted) => {
-            const deletedContentsIds = deletedContents.map((content) => content._id);
+        bulkDeleteContents(restInfo, contentsToDelete, this.afterBulkDelete);
+    }
 
-            removeItemsFromList((item) => deletedContentsIds.includes(item.content._id));
+    afterBulkDelete(deletedContents, notDeleted) {
+        const { removeItemsFromList } = this.props;
+        const deletedContentsIds = deletedContents.map((content) => content._id);
 
-            if (deletedContents.length > 0) {
-                const message = Translator.trans(
-                    /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
-                    {},
-                    'sub_items'
-                );
+        removeItemsFromList((item) => deletedContentsIds.includes(item.content._id));
 
-                window.eZ.helpers.notification.showSuccessNotification(message);
-            }
+        if (deletedContents.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
+                {},
+                'sub_items'
+            );
 
-            if (notDeleted.length > 0) {
-                const message = Translator.trans(
-                    /*@Desc("You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
-                    {},
-                    'sub_items'
-                );
+            window.eZ.helpers.notification.showSuccessNotification(message);
+        }
 
-                window.eZ.helpers.notification.showErrorNotification(message);
-            }
-        });
+        if (notDeleted.length) {
+            const message = Translator.trans(
+                /*@Desc("You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
+                {},
+                'sub_items'
+            );
+
+            window.eZ.helpers.notification.showErrorNotification(message);
+        }
     }
 
     togglePopup(show) {
@@ -86,14 +92,15 @@ class BulkDeleteButton extends PureComponent {
 
         return (
             <Fragment>
-                <button onClick={this.closePopup} type="button" className="btn btn-secondary btn--no" data-dismiss="modal">
+                <button
+                    onClick={this.closePopup}
+                    type="button"
+                    className="btn btn-secondary btn--no c-bulk-delete-btn__cancel-btn"
+                    data-dismiss="modal"
+                >
                     {cancelLabel}
                 </button>
-                <button
-                    onClick={this.onPopupConfirm}
-                    className="btn btn-danger font-weight-bold btn--trigger"
-                    data-click="#version-remove-version_remove_draft_remove"
-                >
+                <button onClick={this.onPopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
                     {confirmLabel}
                 </button>
             </Fragment>
@@ -108,7 +115,7 @@ class BulkDeleteButton extends PureComponent {
         }
 
         const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to send the selected content item(s) to the trash?")*/ 'bulk_delete.popup.message',
+            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message',
             {},
             'sub_items'
         );
@@ -120,7 +127,7 @@ class BulkDeleteButton extends PureComponent {
                 isLoading={false}
                 size="medium"
                 footerChildren={this.renderConfirmationPopupFooter()}
-                plain
+                noHeader={true}
             >
                 <div className="c-bulk-delete-btn__modal-body">{confirmationMessage}</div>
             </Popup>,
@@ -140,7 +147,7 @@ class BulkDeleteButton extends PureComponent {
         return (
             <Fragment>
                 <div className={className} title={label} onClick={this.onBtnClick}>
-                    <svg className="ez-icon">
+                    <svg className="ez-icon ez-icon--medium">
                         <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#trash" />
                     </svg>
                 </div>
