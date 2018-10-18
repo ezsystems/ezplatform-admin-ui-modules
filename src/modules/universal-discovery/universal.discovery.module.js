@@ -299,14 +299,20 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {Object} contentMeta
      */
     onItemSelect(contentMeta) {
-        const isLocationAllowed = !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
-        const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
+        this.setState(
+            () => CONTENT_META_PREVIEW_BASE_STATE,
+            () => {
+                const isLocationAllowed =
+                    !this.props.cotfAllowedLocations.length || this.props.cotfAllowedLocations.includes(contentMeta.id);
+                const contentMetaWithContentTypeInfo = this.addContentTypeInfo([contentMeta])[0];
 
-        this.setState(() => ({
-            contentMeta: contentMetaWithContentTypeInfo,
-            isLocationAllowed,
-            isPreviewMetaReady: false,
-        }));
+                this.setState(() => ({
+                    contentMeta: contentMetaWithContentTypeInfo,
+                    isLocationAllowed,
+                    isPreviewMetaReady: false,
+                }));
+            }
+        );
     }
 
     /**

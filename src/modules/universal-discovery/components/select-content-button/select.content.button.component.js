@@ -51,19 +51,15 @@ export default class SelectContentButtonComponent extends Component {
     }
 
     render() {
-        const { multiple, selectedContent, location } = this.props;
-        const isSelectedContent = selectedContent.find((content) => content.id === location.id);
-        const iconId = isSelectedContent ? 'checkmark' : 'create';
-        const attrs = {
-            className: 'c-select-content-button',
-            onClick: isSelectedContent ? this.handleUnselect : this.handleSelect,
-        };
+        const { multiple, isSelected } = this.props;
+        const iconId = isSelected ? 'checkmark' : 'create';
+        const attrs = { className: 'c-select-content-button', onClick: isSelected ? this.handleUnselect : this.handleSelect };
 
-        if (!multiple || (!isSelectedContent && !this.state.selectContentEnabled)) {
+        if (!multiple || (!isSelected && !this.state.selectContentEnabled)) {
             return null;
         }
 
-        if (isSelectedContent) {
+        if (isSelected) {
             attrs.className = `${attrs.className} c-select-content-button--selected`;
         }
 
@@ -87,7 +83,8 @@ SelectContentButtonComponent.propTypes = {
             notAvailable: PropTypes.string.isRequired,
         }).isRequired,
     }).isRequired,
-    selectedContent: PropTypes.array.isRequired,
+    location: PropTypes.object.isRequired,
+    isSelected: PropTypes.bool.isRequired,
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
