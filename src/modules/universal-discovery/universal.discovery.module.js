@@ -28,6 +28,7 @@ export const TAB_SEARCH = 'search';
 export const TAB_CREATE = 'create';
 export const TAB_BOOKMARKS = 'bookmarks';
 
+const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 const CONTENT_META_PREVIEW_BASE_STATE = {
     contentMeta: null,
     isPreviewMetaReady: false,
@@ -66,8 +67,13 @@ export default class UniversalDiscoveryModule extends Component {
         this.onBookmarksLoaded = this.onBookmarksLoaded.bind(this);
         this.updatePermissionsState = this.updatePermissionsState.bind(this);
         this.setCanSelectContentState = this.setCanSelectContentState.bind(this);
+        this.updateMaxHeightState = this.updateMaxHeightState.bind(this);
+        this.setMainContainerRef = this.setMainContainerRef.bind(this);
+        this.setContentContainerRef = this.setContentContainerRef.bind(this);
 
         this.loadingBookmarksLocationsIds = {};
+        this._refMainContainer;
+        this._refContentContainer;
 
         if (isForcedContentType) {
             selectedContentType = this.findContentType(props.cotfAllowedContentTypes[0]);
@@ -85,6 +91,7 @@ export default class UniversalDiscoveryModule extends Component {
             contentTypesMap: {},
             selectedContent: [],
             maxHeight: props.maxHeight,
+            mainContainerRestHeight: 0,
             selectedLanguage: {},
             selectedContentType,
             isCreateMode: isForcedLanguage && isForcedContentType && isForcedLocation,
@@ -106,8 +113,20 @@ export default class UniversalDiscoveryModule extends Component {
             return null;
         }
 
-        this.setState(() => ({ maxHeight: this._refContentContainer.clientHeight }));
+        window.document.body.classList.add(CLASS_SCROLL_DISABLED);
+        window.addEventListener('resize', this.updateMaxHeightState, false);
+
         this.initializeBookmarks();
+
+        this.setState(() => ({
+            maxHeight: this._refContentContainer.clientHeight,
+            mainContainerRestHeight: this._refMainContainer.clientHeight - this._refContentContainer.clientHeight,
+        }));
+    }
+
+    componentWillUnmount() {
+        window.document.body.classList.remove(CLASS_SCROLL_DISABLED);
+        window.removeEventListener('resize', this.updateMaxHeightState);
     }
 
     componentDidUpdate() {
@@ -120,6 +139,18 @@ export default class UniversalDiscoveryModule extends Component {
         if (!this.props.multiple) {
             this.canSelectContent(contentMeta, this.setCanSelectContentState);
         }
+    }
+
+    /**
+     * Updates the maxHeight state
+     *
+     * @method updateMaxHeightState
+     * @memberof UniversalDiscoveryModule
+     */
+    updateMaxHeightState() {
+        this.setState(() => ({
+            maxHeight: this._refMainContainer.clientHeight - this.state.mainContainerRestHeight,
+        }));
     }
 
     /**
@@ -256,7 +287,9 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {String} id
      */
     onItemRemove(id) {
-        this.setState((state) => ({ selectedContent: state.selectedContent.filter((item) => item.id !== id) }));
+        this.setState((state) => ({
+            selectedContent: state.selectedContent.filter((item) => item.id !== id),
+        }));
     }
 
     /**
@@ -989,6 +1022,14 @@ export default class UniversalDiscoveryModule extends Component {
         return <span className="m-ud__location-not-allowed">{locationNotAllowedMessage}</span>;
     }
 
+    setMainContainerRef(ref) {
+        this._refMainContainer = ref;
+    }
+
+    setContentContainerRef(ref) {
+        this._refContentContainer = ref;
+    }
+
     render() {
         const componentClassName = 'm-ud';
         const metaPreviewClassName = !!this.state.contentMeta ? `${componentClassName}--with-preview` : '';
@@ -1014,11 +1055,11 @@ export default class UniversalDiscoveryModule extends Component {
 
         return (
             <div className="m-ud__wrapper">
-                <div className={containerClassName}>
+                <div className={containerClassName} ref={this.setMainContainerRef}>
                     <h1 className="m-ud__title">{this.props.title}</h1>
                     <div className="m-ud__content-wrapper">
                         {this.renderTabs()}
-                        <div className="m-ud__content" ref={(ref) => (this._refContentContainer = ref)}>
+                        <div className="m-ud__content" ref={this.setContentContainerRef}>
                             {this.renderPanels()}
                             {this.renderContentMetaPreview()}
                         </div>
