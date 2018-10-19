@@ -131,10 +131,7 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     setPreselectedLocationData() {
-        this.setState(
-            () => ({ locationsMap: this.locationsMap, activeLocations: this.activeLocations }),
-            () => this.props.isVisible && this.props.onItemSelect(this.preselectedItem)
-        );
+        this.setState(this.setPreselectedState, () => this.props.isVisible && this.props.onItemSelect(this.preselectedItem));
     }
 
     /**
@@ -375,13 +372,10 @@ export default class FinderComponent extends Component {
      * @returns {null|Element}
      * @memberof FinderComponent
      */
-    renderBranch({ parent, data, count, location }, index, branches) {
+    renderBranch({ parent, data, count, location }) {
         const { lastSelectedItem } = this.state;
-        const listedBranch = branches.find((branch) => branch.parent === lastSelectedItem);
-        const listedBranchIndex = branches.indexOf(listedBranch);
-        const shouldRenderBranch = !(index > 0 && !listedBranch && index <= listedBranchIndex);
 
-        if (!data || !count || !shouldRenderBranch) {
+        if (!data || !count) {
             return null;
         }
 
