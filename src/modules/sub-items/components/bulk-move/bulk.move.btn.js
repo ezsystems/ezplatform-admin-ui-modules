@@ -31,14 +31,14 @@ class BulkMoveButton extends PureComponent {
         const { restInfo, selectedItems: itemsToMove } = this.props;
         const contentsToMove = itemsToMove.map((item) => item.location);
 
-        bulkMoveLocations(restInfo, contentsToMove, location, this.afterBulkMove.bind(this, location));
+        bulkMoveLocations(restInfo, contentsToMove, location._href, this.afterBulkMove.bind(this, location));
     }
 
     afterBulkMove(location, movedLocations, notMoved) {
         const { removeItemsFromList } = this.props;
-        const movedContentsIds = movedLocations.map((content) => content.id);
+        const movedLocationsIds = new Set(movedLocations.map((location) => location.id));
 
-        removeItemsFromList((item) => movedContentsIds.includes(item.location.id));
+        removeItemsFromList(movedLocationsIds);
 
         if (notMoved.length) {
             const message = Translator.trans(

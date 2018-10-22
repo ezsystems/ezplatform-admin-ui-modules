@@ -1,43 +1,32 @@
 import { handleRequestResponse } from '../../common/helpers/request.helper.js';
 
-export const bulkDeleteContents = (restInfo, contents, callback) => {
-    const requestBody = JSON.stringify(getBulkDeleteRequestBody(contents));
-
-    makeBulkRequest(restInfo, requestBody, processBulkResponse.bind(null, contents, 204, callback));
+const HEADERS_BULK = {
+    Accept: 'application/vnd.ez.api.BulkOperationResponse+json',
+    'Content-Type': 'application/vnd.ez.api.BulkOperation+json',
 };
 
-export const bulkMoveLocations = (restInfo, locations, newLocation, callback) => {
-    const requestBody = JSON.stringify(getBulkMoveRequestBody(locations, newLocation));
+export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
+    const requestBody = getBulkMoveRequestBody(locations, newLocationHref);
 
     makeBulkRequest(restInfo, requestBody, processBulkResponse.bind(null, locations, 201, callback));
 };
 
-const getBulkDeleteRequestBody = (contents) =>
-    contents.map((content) => {
-        return {
-            uri: content._href,
-            method: 'DELETE',
-            parameters: [''],
-            headers: {},
-            content: '',
-        };
-    });
+export const bulkDeleteContents = (restInfo, locations, callback) => {
+    bulkMoveLocations(restInfo, locations, '/api/ezp/v2/content/trash', callback);
+};
 
-const getBulkMoveRequestBody = (locations, newLocation) =>
-    locations.map((location) => {
-        return {
-            uri: location._href,
-            method: 'MOVE',
-            parameters: [''],
-            headers: {
-                HTTP_Destination: newLocation._href,
-            },
-            content: '',
-        };
-    });
+const getBulkMoveRequestBody = (locations, destination) =>
+    locations.map((location) => ({
+        uri: location._href,
+        method: 'MOVE',
+        headers: {
+            Destination: destination,
+        },
+    }));
 
-const processBulkResponse = (items, successCode, callback, apiResponses) => {
-    const contentsMatches = apiResponses.reduce(
+const processBulkResponse = (items, successCode, callback, response) => {
+    const operations = response.BulkOperationResponse.Operations;
+    const contentsMatches = operations.reduce(
         (acc, apiResponse, index) => {
             const respectiveItem = items[index];
             const isSuccess = apiResponse.statusCode === successCode;
@@ -56,14 +45,18 @@ const processBulkResponse = (items, successCode, callback, apiResponses) => {
     callback(contentsMatches.success, contentsMatches.fail);
 };
 
-const makeBulkRequest = ({ token, siteaccess }, body, callback) => {
-    const request = new Request('/bulk', {
+const makeBulkRequest = ({ token }, body, callback) => {
+    const request = new Request(Routing.generate('ezplatform.bulk_operation'), {
         method: 'POST',
         headers: {
-            'X-Siteaccess': siteaccess,
+            ...HEADERS_BULK,
             'X-CSRF-Token': token,
         },
-        body: body,
+        body: JSON.stringify({
+            bulkOperations: {
+                operation: body,
+            },
+        }),
         mode: 'cors',
         credentials: 'same-origin',
     });

@@ -39,18 +39,18 @@ class BulkDeleteButton extends PureComponent {
 
     bulkDelete() {
         const { restInfo, selectedItems: itemsToDelete } = this.props;
-        const contentsToDelete = itemsToDelete.map((item) => item.content);
+        const locationsToDelete = itemsToDelete.map((item) => item.location);
 
-        bulkDeleteContents(restInfo, contentsToDelete, this.afterBulkDelete);
+        bulkDeleteContents(restInfo, locationsToDelete, this.afterBulkDelete);
     }
 
-    afterBulkDelete(deletedContents, notDeleted) {
+    afterBulkDelete(deletedLocations, notDeleted) {
         const { removeItemsFromList } = this.props;
-        const deletedContentsIds = deletedContents.map((content) => content._id);
+        const deletedLocationsIds = new Set(deletedLocations.map((location) => location.id));
 
-        removeItemsFromList((item) => deletedContentsIds.includes(item.content._id));
+        removeItemsFromList(deletedLocationsIds);
 
-        if (deletedContents.length) {
+        if (deletedLocations.length) {
             const message = Translator.trans(
                 /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
                 {},

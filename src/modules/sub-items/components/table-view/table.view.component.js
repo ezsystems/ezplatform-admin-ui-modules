@@ -18,6 +18,7 @@ export default class TableViewComponent extends Component {
         this.sortByDate = this.sortByDate.bind(this);
         this.sortByPriority = this.sortByPriority.bind(this);
         this.renderItem = this.renderItem.bind(this);
+        this.onSelectAll = this.onSelectAll.bind(this);
 
         this.state = {
             items: props.items,
@@ -146,6 +147,17 @@ export default class TableViewComponent extends Component {
     }
 
     /**
+     *
+     * @param {Event} event
+     */
+    onSelectAll(event) {
+        const { toggleAllItemsSelect } = this.props;
+        const isSelectAction = event.target.checked;
+
+        toggleAllItemsSelect(isSelectAction);
+    }
+
+    /**
      * Renders single list item
      *
      * @method renderItem
@@ -154,7 +166,16 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     renderItem(data) {
-        const { contentTypesMap, handleItemPriorityUpdate, handleEditItem, generateLink, languages, onItemSelect } = this.props;
+        const {
+            contentTypesMap,
+            handleItemPriorityUpdate,
+            handleEditItem,
+            generateLink,
+            languages,
+            onItemSelect,
+            selectedLocationsIds,
+        } = this.props;
+        const isSelected = selectedLocationsIds.has(data.location.id);
 
         return (
             <TableViewItemComponent
@@ -166,6 +187,7 @@ export default class TableViewComponent extends Component {
                 handleEditItem={handleEditItem}
                 generateLink={generateLink}
                 onItemSelect={onItemSelect}
+                isSelected={isSelected}
             />
         );
     }
@@ -217,11 +239,15 @@ export default class TableViewComponent extends Component {
         const headerContentTypeLabel = Translator.trans(/*@Desc("Content type")*/ 'items_table.header.content_type', {}, 'sub_items');
         const headerPriorityLabel = Translator.trans(/*@Desc("Priority")*/ 'items_table.header.priority', {}, 'sub_items');
         const headerTranslationsLabel = Translator.trans(/*@Desc("Translations")*/ 'items_table.header.translations', {}, 'sub_items');
+        const { selectedLocationsIds } = this.props;
+        const anyLocationSelected = !!selectedLocationsIds.size;
 
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
-                    <td className={cellHeadClass} />
+                    <td className={cellHeadClass}>
+                        <input type="checkbox" checked={anyLocationSelected} onChange={this.onSelectAll} />
+                    </td>
                     <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
                         <span className="c-table-view__label">{headerNameLabel}</span>
                     </td>
@@ -263,4 +289,6 @@ TableViewComponent.propTypes = {
     handleEditItem: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,
     onItemSelect: PropTypes.func.isRequired,
+    toggleAllItemsSelect: PropTypes.func.isRequired,
+    selectedLocationsIds: PropTypes.instanceOf(Set),
 };

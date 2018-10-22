@@ -22,13 +22,15 @@ export default class SubItemsModule extends Component {
         this.handleLoadMore = this.handleLoadMore.bind(this);
         this.switchView = this.switchView.bind(this);
         this.handleItemPriorityUpdate = this.handleItemPriorityUpdate.bind(this);
-        this.onItemSelect = this.onItemSelect.bind(this);
+        this.toggleItemSelect = this.toggleItemSelect.bind(this);
+        this.toggleAllItemsSelect = this.toggleAllItemsSelect.bind(this);
         this.getSelectedItems = this.getSelectedItems.bind(this);
         this.removeItemsFromList = this.removeItemsFromList.bind(this);
 
         this.state = {
             activeView: props.activeView,
-            items: props.items.map((item) => ({ ...item, isSelected: false })),
+            items: props.items,
+            selectedLocationsIds: new Set(),
             contentTypesMap: props.contentTypesMap,
             totalCount: props.totalCount,
             offset: props.offset,
@@ -86,8 +88,8 @@ export default class SubItemsModule extends Component {
      */
     loadLocation(locationId) {
         const { limit, sortClauses, loadLocation, restInfo } = this.props;
-        const { items } = this.state;
-        const queryConfig = { locationId, limit, sortClauses, offset: items.length };
+        const { offset } = this.state;
+        const queryConfig = { locationId, limit, sortClauses, offset };
 
         return new Promise((resolve) => loadLocation(restInfo, queryConfig, resolve));
     }
@@ -177,7 +179,6 @@ export default class SubItemsModule extends Component {
                 {
                     location: itemLocation,
                     content: content.find((item) => item.value.Content._id === itemLocation.ContentInfo.Content._id).value.Content,
-                    isSelected: false,
                 },
             ];
         }, []);
@@ -266,37 +267,68 @@ export default class SubItemsModule extends Component {
         this.setState(() => ({ activeView }));
     }
 
-    onItemSelect(contentId, isSelected) {
+    toggleItemSelect(location, isSelected) {
+        const { selectedLocationsIds } = this.state;
+        const updatedSelectedItemsIds = new Set(selectedLocationsIds);
+
+        if (isSelected) {
+            updatedSelectedItemsIds.add(location.id);
+        } else {
+            updatedSelectedItemsIds.delete(location.id);
+        }
+
+        this.setSelectedItemsState(updatedSelectedItemsIds);
+    }
+
+    toggleAllItemsSelect(isSelectAction) {
+        if (isSelectAction) {
+            this.selectAllItems();
+        } else {
+            this.deselectAllItems();
+        }
+    }
+
+    selectAllItems() {
         const { items } = this.state;
-        const itemIndex = items.findIndex((item) => item.content._id == contentId);
-        const item = items[itemIndex];
-        const updatedItems = [...items];
+        const contentItemsIds = items.map((item) => item.location.id);
+        const contentItemsIdsSet = new Set(contentItemsIds);
 
-        updatedItems.splice(itemIndex, 1, { ...item, isSelected });
+        this.setSelectedItemsState(contentItemsIdsSet);
+    }
 
+    deselectAllItems() {
+        this.setSelectedItemsState(new Set());
+    }
+
+    setSelectedItemsState(selectedLocationsIds) {
         this.setState(() => ({
-            items: updatedItems,
+            selectedLocationsIds,
         }));
     }
 
     getSelectedItems() {
-        const { items } = this.state;
+        const { items, selectedLocationsIds } = this.state;
+        const selectedLocationsIdsArray = [...selectedLocationsIds];
+        const selectedItems = items.filter((item) => selectedLocationsIdsArray.includes(item.location.id));
 
-        return items.filter((item) => item.isSelected);
+        return selectedItems;
     }
 
     /**
-     * @param {Function} shouldItemStay
+     * @param {Set} locationsToRemoveIds
      */
-    removeItemsFromList(shouldItemStay) {
+    removeItemsFromList(locationsToRemoveIds) {
         this.setState((state) => {
             const { items } = state;
-            const filteredItems = items.filter((item) => !shouldItemStay(item));
+            const filteredItems = items.filter((item) => !locationsToRemoveIds.has(item.location.id));
             const removedItemsCount = items.length - filteredItems.length;
+            const selectedLocationsIds = new Set([...state.selectedLocationsIds].filter((id) => !locationsToRemoveIds.has(id)));
 
             return {
+                selectedLocationsIds,
                 items: filteredItems,
                 totalCount: state.totalCount - removedItemsCount,
+                offset: state.offset - removedItemsCount,
             };
         });
     }
@@ -399,7 +431,9 @@ export default class SubItemsModule extends Component {
                         languages={this.props.languages}
                         handleEditItem={this.props.handleEditItem}
                         generateLink={this.props.generateLink}
-                        onItemSelect={this.onItemSelect}
+                        onItemSelect={this.toggleItemSelect}
+                        toggleAllItemsSelect={this.toggleAllItemsSelect}
+                        selectedLocationsIds={this.state.selectedLocationsIds}
                     />
                 </div>
                 {this.renderLoadMore()}
