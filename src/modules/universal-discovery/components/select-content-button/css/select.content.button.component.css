@@ -7,16 +7,21 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    outline: none;
+}
+
+.c-select-content-button:focus {
+    outline: none;
 }
 
 .c-select-content-button .ez-icon {
-	fill: #878787;
+    fill: #878787;
 }
 
 .c-select-content-button--selected {
-	background: #00825c;
+    background: #00825c;
 }
 
 .c-select-content-button--selected .ez-icon {
-	fill: #fff;
+    fill: #fff;
 }
