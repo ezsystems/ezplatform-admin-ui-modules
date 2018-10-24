@@ -11,20 +11,14 @@ export default class FinderTreeBranchComponent extends Component {
 
         this.expandBranch = this.expandBranch.bind(this);
         this.onLoadMore = this.onLoadMore.bind(this);
+        this.removeLoadingStateFromItem = this.removeLoadingStateFromItem.bind(this);
+        this.updateSelectedLocations = this.updateSelectedLocations.bind(this);
+        this.renderLeaf = this.renderLeaf.bind(this);
 
         this.state = {
-            selectedLocations: props.selectedLocations,
             currentlyLoadingLocationId: false,
+            selectedLocationId: null,
         };
-    }
-
-    UNSAFE_componentWillReceiveProps(props) {
-        this.setState((state) =>
-            Object.assign({}, state, {
-                selectedLocations: props.selectedLocations,
-                currentlyLoadingLocationId: false,
-            })
-        );
     }
 
     /**
@@ -35,19 +29,19 @@ export default class FinderTreeBranchComponent extends Component {
      * @memberof FinderTreeBranchComponent
      */
     updateSelectedLocations(location) {
-        this.setState((state) => {
-            const locations = [...state.selectedLocations, location.id];
+        this.setState(
+            () => ({ currentlyLoadingLocationId: location.id, selectedLocationId: location.id }),
+            () =>
+                this.props.onItemClick({
+                    parent: location.id,
+                    location,
+                    onDataLoaded: this.removeLoadingStateFromItem,
+                })
+        );
+    }
 
-            return Object.assign({}, state, {
-                selectedLocations: [...new Set(locations)],
-                currentlyLoadingLocationId: location.id,
-            });
-        });
-
-        this.props.onItemClick({
-            parent: location.id,
-            location,
-        });
+    removeLoadingStateFromItem() {
+        this.setState(() => ({ currentlyLoadingLocationId: false }));
     }
 
     expandBranch() {
@@ -69,13 +63,14 @@ export default class FinderTreeBranchComponent extends Component {
         const contentTypeHref = location.ContentInfo.Content.ContentType._href;
         const isContainer = contentTypesMap && contentTypesMap[contentTypeHref] && contentTypesMap[contentTypeHref].isContainer;
         const isSelectable = !(this.props.allowContainersOnly && !isContainer);
+        const selected = location.id === this.state.selectedLocationId;
 
         return (
             <FinderTreeLeafComponent
                 key={location.remoteId}
                 location={location}
-                onClick={this.updateSelectedLocations.bind(this)}
-                selected={this.state.selectedLocations.includes(location.id)}
+                onClick={this.updateSelectedLocations}
+                selected={selected}
                 isLoadingChildren={isLoadingChildren}
                 isSelectable={isSelectable}
                 allowedLocations={this.props.allowedLocations}
@@ -130,7 +125,7 @@ export default class FinderTreeBranchComponent extends Component {
         return (
             <div {...attrs}>
                 <div className="c-finder-tree-branch__list-wrapper">
-                    {this.props.items.map(this.renderLeaf.bind(this))}
+                    {this.props.items.map(this.renderLeaf)}
                     {this.renderLoadMore()}
                 </div>
             </div>

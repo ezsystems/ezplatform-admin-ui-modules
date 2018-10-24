@@ -10,20 +10,6 @@ export default class FinderTreeLeafComponent extends Component {
         super(props);
 
         this.handleClick = this.handleClick.bind(this);
-
-        this.state = {
-            selected: props.selected,
-            isLoadingChildren: props.isLoadingChildren,
-        };
-    }
-
-    UNSAFE_componentWillReceiveProps({ selected, isLoadingChildren }) {
-        this.setState((state) =>
-            Object.assign({}, state, {
-                selected,
-                isLoadingChildren,
-            })
-        );
     }
 
     /**
@@ -33,20 +19,13 @@ export default class FinderTreeLeafComponent extends Component {
      * @memberof FinderTreeLeafComponent
      */
     handleClick(event) {
-        const { location } = this.props;
+        const { location, isSelectable, onClick } = this.props;
 
-        if (!this.props.isSelectable || event.target.closest('.c-finder-tree-leaf__btn--toggle-selection')) {
+        if (!isSelectable || event.target.closest('.c-finder-tree-leaf__btn--toggle-selection')) {
             return;
         }
 
-        this.setState(
-            (state) =>
-                Object.assign({}, state, {
-                    selected: true,
-                    isLoadingChildren: !!location.childCount,
-                }),
-            () => this.props.onClick(location)
-        );
+        onClick(location);
     }
 
     /**
@@ -57,28 +36,37 @@ export default class FinderTreeLeafComponent extends Component {
      * @memberof FinderTreeLeafComponent
      */
     renderLoadingIcon() {
-        if (!this.state.selected || !this.state.isLoadingChildren) {
+        if (!this.props.selected || !this.props.isLoadingChildren) {
             return null;
         }
 
         return (
-            <svg className="ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
+            <svg className="ez-icon ez-spin ez-icon-x2">
                 <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
             </svg>
         );
     }
 
     renderSelectContentBtn() {
-        const { isSelectable, multiple, selectedContent, location, onSelectContent, onItemRemove, canSelectContent } = this.props;
+        const {
+            isSelectable,
+            multiple,
+            selectedContent,
+            location,
+            onSelectContent,
+            onItemRemove,
+            canSelectContent,
+            isLoadingChildren,
+        } = this.props;
 
-        if (!isSelectable || this.state.isLoadingChildren || !multiple) {
+        if (!isSelectable || isLoadingChildren || !multiple) {
             return null;
         }
 
         return (
             <SelectContentButtonComponent
                 multiple={multiple}
-                selectedContent={selectedContent}
+                isSelected={!!selectedContent.find((content) => content.id === location.id)}
                 location={location}
                 onSelectContent={onSelectContent}
                 onItemRemove={onItemRemove}
@@ -88,16 +76,21 @@ export default class FinderTreeLeafComponent extends Component {
     }
 
     render() {
-        const location = this.props.location;
-        const isForcedLocation = this.props.allowedLocations.length === 1;
+        const { location, selected, isSelectable, isLoadingChildren, allowedLocations } = this.props;
+        const isForcedLocation = allowedLocations.length === 1;
         const componentClassName = 'c-finder-tree-leaf';
-        const isSelected = this.state.selected ? `${componentClassName}--selected` : '';
-        const isNotSelectable = !this.props.isSelectable || isForcedLocation ? `${componentClassName}--not-selectable` : '';
-        const hasChildren = location.childCount ? `${componentClassName}--has-children` : '';
-        const isLoadingChildren = this.state.isLoadingChildren ? `${componentClassName}--loading` : '';
-        const finalClassName = `${componentClassName} ${isSelected} ${hasChildren} ${isLoadingChildren} ${isNotSelectable}`;
+        const isSelectedClassName = selected ? `${componentClassName}--selected` : '';
+        const isNotSelectableClassName = !isSelectable || isForcedLocation ? `${componentClassName}--not-selectable` : '';
+        const hasChildrenClassName = location.childCount ? `${componentClassName}--has-children` : '';
+        const isLoadingChildrenClassName = isLoadingChildren ? `${componentClassName}--loading` : '';
         const attrs = {
-            className: finalClassName,
+            className: [
+                componentClassName,
+                isSelectedClassName,
+                hasChildrenClassName,
+                isLoadingChildrenClassName,
+                isNotSelectableClassName,
+            ].join(' '),
         };
 
         if (!isForcedLocation) {
