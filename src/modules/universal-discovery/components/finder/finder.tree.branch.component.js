@@ -12,10 +12,12 @@ export default class FinderTreeBranchComponent extends Component {
         this.expandBranch = this.expandBranch.bind(this);
         this.onLoadMore = this.onLoadMore.bind(this);
         this.removeLoadingStateFromItem = this.removeLoadingStateFromItem.bind(this);
+        this.updateSelectedLocations = this.updateSelectedLocations.bind(this);
+        this.renderLeaf = this.renderLeaf.bind(this);
 
         this.state = {
             currentlyLoadingLocationId: false,
-            selectedItem: null,
+            selectedLocationId: null,
         };
     }
 
@@ -28,7 +30,7 @@ export default class FinderTreeBranchComponent extends Component {
      */
     updateSelectedLocations(location) {
         this.setState(
-            () => ({ currentlyLoadingLocationId: location.id, selectedItem: location.id }),
+            () => ({ currentlyLoadingLocationId: location.id, selectedLocationId: location.id }),
             () =>
                 this.props.onItemClick({
                     parent: location.id,
@@ -61,13 +63,13 @@ export default class FinderTreeBranchComponent extends Component {
         const contentTypeHref = location.ContentInfo.Content.ContentType._href;
         const isContainer = contentTypesMap && contentTypesMap[contentTypeHref] && contentTypesMap[contentTypeHref].isContainer;
         const isSelectable = !(this.props.allowContainersOnly && !isContainer);
-        const selected = location.id === this.state.selectedItem;
+        const selected = location.id === this.state.selectedLocationId;
 
         return (
             <FinderTreeLeafComponent
                 key={location.remoteId}
                 location={location}
-                onClick={this.updateSelectedLocations.bind(this)}
+                onClick={this.updateSelectedLocations}
                 selected={selected}
                 isLoadingChildren={isLoadingChildren}
                 isSelectable={isSelectable}
@@ -123,7 +125,7 @@ export default class FinderTreeBranchComponent extends Component {
         return (
             <div {...attrs}>
                 <div className="c-finder-tree-branch__list-wrapper">
-                    {this.props.items.map(this.renderLeaf.bind(this))}
+                    {this.props.items.map(this.renderLeaf)}
                     {this.renderLoadMore()}
                 </div>
             </div>
