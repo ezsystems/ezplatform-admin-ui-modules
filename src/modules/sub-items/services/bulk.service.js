@@ -6,7 +6,7 @@ const HEADERS_BULK = {
 };
 
 export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
-    const requestBody = getBulkMoveRequestBody(locations, newLocationHref);
+    const requestBody = getBulkMoveRequestOperations(locations, newLocationHref);
 
     makeBulkRequest(restInfo, requestBody, processBulkResponse.bind(null, locations, 201, callback));
 };
@@ -15,37 +15,42 @@ export const bulkDeleteContents = (restInfo, locations, callback) => {
     bulkMoveLocations(restInfo, locations, '/api/ezp/v2/content/trash', callback);
 };
 
-const getBulkMoveRequestBody = (locations, destination) =>
-    locations.map((location) => ({
-        uri: location._href,
-        method: 'MOVE',
-        headers: {
-            Destination: destination,
-        },
-    }));
+const getBulkMoveRequestOperations = (locations, destination) => {
+    const operations = {};
 
-const processBulkResponse = (items, successCode, callback, response) => {
-    const operations = response.BulkOperationResponse.Operations;
-    const contentsMatches = operations.reduce(
-        (acc, apiResponse, index) => {
-            const respectiveItem = items[index];
-            const isSuccess = apiResponse.statusCode === successCode;
+    locations.forEach((location) => {
+        operations[location.id] = {
+            uri: location._href,
+            method: 'MOVE',
+            headers: {
+                Destination: destination,
+            },
+        };
+    });
 
-            if (isSuccess) {
-                acc.success.push(respectiveItem);
-            } else {
-                acc.fail.push(respectiveItem);
-            }
+    return operations;
+};
 
-            return acc;
-        },
-        { success: [], fail: [] }
-    );
+const processBulkResponse = (locations, successCode, callback, response) => {
+    const { operations } = response.BulkOperationResponse;
+    const contentsMatches = { success: [], fail: [] };
+
+    for (const locationId of Object.keys(operations)) {
+        const response = operations[locationId];
+        const respectiveItem = locations.find((location) => String(location.id) === locationId);
+        const isSuccess = response.statusCode === successCode;
+
+        if (isSuccess) {
+            contentsMatches.success.push(respectiveItem);
+        } else {
+            contentsMatches.fail.push(respectiveItem);
+        }
+    }
 
     callback(contentsMatches.success, contentsMatches.fail);
 };
 
-const makeBulkRequest = ({ token }, body, callback) => {
+const makeBulkRequest = ({ token }, operations, callback) => {
     const request = new Request(Routing.generate('ezplatform.bulk_operation'), {
         method: 'POST',
         headers: {
@@ -54,7 +59,7 @@ const makeBulkRequest = ({ token }, body, callback) => {
         },
         body: JSON.stringify({
             bulkOperations: {
-                operation: body,
+                operations,
             },
         }),
         mode: 'cors',
