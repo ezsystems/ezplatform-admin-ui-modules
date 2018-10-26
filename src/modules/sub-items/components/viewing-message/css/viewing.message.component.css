@@ -1,0 +1,8 @@
+.c-viewing-message {
+    text-align: center;
+}
+
+.c-viewing-message__text {
+    padding: 16px 0;
+    font-size: 12px;
+}

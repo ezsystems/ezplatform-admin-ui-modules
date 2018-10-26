@@ -4,14 +4,18 @@ import PropTypes from 'prop-types';
 
 import ViewSwitcherComponent from './components/view-switcher/view.switcher.component.js';
 import SubItemsListComponent from './components/sub-items-list/sub.items.list.component.js';
-import LoadMoreComponent from './components/load-more/load.more.component.js';
 import Popup from '../common/popup/popup.component';
 import ActionButton from './components/action-btn/action.btn.js';
+import PaginationComponent from './components/pagination/pagination.component.js';
+import ViewingMessageComponent from './components/viewing-message/viewing.message.component.js';
+import NoItemsComponent from './components/no-items/no.items.component.js';
+import Icon from '../common/icon/icon.js';
 
 import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
 import { bulkMoveLocations, bulkMoveLocationsToTrash } from './services/bulk.service.js';
 
 import './css/sub.items.module.css';
+import deepClone from '../common/helpers/deep.clone.helper.js';
 
 export default class SubItemsModule extends Component {
     constructor(props) {
@@ -21,13 +25,10 @@ export default class SubItemsModule extends Component {
         this.loadContentItems = this.loadContentItems.bind(this);
         this.loadContentTypes = this.loadContentTypes.bind(this);
         this.updateItemsState = this.updateItemsState.bind(this);
-        this.handleLoadMore = this.handleLoadMore.bind(this);
         this.switchView = this.switchView.bind(this);
         this.handleItemPriorityUpdate = this.handleItemPriorityUpdate.bind(this);
         this.toggleItemSelect = this.toggleItemSelect.bind(this);
-        this.toggleAllItemsSelect = this.toggleAllItemsSelect.bind(this);
-        this.getSelectedItems = this.getSelectedItems.bind(this);
-        this.removeItemsFromList = this.removeItemsFromList.bind(this);
+        this.toggleAllPageItemsSelection = this.toggleAllPageItemsSelection.bind(this);
         this.onMoveBtnClick = this.onMoveBtnClick.bind(this);
         this.closeUdw = this.closeUdw.bind(this);
         this.onUdwConfirm = this.onUdwConfirm.bind(this);
@@ -35,14 +36,22 @@ export default class SubItemsModule extends Component {
         this.closeBulkDeletePopup = this.closeBulkDeletePopup.bind(this);
         this.onBulkDeletePopupConfirm = this.onBulkDeletePopupConfirm.bind(this);
         this.afterBulkDelete = this.afterBulkDelete.bind(this);
+        this.changePage = this.changePage.bind(this);
+        this.changeSorting = this.changeSorting.bind(this);
 
+        this._refListViewWrapper = React.createRef();
         this.bulkDeleteModalContainer = null;
         this.udwContainer = null;
+        this.pagesDuringLoading = new Set();
+
+        const sortClauseData = this.extractFirstSortClauseData(props.sortClauses);
 
         this.state = {
             activeView: props.activeView,
-            items: props.items,
-            selectedLocationsIds: new Set(),
+            pages: {
+                '0': props.items,
+            },
+            selectedItemsCachedData: new Map(),
             contentTypesMap: props.contentTypesMap,
             totalCount: props.totalCount,
             offset: props.offset,
@@ -50,6 +59,10 @@ export default class SubItemsModule extends Component {
             isDuringBulkOperation: false,
             isUdwOpened: false,
             isBulkDeletePopupVisible: false,
+            activePage: 0,
+            listViewHeight: null,
+            sortClause: sortClauseData.name,
+            sortOrder: sortClauseData.order,
         };
     }
 
@@ -60,9 +73,27 @@ export default class SubItemsModule extends Component {
         document.body.appendChild(this.bulkDeleteModalContainer);
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.offset < this.state.offset) {
-            this.loadItems();
+    componentDidUpdate() {
+        const { activePage, pages, totalCount } = this.state;
+        const { limit: itemsPerPage } = this.props;
+        const numberOfPages = Math.ceil(totalCount / itemsPerPage);
+        const pageDoesNotExist = activePage > numberOfPages - 1 && activePage !== 0;
+
+        if (pageDoesNotExist) {
+            this.setState({
+                activePage: numberOfPages - 1,
+            });
+
+            return;
+        }
+
+        const pageData = pages[activePage];
+        const activePageIsLoading = this.pagesDuringLoading.has(activePage);
+        const shouldLoadPage = !pageData && !activePageIsLoading;
+
+        if (shouldLoadPage) {
+            this.updateListViewHeight();
+            this.loadPage(activePage);
         }
     }
 
@@ -74,14 +105,23 @@ export default class SubItemsModule extends Component {
         this.setState((state) => ({ items: [...state.items, ...props.items] }));
     }
 
-    /**
-     * Increases an amount of items to be loaded in the list
-     *
-     * @method handleLoadMore
-     * @memberof SubItemsModule
-     */
-    handleLoadMore() {
-        this.setState((state) => ({ offset: state.offset + this.props.limit }));
+    extractFirstSortClauseData(sortClauses) {
+        const objKeys = Object.keys(sortClauses);
+
+        if (!objKeys.length) {
+            return { name: null, order: null };
+        }
+
+        const name = objKeys[0];
+        const order = sortClauses[name];
+
+        return { name, order };
+    }
+
+    updateListViewHeight() {
+        this.setState(() => ({
+            listViewHeight: this._refListViewWrapper.current.offsetHeight,
+        }));
     }
 
     /**
@@ -90,32 +130,40 @@ export default class SubItemsModule extends Component {
      * @method loadItems
      * @memberof SubItemsModule
      */
-    loadItems() {
-        const parentLocationId = this.props.parentLocationId;
+    loadPage(page) {
+        this.pagesDuringLoading.add(page);
 
-        this.setState(() => ({ isLoading: true }));
-
-        this.loadLocation(parentLocationId)
-            .then(this.loadContentItems)
+        this.loadLocation(page)
+            .then(this.loadContentItems.bind(this, page))
             .then(this.loadContentTypes)
             .then(this.updateItemsState)
-            .catch(() =>
-                window.eZ.helpers.notification.showErrorNotification('An error occurred while loading items in the Sub Items module')
-            );
+            .catch(() => {
+                const errorMessage = Translator.trans(
+                    /*@Desc("An error occurred while loading items in the Sub Items module")*/ 'page.loading_error.message',
+                    {},
+                    'sub_items'
+                );
+
+                window.eZ.helpers.notification.showErrorNotification(errorMessage);
+            });
     }
 
     /**
      * Loads location data
      *
+     * @param {Number} page
      * @method loadLocation
-     * @param {Number} locationId
      * @returns {Promise}
      * @memberof SubItemsModule
      */
-    loadLocation(locationId) {
-        const { limit, sortClauses, loadLocation, restInfo } = this.props;
-        const { offset } = this.state;
-        const queryConfig = { locationId, limit, sortClauses, offset };
+    loadLocation(page) {
+        const { limit: itemsPerPage, loadLocation, restInfo, parentLocationId: locationId } = this.props;
+        const { sortClause, sortOrder } = this.state;
+        const offset = page * itemsPerPage;
+        const sortClauses = {
+            [sortClause]: sortOrder,
+        };
+        const queryConfig = { locationId, limit: itemsPerPage, sortClauses, offset };
 
         return new Promise((resolve) => loadLocation(restInfo, queryConfig, resolve));
     }
@@ -124,11 +172,12 @@ export default class SubItemsModule extends Component {
      * Loads content items from location
      *
      * @method loadContentItems
+     * @param {Number} page
      * @param {Object} response query results
      * @returns {Promise}
      * @memberof SubItemsModule
      */
-    loadContentItems(response) {
+    loadContentItems(page, response) {
         const { loadContentInfo, restInfo } = this.props;
 
         if (!response || !response.View) {
@@ -141,51 +190,54 @@ export default class SubItemsModule extends Component {
         }
 
         const locations = response.View.Result.searchHits.searchHit;
-        const promises = [];
 
-        promises.push(
-            new Promise((resolve) => {
-                const contentIds = locations.map((item) => item.value.Location.ContentInfo.Content._id);
+        return new Promise((resolve) => {
+            const contentIds = locations.map((item) => item.value.Location.ContentInfo.Content._id);
 
-                loadContentInfo(restInfo, contentIds, resolve);
-            }).then((contentInfo) => ({
-                locations,
-                totalCount: response.View.Result.count,
-                content: contentInfo.View.Result.searchHits.searchHit,
-            }))
-        );
+            loadContentInfo(restInfo, contentIds, (contentInfo) => {
+                const { totalCount: oldTotalCount } = this.state;
+                const totalCount = response.View.Result.count;
 
-        return Promise.all(promises);
+                if (oldTotalCount !== totalCount) {
+                    this.discardPagesDataOtherThan([page]);
+                }
+
+                resolve({
+                    page,
+                    locations,
+                    totalCount,
+                    contents: contentInfo.View.Result.searchHits.searchHit.map((searchHit) => searchHit.value.Content),
+                });
+            });
+        });
     }
 
     /**
      * Loads content types info
      *
-     * @method loadContenTypes
-     * @param {Array} responses
+     * @method loadContentTypes
+     * @param {Object} itemsData
      * @returns {Promise}
      * @memberof SubItemsModule
      */
-    loadContentTypes(responses) {
-        const promises = responses[0].content.reduce((total, item) => {
-            return [
-                ...total,
+    loadContentTypes(itemsData) {
+        const promises = itemsData.contents.map(
+            (content) =>
                 new Promise((resolve) => {
-                    const contentTypeId = item.value.Content.ContentType._href;
+                    const contentTypeId = content.ContentType._href;
 
                     if (!this.state.contentTypesMap[contentTypeId]) {
                         this.props.loadContentType(contentTypeId, this.props.restInfo, (response) => resolve(response));
                     } else {
                         resolve({ ContentType: this.state.contentTypesMap[contentTypeId] });
                     }
-                }),
-            ];
-        }, []);
+                })
+        );
 
         return Promise.all(promises).then((contentTypes) => {
-            responses[0].contentTypes = contentTypes;
+            itemsData.contentTypes = contentTypes;
 
-            return responses[0];
+            return itemsData;
         });
     }
 
@@ -196,28 +248,33 @@ export default class SubItemsModule extends Component {
      * @param {Object} responses
      * @memberof SubItemsModule
      */
-    updateItemsState({ locations, content, totalCount, contentTypes }) {
-        const items = locations.reduce((total, location) => {
+    updateItemsState({ page, locations, contents, totalCount, contentTypes }) {
+        const pageItems = locations.map((location) => {
             const itemLocation = location.value.Location;
+            const respectiveContent = contents.find((content) => content._id === itemLocation.ContentInfo.Content._id);
 
-            return [
-                ...total,
-                {
-                    location: itemLocation,
-                    content: content.find((item) => item.value.Content._id === itemLocation.ContentInfo.Content._id).value.Content,
+            return {
+                location: itemLocation,
+                content: respectiveContent,
+            };
+        });
+
+        this.setState(
+            (state) => ({
+                pages: {
+                    ...state.pages,
+                    [page]: pageItems,
                 },
-            ];
-        }, []);
-
-        this.setState((state) => ({
-            items: [...state.items, ...items],
-            isLoading: false,
-            totalCount,
-            contentTypesMap: {
-                ...state.contentTypesMap,
-                ...this.buildContentTypesMap(contentTypes),
-            },
-        }));
+                totalCount,
+                contentTypesMap: {
+                    ...state.contentTypesMap,
+                    ...this.buildContentTypesMap(contentTypes),
+                },
+            }),
+            () => {
+                this.pagesDuringLoading.delete(page);
+            }
+        );
     }
 
     /**
@@ -240,6 +297,42 @@ export default class SubItemsModule extends Component {
         }, {});
     }
 
+    updateTotalCountState(totalCount) {
+        this.setState(() => ({
+            totalCount,
+        }));
+    }
+
+    discardPagesDataOtherThan(pages) {
+        this.setState((state) => {
+            const notDiscardedPagesData = pages.reduce((pagesData, page) => (pagesData[page] = state.pages[page]), {});
+
+            return {
+                pages: notDiscardedPagesData,
+            };
+        });
+    }
+
+    changeSorting(sortClause) {
+        this.setState((state) => ({
+            sortClause,
+            sortOrder: this.getSortOrder(state.sortClause, sortClause, state.sortOrder),
+            pages: {},
+        }));
+    }
+
+    getSortOrder(sortClause, newSortClause, currentSortOrder) {
+        return newSortClause === sortClause ? this.getOppositeSortOrder(currentSortOrder) : this.getDefaultSortOrder();
+    }
+
+    getOppositeSortOrder(sortOrder) {
+        return sortOrder === 'ascending' ? 'descending' : 'ascending';
+    }
+
+    getDefaultSortOrder() {
+        return 'ascending';
+    }
+
     /**
      * Updates item priority
      *
@@ -259,27 +352,57 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     afterPriorityUpdated(response) {
-        this.setState(this.updateItemsOrder.bind(this, response.Location));
+        if (this.state.sortClause === 'LocationPriority') {
+            this.discardPagesDataOtherThan([]);
+            return;
+        }
+
+        this.updateItemLocation(response.Location);
+    }
+
+    updateItemLocation(location) {
+        this.setState((state) => {
+            const { pages } = state;
+            const { itemPage, itemIndex } = this.findItemPositionByLocationId(pages, location.id);
+            const itemPageData = pages[itemPage];
+            const item = itemPageData.items[itemIndex];
+            const updatedItem = deepClone(item);
+
+            updatedItem.location = location;
+
+            const updatedPageItems = [...itemPageData.items];
+
+            updatedPageItems[itemIndex] = updatedItem;
+
+            return {
+                pages: {
+                    ...state.pages,
+                    [itemPage]: updatedPageItems,
+                },
+            };
+        });
     }
 
     /**
-     * Updates items order
+     * Finds on what page item is located
+     * and what is the index of the item in page's items list
      *
-     * @method updateItemsOrder
-     * @param {Object} location
-     * @param {Object} state
-     * @returns {Object}
-     * @memberof SubItemsModule
+     * @returns {{itemPage: number, itemIndex: number}}
      */
-    updateItemsOrder(location, state) {
-        const items = state.items;
-        const item = items.find((element) => element.location.id === location.id);
+    findItemPositionByLocationId(pages, locationId) {
+        let itemPage = null;
+        let itemIndex = null;
 
-        item.location = location;
+        for (const [page, pageData] of Object.entries(pages)) {
+            itemIndex = pageData.items.findIndex((item) => item.location.id === locationId);
 
-        items.sort((a, b) => a.location.priority - b.location.priority);
+            if (itemIndex !== -1) {
+                itemPage = page;
+                break;
+            }
+        }
 
-        return { items };
+        return { itemPage, itemIndex };
     }
 
     /**
@@ -293,72 +416,95 @@ export default class SubItemsModule extends Component {
         this.setState(() => ({ activeView }));
     }
 
-    toggleItemSelect(location, isSelected) {
-        const { selectedLocationsIds } = this.state;
-        const updatedSelectedItemsIds = new Set(selectedLocationsIds);
+    /**
+     * Returns data which we want to cache for selected item
+     * Page data might be discarded but selection of the item should stay,
+     * thus we need item data to perform operations such as bulk delete or bulk move
+     *
+     * @param {Object} item
+     * @param {Object} item.content
+     * @param {Object} item.location
+     *
+     * @returns {Object} dataToCache
+     */
+    getItemDataToCache(item) {
+        const { contentTypesMap } = this.state;
+        const contentType = contentTypesMap[item.content.ContentType._href];
+        const contentTypeIdentifier = contentType.identifier;
+        const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+
+        return {
+            contentTypeName,
+            name: item.content.Name,
+            location: {
+                id: item.location.id,
+                _href: item.location._href,
+            },
+        };
+    }
+
+    toggleItemSelect(item, isSelected) {
+        const { selectedItemsCachedData } = this.state;
+        const updatedSelectedItemsCachedData = new Map(selectedItemsCachedData);
+        const itemDataToCache = this.getItemDataToCache(item);
+        const locationId = item.location.id;
 
         if (isSelected) {
-            updatedSelectedItemsIds.add(location.id);
+            updatedSelectedItemsCachedData.set(locationId, itemDataToCache);
         } else {
-            updatedSelectedItemsIds.delete(location.id);
+            updatedSelectedItemsCachedData.delete(locationId);
         }
 
-        this.setSelectedItemsState(updatedSelectedItemsIds);
+        this.setSelectedItemsState(updatedSelectedItemsCachedData);
     }
 
-    toggleAllItemsSelect(isSelectAction) {
-        if (isSelectAction) {
-            this.selectAllItems();
+    toggleAllPageItemsSelection(select) {
+        const { pages, activePage } = this.state;
+        const pageItems = pages[activePage];
+
+        if (select) {
+            const itemsCachedData = new Map(pageItems.map((item) => [item.location.id, this.getItemDataToCache(item)]));
+
+            this.selectItems(itemsCachedData);
         } else {
-            this.deselectAllItems();
+            const locationsIds = pageItems.map((item) => item.location.id);
+            const locationsIdsSet = new Set(locationsIds);
+
+            this.deselectItems(locationsIdsSet);
         }
-    }
-
-    selectAllItems() {
-        const { items } = this.state;
-        const contentItemsIds = items.map((item) => item.location.id);
-        const contentItemsIdsSet = new Set(contentItemsIds);
-
-        this.setSelectedItemsState(contentItemsIdsSet);
-    }
-
-    deselectAllItems() {
-        this.setSelectedItemsState(new Set());
-    }
-
-    setSelectedItemsState(selectedLocationsIds) {
-        this.setState(() => ({
-            selectedLocationsIds,
-        }));
-    }
-
-    getSelectedItems() {
-        const { items, selectedLocationsIds } = this.state;
-        const selectedLocationsIdsArray = [...selectedLocationsIds];
-        const selectedItems = items.filter((item) => selectedLocationsIdsArray.includes(item.location.id));
-
-        return selectedItems;
     }
 
     /**
-     * Removes items of provided locations' IDs from items list in component state
      *
-     * @param {Set} locationsToRemoveIds
+     * @param {Map} itemsCachedData
      */
-    removeItemsFromList(locationsToRemoveIds) {
-        this.setState((state) => {
-            const { items } = state;
-            const itemsWithoutItemsToRemove = items.filter((item) => !locationsToRemoveIds.has(item.location.id));
-            const removedItemsCount = items.length - itemsWithoutItemsToRemove.length;
-            const selectedLocationsIds = new Set([...state.selectedLocationsIds].filter((id) => !locationsToRemoveIds.has(id)));
+    selectItems(itemsCachedData) {
+        const { selectedItemsCachedData } = this.state;
+        const newSelection = new Map([...selectedItemsCachedData, ...itemsCachedData]);
 
-            return {
-                selectedLocationsIds,
-                items: itemsWithoutItemsToRemove,
-                totalCount: state.totalCount - removedItemsCount,
-                offset: state.offset - removedItemsCount,
-            };
-        });
+        this.setSelectedItemsState(newSelection);
+    }
+
+    /**
+     * Deselects items with locations with provided IDs.
+     *
+     * @param {Set} locationsIds
+     */
+    deselectItems(locationsIds) {
+        const { selectedItemsCachedData } = this.state;
+        const newSelection = new Map([...selectedItemsCachedData].filter(([locationId, cachedData]) => !locationsIds.has(locationId)));
+
+        this.setSelectedItemsState(newSelection);
+    }
+
+    deselectAllItems() {
+        this.setSelectedItemsState(new Map());
+    }
+
+    setSelectedItemsState(selectedItemsCachedData) {
+        this.setState(() => ({
+            selectedItemsCachedData,
+        }));
     }
 
     toggleBulkOperationStatusState(isDuringBulkOperation) {
@@ -375,16 +521,18 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(true);
 
         const { restInfo } = this.props;
-        const itemsToMove = this.getSelectedItems();
-        const contentsToMove = itemsToMove.map((item) => item.location);
+        const { selectedItemsCachedData } = this.state;
+        const locationsToMove = [...selectedItemsCachedData.values()].map(({ location }) => location);
 
-        bulkMoveLocations(restInfo, contentsToMove, location._href, this.afterBulkMove.bind(this, location));
+        bulkMoveLocations(restInfo, locationsToMove, location._href, this.afterBulkMove.bind(this, location));
     }
 
     afterBulkMove(location, movedLocations, notMovedLocations) {
-        const movedLocationsIds = new Set(movedLocations.map((location) => location.id));
+        const { totalCount } = this.state;
 
-        this.removeItemsFromList(movedLocationsIds);
+        this.updateTotalCountState(totalCount - movedLocations.length);
+        this.deselectAllItems();
+        this.discardPagesDataOtherThan([]);
 
         this.toggleBulkOperationStatusState(false);
 
@@ -433,8 +581,8 @@ export default class SubItemsModule extends Component {
 
         const UniversalDiscovery = window.eZ.modules.UniversalDiscovery;
         const { restInfo, parentLocationId, udwConfigBulkMoveItems } = this.props;
-        const selectedItems = this.getSelectedItems();
-        const selectedItemsLocationsIds = selectedItems.map((item) => item.location.id);
+        const { selectedItemsCachedData } = this.state;
+        const selectedItemsLocationsIds = [...selectedItemsCachedData.values()].map(({ location }) => location.id);
         const excludedMoveLocations = [parentLocationId, ...selectedItemsLocationsIds];
         const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
         const udwProps = {
@@ -459,16 +607,18 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(true);
 
         const { restInfo } = this.props;
-        const itemsToDelete = this.getSelectedItems();
-        const locationsToDelete = itemsToDelete.map((item) => item.location);
+        const { selectedItemsCachedData } = this.state;
+        const locationsToDelete = [...selectedItemsCachedData.values()].map(({ location }) => location);
 
         bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete);
     }
 
-    afterBulkDelete(deletedLocations, notDeleted) {
-        const deletedLocationsIds = new Set(deletedLocations.map((location) => location.id));
+    afterBulkDelete(deletedLocations, notDeletedLocations) {
+        const { totalCount } = this.state;
 
-        this.removeItemsFromList(deletedLocationsIds);
+        this.updateTotalCountState(totalCount - deletedLocations.length);
+        this.deselectAllItems();
+        this.discardPagesDataOtherThan([]);
 
         this.toggleBulkOperationStatusState(false);
 
@@ -482,7 +632,7 @@ export default class SubItemsModule extends Component {
             window.eZ.helpers.notification.showSuccessNotification(message);
         }
 
-        if (notDeleted.length) {
+        if (notDeletedLocations.length) {
             const message = Translator.trans(
                 /*@Desc("You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
                 {},
@@ -557,6 +707,23 @@ export default class SubItemsModule extends Component {
         );
     }
 
+    changePage(page) {
+        this.updateListViewHeight();
+        this.setState(() => ({
+            activePage: page,
+        }));
+    }
+
+    getPageSelectedLocationsIds() {
+        const { selectedItemsCachedData, pages, activePage } = this.state;
+        const selectedLocationsIds = new Set([...selectedItemsCachedData.keys()]);
+        const pageItems = pages[activePage];
+        const pageLocationsIds = new Set(pageItems.map((item) => item.location.id));
+        const selectedPageLocationsIds = new Set([...pageLocationsIds].filter((locationId) => selectedLocationsIds.has(locationId)));
+
+        return selectedPageLocationsIds;
+    }
+
     /**
      * Renders extra actions
      *
@@ -572,23 +739,45 @@ export default class SubItemsModule extends Component {
     }
 
     /**
-     * Renders load more button
+     * Renders viewing message
      *
-     * @method renderLoadMore
+     * @method renderViewingMessage
+     * @returns {JSX.Element}
+     */
+    renderViewingMessage() {
+        const { totalCount } = this.state;
+        const { activePage, pages } = this.state;
+        const pageItems = pages[activePage];
+        const viewingCount = pageItems ? pageItems.length : 0;
+
+        return <ViewingMessageComponent totalCount={totalCount} viewingCount={viewingCount} />;
+    }
+
+    /**
+     * Renders pagination
+     *
+     * @method renderPagination
      * @returns {JSX.Element}
      * @memberof SubItemsModule
      */
-    renderLoadMore() {
-        if (!this.state.totalCount) {
-            return;
+    renderPagination() {
+        const { limit: itemsPerPage } = this.props;
+        const { totalCount } = this.state;
+        const onlyOnePage = totalCount <= itemsPerPage;
+
+        if (!this.state.totalCount || onlyOnePage) {
+            return null;
         }
 
+        const { activePage } = this.state;
+
         return (
-            <LoadMoreComponent
-                totalCount={this.state.totalCount}
-                loadedCount={this.state.items.length}
-                limit={this.state.limit}
-                onLoadMore={this.handleLoadMore}
+            <PaginationComponent
+                proximity={1}
+                itemsPerPage={itemsPerPage}
+                activePageIndex={activePage}
+                totalCount={totalCount}
+                onPageChange={this.changePage}
             />
         );
     }
@@ -605,20 +794,81 @@ export default class SubItemsModule extends Component {
         return <ActionButton disabled={disabled} onClick={this.onDeleteBtnClick} label={label} type="trash" />;
     }
 
-    render() {
-        const { isLoading, isDuringBulkOperation } = this.state;
-        let listClassName = 'm-sub-items__list';
+    renderSpinner() {
+        const { pages, activePage } = this.state;
+        const activePageItems = pages[activePage];
+        const pageLoaded = !!activePageItems;
 
-        if (isLoading || isDuringBulkOperation) {
-            listClassName = `${listClassName} ${listClassName}--loading`;
+        if (pageLoaded) {
+            return null;
         }
 
+        const { listViewHeight } = this.state;
+        const spinnerMinHeight = 90;
+        const style = {
+            height: listViewHeight && listViewHeight > spinnerMinHeight ? listViewHeight : spinnerMinHeight,
+        };
+
+        return (
+            <div style={style}>
+                <div className="m-sub-items__list-spinner-wrapper">
+                    <Icon name="spinner" extraClasses="m-sub-items__list-spinner ez-spin ez-icon-x2 ez-icon-spinner" />
+                </div>
+            </div>
+        );
+    }
+
+    renderNoItems() {
+        const { totalCount } = this.state;
+
+        if (totalCount) {
+            return null;
+        }
+
+        return <NoItemsComponent />;
+    }
+
+    renderListView() {
+        const { pages, activePage, sortClause, sortOrder } = this.state;
+        const activePageItems = pages[activePage];
+        const pageLoaded = !!activePageItems;
+
+        if (!pageLoaded) {
+            return null;
+        }
+
+        const selectedPageLocationsIds = this.getPageSelectedLocationsIds();
+
+        return (
+            <SubItemsListComponent
+                activeView={this.state.activeView}
+                contentTypesMap={this.state.contentTypesMap}
+                handleItemPriorityUpdate={this.handleItemPriorityUpdate}
+                items={activePageItems}
+                languages={this.props.languages}
+                handleEditItem={this.props.handleEditItem}
+                generateLink={this.props.generateLink}
+                onItemSelect={this.toggleItemSelect}
+                toggleAllItemsSelect={this.toggleAllPageItemsSelection}
+                selectedLocationsIds={selectedPageLocationsIds}
+                onSortChange={this.changeSorting}
+                sortClause={sortClause}
+                sortOrder={sortOrder}
+            />
+        );
+    }
+
+    render() {
         const listTitle = Translator.trans(/*@Desc("Sub-items")*/ 'items_list.title', {}, 'sub_items');
-        const { activeView } = this.state;
-        const selectedItems = this.getSelectedItems();
-        const nothingSelected = !selectedItems.length;
+        const { selectedItemsCachedData, activeView, totalCount, isDuringBulkOperation } = this.state;
+        const nothingSelected = !selectedItemsCachedData.size;
         const isTableViewActive = activeView === 'table';
         const bulkBtnDisabled = nothingSelected || !isTableViewActive;
+        let listClassName = 'm-sub-items__list';
+
+        if (isDuringBulkOperation) {
+            listClassName = `${listClassName} ${listClassName}--processing`;
+        }
 
         return (
             <div className="m-sub-items">
@@ -631,27 +881,15 @@ export default class SubItemsModule extends Component {
                         {this.renderBulkMoveBtn(bulkBtnDisabled)}
                         {this.renderBulkDeleteBtn(bulkBtnDisabled)}
                     </div>
-                    <ViewSwitcherComponent
-                        onViewChange={this.switchView}
-                        activeView={this.state.activeView}
-                        isDisabled={!this.state.items.length}
-                    />
+                    <ViewSwitcherComponent onViewChange={this.switchView} activeView={activeView} isDisabled={!totalCount} />
                 </div>
-                <div className={listClassName}>
-                    <SubItemsListComponent
-                        activeView={activeView}
-                        contentTypesMap={this.state.contentTypesMap}
-                        handleItemPriorityUpdate={this.handleItemPriorityUpdate}
-                        items={this.state.items}
-                        languages={this.props.languages}
-                        handleEditItem={this.props.handleEditItem}
-                        generateLink={this.props.generateLink}
-                        onItemSelect={this.toggleItemSelect}
-                        toggleAllItemsSelect={this.toggleAllItemsSelect}
-                        selectedLocationsIds={this.state.selectedLocationsIds}
-                    />
+                <div ref={this._refListViewWrapper} className={listClassName}>
+                    {this.renderSpinner()}
+                    {this.renderListView()}
+                    {this.renderNoItems()}
                 </div>
-                {this.renderLoadMore()}
+                {this.renderViewingMessage()}
+                {this.renderPagination()}
                 {this.renderUdw()}
                 {this.renderConfirmationPopup()}
             </div>

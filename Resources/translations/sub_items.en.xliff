@@ -91,16 +91,6 @@
         <target>Invalid response format</target>
         <note>key: load_content_items.invalid_response_format.error.message</note>
       </trans-unit>
-      <trans-unit id="3b84946bc3cacc7c087ccdf3546c3e1d32718075" resname="load_more.action.text">
-        <source>Show %limit% more results</source>
-        <target>Show %limit% more results</target>
-        <note>key: load_more.action.text</note>
-      </trans-unit>
-      <trans-unit id="0b518af9d0e5e0471ad7c9aefbcda068ff71d0ab" resname="load_more.info.text">
-        <source><![CDATA[Viewing <strong>%loaded%</strong> out of <strong>%total%</strong> sub-items]]></source>
-        <target><![CDATA[Viewing <strong>%loaded%</strong> out of <strong>%total%</strong> sub-items]]></target>
-        <note>key: load_more.info.text</note>
-      </trans-unit>
       <trans-unit id="e3c395cec9466f06c8f2f3f4b2bfcd9021537714" resname="move_btn.label">
         <source>Move selected items</source>
         <target state="new">Move selected items</target>
@@ -110,6 +100,21 @@
         <source>This location has no sub-items</source>
         <target>This location has no sub-items</target>
         <note>key: no_items.message</note>
+      </trans-unit>
+      <trans-unit id="a0e2bd4beeb6680ff81add5686bbf2ee9b8ad0ca" resname="page.loading_error.message">
+        <source>An error occurred while loading items in the Sub Items module</source>
+        <target state="new">An error occurred while loading items in the Sub Items module</target>
+        <note>key: page.loading_error.message</note>
+      </trans-unit>
+      <trans-unit id="af3bcdfcdcd33a16838a6f2b88c845c92fcb0938" resname="pagination.back">
+        <source>Back</source>
+        <target state="new">Back</target>
+        <note>key: pagination.back</note>
+      </trans-unit>
+      <trans-unit id="b10157de76c0f57fa166904d97c06336e10559ca" resname="pagination.next">
+        <source>Next</source>
+        <target state="new">Next</target>
+        <note>key: pagination.next</note>
       </trans-unit>
       <trans-unit id="af207d1e719904a39524b34212a1ea6116cb3d46" resname="switch_to_grid_view.btn.label">
         <source>View as grid</source>
@@ -130,6 +135,11 @@
         <source>Choose location</source>
         <target state="new">Choose location</target>
         <note>key: udw.choose_location.title</note>
+      </trans-unit>
+      <trans-unit id="5ae5a511a5c344781ad0caa53efe7b33429c6132" resname="viewing_message">
+        <source><![CDATA[Viewing <strong>%viewingCount%</strong> out of <strong>%totalCount%</strong> sub-items]]></source>
+        <target state="new"><![CDATA[Viewing <strong>%viewingCount%</strong> out of <strong>%totalCount%</strong> sub-items]]></target>
+        <note>key: viewing_message</note>
       </trans-unit>
     </body>
   </file>

@@ -44,7 +44,7 @@
     position: relative;
 }
 
-.m-sub-items__list--loading:after {
+.m-sub-items__list--processing:after {
     content: '';
     position: absolute;
     z-index: 999;
@@ -53,6 +53,20 @@
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.m-sub-items__list-spinner-wrapper {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.m-sub-items__list-spinner {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 20px;
 }
 
 .m-sub-items__confirmation-modal-body {
