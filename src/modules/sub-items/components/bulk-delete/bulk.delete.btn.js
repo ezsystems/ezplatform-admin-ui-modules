@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import Popup from '../../../common/popup/popup.component';
-import { bulkDeleteContents } from './../../services/bulk.service.js';
+import { bulkMoveLocationsToTrash } from './../../services/bulk.service.js';
 
 import './css/bulk.delete.btn.css';
+import Icon from '../../../common/icon/icon';
 
 class BulkDeleteButton extends PureComponent {
     constructor(props) {
@@ -41,7 +42,7 @@ class BulkDeleteButton extends PureComponent {
         const { restInfo, selectedItems: itemsToDelete } = this.props;
         const locationsToDelete = itemsToDelete.map((item) => item.location);
 
-        bulkDeleteContents(restInfo, locationsToDelete, this.afterBulkDelete);
+        bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete);
     }
 
     afterBulkDelete(deletedLocations, notDeleted) {
@@ -147,9 +148,7 @@ class BulkDeleteButton extends PureComponent {
         return (
             <Fragment>
                 <div className={className} title={label} onClick={this.onBtnClick}>
-                    <svg className="ez-icon ez-icon--medium">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#trash" />
-                    </svg>
+                    <Icon name="trash" extraClasses="ez-icon--medium" />
                 </div>
                 {this.renderConfirmationPopup()}
             </Fragment>

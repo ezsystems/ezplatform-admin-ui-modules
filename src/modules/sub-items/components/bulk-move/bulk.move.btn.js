@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import { bulkMoveLocations } from './../../services/bulk.service.js';
-
-import './css/bulk.move.btn.css';
+import Icon from '../../../common/icon/icon.js';
 
 class BulkMoveButton extends PureComponent {
     constructor(props) {
@@ -84,7 +83,7 @@ class BulkMoveButton extends PureComponent {
         }
 
         const UniversalDiscovery = window.eZ.modules.UniversalDiscovery;
-        const { restInfo, parentLocationId, selectedItems } = this.props;
+        const { restInfo, parentLocationId, selectedItems, udwConfigMove } = this.props;
         const selectedItemsLocationsIds = selectedItems.map((item) => item.location.id);
         const excludedMoveLocations = [parentLocationId, ...selectedItemsLocationsIds];
         const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
@@ -96,8 +95,7 @@ class BulkMoveButton extends PureComponent {
             canSelectContent: ({ item }, callback) => {
                 callback(!excludedMoveLocations.includes(item.id));
             },
-            multiple: false,
-            allowContainersOnly: true,
+            ...udwConfigMove,
         };
 
         return ReactDOM.createPortal(<UniversalDiscovery {...udwProps} />, this.udwContainer);
@@ -115,9 +113,7 @@ class BulkMoveButton extends PureComponent {
         return (
             <Fragment>
                 <div className={className} title={label} onClick={this.onBtnClick}>
-                    <svg className="ez-icon ez-icon--medium">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#move" />
-                    </svg>
+                    <Icon name="move" extraClasses="ez-icon--medium" />
                 </div>
                 {this.renderUdw()}
             </Fragment>
@@ -133,6 +129,7 @@ BulkMoveButton.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
+    udwConfigMove: PropTypes.object.isRequired,
 };
 
 export default BulkMoveButton;

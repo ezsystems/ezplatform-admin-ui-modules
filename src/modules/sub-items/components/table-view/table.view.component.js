@@ -147,6 +147,7 @@ export default class TableViewComponent extends Component {
     }
 
     /**
+     * Selects all visible items
      *
      * @param {Event} event
      */

@@ -149,7 +149,9 @@ class Popup extends Component {
             modalAttrs.className = `${modalAttrs.className} ${additionalClasses}`;
         }
 
-        modalAttrs.className = noHeader ? `${modalAttrs.className} c-popup--no-header` : modalAttrs.className;
+        if (noHeader) {
+            modalAttrs.className = `${modalAttrs.className} c-popup--no-header`;
+        }
 
         return (
             <div {...modalAttrs}>

@@ -162,6 +162,7 @@ export default class TableViewItemComponent extends PureComponent {
     }
 
     /**
+     * Calls onItemSelect callback for given item
      *
      * @param {Event} event
      */

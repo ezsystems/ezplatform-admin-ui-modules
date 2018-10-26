@@ -315,18 +315,20 @@ export default class SubItemsModule extends Component {
     }
 
     /**
+     * Removes items of provided locations' IDs from items list in component state
+     *
      * @param {Set} locationsToRemoveIds
      */
     removeItemsFromList(locationsToRemoveIds) {
         this.setState((state) => {
             const { items } = state;
-            const filteredItems = items.filter((item) => !locationsToRemoveIds.has(item.location.id));
-            const removedItemsCount = items.length - filteredItems.length;
+            const itemsWithoutItemsToRemove = items.filter((item) => !locationsToRemoveIds.has(item.location.id));
+            const removedItemsCount = items.length - itemsWithoutItemsToRemove.length;
             const selectedLocationsIds = new Set([...state.selectedLocationsIds].filter((id) => !locationsToRemoveIds.has(id)));
 
             return {
                 selectedLocationsIds,
-                items: filteredItems,
+                items: itemsWithoutItemsToRemove,
                 totalCount: state.totalCount - removedItemsCount,
                 offset: state.offset - removedItemsCount,
             };
@@ -370,7 +372,7 @@ export default class SubItemsModule extends Component {
     }
 
     renderBulkMoveBtn(selectedItems) {
-        const { restInfo, parentLocationId } = this.props;
+        const { restInfo, parentLocationId, udwConfigMove } = this.props;
 
         return (
             <BulkMoveButton
@@ -378,6 +380,7 @@ export default class SubItemsModule extends Component {
                 removeItemsFromList={this.removeItemsFromList}
                 parentLocationId={parentLocationId}
                 restInfo={restInfo}
+                udwConfigMove={udwConfigMove}
             />
         );
     }
@@ -469,6 +472,7 @@ SubItemsModule.propTypes = {
     contentTypesMap: PropTypes.object,
     totalCount: PropTypes.number,
     languages: PropTypes.object,
+    udwConfigMove: PropTypes.object.isRequired,
 };
 
 SubItemsModule.defaultProps = {

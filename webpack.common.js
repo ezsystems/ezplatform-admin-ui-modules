@@ -48,7 +48,7 @@ module.exports = {
             amd: 'prop-types',
         },
         jquery: {
-            root: '$',
+            root: 'jQuery',
             commonjs2: 'jquery',
             commonjs: 'jquery',
             amd: 'jquery',

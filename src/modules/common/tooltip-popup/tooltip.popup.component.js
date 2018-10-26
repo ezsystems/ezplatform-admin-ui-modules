@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './css/tooltip.popup.component.css';
+import Icon from '../icon/icon';
 
 const TooltipPopupComponent = (props) => {
     const attrs = {
@@ -14,9 +15,7 @@ const TooltipPopupComponent = (props) => {
             <div className="c-tooltip-popup__header">
                 <div className="c-tooltip-popup__title">{props.title}</div>
                 <div className="c-tooltip-popup__close" onClick={props.onClose}>
-                    <svg className="ez-icon">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard" />
-                    </svg>
+                    <Icon name="discard"/>
                 </div>
             </div>
             <div className="c-tooltip-popup__content">{props.children}</div>

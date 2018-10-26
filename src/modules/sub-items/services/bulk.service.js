@@ -4,15 +4,16 @@ const HEADERS_BULK = {
     Accept: 'application/vnd.ez.api.BulkOperationResponse+json',
     'Content-Type': 'application/vnd.ez.api.BulkOperation+json',
 };
+const TRASH_FAKE_LOCATION = '/api/ezp/v2/content/trash';
 
 export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
-    const requestBody = getBulkMoveRequestOperations(locations, newLocationHref);
+    const requestBodyOperations = getBulkMoveRequestOperations(locations, newLocationHref);
 
-    makeBulkRequest(restInfo, requestBody, processBulkResponse.bind(null, locations, 201, callback));
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, 201, callback));
 };
 
-export const bulkDeleteContents = (restInfo, locations, callback) => {
-    bulkMoveLocations(restInfo, locations, '/api/ezp/v2/content/trash', callback);
+export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
+    bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
 };
 
 const getBulkMoveRequestOperations = (locations, destination) => {
@@ -33,24 +34,23 @@ const getBulkMoveRequestOperations = (locations, destination) => {
 
 const processBulkResponse = (locations, successCode, callback, response) => {
     const { operations } = response.BulkOperationResponse;
-    const contentsMatches = { success: [], fail: [] };
+    const locationsMatches = { success: [], fail: [] };
 
-    for (const locationId of Object.keys(operations)) {
-        const response = operations[locationId];
-        const respectiveItem = locations.find((location) => String(location.id) === locationId);
+    Object.entries(operations).forEach(([locationId, response]) => {
+        const respectiveItem = locations.find((location) => location.id === parseInt(locationId, 10));
         const isSuccess = response.statusCode === successCode;
 
         if (isSuccess) {
-            contentsMatches.success.push(respectiveItem);
+            locationsMatches.success.push(respectiveItem);
         } else {
-            contentsMatches.fail.push(respectiveItem);
+            locationsMatches.fail.push(respectiveItem);
         }
-    }
+    });
 
-    callback(contentsMatches.success, contentsMatches.fail);
+    callback(locationsMatches.success, locationsMatches.fail);
 };
 
-const makeBulkRequest = ({ token }, operations, callback) => {
+const makeBulkRequest = ({ token }, requestBodyOperations, callback) => {
     const request = new Request(Routing.generate('ezplatform.bulk_operation'), {
         method: 'POST',
         headers: {
@@ -59,10 +59,10 @@ const makeBulkRequest = ({ token }, operations, callback) => {
         },
         body: JSON.stringify({
             bulkOperations: {
-                operations,
+                operations: requestBodyOperations,
             },
         }),
-        mode: 'cors',
+        mode: 'same-origin',
         credentials: 'same-origin',
     });
 
