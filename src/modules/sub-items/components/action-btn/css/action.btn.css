@@ -1,0 +1,35 @@
+.c-action-btn {
+    display: inline-flex;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.c-action-btn .ez-icon {
+    fill: #fff;
+}
+
+.c-action-btn--disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+}
+
+.c-action-btn--move {
+    border: 1px solid #106d95;
+    background-color: #106d95;
+}
+
+.c-action-btn--trash {
+    border: 1px solid #d92d42;
+    background-color: #d92d42;
+}

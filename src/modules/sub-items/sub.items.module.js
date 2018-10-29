@@ -1,15 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import ViewSwitcherComponent from './components/view-switcher/view.switcher.component.js';
 import SubItemsListComponent from './components/sub-items-list/sub.items.list.component.js';
 import LoadMoreComponent from './components/load-more/load.more.component.js';
+import Popup from '../common/popup/popup.component';
+import ActionButton from './components/action-btn/action.btn.js';
 
 import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
+import { bulkMoveLocations, bulkMoveLocationsToTrash } from './services/bulk.service.js';
 
 import './css/sub.items.module.css';
-import BulkMoveButton from './components/bulk-move/bulk.move.btn.js';
-import BulkDeleteButton from './components/bulk-delete/bulk.delete.btn.js';
 
 export default class SubItemsModule extends Component {
     constructor(props) {
@@ -26,6 +28,16 @@ export default class SubItemsModule extends Component {
         this.toggleAllItemsSelect = this.toggleAllItemsSelect.bind(this);
         this.getSelectedItems = this.getSelectedItems.bind(this);
         this.removeItemsFromList = this.removeItemsFromList.bind(this);
+        this.onMoveBtnClick = this.onMoveBtnClick.bind(this);
+        this.closeUdw = this.closeUdw.bind(this);
+        this.onUdwConfirm = this.onUdwConfirm.bind(this);
+        this.onDeleteBtnClick = this.onDeleteBtnClick.bind(this);
+        this.closeBulkDeletePopup = this.closeBulkDeletePopup.bind(this);
+        this.onBulkDeletePopupConfirm = this.onBulkDeletePopupConfirm.bind(this);
+        this.afterBulkDelete = this.afterBulkDelete.bind(this);
+
+        this.bulkDeleteModalContainer = null;
+        this.udwContainer = null;
 
         this.state = {
             activeView: props.activeView,
@@ -35,13 +47,26 @@ export default class SubItemsModule extends Component {
             totalCount: props.totalCount,
             offset: props.offset,
             isLoading: false,
+            isUdwOpened: false,
+            isBulkDeletePopupVisible: false,
         };
+    }
+
+    componentDidMount() {
+        this.udwContainer = document.getElementById('react-udw');
+        this.bulkDeleteModalContainer = document.createElement('div');
+        this.bulkDeleteModalContainer.classList.add('m-sub-items__bulk-delete-modal-container');
+        document.body.appendChild(this.bulkDeleteModalContainer);
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.offset < this.state.offset) {
             this.loadItems();
         }
+    }
+
+    componentWillUnmount() {
+        document.body.removeChild(this.bulkDeleteModalContainer);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
@@ -335,6 +360,188 @@ export default class SubItemsModule extends Component {
         });
     }
 
+    onMoveBtnClick() {
+        this.toggleUdw(true);
+    }
+
+    bulkMove(location) {
+        const { restInfo } = this.props;
+        const itemsToMove = this.getSelectedItems();
+        const contentsToMove = itemsToMove.map((item) => item.location);
+
+        bulkMoveLocations(restInfo, contentsToMove, location._href, this.afterBulkMove.bind(this, location));
+    }
+
+    afterBulkMove(location, movedLocations, notMoved) {
+        const movedLocationsIds = new Set(movedLocations.map((location) => location.id));
+
+        this.removeItemsFromList(movedLocationsIds);
+
+        if (notMoved.length) {
+            const message = Translator.trans(
+                /*@Desc("You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
+                {},
+                'sub_items'
+            );
+
+            window.eZ.helpers.notification.showErrorNotification(message);
+        }
+
+        if (movedLocations.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected content item(s) have been sent to <u>%location_name%</u>")*/ 'bulk_move.success.message',
+                { location_name: location.ContentInfo.Content.Name },
+                'sub_items'
+            );
+
+            window.eZ.helpers.notification.showSuccessNotification(message);
+        }
+    }
+
+    toggleUdw(show) {
+        this.setState(() => ({
+            isUdwOpened: show,
+        }));
+    }
+
+    closeUdw() {
+        this.toggleUdw(false);
+    }
+
+    onUdwConfirm([selectedLocation]) {
+        this.closeUdw();
+        this.bulkMove(selectedLocation);
+    }
+
+    renderUdw() {
+        const { isUdwOpened } = this.state;
+
+        if (!isUdwOpened) {
+            return null;
+        }
+
+        const UniversalDiscovery = window.eZ.modules.UniversalDiscovery;
+        const { restInfo, parentLocationId, udwConfigBulkMoveItems } = this.props;
+        const selectedItems = this.getSelectedItems();
+        const selectedItemsLocationsIds = selectedItems.map((item) => item.location.id);
+        const excludedMoveLocations = [parentLocationId, ...selectedItemsLocationsIds];
+        const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
+        const udwProps = {
+            title,
+            restInfo,
+            onCancel: this.closeUdw,
+            onConfirm: this.onUdwConfirm,
+            canSelectContent: ({ item }, callback) => {
+                callback(!excludedMoveLocations.includes(item.id));
+            },
+            ...udwConfigBulkMoveItems,
+        };
+
+        return ReactDOM.createPortal(<UniversalDiscovery {...udwProps} />, this.udwContainer);
+    }
+
+    onDeleteBtnClick() {
+        this.toggleBulkDeletePopup(true);
+    }
+
+    bulkDelete() {
+        const { restInfo } = this.props;
+        const itemsToDelete = this.getSelectedItems();
+        const locationsToDelete = itemsToDelete.map((item) => item.location);
+
+        bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete);
+    }
+
+    afterBulkDelete(deletedLocations, notDeleted) {
+        const deletedLocationsIds = new Set(deletedLocations.map((location) => location.id));
+
+        this.removeItemsFromList(deletedLocationsIds);
+
+        if (deletedLocations.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
+                {},
+                'sub_items'
+            );
+
+            window.eZ.helpers.notification.showSuccessNotification(message);
+        }
+
+        if (notDeleted.length) {
+            const message = Translator.trans(
+                /*@Desc("You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
+                {},
+                'sub_items'
+            );
+
+            window.eZ.helpers.notification.showErrorNotification(message);
+        }
+    }
+
+    toggleBulkDeletePopup(show) {
+        this.setState(() => ({
+            isBulkDeletePopupVisible: show,
+        }));
+    }
+
+    closeBulkDeletePopup() {
+        this.toggleBulkDeletePopup(false);
+    }
+
+    onBulkDeletePopupConfirm() {
+        this.closeBulkDeletePopup();
+        this.bulkDelete();
+    }
+
+    renderConfirmationPopupFooter() {
+        const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_delete.popup.cancel', {}, 'sub_items');
+        const confirmLabel = Translator.trans(/*@Desc("Send to trash")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
+
+        return (
+            <Fragment>
+                <button
+                    onClick={this.closeBulkDeletePopup}
+                    type="button"
+                    className="btn btn-secondary btn--no m-sub-items__confirmation-modal-cancel-btn"
+                    data-dismiss="modal"
+                >
+                    {cancelLabel}
+                </button>
+                <button onClick={this.onBulkDeletePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
+                    {confirmLabel}
+                </button>
+            </Fragment>
+        );
+    }
+
+    renderConfirmationPopup() {
+        const { isBulkDeletePopupVisible } = this.state;
+
+        if (!isBulkDeletePopupVisible) {
+            return null;
+        }
+
+        const confirmationMessage = Translator.trans(
+            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message',
+            {},
+            'sub_items'
+        );
+
+        return ReactDOM.createPortal(
+            <Popup
+                onClose={this.closeBulkDeletePopup}
+                isVisible={isBulkDeletePopupVisible}
+                isLoading={false}
+                size="medium"
+                footerChildren={this.renderConfirmationPopupFooter()}
+                noHeader={true}
+            >
+                <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
+            </Popup>,
+            this.bulkDeleteModalContainer
+        );
+    }
+
     /**
      * Renders extra actions
      *
@@ -371,31 +578,16 @@ export default class SubItemsModule extends Component {
         );
     }
 
-    renderBulkMoveBtn(selectedItems) {
-        const { restInfo, parentLocationId, udwConfigMove } = this.props;
+    renderBulkMoveBtn(disabled) {
+        const label = Translator.trans(/*@Desc("Move selected items")*/ 'move_btn.label', {}, 'sub_items');
 
-        return (
-            <BulkMoveButton
-                selectedItems={selectedItems}
-                removeItemsFromList={this.removeItemsFromList}
-                parentLocationId={parentLocationId}
-                restInfo={restInfo}
-                udwConfigMove={udwConfigMove}
-            />
-        );
+        return <ActionButton disabled={disabled} onClick={this.onMoveBtnClick} label={label} type="move" />;
     }
 
-    renderBulkDeleteBtn(selectedItems) {
-        const { restInfo, parentLocationId } = this.props;
+    renderBulkDeleteBtn(disabled) {
+        const label = Translator.trans(/*@Desc("Delete selected items")*/ 'trash_btn.label', {}, 'sub_items');
 
-        return (
-            <BulkDeleteButton
-                selectedItems={selectedItems}
-                removeItemsFromList={this.removeItemsFromList}
-                parentLocationId={parentLocationId}
-                restInfo={restInfo}
-            />
-        );
+        return <ActionButton disabled={disabled} onClick={this.onDeleteBtnClick} label={label} type="trash" />;
     }
 
     render() {
@@ -407,6 +599,7 @@ export default class SubItemsModule extends Component {
 
         const listTitle = Translator.trans(/*@Desc("Sub-items")*/ 'items_list.title', {}, 'sub_items');
         const selectedItems = this.getSelectedItems();
+        const bulkBtnDisabled = !selectedItems.length;
 
         return (
             <div className="m-sub-items">
@@ -416,8 +609,8 @@ export default class SubItemsModule extends Component {
                     </div>
                     <div className="m-sub-items__actions">
                         {this.props.extraActions.map(this.renderExtraActions)}
-                        {this.renderBulkMoveBtn(selectedItems)}
-                        {this.renderBulkDeleteBtn(selectedItems)}
+                        {this.renderBulkMoveBtn(bulkBtnDisabled)}
+                        {this.renderBulkDeleteBtn(bulkBtnDisabled)}
                     </div>
                     <ViewSwitcherComponent
                         onViewChange={this.switchView}
@@ -440,6 +633,8 @@ export default class SubItemsModule extends Component {
                     />
                 </div>
                 {this.renderLoadMore()}
+                {this.renderUdw()}
+                {this.renderConfirmationPopup()}
             </div>
         );
     }
@@ -472,7 +667,7 @@ SubItemsModule.propTypes = {
     contentTypesMap: PropTypes.object,
     totalCount: PropTypes.number,
     languages: PropTypes.object,
-    udwConfigMove: PropTypes.object.isRequired,
+    udwConfigBulkMoveItems: PropTypes.object.isRequired,
 };
 
 SubItemsModule.defaultProps = {

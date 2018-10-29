@@ -55,38 +55,11 @@
     bottom: 0;
 }
 
-.m-sub-items__btn {
-    display: inline-flex;
-    border-radius: 4px;
-    text-align: center;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    transition: background 0.3s ease-in-out;
-    align-items: center;
-    height: 40px;
-    width: 40px;
-    justify-content: center;
-    margin-right: 8px;
+.m-sub-items__confirmation-modal-body {
+    padding: 0 2rem;
 }
 
-.m-sub-items__btn .ez-icon {
-    fill: #fff;
-}
-
-.m-sub-items__btn--disabled {
-    cursor: not-allowed;
-    opacity: 0.3;
-}
-
-.m-sub-items__btn--move {
-    border: 1px solid #106d95;
-    background-color: #106d95;
-}
-
-.m-sub-items__btn--trash {
-    border: 1px solid #d92d42;
-    background-color: #d92d42;
+.m-sub-items__confirmation-modal-cancel-btn {
+    background-color: #646464;
+    border-color: #646464;
 }
