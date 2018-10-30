@@ -37,8 +37,8 @@
         <note>key: bulk_move.error.message</note>
       </trans-unit>
       <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
-        <source><![CDATA[The selected content item(s) have been sent to <u>%location_name%</u>]]></source>
-        <target state="new"><![CDATA[The selected content item(s) have been sent to <u>%location_name%</u>]]></target>
+        <source><![CDATA[The selected content item(s) have been moved to <u>%location_name%</u>]]></source>
+        <target state="new"><![CDATA[The selected content item(s) have been moved to <u>%location_name%</u>]]></target>
         <note>key: bulk_move.success.message</note>
       </trans-unit>
       <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">

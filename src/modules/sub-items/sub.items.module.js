@@ -614,8 +614,11 @@ export default class SubItemsModule extends Component {
         }
 
         const listTitle = Translator.trans(/*@Desc("Sub-items")*/ 'items_list.title', {}, 'sub_items');
+        const { activeView } = this.state;
         const selectedItems = this.getSelectedItems();
-        const bulkBtnDisabled = !selectedItems.length;
+        const nothingSelected = !selectedItems.length;
+        const isTableViewActive = activeView === 'table';
+        const bulkBtnDisabled = nothingSelected || !isTableViewActive;
 
         return (
             <div className="m-sub-items">
@@ -636,7 +639,7 @@ export default class SubItemsModule extends Component {
                 </div>
                 <div className={listClassName}>
                     <SubItemsListComponent
-                        activeView={this.state.activeView}
+                        activeView={activeView}
                         contentTypesMap={this.state.contentTypesMap}
                         handleItemPriorityUpdate={this.handleItemPriorityUpdate}
                         items={this.state.items}
