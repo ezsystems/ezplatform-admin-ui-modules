@@ -188,6 +188,7 @@ Popup.defaultProps = {
     hasFocus: true,
     size: 'large',
     noHeader: false,
+    onConfigIframeLoad: () => {},
 };
 
 export default Popup;

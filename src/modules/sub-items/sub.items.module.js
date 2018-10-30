@@ -47,6 +47,7 @@ export default class SubItemsModule extends Component {
             totalCount: props.totalCount,
             offset: props.offset,
             isLoading: false,
+            isDuringBulkOperation: false,
             isUdwOpened: false,
             isBulkDeletePopupVisible: false,
         };
@@ -360,11 +361,19 @@ export default class SubItemsModule extends Component {
         });
     }
 
+    toggleBulkOperationStatusState(isDuringBulkOperation) {
+        this.setState(() => ({
+            isDuringBulkOperation,
+        }));
+    }
+
     onMoveBtnClick() {
         this.toggleUdw(true);
     }
 
     bulkMove(location) {
+        this.toggleBulkOperationStatusState(true);
+
         const { restInfo } = this.props;
         const itemsToMove = this.getSelectedItems();
         const contentsToMove = itemsToMove.map((item) => item.location);
@@ -372,12 +381,14 @@ export default class SubItemsModule extends Component {
         bulkMoveLocations(restInfo, contentsToMove, location._href, this.afterBulkMove.bind(this, location));
     }
 
-    afterBulkMove(location, movedLocations, notMoved) {
+    afterBulkMove(location, movedLocations, notMovedLocations) {
         const movedLocationsIds = new Set(movedLocations.map((location) => location.id));
 
         this.removeItemsFromList(movedLocationsIds);
 
-        if (notMoved.length) {
+        this.toggleBulkOperationStatusState(false);
+
+        if (notMovedLocations.length) {
             const message = Translator.trans(
                 /*@Desc("You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
                 {},
@@ -445,6 +456,8 @@ export default class SubItemsModule extends Component {
     }
 
     bulkDelete() {
+        this.toggleBulkOperationStatusState(true);
+
         const { restInfo } = this.props;
         const itemsToDelete = this.getSelectedItems();
         const locationsToDelete = itemsToDelete.map((item) => item.location);
@@ -456,6 +469,8 @@ export default class SubItemsModule extends Component {
         const deletedLocationsIds = new Set(deletedLocations.map((location) => location.id));
 
         this.removeItemsFromList(deletedLocationsIds);
+
+        this.toggleBulkOperationStatusState(false);
 
         if (deletedLocations.length) {
             const message = Translator.trans(
@@ -591,9 +606,10 @@ export default class SubItemsModule extends Component {
     }
 
     render() {
+        const { isLoading, isDuringBulkOperation } = this.state;
         let listClassName = 'm-sub-items__list';
 
-        if (this.state.isLoading) {
+        if (isLoading || isDuringBulkOperation) {
             listClassName = `${listClassName} ${listClassName}--loading`;
         }
 
