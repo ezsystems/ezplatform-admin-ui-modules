@@ -6,6 +6,46 @@
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
+      <trans-unit id="35e03083bfdfafc073cf343c74385bec3945b4ac" resname="bulk_delete.error.message">
+        <source>You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</source>
+        <target state="new">You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</target>
+        <note>key: bulk_delete.error.message</note>
+      </trans-unit>
+      <trans-unit id="410f2ebb276d839b6606da042d0327a32e949093" resname="bulk_delete.popup.cancel">
+        <source>Cancel</source>
+        <target state="new">Cancel</target>
+        <note>key: bulk_delete.popup.cancel</note>
+      </trans-unit>
+      <trans-unit id="a668a561527cc0e3e2c7952fbf300558d9d4f877" resname="bulk_delete.popup.confirm">
+        <source>Send to trash</source>
+        <target state="new">Send to trash</target>
+        <note>key: bulk_delete.popup.confirm</note>
+      </trans-unit>
+      <trans-unit id="02d93b03435046c6bcf08ce15ae7970f7ff8f746" resname="bulk_delete.popup.message">
+        <source>Are you sure you want to send the selected content item(s) to trash?</source>
+        <target state="new">Are you sure you want to send the selected content item(s) to trash?</target>
+        <note>key: bulk_delete.popup.message</note>
+      </trans-unit>
+      <trans-unit id="684c07e2248d815e6eb6bc3f92d3cd49c6952cbe" resname="bulk_delete.success.message">
+        <source>The selected content item(s) have been sent to trash</source>
+        <target state="new">The selected content item(s) have been sent to trash</target>
+        <note>key: bulk_delete.success.message</note>
+      </trans-unit>
+      <trans-unit id="364a3498e021163497d9110380736b876beb326f" resname="bulk_move.error.message">
+        <source>You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</source>
+        <target state="new">You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</target>
+        <note>key: bulk_move.error.message</note>
+      </trans-unit>
+      <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
+        <source><![CDATA[The selected content item(s) have been moved to <u>%location_name%</u>]]></source>
+        <target state="new"><![CDATA[The selected content item(s) have been moved to <u>%location_name%</u>]]></target>
+        <note>key: bulk_move.success.message</note>
+      </trans-unit>
+      <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">
+        <source>Bulk request failed</source>
+        <target state="new">Bulk request failed</target>
+        <note>key: bulk_request.error.message</note>
+      </trans-unit>
       <trans-unit id="e95c7e2e8f7a1a4bb1f64cc48ca2eae0b0af78b6" resname="content_type.not_available.label">
         <source>N/A</source>
         <target>N/A</target>
@@ -61,6 +101,11 @@
         <target><![CDATA[Viewing <strong>%loaded%</strong> out of <strong>%total%</strong> sub-items]]></target>
         <note>key: load_more.info.text</note>
       </trans-unit>
+      <trans-unit id="e3c395cec9466f06c8f2f3f4b2bfcd9021537714" resname="move_btn.label">
+        <source>Move selected items</source>
+        <target state="new">Move selected items</target>
+        <note>key: move_btn.label</note>
+      </trans-unit>
       <trans-unit id="276a7024903672cd0476c82ba8845453e13db95e" resname="no_items.message">
         <source>This location has no sub-items</source>
         <target>This location has no sub-items</target>
@@ -75,6 +120,16 @@
         <source>View as list</source>
         <target>View as list</target>
         <note>key: switch_to_list_view.btn.label</note>
+      </trans-unit>
+      <trans-unit id="11b5de206f496e357ede3c3798b8e113c2946a60" resname="trash_btn.label">
+        <source>Delete selected items</source>
+        <target state="new">Delete selected items</target>
+        <note>key: trash_btn.label</note>
+      </trans-unit>
+      <trans-unit id="cd8466f8e727278543a7e1ded7f3a0c67243c276" resname="udw.choose_location.title">
+        <source>Choose location</source>
+        <target state="new">Choose location</target>
+        <note>key: udw.choose_location.title</note>
       </trans-unit>
     </body>
   </file>

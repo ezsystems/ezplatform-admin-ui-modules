@@ -27,9 +27,13 @@
     flex: 1 1 auto;
 }
 
+.m-sub-items__actions {
+    display: flex;
+}
+
 .m-sub-items__actions .m-mfu {
-    height: 40px;
-    margin-right: 16px;
+    margin-right: 8px;
+    display: flex;
 }
 
 .m-sub-items__list {
@@ -44,9 +48,18 @@
     content: '';
     position: absolute;
     z-index: 999;
-    background: rgba(0,0,0,.5);
+    background: rgba(0, 0, 0, 0.5);
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.m-sub-items__confirmation-modal-body {
+    padding: 0 2rem;
+}
+
+.m-sub-items__confirmation-modal-cancel-btn {
+    background-color: #646464;
+    border-color: #646464;
 }

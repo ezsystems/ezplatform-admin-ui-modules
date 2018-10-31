@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Popup from '../../../common/popup/popup.component';
+import TooltipPopup from '../../../common/tooltip-popup/tooltip.popup.component';
 import DropAreaComponent from '../drop-area/drop.area.component';
 import UploadListComponent from '../upload-list/upload.list.component';
 
@@ -43,7 +43,7 @@ export default class UploadPopupModule extends Component {
 
         return (
             <div className="c-upload-popup">
-                <Popup title={title} {...this.props}>
+                <TooltipPopup title={title} {...this.props}>
                     <DropAreaComponent
                         onDrop={this.uploadFiles.bind(this)}
                         maxFileSize={this.props.adminUiConfig.multiFileUpload.maxFileSize}
@@ -51,7 +51,7 @@ export default class UploadPopupModule extends Component {
                         proccessUploadedFiles={this.props.proccessUploadedFiles}
                     />
                     <UploadListComponent {...listAttrs} />
-                </Popup>
+                </TooltipPopup>
             </div>
         );
     }

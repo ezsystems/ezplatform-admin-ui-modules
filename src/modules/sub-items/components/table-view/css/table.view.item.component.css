@@ -2,7 +2,7 @@
     border-top: 1px solid #a8c8d5;
 }
 
-[class*="c-table-view-item__cell--"] {
+[class*='c-table-view-item__cell--'] {
     padding-left: 16px;
     font-size: 14px;
     line-height: 20px;
@@ -41,6 +41,10 @@
     width: 90px;
 }
 
+.c-table-view-item__inner-wrapper {
+    cursor: pointer;
+}
+
 .c-table-view-item__inner-wrapper--input {
     width: 7ch;
 }
@@ -74,13 +78,13 @@
     cursor: pointer;
 }
 
-[class*="c-table-view-item__btn--"] {
+[class*='c-table-view-item__btn--'] {
     color: #fff;
     border: 1px solid transparent;
     height: 40px;
     min-width: 40px;
     padding: 7px 8px;
-    transition: background .3s ease-in-out;
+    transition: background 0.3s ease-in-out;
     cursor: pointer;
 }
 
@@ -131,11 +135,15 @@
     color: #0645ad;
     text-decoration: none;
     cursor: pointer;
-    transition: color .3s cubic-bezier(.25, .8, .25, 1);
+    transition: color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .c-table-view-item__link:hover,
 .c-table-view-item__link:focus {
     color: #032863;
     text-decoration: underline;
+}
+
+.c-table-view-item__cell--checkbox {
+    width: 5%;
 }

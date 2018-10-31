@@ -21,7 +21,7 @@ export const getBasicRequestInit = ({ token, siteaccess }) => {
  *
  * @function handleRequestResponse
  * @param {Response} response
- * @returns {Error|Promise}
+ * @returns {Response}
  */
 export const handleRequestError = (response) => {
     if (!response.ok) {
@@ -47,7 +47,7 @@ export const handleRequestResponse = (response) => {
  *
  * @function handleRequestResponseStatus
  * @param {Response} response
- * @returns {Error|Promise}
+ * @returns {number}
  */
 export const handleRequestResponseStatus = (response) => {
     return handleRequestError(response).status;

@@ -46,7 +46,13 @@ module.exports = {
             commonjs2: 'prop-types',
             commonjs: 'prop-types',
             amd: 'prop-types',
-        }
+        },
+        jquery: {
+            root: 'jQuery',
+            commonjs2: 'jquery',
+            commonjs: 'jquery',
+            amd: 'jquery',
+        },
     },
     plugins: [new CleanWebpackPlugin(['Resources/public/'])],
 };
