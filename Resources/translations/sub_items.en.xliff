@@ -7,9 +7,14 @@
     </header>
     <body>
       <trans-unit id="35e03083bfdfafc073cf343c74385bec3945b4ac" resname="bulk_delete.error.message">
-        <source>You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</source>
-        <target state="new">You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</target>
+        <source><![CDATA[%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.]]></source>
+        <target state="new"><![CDATA[%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.]]></target>
         <note>key: bulk_delete.error.message</note>
+      </trans-unit>
+      <trans-unit id="23c9d6861623cc0b2f5f454afa841f1e368123cc" resname="bulk_delete.error.modal.table_title">
+        <source>Content item(s) cannot be sent to trash (%itemsCount%)</source>
+        <target state="new">Content item(s) cannot be sent to trash (%itemsCount%)</target>
+        <note>key: bulk_delete.error.modal.table_title</note>
       </trans-unit>
       <trans-unit id="410f2ebb276d839b6606da042d0327a32e949093" resname="bulk_delete.popup.cancel">
         <source>Cancel</source>
@@ -32,18 +37,23 @@
         <note>key: bulk_delete.success.message</note>
       </trans-unit>
       <trans-unit id="364a3498e021163497d9110380736b876beb326f" resname="bulk_move.error.message">
-        <source>You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</source>
-        <target state="new">You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.</target>
+        <source><![CDATA[%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.]]></source>
+        <target state="new"><![CDATA[%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.]]></target>
         <note>key: bulk_move.error.message</note>
       </trans-unit>
+      <trans-unit id="44a971e3ea91b95b9fbbd596f54ca632ef0865d4" resname="bulk_move.error.modal.table_title">
+        <source>Content items cannot be moved (%itemsCount%)</source>
+        <target state="new">Content items cannot be moved (%itemsCount%)</target>
+        <note>key: bulk_move.error.modal.table_title</note>
+      </trans-unit>
       <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
-        <source><![CDATA[The selected content item(s) have been moved to <u>%location_name%</u>]]></source>
-        <target state="new"><![CDATA[The selected content item(s) have been moved to <u>%location_name%</u>]]></target>
+        <source><![CDATA[The selected content item(s) have been sent to <u><a href='%locationHref%'>%locationName%</a></u>]]></source>
+        <target state="new"><![CDATA[The selected content item(s) have been sent to <u><a href='%locationHref%'>%locationName%</a></u>]]></target>
         <note>key: bulk_move.success.message</note>
       </trans-unit>
       <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">
-        <source>Bulk request failed</source>
-        <target state="new">Bulk request failed</target>
+        <source>An unexpected error occurred while deleting the content item(s). Please try again later.</source>
+        <target state="new">An unexpected error occurred while deleting the content item(s). Please try again later.</target>
         <note>key: bulk_request.error.message</note>
       </trans-unit>
       <trans-unit id="e95c7e2e8f7a1a4bb1f64cc48ca2eae0b0af78b6" resname="content_type.not_available.label">
