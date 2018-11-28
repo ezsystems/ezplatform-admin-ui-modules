@@ -48,7 +48,7 @@ export default class UploadPopupModule extends Component {
                         onDrop={this.uploadFiles.bind(this)}
                         maxFileSize={this.props.adminUiConfig.multiFileUpload.maxFileSize}
                         preventDefaultAction={this.props.preventDefaultAction}
-                        proccessUploadedFiles={this.props.proccessUploadedFiles}
+                        processUploadedFiles={this.props.processUploadedFiles}
                     />
                     <UploadListComponent {...listAttrs} />
                 </Popup>
@@ -89,7 +89,7 @@ UploadPopupModule.propTypes = {
         language: PropTypes.string.isRequired,
     }).isRequired,
     preventDefaultAction: PropTypes.func.isRequired,
-    proccessUploadedFiles: PropTypes.func.isRequired,
+    processUploadedFiles: PropTypes.func.isRequired,
 };
 
 UploadPopupModule.defaultProps = {
