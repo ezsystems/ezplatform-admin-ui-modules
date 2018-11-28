@@ -28,7 +28,7 @@ export default class DropAreaComponent extends Component {
      */
     handleUpload(event) {
         this.props.preventDefaultAction(event);
-        this.props.onDrop(this.props.proccessUploadedFiles(event));
+        this.props.onDrop(this.props.processUploadedFiles(event));
     }
 
     componentDidMount() {
@@ -83,6 +83,6 @@ export default class DropAreaComponent extends Component {
 DropAreaComponent.propTypes = {
     onDrop: PropTypes.func.isRequired,
     maxFileSize: PropTypes.number.isRequired,
-    proccessUploadedFiles: PropTypes.func.isRequired,
+    processUploadedFiles: PropTypes.func.isRequired,
     preventDefaultAction: PropTypes.func.isRequired,
 };

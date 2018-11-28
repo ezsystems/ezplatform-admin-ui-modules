@@ -99,7 +99,7 @@ export default class MultiFileUploadModule extends Component {
     handleDropOnWindow(event) {
         this.preventDefaultAction(event);
 
-        const itemsToUpload = this.proccessUploadedFiles(event);
+        const itemsToUpload = this.processUploadedFiles(event);
 
         // Covers the case when dragging and dropping page elements inside the browser,
         // like links, images, etc.
@@ -143,14 +143,14 @@ export default class MultiFileUploadModule extends Component {
      * Processes uploaded files and generates an unique file id
      *
      * @method processUploadedFiles
-     * @param {EVent} event
+     * @param {Event} event
      * @returns {Array}
      * @memberof MultiFileUploadModule
      */
-    proccessUploadedFiles(event) {
+    processUploadedFiles(event) {
         const list = this.extractDroppedFilesList(event);
 
-        return [...list.files].map((file) => ({
+        return Array.from(list.files).map((file) => ({
             id: Math.floor(Math.random() * Date.now()),
             file,
         }));
@@ -210,7 +210,7 @@ export default class MultiFileUploadModule extends Component {
             itemsToUpload: this.state.itemsToUpload,
             onAfterUpload: this.handleAfterUpload.bind(this),
             preventDefaultAction: this.preventDefaultAction,
-            proccessUploadedFiles: this.proccessUploadedFiles.bind(this),
+            processUploadedFiles: this.processUploadedFiles.bind(this),
         });
 
         return <UploadPopupComponent {...attrs} />;
