@@ -19,11 +19,16 @@ export default class MultiFileUploadModule extends Component {
         }
 
         this.handleDropOnWindow = this.handleDropOnWindow.bind(this);
+        this.handleAfterUpload = this.handleAfterUpload.bind(this);
+        this.showUploadPopup = this.showUploadPopup.bind(this);
+        this.hidePopup = this.hidePopup.bind(this);
+        this.processUploadedFiles = this.processUploadedFiles.bind(this);
 
         this.state = {
             popupVisible,
             itemsToUpload: props.itemsToUpload,
             allowDropOnWindow: true,
+            uploadDisabled: Object.values(props.contentCreatePermissionsConfig).every((isEnabled) => !isEnabled),
         };
     }
 
@@ -42,7 +47,9 @@ export default class MultiFileUploadModule extends Component {
      * @memberof MultiFileUploadModule
      */
     manageDropEvent() {
-        if (!this.state.popupVisible && !this.state.itemsToUpload.length) {
+        const { uploadDisabled, popupVisible, itemsToUpload } = this.state;
+
+        if (!uploadDisabled && !popupVisible && !itemsToUpload.length) {
             window.addEventListener('drop', this.handleDropOnWindow, false);
             window.addEventListener('dragover', this.preventDefaultAction, false);
         }
@@ -64,14 +71,13 @@ export default class MultiFileUploadModule extends Component {
      * Displays multi file upload popup
      *
      * @method showUploadPopup
-     * @param {Array} itemsToUpload
      * @memberof MultiFileUploadModule
      */
-    showUploadPopup(itemsToUpload) {
+    showUploadPopup() {
         this.setState((state) =>
             Object.assign({}, state, {
                 popupVisible: true,
-                itemsToUpload,
+                itemsToUpload: [],
             })
         );
     }
@@ -181,14 +187,22 @@ export default class MultiFileUploadModule extends Component {
             return null;
         }
 
-        const label = Translator.trans(/*@Desc("Upload sub-items")*/ 'multi_file_upload_open_btn.label', {}, 'multi_file_upload');
+        const uploadDisabled = this.state.uploadDisabled;
+        const title = Translator.trans(/*@Desc("Upload sub-items")*/ 'multi_file_upload_open_btn.label', {}, 'multi_file_upload');
+        const attrs = { className: 'm-mfu__btn--upload', title, onClick: this.showUploadPopup, type: 'button' };
+
+        if (uploadDisabled) {
+            delete attrs.onClick;
+
+            attrs.disabled = true;
+        }
 
         return (
-            <div className="m-mfu__btn--upload" title={label} onClick={this.showUploadPopup.bind(this, [])}>
+            <button {...attrs}>
                 <svg className="ez-icon">
                     <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
                 </svg>
-            </div>
+            </button>
         );
     }
 
@@ -204,14 +218,15 @@ export default class MultiFileUploadModule extends Component {
             return null;
         }
 
-        const attrs = Object.assign({}, this.props, {
+        const attrs = {
+            ...this.props,
             visible: true,
-            onClose: this.hidePopup.bind(this),
+            onClose: this.hidePopup,
             itemsToUpload: this.state.itemsToUpload,
-            onAfterUpload: this.handleAfterUpload.bind(this),
+            onAfterUpload: this.handleAfterUpload,
             preventDefaultAction: this.preventDefaultAction,
-            processUploadedFiles: this.processUploadedFiles.bind(this),
-        });
+            processUploadedFiles: this.processUploadedFiles,
+        };
 
         return <UploadPopupComponent {...attrs} />;
     }
@@ -250,6 +265,7 @@ MultiFileUploadModule.propTypes = {
     publishFile: PropTypes.func,
     itemsToUpload: PropTypes.array,
     withUploadButton: PropTypes.bool,
+    contentCreatePermissionsConfig: PropTypes.object,
 };
 
 MultiFileUploadModule.defaultProps = {
