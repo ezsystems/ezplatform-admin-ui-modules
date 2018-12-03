@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './css/viewing.message.component.css';
+import './css/pagination.info.component.css';
 
-const ViewingMessageComponent = ({ totalCount, viewingCount }) => {
+const PaginationInfoComponent = ({ totalCount, viewingCount }) => {
     const message = Translator.trans(
         /*@Desc("Viewing <strong>%viewingCount%</strong> out of <strong>%totalCount%</strong> sub-items")*/ 'viewing_message',
         {
@@ -14,15 +14,15 @@ const ViewingMessageComponent = ({ totalCount, viewingCount }) => {
     );
 
     return (
-        <div className="c-viewing-message">
-            <div className="c-viewing-message__text" dangerouslySetInnerHTML={{ __html: message }} />
+        <div className="c-pagination-info">
+            <div className="c-pagination-info__text" dangerouslySetInnerHTML={{ __html: message }} />
         </div>
     );
 };
 
-ViewingMessageComponent.propTypes = {
+PaginationInfoComponent.propTypes = {
     totalCount: PropTypes.number.isRequired,
     viewingCount: PropTypes.number.isRequired,
 };
 
-export default ViewingMessageComponent;
+export default PaginationInfoComponent;

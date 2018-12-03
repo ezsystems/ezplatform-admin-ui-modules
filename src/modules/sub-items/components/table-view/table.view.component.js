@@ -120,10 +120,10 @@ export default class TableViewComponent extends Component {
         const { sortClause, sortOrder } = this.props;
 
         if (sortClause) {
-            const headSortClass = sortOrder === 'ascending' ? `${headClass}--sort-asc` : `${headClass}--sort-desc`;
+            const headSortOrderClass = sortOrder === 'ascending' ? `${headClass}--sort-asc` : `${headClass}--sort-desc`;
             const headSortByClass = `${headClass}--sort-by-${SORTKEY_MAP[sortClause]}`;
 
-            headClass = `${headClass} ${headSortClass} ${headSortByClass}`;
+            headClass = `${headClass} ${headSortOrderClass} ${headSortByClass}`;
         }
 
         const headerNameLabel = Translator.trans(/*@Desc("Name")*/ 'items_table.header.name', {}, 'sub_items');
@@ -187,5 +187,3 @@ TableViewComponent.propTypes = {
     sortClause: PropTypes.string.isRequired,
     sortOrder: PropTypes.string.isRequired,
 };
-
-TableViewComponent.defaultProps = {};
