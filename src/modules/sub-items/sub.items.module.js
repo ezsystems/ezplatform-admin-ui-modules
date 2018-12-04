@@ -7,7 +7,6 @@ import SubItemsListComponent from './components/sub-items-list/sub.items.list.co
 import Popup from '../common/popup/popup.component';
 import ActionButton from './components/action-btn/action.btn.js';
 import PaginationComponent from './components/pagination/pagination.component.js';
-import PaginationInfoComponent from './components/pagination-info/pagination.info.component.js';
 import NoItemsComponent from './components/no-items/no.items.component.js';
 import Icon from '../common/icon/icon.js';
 
@@ -332,8 +331,7 @@ export default class SubItemsModule extends Component {
     }
 
     updateItemLocation(location) {
-        this.setState((state) => {
-            const { activePageItems } = state;
+        this.setState(({ activePageItems }) => {
             const itemIndex = activePageItems.findIndex((item) => item.location.id === location.id);
 
             if (itemIndex === -1) {
@@ -662,7 +660,16 @@ export default class SubItemsModule extends Component {
         const { totalCount, activePageItems } = this.state;
         const viewingCount = activePageItems ? activePageItems.length : 0;
 
-        return <PaginationInfoComponent totalCount={totalCount} viewingCount={viewingCount} />;
+        const message = Translator.trans(
+            /*@Desc("Viewing <strong>%viewingCount%</strong> out of <strong>%totalCount%</strong> sub-items")*/ 'viewing_message',
+            {
+                viewingCount,
+                totalCount,
+            },
+            'sub_items'
+        );
+
+        return <div className="m-sub-items__pagination-info" dangerouslySetInnerHTML={{ __html: message }} />;
     }
 
     /**
@@ -724,8 +731,8 @@ export default class SubItemsModule extends Component {
 
         return (
             <div style={style}>
-                <div className="m-sub-items__list-spinner-wrapper">
-                    <Icon name="spinner" extraClasses="m-sub-items__list-spinner ez-spin ez-icon-x2 ez-icon-spinner" />
+                <div className="m-sub-items__spinner-wrapper">
+                    <Icon name="spinner" extraClasses="m-sub-items__spinner ez-spin ez-icon-x2 ez-icon-spinner" />
                 </div>
             </div>
         );
