@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
-import NoItemsComponent from '../no-items/no.items.component';
 
 import './css/table.view.component.css';
 
-const SORTKEY_NAME = 'name';
-const SORTKEY_DATE = 'date';
-const SORTKEY_PRIORITY = 'priority';
+const KEY_CONTENT_NAME = 'ContentName';
+const KEY_DATE_MODIFIED = 'DateModified';
+const KEY_LOCATION_PRIORITY = 'LocationPriority';
+const SORTKEY_MAP = {
+    [KEY_CONTENT_NAME]: 'name',
+    [KEY_DATE_MODIFIED]: 'date',
+    [KEY_LOCATION_PRIORITY]: 'priority',
+};
 
 export default class TableViewComponent extends Component {
     constructor(props) {
@@ -18,132 +22,34 @@ export default class TableViewComponent extends Component {
         this.sortByDate = this.sortByDate.bind(this);
         this.sortByPriority = this.sortByPriority.bind(this);
         this.renderItem = this.renderItem.bind(this);
-        this.onSelectAll = this.onSelectAll.bind(this);
-
-        this.state = {
-            items: props.items,
-            isAscSort: false,
-            sortKey: false,
-        };
-    }
-
-    UNSAFE_componentWillReceiveProps({ items }) {
-        this.sortItems(items);
+        this.selectAll = this.selectAll.bind(this);
     }
 
     /**
-     * Sorts provided items
-     *
-     * @method sortItems
-     * @param {Array} items
-     * @memberof TableViewComponent
+     * Changes sort to name
      */
-    sortItems(items) {
-        const sortKey = this.state.sortKey;
+    sortByName() {
+        const { onSortChange } = this.props;
 
-        if (!sortKey) {
-            this.setState(() => ({ items }));
-        }
-
-        if (sortKey === SORTKEY_NAME) {
-            this.sortByName(items);
-        } else if (sortKey === SORTKEY_DATE) {
-            this.sortByDate(items);
-        } else if (sortKey === SORTKEY_PRIORITY) {
-            this.sortByPriority(items);
-        } else {
-            this.setState(() => ({ items }));
-        }
+        onSortChange(KEY_CONTENT_NAME);
     }
 
     /**
-     * Sorts provided items by name
-     *
-     * @method sortByName
-     * @param {Array} items
-     * @memberof TableViewComponent
+     * Changes sort to modification date
      */
-    sortByName(items) {
-        this.setState((state) => {
-            const isOnClick = !Array.isArray(items);
-            const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
+    sortByDate() {
+        const { onSortChange } = this.props;
 
-            items = isOnClick ? state.items : items;
-
-            items.sort((a, b) => {
-                if (isAscSort) {
-                    return a.content.Name.localeCompare(b.content.Name);
-                }
-
-                return b.content.Name.localeCompare(a.content.Name);
-            });
-
-            return {
-                items,
-                isAscSort,
-                sortKey: SORTKEY_NAME,
-            };
-        });
+        onSortChange(KEY_DATE_MODIFIED);
     }
 
     /**
-     * Sorts provided items by date
-     *
-     * @method sortByDate
-     * @param {Array} items
-     * @memberof TableViewComponent
+     * Changes sort to priority
      */
-    sortByDate(items) {
-        this.setState((state) => {
-            const isOnClick = !Array.isArray(items);
-            const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
+    sortByPriority() {
+        const { onSortChange } = this.props;
 
-            items = isOnClick ? state.items : items;
-
-            items.sort((a, b) => {
-                if (isAscSort) {
-                    return new Date(a.content.lastModificationDate) - new Date(b.content.lastModificationDate);
-                }
-
-                return new Date(b.content.lastModificationDate) - new Date(a.content.lastModificationDate);
-            });
-
-            return {
-                items,
-                isAscSort,
-                sortKey: SORTKEY_DATE,
-            };
-        });
-    }
-
-    /**
-     * Sorts provided items by priority
-     *
-     * @method sortByPriority
-     * @param {Array} items
-     * @memberof TableViewComponent
-     */
-    sortByPriority(items) {
-        this.setState((state) => {
-            const isOnClick = !Array.isArray(items);
-            const isAscSort = isOnClick ? !state.isAscSort : state.isAscSort;
-
-            items = isOnClick ? state.items : items;
-
-            items.sort((a, b) => {
-                if (isAscSort) {
-                    return a.location.priority - b.location.priority;
-                }
-
-                return b.location.priority - a.location.priority;
-            });
-
-            return {
-                items,
-                isAscSort,
-                sortKey: SORTKEY_PRIORITY,
-            };
-        });
+        onSortChange(KEY_LOCATION_PRIORITY);
     }
 
     /**
@@ -151,7 +57,7 @@ export default class TableViewComponent extends Component {
      *
      * @param {Event} event
      */
-    onSelectAll(event) {
+    selectAll(event) {
         const { toggleAllItemsSelect } = this.props;
         const isSelectAction = event.target.checked;
 
@@ -194,23 +100,6 @@ export default class TableViewComponent extends Component {
     }
 
     /**
-     * Renders no items message
-     *
-     * @method renderNoItems
-     * @returns {JSX.Element}
-     * @memberof TableViewComponent
-     */
-    renderNoItems() {
-        return (
-            <tr>
-                <td>
-                    <NoItemsComponent />
-                </td>
-            </tr>
-        );
-    }
-
-    /**
      * Renders table's head
      *
      * @method renderHead
@@ -228,11 +117,13 @@ export default class TableViewComponent extends Component {
             return;
         }
 
-        if (this.state.sortKey) {
-            const headSortClass = this.state.isAscSort ? `${headClass}--sort-asc` : `${headClass}--sort-desc`;
-            const headSortByClass = `${headClass}--sort-by-${this.state.sortKey}`;
+        const { sortClause, sortOrder } = this.props;
 
-            headClass = `${headClass} ${headSortClass} ${headSortByClass}`;
+        if (sortClause) {
+            const headSortOrderClass = sortOrder === 'ascending' ? `${headClass}--sort-asc` : `${headClass}--sort-desc`;
+            const headSortByClass = `${headClass}--sort-by-${SORTKEY_MAP[sortClause]}`;
+
+            headClass = `${headClass} ${headSortOrderClass} ${headSortByClass}`;
         }
 
         const headerNameLabel = Translator.trans(/*@Desc("Name")*/ 'items_table.header.name', {}, 'sub_items');
@@ -247,7 +138,7 @@ export default class TableViewComponent extends Component {
             <thead className={headClass}>
                 <tr className="c-table-view__row">
                     <td className={cellHeadClass}>
-                        <input type="checkbox" checked={anyLocationSelected} onChange={this.onSelectAll} />
+                        <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
                     </td>
                     <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
                         <span className="c-table-view__label">{headerNameLabel}</span>
@@ -271,7 +162,7 @@ export default class TableViewComponent extends Component {
 
     render() {
         const { items } = this.props;
-        const content = items.length ? items.map(this.renderItem) : this.renderNoItems();
+        const content = items.map(this.renderItem);
 
         return (
             <table className="c-table-view">
@@ -292,4 +183,7 @@ TableViewComponent.propTypes = {
     onItemSelect: PropTypes.func.isRequired,
     toggleAllItemsSelect: PropTypes.func.isRequired,
     selectedLocationsIds: PropTypes.instanceOf(Set),
+    onSortChange: PropTypes.func.isRequired,
+    sortClause: PropTypes.string.isRequired,
+    sortOrder: PropTypes.string.isRequired,
 };

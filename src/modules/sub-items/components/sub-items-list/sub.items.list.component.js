@@ -25,7 +25,10 @@ SubItemsListComponent.propTypes = {
     languages: PropTypes.object.isRequired,
     onItemSelect: PropTypes.func.isRequired,
     toggleAllItemsSelect: PropTypes.func.isRequired,
-    selectedLocationsIds: PropTypes.instanceOf(Set),
+    selectedLocationsIds: PropTypes.instanceOf(Set).isRequired,
+    onSortChange: PropTypes.func.isRequired,
+    sortClause: PropTypes.string.isRequired,
+    sortOrder: PropTypes.string.isRequired,
 };
 
 export default SubItemsListComponent;

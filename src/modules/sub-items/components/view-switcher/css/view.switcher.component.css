@@ -11,7 +11,7 @@
     display: flex;
     overflow: hidden;
     background: #fff;
-    box-shadow: inset 0 0 2px 0 rgba(26,53,71,0.4);
+    box-shadow: inset 0 0 2px 0 rgba(26, 53, 71, 0.4);
     padding: 2px;
 }
 
@@ -24,7 +24,7 @@
     border: 2px solid #fff;
     background: #fff;
     color: #0e77a3;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
     display: flex;
     justify-content: center;
     cursor: pointer;
@@ -55,9 +55,8 @@
 
 .c-grid-switcher__option--disabled {
     pointer-events: none;
-    opacity: .5;
+    opacity: 0.5;
 }
-
 .c-grid-switcher--disabled {
     cursor: not-allowed;
 }

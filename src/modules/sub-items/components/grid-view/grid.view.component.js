@@ -2,20 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import GridViewItemComponent from './grid.view.item.component';
-import NoItemsComponent from '../no-items/no.items.component';
 
 import './css/grid.view.component.css';
 
 const GridViewComponent = (props) => {
     const { items, contentTypesMap, generateLink } = props;
-
-    if (!items.length) {
-        return (
-            <div className="c-grid-view">
-                <NoItemsComponent />
-            </div>
-        );
-    }
 
     return (
         <div className="c-grid-view">

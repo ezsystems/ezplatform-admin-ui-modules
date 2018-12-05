@@ -167,10 +167,10 @@ export default class TableViewItemComponent extends PureComponent {
      * @param {Event} event
      */
     onSelectCheckboxChange(event) {
-        const { location, onItemSelect } = this.props;
+        const { location, content, onItemSelect } = this.props;
         const isSelected = event.target.checked;
 
-        onItemSelect(location, isSelected);
+        onItemSelect({ content, location }, isSelected);
     }
 
     render() {
