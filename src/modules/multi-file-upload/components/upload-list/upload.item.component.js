@@ -279,23 +279,28 @@ export default class UploadItemComponent extends Component {
      * @memberof UploadItemComponent
      */
     handleUploadEnd() {
-        this.setState((state) => {
-            const struct = JSON.parse(state.xhr.response);
+        this.setState(
+            (state) => {
+                const struct = JSON.parse(state.xhr.response);
 
-            this.props.onAfterUpload(Object.assign({}, this.props.data, { struct }));
+                return {
+                    struct,
+                    uploading: false,
+                    disallowed: false,
+                    disallowedType: false,
+                    disallowedSize: false,
+                    disallowedContentType: false,
+                    uploaded: true,
+                    aborted: false,
+                    failed: false,
+                };
+            },
+            () => {
+                const data = this.props.data;
 
-            return {
-                struct,
-                uploading: false,
-                disallowed: false,
-                disallowedType: false,
-                disallowedSize: false,
-                disallowedContentType: false,
-                uploaded: true,
-                aborted: false,
-                failed: false,
-            };
-        });
+                this.props.onAfterUpload({ ...data, struct: this.state.struct });
+            }
+        );
     }
 
     /**
