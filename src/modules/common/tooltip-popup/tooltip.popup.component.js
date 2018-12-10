@@ -15,7 +15,7 @@ const TooltipPopupComponent = (props) => {
             <div className="c-tooltip-popup__header">
                 <div className="c-tooltip-popup__title">{props.title}</div>
                 <div className="c-tooltip-popup__close" onClick={props.onClose}>
-                    <Icon name="discard"/>
+                    <Icon name="discard" />
                 </div>
             </div>
             <div className="c-tooltip-popup__content">{props.children}</div>

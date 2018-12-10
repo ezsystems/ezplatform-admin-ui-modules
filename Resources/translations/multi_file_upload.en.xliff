@@ -21,6 +21,11 @@
         <target>Delete</target>
         <note>key: delete.label</note>
       </trans-unit>
+      <trans-unit id="2b1c547a8eeb8b7c83a9580901c66193cbcb0eb9" resname="disallowed_content_type.message">
+        <source>You do not have permission to create this content item</source>
+        <target state="new">You do not have permission to create this content item</target>
+        <note>key: disallowed_content_type.message</note>
+      </trans-unit>
       <trans-unit id="f2a2dab7435a694af5f4e9d2393e3cfb9c9c79f0" resname="disallowed_size.message">
         <source>File size is not allowed</source>
         <target>File size is not allowed</target>

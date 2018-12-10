@@ -244,6 +244,25 @@ const publishDraft = ({ token, siteaccess }, response) => {
 };
 
 /**
+ * Checks whether a content based on an uploaded file can be created
+ *
+ * @function canCreateContent
+ * @param {File} file
+ * @param {Object} parentInfo parent info hash
+ * @param {Object} config multi file upload config
+ * @returns {Boolean}
+ */
+const canCreateContent = (file, parentInfo, config) => {
+    if (!config.hasOwnProperty('contentCreatePermissionsConfig') || !config.contentCreatePermissionsConfig) {
+        return true;
+    }
+
+    const contentTypeConfig = detectContentTypeMapping(file, parentInfo, config);
+
+    return config.contentCreatePermissionsConfig[contentTypeConfig.contentTypeIdentifier];
+};
+
+/**
  * Checks if a file can be uploaded
  *
  * @function checkCanUpload
@@ -255,6 +274,12 @@ const publishDraft = ({ token, siteaccess }, response) => {
  */
 export const checkCanUpload = (file, parentInfo, config, callbacks) => {
     const locationMapping = config.locationMappings.find((item) => item.contentTypeIdentifier === parentInfo.contentTypeIdentifier);
+
+    if (!canCreateContent(file, parentInfo, config)) {
+        callbacks.contentTypeNotAllowedCallback();
+
+        return false;
+    }
 
     if (!checkFileTypeAllowed(file, locationMapping)) {
         callbacks.fileTypeNotAllowedCallback();

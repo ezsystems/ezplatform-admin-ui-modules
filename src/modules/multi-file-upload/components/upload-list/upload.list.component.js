@@ -130,12 +130,14 @@ export default class UploadListComponent extends Component {
      * @returns {Element}
      */
     renderItem(item, customAttrs) {
+        const { adminUiConfig, parentInfo, contentCreatePermissionsConfig } = this.props;
         const attrs = Object.assign(
             {
                 key: item.id,
                 data: item,
-                adminUiConfig: this.props.adminUiConfig,
-                parentInfo: this.props.parentInfo,
+                adminUiConfig,
+                parentInfo,
+                contentCreatePermissionsConfig,
             },
             customAttrs
         );
