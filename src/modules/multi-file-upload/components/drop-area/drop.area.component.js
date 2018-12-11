@@ -62,9 +62,6 @@ export default class DropAreaComponent extends Component {
                 <div className="c-drop-area__message--filesize">
                     ({maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})
                 </div>
-                <div className="c-drop-area__message--filesize">
-                    ({this.props.maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})
-                </div>
                 <input
                     className="c-drop-area__input--hidden"
                     ref={(ref) => (this._refFileInput = ref)}
