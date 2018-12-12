@@ -129,11 +129,13 @@ export default class UniversalDiscoveryModule extends Component {
         window.removeEventListener('resize', this.updateMaxHeightState);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         const { contentMeta, isPreviewMetaReady } = this.state;
 
-        if (!!contentMeta && !isPreviewMetaReady) {
-            this.props.loadContentInfo(this.props.restInfo, contentMeta.ContentInfo.Content._id, this.updateContentMetaWithCurrentVersion);
+        if (!!contentMeta && contentMeta !== prevState.contentMeta && !isPreviewMetaReady) {
+            const contentId = contentMeta.ContentInfo.Content._id;
+
+            this.props.loadContentInfo(this.props.restInfo, contentId, this.updateContentMetaWithCurrentVersion.bind(this, contentId));
         }
 
         if (!this.props.multiple) {
@@ -193,15 +195,22 @@ export default class UniversalDiscoveryModule extends Component {
      * Updates selected content item meta with a current version info object
      *
      * @method updateContentMetaWithCurrentVersion
+     * @param {Number} contentId ID of content for which we fetched CurrentVersion
      * @param {Object} response
      */
-    updateContentMetaWithCurrentVersion(response) {
-        const contentMeta = deepClone(this.state.contentMeta);
+    updateContentMetaWithCurrentVersion(contentId, response) {
+        const { contentMeta } = this.state;
+
+        if (!contentMeta || contentMeta.ContentInfo.Content._id !== contentId) {
+            return;
+        }
+
+        const updatedContentMeta = deepClone(contentMeta);
         const currentVersion = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion;
 
-        contentMeta.CurrentVersion = currentVersion;
+        updatedContentMeta.CurrentVersion = currentVersion;
 
-        this.setState(() => ({ contentMeta, isPreviewMetaReady: true }));
+        this.setState(() => ({ contentMeta: updatedContentMeta, isPreviewMetaReady: true }));
     }
 
     /**
