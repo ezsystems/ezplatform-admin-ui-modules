@@ -34,18 +34,21 @@ const getBulkMoveRequestOperations = (locations, destination) => {
 
 const processBulkResponse = (locations, successCode, callback, response) => {
     const { operations } = response.BulkOperationResponse;
-    const locationsMatches = { success: [], fail: [] };
+    const locationsMatches = Object.entries(operations).reduce(
+        (locationsMatches, [locationId, response]) => {
+            const respectiveItem = locations.find((location) => location.id === parseInt(locationId, 10));
+            const isSuccess = response.statusCode === successCode;
 
-    Object.entries(operations).forEach(([locationId, response]) => {
-        const respectiveItem = locations.find((location) => location.id === parseInt(locationId, 10));
-        const isSuccess = response.statusCode === successCode;
+            if (isSuccess) {
+                locationsMatches.success.push(respectiveItem);
+            } else {
+                locationsMatches.fail.push(respectiveItem);
+            }
 
-        if (isSuccess) {
-            locationsMatches.success.push(respectiveItem);
-        } else {
-            locationsMatches.fail.push(respectiveItem);
-        }
-    });
+            return locationsMatches;
+        },
+        { success: [], fail: [] }
+    );
 
     callback(locationsMatches.success, locationsMatches.fail);
 };
@@ -70,7 +73,11 @@ const makeBulkRequest = ({ token }, requestBodyOperations, callback) => {
         .then(handleRequestResponse)
         .then(callback)
         .catch(() => {
-            const message = Translator.trans(/*@Desc("Bulk request failed")*/ 'bulk_request.error.message', {}, 'sub_items');
+            const message = Translator.trans(
+                /*@Desc("An unexpected error occurred while deleting the content item(s). Please try again later.")*/ 'bulk_request.error.message',
+                {},
+                'sub_items'
+            );
 
             window.eZ.helpers.notification.showErrorNotification(message);
         });

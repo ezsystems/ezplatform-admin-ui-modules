@@ -434,10 +434,10 @@ export default class SubItemsModule extends Component {
         const { selectedItems } = this.state;
         const locationsToMove = [...selectedItems.values()].map(({ location }) => location);
 
-        bulkMoveLocations(restInfo, locationsToMove, location._href, this.afterBulkMove.bind(this, location));
+        bulkMoveLocations(restInfo, locationsToMove, location._href, this.afterBulkMove.bind(this, selectedItems, location));
     }
 
-    afterBulkMove(location, movedLocations, notMovedLocations) {
+    afterBulkMove(selectedItems, location, movedLocations, notMovedLocations) {
         const { totalCount } = this.state;
 
         this.updateTotalCountState(totalCount - movedLocations.length);
@@ -447,19 +447,32 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(false);
 
         if (notMovedLocations.length) {
-            const message = Translator.trans(
-                /*@Desc("You do not have permission to move at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
-                {},
+            const modalTableTitle = Translator.trans(
+                /*@Desc("Content items cannot be moved (%itemsCount%)")*/ 'bulk_move.error.modal.table_title',
+                {
+                    itemsCount: notMovedLocations.length,
+                },
+                'sub_items'
+            );
+            const notificationMessage = Translator.trans(
+                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
+                {
+                    notMovedCount: notMovedLocations.length,
+                    totalCount: movedLocations.length + notMovedLocations.length,
+                },
                 'sub_items'
             );
 
-            window.eZ.helpers.notification.showErrorNotification(message);
+            this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage);
         }
 
         if (movedLocations.length) {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to <u>%location_name%</u>")*/ 'bulk_move.success.message',
-                { location_name: location.ContentInfo.Content.Name },
+                /*@Desc("The selected content item(s) have been sent to <u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.message',
+                {
+                    locationName: location.ContentInfo.Content.Name,
+                    locationHref: this.props.generateLink(location.id),
+                },
                 'sub_items'
             );
 
@@ -520,10 +533,10 @@ export default class SubItemsModule extends Component {
         const { selectedItems } = this.state;
         const locationsToDelete = [...selectedItems.values()].map(({ location }) => location);
 
-        bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete);
+        bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete.bind(this, selectedItems));
     }
 
-    afterBulkDelete(deletedLocations, notDeletedLocations) {
+    afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {
         const { totalCount } = this.state;
 
         this.updateTotalCountState(totalCount - deletedLocations.length);
@@ -532,7 +545,25 @@ export default class SubItemsModule extends Component {
 
         this.toggleBulkOperationStatusState(false);
 
-        if (deletedLocations.length) {
+        if (notDeletedLocations.length) {
+            const modalTableTitle = Translator.trans(
+                /*@Desc("Content item(s) cannot be sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title',
+                {
+                    itemsCount: notDeletedLocations.length,
+                },
+                'sub_items'
+            );
+            const message = Translator.trans(
+                /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
+                {
+                    notDeletedCount: notDeletedLocations.length,
+                    totalCount: deletedLocations.length + notDeletedLocations.length,
+                },
+                'sub_items'
+            );
+
+            this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message);
+        } else {
             const message = Translator.trans(
                 /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
                 {},
@@ -540,16 +571,6 @@ export default class SubItemsModule extends Component {
             );
 
             window.eZ.helpers.notification.showSuccessNotification(message);
-        }
-
-        if (notDeletedLocations.length) {
-            const message = Translator.trans(
-                /*@Desc("You do not have permission to delete at least 1 of the selected content item(s). Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
-                {},
-                'sub_items'
-            );
-
-            window.eZ.helpers.notification.showErrorNotification(message);
         }
     }
 
@@ -566,6 +587,41 @@ export default class SubItemsModule extends Component {
     onBulkDeletePopupConfirm() {
         this.closeBulkDeletePopup();
         this.bulkDelete();
+    }
+
+    /**
+     * Shows warning notification which has a button.
+     * Clicking the button should cause appearance of the modal
+     * with list of items, which failed to be deleted/moved.
+     *
+     * @param {Map} selectedItems
+     * @param {Array} failedLocations
+     * @param {String} modalTableTitle
+     * @param {String} notificationMessage
+     */
+    handleBulkOperationFailedNotification(selectedItems, failedLocations, modalTableTitle, notificationMessage) {
+        const { contentTypesMap } = this.state;
+        const failedItemsData = failedLocations.map(({ id: locationId }) => {
+            const item = selectedItems.get(locationId);
+            const contentType = contentTypesMap[item.content.ContentType._href];
+            const contentTypeIdentifier = contentType.identifier;
+            const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+
+            return {
+                contentTypeName,
+                contentName: item.content.Name,
+            };
+        });
+
+        window.eZ.helpers.notification.showWarningNotification(notificationMessage, (notificationNode) => {
+            const showModalBtn = notificationNode.querySelector('.ez-notification-btn--show-modal');
+
+            if (!showModalBtn) {
+                return;
+            }
+
+            showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
+        });
     }
 
     renderConfirmationPopupFooter() {
@@ -688,8 +744,9 @@ export default class SubItemsModule extends Component {
             return null;
         }
 
-        const { activePageIndex, activePageItems } = this.state;
+        const { activePageIndex, activePageItems, isDuringBulkOperation } = this.state;
         const isActivePageLoaded = !!activePageItems;
+        const isPaginationDisabled = !isActivePageLoaded || isDuringBulkOperation;
 
         return (
             <PaginationComponent
@@ -698,7 +755,7 @@ export default class SubItemsModule extends Component {
                 activePageIndex={activePageIndex}
                 totalCount={totalCount}
                 onPageChange={this.changePage}
-                disabled={!isActivePageLoaded}
+                disabled={isPaginationDisabled}
             />
         );
     }
@@ -843,6 +900,7 @@ SubItemsModule.propTypes = {
     totalCount: PropTypes.number,
     languages: PropTypes.object,
     udwConfigBulkMoveItems: PropTypes.object.isRequired,
+    showBulkActionFailedModal: PropTypes.func.isRequired,
 };
 
 SubItemsModule.defaultProps = {
