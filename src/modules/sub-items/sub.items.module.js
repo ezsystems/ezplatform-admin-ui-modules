@@ -789,7 +789,7 @@ export default class SubItemsModule extends Component {
         return (
             <div style={style}>
                 <div className="m-sub-items__spinner-wrapper">
-                    <Icon name="spinner" extraClasses="m-sub-items__spinner ez-spin ez-icon-x2 ez-icon-spinner" />
+                    <Icon name="spinner" extraClasses="m-sub-items__spinner ez-icon--medium ez-spin" />
                 </div>
             </div>
         );
