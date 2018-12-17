@@ -30,6 +30,7 @@ export default class FinderComponent extends Component {
         this.locationsMap = {};
         this.activeLocations = {};
         this.preselectedItem = null;
+        this.lastSelectedLocationId = null;
     }
 
     componentDidMount() {
@@ -300,6 +301,8 @@ export default class FinderComponent extends Component {
 
         this.setState(() => ({ lastSelectedItem: parent }));
 
+        this.lastSelectedLocationId = location.id;
+
         if (this.state.locationsMap[parent]) {
             this.updateSelectedBranches(location, onDataLoaded);
             this.props.onItemSelect(location);
@@ -319,11 +322,14 @@ export default class FinderComponent extends Component {
             )
         );
 
+        this.props.onItemSelect(location);
+
         promise.then((response) => {
             this.updateLocationsData(response, location);
-            this.updateSelectedBranches(location, onDataLoaded);
 
-            this.props.onItemSelect(location);
+            if (this.lastSelectedLocationId === location.id) {
+                this.updateSelectedBranches(location, onDataLoaded);
+            }
         });
     }
 
