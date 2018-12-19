@@ -27,12 +27,26 @@ const CreatePanelComponent = (props) => {
         wrapperAttrs.hidden = true;
     }
 
+    const contentTypes = Object.entries(props.contentTypes).reduce((total, [key, items]) => {
+        items = items.map((item) => {
+            const contentTypeInfo = Object.values(props.contentTypesMap).find((contentType) => {
+                return contentType.identifier === item.identifier;
+            });
+
+            return { ...item, names: contentTypeInfo ? contentTypeInfo.names : [] };
+        });
+
+        total[key] = items;
+
+        return total;
+    }, {});
+
     return (
         <div {...wrapperAttrs}>
             <TabContentPanelComponent {...props}>
                 <div className="c-create-panel__first-step">
                     <div className="c-create-panel__step-title">1) {chooseLanguageAndContentTypeTitle}</div>
-                    <CreateComponent {...componentProps} />
+                    <CreateComponent {...componentProps} contentTypes={contentTypes} />
                 </div>
                 <div className="c-create-panel__second-step">
                     <div className="c-create-panel__step-title">2) {selectLocationTitle}</div>
@@ -56,6 +70,7 @@ CreatePanelComponent.propTypes = {
     }).isRequired,
     languages: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
+    contentTypesMap: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
     forcedLanguage: PropTypes.string.isRequired,

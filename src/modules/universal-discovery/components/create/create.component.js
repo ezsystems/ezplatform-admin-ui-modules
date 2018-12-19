@@ -19,6 +19,7 @@ CreateComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     languages: PropTypes.object.isRequired,
     contentTypes: PropTypes.object.isRequired,
+    contentTypesMap: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
     forcedLanguage: PropTypes.string.isRequired,

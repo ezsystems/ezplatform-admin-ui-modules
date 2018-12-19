@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import './css/choose.content.type.component.css';
 
+const PREFERRED_LANGUAGE = window.eZ.adminUiConfig.userPreferredLanguages[0];
+
 export default class ChooseContentTypeComponent extends Component {
     constructor(props) {
         super(props);
@@ -88,7 +90,11 @@ export default class ChooseContentTypeComponent extends Component {
             attrs.hidden = true;
         }
 
-        return <div {...attrs}>{item.name}</div>;
+        let name = Object.values(item.names.value).find((value) => value._languageCode === PREFERRED_LANGUAGE);
+
+        name = name ? name['#text'] : item.name;
+
+        return <div {...attrs}>{name}</div>;
     }
 
     renderGroup(groupName, index) {
@@ -139,6 +145,7 @@ export default class ChooseContentTypeComponent extends Component {
 ChooseContentTypeComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypes: PropTypes.object.isRequired,
+    contentTypesMap: PropTypes.object.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
     preselectedContentType: PropTypes.string,
     allowedContentTypes: PropTypes.array.isRequired,
