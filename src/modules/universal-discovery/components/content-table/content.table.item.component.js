@@ -6,24 +6,11 @@ import SelectContentButtonComponent from '../select-content-button/select.conten
 import './css/content.table.item.component.css';
 
 const ContentTableItemComponent = (props) => {
-    const {
-        onItemClick,
-        onPreview,
-        data,
-        contentTypesMap,
-        multiple,
-        selectedContent,
-        onSelectContent,
-        onItemRemove,
-        canSelectContent,
-    } = props;
+    const { onPreview, data, contentTypesMap, multiple, selectedContent, onSelectContent, onItemRemove, canSelectContent } = props;
     const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_table.not_available.label', {}, 'universal_discovery_widget');
     const item = data.ContentInfo.Content;
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : false;
     const contentTypeName = contentType ? contentType.names.value[0]['#text'] : notAvailableLabel;
-    const onClick = !!onItemClick ? onItemClick.bind(null, data) : null;
-    const isSelectedContent = selectedContent.find((content) => content.id === data.id);
-    const iconId = isSelectedContent ? 'checkmark' : 'create';
 
     return (
         <div className="c-content-table-item" onClick={() => onPreview(data)}>

@@ -8,7 +8,7 @@ const SearchPaginationComponent = (props) => {
     console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
     console.warn('[DEPRECATED] use ContentTablePaginationComponent instead');
 
-    const { minIndex, activeIndex, maxIndex, onChange, labels } = props;
+    const { minIndex, activeIndex, maxIndex, onChange } = props;
     const btnFirstLabel = Translator.trans(/*@Desc("First")*/ 'pagination.first', {}, 'universal_discovery_widget');
     const btnPrevLabel = Translator.trans(/*@Desc("Previous")*/ 'pagination.prev', {}, 'universal_discovery_widget');
     const btnNextLabel = Translator.trans(/*@Desc("Next")*/ 'pagination.next', {}, 'universal_discovery_widget');

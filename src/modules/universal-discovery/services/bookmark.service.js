@@ -1,5 +1,10 @@
 import { showErrorNotification } from '../../common/services/notification.service';
-import { getBasicRequestInit, handleRequestResponse, handleRequestError, handleRequestResponseStatus } from '../../common/helpers/request.helper.js';
+import {
+    getBasicRequestInit,
+    handleRequestResponse,
+    handleRequestError,
+    handleRequestResponseStatus,
+} from '../../common/helpers/request.helper.js';
 
 const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 
