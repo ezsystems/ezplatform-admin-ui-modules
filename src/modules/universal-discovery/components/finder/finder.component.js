@@ -7,14 +7,16 @@ import deepClone from '../../../common/helpers/deep.clone.helper';
 
 import './css/finder.component.css';
 
+const ROOT_LOCATION_ID = 1;
+const ROOT_LOCATION_OBJECT = null;
+
 export default class FinderComponent extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             locationsMap: {},
-            activeLocations: {},
-            lastSelectedItem: null,
+            activeLocations: [],
             limit: QUERY_LIMIT,
         };
 
@@ -25,12 +27,11 @@ export default class FinderComponent extends Component {
         this.onLoadMore = this.onLoadMore.bind(this);
         this.renderBranch = this.renderBranch.bind(this);
         this.setBranchContainerRef = this.setBranchContainerRef.bind(this);
-        this.setPreselectedState = this.setPreselectedState.bind(this);
+        this.setPreselectedState = this.getPreselectedState.bind(this);
 
         this.locationsMap = {};
-        this.activeLocations = {};
+        this.activeLocations = [];
         this.preselectedItem = null;
-        this.lastSelectedLocationId = null;
     }
 
     componentDidMount() {
@@ -39,10 +40,11 @@ export default class FinderComponent extends Component {
         const isPreselectedLocation = this.props.preselectedLocation && (!this.props.allowedLocations.length || allowedIncludesPreselected);
 
         if (isForcedLocation) {
-            this.loadPreselectedData(this.props.allowedLocations[0], true);
+            this.loadPreselectedData(this.props.allowedLocations[0]);
         } else if (isPreselectedLocation) {
-            this.loadPreselectedData(this.props.preselectedLocation, true);
+            this.loadPreselectedData(this.props.preselectedLocation);
         } else {
+            this.setDefaultActiveLocations();
             this.props.findLocationsByParentLocationId(
                 { ...this.props.restInfo, parentLocationId: this.props.startingLocationId },
                 this.updateLocationsData
@@ -58,11 +60,11 @@ export default class FinderComponent extends Component {
         const isShowingUp = nextProps.isVisible && nextProps.isVisible !== this.props.isVisible;
 
         if (this.preselectedItem && this.locationsMap && this.activeLocations && isShowingUp) {
-            this.setState(this.setPreselectedState, () => nextProps.isVisible && this.props.onItemSelect(this.preselectedItem));
+            this.setState(this.getPreselectedState, () => nextProps.isVisible && this.props.onItemSelect(this.preselectedItem));
         }
     }
 
-    setPreselectedState() {
+    getPreselectedState() {
         return { locationsMap: this.locationsMap, activeLocations: this.activeLocations };
     }
 
@@ -89,12 +91,13 @@ export default class FinderComponent extends Component {
      * Create preselected location data.
      *
      * @method createPreselectedLocationData
-     * @param {Object} locations
-     * @param {Object} subitems
+     * @param {Object} params
+     * @param {Array} params.locations
+     * @param {Array} params.subitems
      * @memberof FinderComponent
      */
     createPreselectedLocationData({ locations, subitems }) {
-        const createItem = ({ parent, offset = 0, children, location }) => {
+        const createItem = ({ offset = 0, children, location }) => {
             const createData = (items) => {
                 return items.locations.map((value) => {
                     return { value };
@@ -103,25 +106,24 @@ export default class FinderComponent extends Component {
             const data = children ? createData(children) : [];
             const count = children ? children.totalCount : location.childCount;
 
-            return { count, data, offset, parent, location };
+            return { count, data, offset, location };
         };
 
         if (subitems[1]) {
-            const item = createItem({ parent: 1, children: subitems[1] });
+            const item = createItem({ children: subitems[1], location: ROOT_LOCATION_OBJECT });
 
-            this.locationsMap[1] = item;
-            this.activeLocations[0] = item;
+            this.locationsMap[ROOT_LOCATION_ID] = item;
+            this.activeLocations[0] = ROOT_LOCATION_OBJECT;
         }
 
         Object.entries(locations).forEach(([key, value]) => {
             const item = createItem({
-                parent: parseInt(key, 10),
                 children: subitems[key],
                 location: value.Location,
             });
 
             this.locationsMap[key] = item;
-            this.activeLocations[value.Location.depth] = item;
+            this.activeLocations[value.Location.depth] = item.location;
         });
     }
 
@@ -132,7 +134,7 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     setPreselectedLocationData() {
-        this.setState(this.setPreselectedState, () => this.props.isVisible && this.props.onItemSelect(this.preselectedItem));
+        this.setState(this.getPreselectedState, () => this.props.isVisible && this.props.onItemSelect(this.preselectedItem));
     }
 
     /**
@@ -142,23 +144,26 @@ export default class FinderComponent extends Component {
      * @param {Object} params params hash containing: parentLocationId, data and offset properties
      * @memberof FinderComponent
      */
-    updateLocationsData({ parentLocationId, data, offset }, location = null) {
+    updateLocationsData({ data, offset }, location = null) {
+        this.setLocationData({
+            location,
+            data: data.View.Result.searchHits.searchHit,
+            count: data.View.Result.count,
+            offset,
+        });
+    }
+
+    setDefaultActiveLocations() {
+        this.setState(() => ({ activeLocations: [ROOT_LOCATION_OBJECT] }));
+    }
+
+    setLocationData(locationData) {
         this.setState((state) => {
-            const activeLocations = deepClone(state.activeLocations);
-            const locationBranch = {
-                location,
-                parent: parentLocationId,
-                data: data.View.Result.searchHits.searchHit,
-                count: data.View.Result.count,
-                offset,
-            };
-            const locationsMap = { ...deepClone(state.locationsMap), [parentLocationId]: locationBranch };
+            const { location } = locationData;
+            const locationId = location ? location.id : ROOT_LOCATION_ID;
+            const locationsMap = { ...deepClone(state.locationsMap), [locationId]: locationData };
 
-            if (!Object.keys(activeLocations).length) {
-                activeLocations[0] = locationBranch;
-            }
-
-            return { activeLocations, locationsMap };
+            return { locationsMap };
         });
     }
 
@@ -185,11 +190,12 @@ export default class FinderComponent extends Component {
      */
     onLoadMore(parentLocation) {
         const limit = this.state.limit;
-        const offset = Object.values(this.state.activeLocations).find((location) => location.parent === parentLocation.id).offset + limit;
-        const sortClauses = this.getLocationSortClauses(parentLocation);
+        const parentLocationId = parentLocation ? parentLocation.id : ROOT_LOCATION_ID;
+        const offset = this.state.locationsMap[parentLocationId].offset + limit;
+        const sortClauses = parentLocation ? this.getLocationSortClauses(parentLocation) : {};
 
         this.props.findLocationsByParentLocationId(
-            { ...this.props.restInfo, parentLocationId: parentLocation.id, limit, offset, sortClauses },
+            { ...this.props.restInfo, parentLocationId, limit, offset, sortClauses },
             this.appendMoreItems
         );
     }
@@ -203,22 +209,13 @@ export default class FinderComponent extends Component {
      */
     appendMoreItems({ parentLocationId, offset, data }) {
         this.setState((state) => {
-            const activeLocations = deepClone(state.activeLocations);
             const locationsMap = deepClone(state.locationsMap);
+            const locationData = locationsMap[parentLocationId];
 
-            Object.keys(activeLocations).forEach((key) => {
-                const location = activeLocations[key];
+            locationData.offset = offset;
+            locationData.data = [...locationData.data, ...data.View.Result.searchHits.searchHit];
 
-                if (location.parent === parentLocationId) {
-                    const results = [...location.data, ...data.View.Result.searchHits.searchHit];
-
-                    location.offset = offset;
-                    location.data = results;
-                    locationsMap[parentLocationId] = location;
-                }
-            });
-
-            return { activeLocations, locationsMap };
+            return { locationsMap };
         });
     }
 
@@ -235,7 +232,7 @@ export default class FinderComponent extends Component {
             this.props.findLocationsByParentLocationId(
                 {
                     ...this.props.restInfo,
-                    parentLocationId: parentLocation.id,
+                    parentLocationId: parentLocation ? parentLocation.id : ROOT_LOCATION_ID,
                     sortClauses,
                 },
                 resolve
@@ -244,24 +241,7 @@ export default class FinderComponent extends Component {
 
         promise.then((response) => {
             this.updateLocationsData(response, parentLocation);
-            this.updateBranchActiveLocations(parentLocation.id);
         });
-    }
-
-    /**
-     * Updates branch active locations
-     *
-     * @method updateBranchActiveLocations
-     * @param {String} parent the parent id
-     * @memberof FinderComponent
-     */
-    updateBranchActiveLocations(parent) {
-        const activeLocations = deepClone(this.state.activeLocations);
-        const depth = Object.keys(activeLocations).find((locationDepth) => activeLocations[locationDepth].parent === parent);
-
-        activeLocations[depth] = this.state.locationsMap[parent];
-
-        this.setState(() => ({ activeLocations }));
     }
 
     /**
@@ -288,24 +268,19 @@ export default class FinderComponent extends Component {
      * Finds location children (sub-items)
      *
      * @method findLocationChildren
-     * @param {Object} params
-     * @param {String} params.parent parent location id
-     * @param {Object} params.location
-     * @param {Function} params.onDataLoaded
+     * @param {Object} location
      * @memberof FinderComponent
      */
-    findLocationChildren({ parent, location, onDataLoaded }) {
+    findLocationChildren(location) {
         if (this.props.allowedLocations.length === 1) {
             return;
         }
 
-        this.setState(() => ({ lastSelectedItem: parent }));
+        this.props.onItemSelect(location);
+        this.updateSelectedBranches(location);
 
-        this.lastSelectedLocationId = location.id;
-
-        if (this.state.locationsMap[parent]) {
-            this.updateSelectedBranches(location, onDataLoaded);
-            this.props.onItemSelect(location);
+        if (!location.childCount) {
+            this.setLocationData({ location, data: [], count: 0, offset: 0 });
 
             return;
         }
@@ -315,21 +290,15 @@ export default class FinderComponent extends Component {
             this.props.findLocationsByParentLocationId(
                 {
                     ...this.props.restInfo,
-                    parentLocationId: parent,
+                    parentLocationId: location.id,
                     sortClauses,
                 },
                 resolve
             )
         );
 
-        this.props.onItemSelect(location);
-
         promise.then((response) => {
             this.updateLocationsData(response, location);
-
-            if (this.lastSelectedLocationId === location.id) {
-                this.updateSelectedBranches(location, onDataLoaded);
-            }
         });
     }
 
@@ -337,11 +306,10 @@ export default class FinderComponent extends Component {
      * Updates selected branches state
      *
      * @param {Object} location location struct
-     * @param {Function} onDataLoaded
      * @memberof FinderComponent
      */
-    updateSelectedBranches(location, onDataLoaded) {
-        this.setState(this.updateActiveLocations.bind(this, location), onDataLoaded);
+    updateSelectedBranches(location) {
+        this.setState(this.updateActiveLocations.bind(this, location));
     }
 
     /**
@@ -355,17 +323,9 @@ export default class FinderComponent extends Component {
      */
     updateActiveLocations(location, state) {
         const locationDepth = parseInt(location.depth, 10);
-        const activeLocations = Object.keys(state.activeLocations)
-            .filter((key) => parseInt(key, 10) < locationDepth)
-            .reduce((total, depth) => {
-                depth = parseInt(depth, 10);
+        const activeLocations = state.activeLocations.slice(0, locationDepth);
 
-                total[depth] = state.activeLocations[depth];
-
-                return total;
-            }, {});
-
-        activeLocations[locationDepth] = state.locationsMap[location.id];
+        activeLocations[locationDepth] = location;
 
         return { activeLocations };
     }
@@ -374,28 +334,26 @@ export default class FinderComponent extends Component {
      * Renders branch (the sub items container)
      *
      * @method renderBranch
-     * @param {Object} params params hash containing: parent, count and data properties
-     * @returns {null|Element}
+     * @param {Object} locationData params hash containing: parent, count and data properties
+     * @returns {JSX.Element|null}
      * @memberof FinderComponent
      */
-    renderBranch({ parent, data, count, location }) {
-        const { lastSelectedItem } = this.state;
-
-        if (!data || !count) {
+    renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading) {
+        if (!locationData || !locationData.count) {
             return null;
         }
 
-        const activeLocations = Object.values(this.state.activeLocations);
-        const selectedLocations = activeLocations.map((item) => item.parent);
+        const { data: childrenData, count, location } = locationData;
+        const locationId = location ? location.id : ROOT_LOCATION_ID;
 
         return (
             <FinderTreeBranchComponent
-                key={parent}
+                key={locationId}
                 parentLocation={location}
-                items={data}
+                items={childrenData}
                 total={count}
-                lastSelectedItem={lastSelectedItem}
-                selectedLocations={selectedLocations}
+                activeLocationId={branchActiveLocationId}
+                isActiveLocationLoading={isBranchActiveLocationLoading}
                 onItemClick={this.findLocationChildren}
                 onBranchClick={this.loadBranchLeaves}
                 onLoadMore={this.onLoadMore}
@@ -417,16 +375,26 @@ export default class FinderComponent extends Component {
     }
 
     render() {
-        const activeLocations = Object.values(this.state.activeLocations);
+        const { activeLocations } = this.state;
 
         if (!activeLocations.length) {
             return null;
         }
 
+        const { locationsMap } = this.state;
+
         return (
             <div className="c-finder" style={{ maxHeight: `${this.props.maxHeight}px` }}>
                 <div className="c-finder__branches" ref={this.setBranchContainerRef}>
-                    {activeLocations.map(this.renderBranch)}
+                    {activeLocations.map((location, index) => {
+                        const locationId = location ? location.id : ROOT_LOCATION_ID;
+                        const branchActiveLocation = activeLocations[index + 1];
+                        const branchActiveLocationId = branchActiveLocation ? branchActiveLocation.id : null;
+                        const isBranchActiveLocationLoading = branchActiveLocationId && !this.state.locationsMap[branchActiveLocationId];
+                        const locationData = locationsMap[locationId];
+
+                        return this.renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading);
+                    })}
                 </div>
             </div>
         );
