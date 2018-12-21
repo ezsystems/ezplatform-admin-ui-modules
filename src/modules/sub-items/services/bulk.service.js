@@ -5,6 +5,7 @@ const HEADERS_BULK = {
     'Content-Type': 'application/vnd.ez.api.BulkOperation+json',
 };
 const TRASH_FAKE_LOCATION = '/api/ezp/v2/content/trash';
+const ENDPOINT_BULK = '/api/ezp/v2/bulk';
 
 export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
     const requestBodyOperations = getBulkMoveRequestOperations(locations, newLocationHref);
@@ -53,11 +54,12 @@ const processBulkResponse = (locations, successCode, callback, response) => {
     callback(locationsMatches.success, locationsMatches.fail);
 };
 
-const makeBulkRequest = ({ token }, requestBodyOperations, callback) => {
-    const request = new Request(Routing.generate('ezplatform.bulk_operation'), {
+const makeBulkRequest = ({ token, siteaccess }, requestBodyOperations, callback) => {
+    const request = new Request(ENDPOINT_BULK, {
         method: 'POST',
         headers: {
             ...HEADERS_BULK,
+            'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
         },
         body: JSON.stringify({
