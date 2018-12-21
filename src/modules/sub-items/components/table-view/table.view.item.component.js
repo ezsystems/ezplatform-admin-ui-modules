@@ -179,7 +179,8 @@ export default class TableViewItemComponent extends PureComponent {
         const editLabel = Translator.trans(/*@Desc("Edit")*/ 'edit_item_btn.label', {}, 'sub_items');
         const { formatShortDateWithTimezone } = window.eZ.helpers.timezone;
         const contentType = contentTypesMap[content.ContentType._href];
-        const contentTypeName = contentType ? contentType.names.value[0]['#text'] : notAvailableLabel;
+        const contentTypeIdentifier = contentType ? contentType.identifier : null;
+        const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : notAvailableLabel;
         const linkAttrs = {
             className: 'c-table-view-item__link c-table-view-item__text-wrapper',
             title: content.Name,
