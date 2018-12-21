@@ -54,11 +54,12 @@ const processBulkResponse = (locations, successCode, callback, response) => {
     callback(locationsMatches.success, locationsMatches.fail);
 };
 
-const makeBulkRequest = ({ token }, requestBodyOperations, callback) => {
+const makeBulkRequest = ({ token, siteaccess }, requestBodyOperations, callback) => {
     const request = new Request(ENDPOINT_BULK, {
         method: 'POST',
         headers: {
             ...HEADERS_BULK,
+            'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
         },
         body: JSON.stringify({
