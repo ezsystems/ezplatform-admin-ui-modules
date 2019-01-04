@@ -9,6 +9,30 @@ export const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
 
 /**
+ * Build the criterion for the search.
+ * Tries to find a search by contentId or locationId with 'location:123' or 'content:456' in the query
+ * If no such pattern is found, return a FullTextCriterion
+ * @function buildQueryCriterions
+ * @param {String} query
+ * @returns {Object}
+ */
+const buildQueryCriterions = query => {
+    const re = new RegExp(/(content|location):([0-9]+)/);
+    let criterion = {};
+    let searchParts = [];
+    if ((searchParts = re.exec(query)) !== null) {
+        if (parseInt(searchParts[2]) > 0) {
+            const criterion = {};
+            let criterionName = searchParts[1].toLowerCase()+'IdCriterion';
+            criterionName = criterionName.charAt(0).toUpperCase()+criterionName.substr(1);
+            criterion[criterionName] = parseInt(searchParts[2]);
+            return criterion;
+        }
+    }
+    return {FullTextCriterion: query};
+};
+
+/**
  * Loads preselected location data
  *
  * @function loadPreselectedLocationData
@@ -204,7 +228,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback)
                 Criteria: {},
                 FacetBuilders: {},
                 SortClauses: {},
-                Filter: { FullTextCriterion: query },
+                Filter: buildQueryCriterions(query),
                 limit: QUERY_LIMIT,
                 offset: 0,
             },
