@@ -35,12 +35,20 @@
     background: #cb3400;
 }
 
+.m-ud__action--publish[disabled],
+.m-ud__action--publish[disabled]:hover,
+.m-ud__action--publish[disabled]:focus {
+    cursor: not-allowed;
+    background: #f15a10;
+    opacity: 0.3;
+}
+
 .m-ud__content {
     position: relative;
 }
 
 .is-loading:before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;

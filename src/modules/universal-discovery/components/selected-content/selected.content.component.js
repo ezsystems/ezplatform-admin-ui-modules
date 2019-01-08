@@ -69,7 +69,7 @@ export default class SelectedContentComponent extends PureComponent {
         let limitLabel = '';
 
         if (this.props.itemsLimit && this.props.multiple) {
-            const limitLabel = Translator.trans(
+            const limitLabelText = Translator.trans(
                 /*@Desc("Limit %items% max")*/ 'select_content.limit.label',
                 {
                     items: this.props.itemsLimit,
@@ -77,7 +77,7 @@ export default class SelectedContentComponent extends PureComponent {
                 'universal_discovery_widget'
             );
 
-            limitLabel = <small className="c-selected-content__label--limit">{limitLabel}</small>;
+            limitLabel = <small className="c-selected-content__label--limit">{limitLabelText}</small>;
         }
 
         return limitLabel;
