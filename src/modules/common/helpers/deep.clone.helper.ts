@@ -2,10 +2,10 @@
  * Clones any object. Faster alternative to `JSON.parse(JSON.stringify)`
  *
  * @function deepClone
- * @param {Any} data
- * @returns {Any} cloned data
+ * @param {*} data
+ * @returns {*} cloned data
  */
-const deepClone = (data) => {
+const deepClone = <T>(data: T): T => {
     let clonedData;
 
     if (typeof data !== 'object') {
@@ -16,7 +16,7 @@ const deepClone = (data) => {
         return data;
     }
 
-    if (Object.prototype.toString.apply(data) === '[object Array]') {
+    if (isArray(data)) {
         clonedData = [];
 
         for (let i = 0; i < data.length; i++) {
@@ -36,5 +36,9 @@ const deepClone = (data) => {
 
     return clonedData;
 };
+
+function isArray(data): data is Array<any> {
+    return Object.prototype.toString.apply(data) === '[object Array]'
+}
 
 export default deepClone;

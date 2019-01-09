@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import { loadLocation } from '../../services/universal.discovery.service';
 
 import './css/content.creator.component.css';
 
-export default class ContentCreatorComponent extends Component {
+export default class ContentCreatorComponent extends Component<any, any> {
     constructor(props) {
         super(props);
 
@@ -16,6 +17,11 @@ export default class ContentCreatorComponent extends Component {
             iframeLoading: true,
         };
     }
+
+    private iframe = null;
+
+    static propTypes;
+    static defaultProps;
 
     handlePublish() {
         this.iframe.contentWindow.onbeforeunload = () => {};
@@ -48,7 +54,7 @@ export default class ContentCreatorComponent extends Component {
 
     loadLocationInfo(locationId) {
         const { loadLocation, handlePublish, restInfo } = this.props;
-        const promise = new Promise((resolve) => loadLocation(Object.assign({}, restInfo, { locationId }), resolve));
+        const promise = new Promise<any>((resolve) => loadLocation(Object.assign({}, restInfo, { locationId }), resolve));
 
         promise.then((response) => {
             handlePublish(response.View.Result.searchHits.searchHit[0].value.Location);
@@ -104,7 +110,7 @@ export default class ContentCreatorComponent extends Component {
                 <div className="m-ud c-content-creator">
                     <h1 className="m-ud__title">{title}</h1>
                     <div className="m-ud__content-wrapper">
-                        <div className={contentClass} ref={(ref) => (this._refContentContainer = ref)}>
+                        <div className={contentClass}>
                             {this.renderLoadingSpinner()}
                             <iframe
                                 src={iframeUrl}

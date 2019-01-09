@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 import ContentTableComponent from '../content-table/content.table.component';
 
 import './css/bookmarks.component.css';
 
-export default class BookmarksComponent extends Component {
+export default class BookmarksComponent extends Component<any, any> {
     renderTable() {
         const { userBookmarksCount, userBookmarksItems } = this.props;
 
@@ -87,24 +88,26 @@ export default class BookmarksComponent extends Component {
             </div>
         );
     }
+
+    static propTypes = {
+        findContentBySearchQuery: PropTypes.func.isRequired,
+        onItemSelect: PropTypes.func.isRequired,
+        maxHeight: PropTypes.number.isRequired,
+        contentTypesMap: PropTypes.object.isRequired,
+        bookmarksPerPage: PropTypes.number.isRequired,
+        userBookmarksCount: PropTypes.number,
+        userBookmarksItems: PropTypes.array,
+        requireBookmarksCount: PropTypes.func.isRequired,
+        restInfo: PropTypes.shape({
+            token: PropTypes.string.isRequired,
+            siteaccess: PropTypes.string.isRequired,
+        }).isRequired,
+        selectedContent: PropTypes.array.isRequired,
+        onSelectContent: PropTypes.func.isRequired,
+        canSelectContent: PropTypes.func.isRequired,
+        onItemRemove: PropTypes.func.isRequired,
+        multiple: PropTypes.bool.isRequired,
+    };
 }
 
-BookmarksComponent.propTypes = {
-    findContentBySearchQuery: PropTypes.func.isRequired,
-    onItemSelect: PropTypes.func.isRequired,
-    maxHeight: PropTypes.number.isRequired,
-    contentTypesMap: PropTypes.object.isRequired,
-    bookmarksPerPage: PropTypes.number.isRequired,
-    userBookmarksCount: PropTypes.number,
-    userBookmarksItems: PropTypes.array,
-    requireBookmarksCount: PropTypes.func.isRequired,
-    restInfo: PropTypes.shape({
-        token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired,
-    }).isRequired,
-    selectedContent: PropTypes.array.isRequired,
-    onSelectContent: PropTypes.func.isRequired,
-    canSelectContent: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
-    multiple: PropTypes.bool.isRequired,
-};
+

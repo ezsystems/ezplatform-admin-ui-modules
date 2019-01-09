@@ -1,9 +1,29 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import { Component, Fragment } from 'react';
 
 import './css/content.meta.preview.component.css';
 
-export default class ContentMetaPreviewComponent extends Component {
+type ContentMetaPreviewComponentProps = {
+    data: any;
+    toggleBookmark: (location: ILocation) => void;
+    contentTypesMap: object;
+    restInfo: IRestInfo;
+    maxHeight: number;
+    activeTab: string;
+    languages: any;
+    ready: boolean;
+} & ContentMetaPreviewComponentDefaultProps;
+
+type ContentMetaPreviewComponentDefaultProps = {
+    isBookmarked: boolean | null;
+};
+
+type ContentMetaPreviewComponentState = {
+    imageUri: string;
+    translations: any[];
+};
+
+export default class ContentMetaPreviewComponent extends Component<ContentMetaPreviewComponentProps, ContentMetaPreviewComponentState> {
     constructor(props) {
         super(props);
 
@@ -11,6 +31,8 @@ export default class ContentMetaPreviewComponent extends Component {
 
         this.toggleBookmark = this.toggleBookmark.bind(this);
     }
+
+    static defaultProps: ContentMetaPreviewComponentDefaultProps;
 
     /**
      * Renders an icon related to a content type
@@ -206,21 +228,6 @@ export default class ContentMetaPreviewComponent extends Component {
         );
     }
 }
-
-ContentMetaPreviewComponent.propTypes = {
-    data: PropTypes.object.isRequired,
-    isBookmarked: PropTypes.bool,
-    toggleBookmark: PropTypes.func.isRequired,
-    contentTypesMap: PropTypes.object.isRequired,
-    restInfo: PropTypes.shape({
-        token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired,
-    }).isRequired,
-    maxHeight: PropTypes.number.isRequired,
-    activeTab: PropTypes.string.isRequired,
-    languages: PropTypes.object.isRequired,
-    ready: PropTypes.bool.isRequired,
-};
 
 ContentMetaPreviewComponent.defaultProps = {
     isBookmarked: null,

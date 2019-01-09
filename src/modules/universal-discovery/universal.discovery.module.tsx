@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 
 import TabNavItemComponent from './components/tab-nav/tab.nav.item.component';
 import FinderPanelComponent from './components/tab-content/finder.panel.component';
@@ -35,7 +35,7 @@ const CONTENT_META_PREVIEW_BASE_STATE = {
     isLocationAllowed: true,
 };
 
-export default class UniversalDiscoveryModule extends Component {
+export default class UniversalDiscoveryModule extends React.Component<any, any> {
     constructor(props) {
         super(props);
 
@@ -71,20 +71,9 @@ export default class UniversalDiscoveryModule extends Component {
         this.setMainContainerRef = this.setMainContainerRef.bind(this);
         this.setContentContainerRef = this.setContentContainerRef.bind(this);
 
-        this.loadingBookmarksLocationsIds = {};
-        this._refMainContainer;
-        this._refContentContainer;
-
         if (isForcedContentType) {
             selectedContentType = this.findContentType(props.cotfAllowedContentTypes[0]);
         }
-
-        this.tabsLabels = {
-            browse: Translator.trans(/*@Desc("Browse")*/ 'browse.tab.label', {}, 'universal_discovery_widget'),
-            search: Translator.trans(/*@Desc("Search")*/ 'search.tab.label', {}, 'universal_discovery_widget'),
-            create: Translator.trans(/*@Desc("Create")*/ 'create.tab.label', {}, 'universal_discovery_widget'),
-            bookmarks: Translator.trans(/*@Desc("Bookmarks")*/ 'bookmarks.tab.label', {}, 'universal_discovery_widget'),
-        };
 
         this.state = {
             activeTab: props.activeTab,
@@ -105,6 +94,20 @@ export default class UniversalDiscoveryModule extends Component {
             ...CONTENT_META_PREVIEW_BASE_STATE,
         };
     }
+
+    private loadingBookmarksLocationsIds = {};
+    private _refMainContainer;
+    private _refContentContainer;
+
+    private tabsLabels = {
+        browse: Translator.trans(/*@Desc("Browse")*/ 'browse.tab.label', {}, 'universal_discovery_widget'),
+        search: Translator.trans(/*@Desc("Search")*/ 'search.tab.label', {}, 'universal_discovery_widget'),
+        create: Translator.trans(/*@Desc("Create")*/ 'create.tab.label', {}, 'universal_discovery_widget'),
+        bookmarks: Translator.trans(/*@Desc("Bookmarks")*/ 'bookmarks.tab.label', {}, 'universal_discovery_widget'),
+    };
+
+    static propTypes;
+    static defaultProps;
 
     componentDidMount() {
         this.props.loadContentTypes(this.props.restInfo, this.setContentTypesMap);
@@ -223,7 +226,7 @@ export default class UniversalDiscoveryModule extends Component {
     findContentType(identifier) {
         let contentType = null;
 
-        Object.values(this.props.contentTypes).forEach((group) => {
+        Object.values(this.props.contentTypes).forEach((group: any) => {
             const result = group.find((contentType) => contentType.identifier === identifier);
 
             if (result) {
@@ -724,10 +727,10 @@ export default class UniversalDiscoveryModule extends Component {
      *
      * @method getTabConfig
      * @param {String} id
-     * @param {String} iconIdentifier
+     * @param {String} [iconIdentifier]
      * @returns {Object}
      */
-    getTabConfig(id, iconIdentifier) {
+    getTabConfig(id, iconIdentifier?) {
         return {
             id,
             iconIdentifier: iconIdentifier ? iconIdentifier : id,
@@ -775,7 +778,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @returns {Element}
      */
     renderSingleTab(tab) {
-        const attrs = { id: tab.id, title: tab.title, onClick: this.togglePanel, isSelected: this.state.activeTab === tab.id };
+        const attrs: any = { id: tab.id, title: tab.title, onClick: this.togglePanel, isSelected: this.state.activeTab === tab.id };
 
         if (tab.iconIdentifier) {
             attrs.iconIdentifier = tab.iconIdentifier;
@@ -917,7 +920,7 @@ export default class UniversalDiscoveryModule extends Component {
         const { activeTab, selectedContent, canSelectContent, isPreviewMetaReady } = this.state;
         const { multiple } = this.props;
         const onClick = multiple ? this.handleConfirm : this.handleSingleConfirm;
-        const attrs = { className: 'm-ud__action--confirm', onClick };
+        const attrs: any = { className: 'm-ud__action--confirm', onClick };
 
         if (activeTab === TAB_CREATE) {
             return null;

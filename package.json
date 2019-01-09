@@ -2,6 +2,8 @@
     "name": "ezplatform-admin-ui-modules",
     "license": "MIT",
     "dependencies": {
+        "@types/react": "^16.7.18",
+        "@types/react-dom": "^16.0.11",
         "react": "^16.2.0",
         "react-dom": "^16.2.0"
     },
@@ -12,6 +14,7 @@
         "watchprod": "webpack --watch --config webpack.prod.js"
     },
     "devDependencies": {
+        "awesome-typescript-loader": "^5.2.1",
         "babel-core": "^6.26.3",
         "babel-eslint": "^8.2.1",
         "babel-loader": "^7.1.4",
@@ -26,9 +29,12 @@
         "eslint-plugin-react": "^7.7.0",
         "prettier": "^1.12.1",
         "prop-types": "^15.6.1",
+        "source-map-loader": "^0.2.4",
         "style-loader": "^0.21.0",
+        "typescript": "^3.2.2",
         "uglifyjs-webpack-plugin": "^1.1.6",
-        "webpack": "3.10.0",
+        "webpack": "^4.28.3",
+        "webpack-cli": "^3.2.1",
         "webpack-merge": "^4.1.3"
     }
 }

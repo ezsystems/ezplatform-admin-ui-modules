@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./Resources/public/js",
+        "sourceMap": true,
+        "target": "es2017",
+        "jsx": "react",
+        "allowJs": true,
+        "checkJs": true,
+    },
+    "include": [
+        "./src/**/*",
+        "./typings/**/*",
+    ]
+}

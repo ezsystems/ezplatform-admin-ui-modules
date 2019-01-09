@@ -1,5 +1,10 @@
 import { showErrorNotification } from '../../common/services/notification.service';
-import { getBasicRequestInit, handleRequestResponse, handleRequestError, handleRequestResponseStatus } from '../../common/helpers/request.helper.js';
+import {
+    getBasicRequestInit,
+    handleRequestResponse,
+    handleRequestError,
+    handleRequestResponseStatus,
+} from '../../common/helpers/request.helper.js';
 
 const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 
@@ -77,7 +82,7 @@ export const removeBookmark = (restInfo, locationId, callback) => {
  * @param {String} locationId location id
  * @param {Function} callback
  */
-export const checkIsBookmarked = (restInfo, locationId, callback) => {
+export const checkIsBookmarked = (restInfo: IRestInfo, locationId, callback) => {
     const basicRequestInit = getBasicRequestInit(restInfo);
     const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
         ...basicRequestInit,

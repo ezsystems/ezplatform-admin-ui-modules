@@ -2,7 +2,7 @@
  * Returns basic RequestInit object for Request
  *
  * @function getBasicRequestInit
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
+ * @param {IRestInfo} restInfo REST config hash containing: token and siteaccess properties
  * @returns {RequestInit}
  */
 export const getBasicRequestInit = ({ token, siteaccess }) => {
