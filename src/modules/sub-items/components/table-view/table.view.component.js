@@ -21,9 +21,11 @@ export default class TableViewComponent extends Component {
 
         this.state = {
             items: props.items,
-            isAscSort: false,
-            sortKey: false,
+            isAscSort: props.isAscSort,
+            sortKey: props.sortKey || SORTKEY_NAME,
         };
+
+        this.sortItems(props.items);
     }
 
     UNSAFE_componentWillReceiveProps({ items }) {

@@ -323,6 +323,7 @@ export default class SubItemsModule extends Component {
                         languages={this.props.languages}
                         handleEditItem={this.props.handleEditItem}
                         generateLink={this.props.generateLink}
+                        sortClauses={this.props.sortClauses}
                     />
                 </div>
                 {this.renderLoadMore()}
