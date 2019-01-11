@@ -3,9 +3,16 @@ import PropTypes from 'prop-types';
 
 import { fileSizeToString } from '../../helpers/text.helper';
 
-import './css/drop.area.component.css';
-
 export default class DropAreaComponent extends Component {
+    constructor(props) {
+        super(props);
+
+        this._refFileInput = null;
+
+        this.openFileSelector = this.openFileSelector.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
+    }
+
     /**
      * Opens a browser native file selector
      *
@@ -51,15 +58,15 @@ export default class DropAreaComponent extends Component {
         const uploadBtnLabel = Translator.trans(/*@Desc("Upload sub-items")*/ 'upload_btn.label', {}, 'multi_file_upload');
 
         return (
-            <form className="c-drop-area" multiple onDrop={this.handleUpload.bind(this)}>
-                <div className="c-drop-area__message--main">{dropActionMessage}</div>
-                <div className="c-drop-area__btn--select" onClick={this.openFileSelector.bind(this)}>
-                    <svg className="ez-icon">
+            <form className="c-drop-area" multiple onDrop={this.handleUpload}>
+                <div className="c-drop-area__message c-drop-area__message--main">{dropActionMessage}</div>
+                <div className="c-drop-area__btn-select" onClick={this.openFileSelector}>
+                    <svg className="c-drop-area__icon ez-icon ez-icon--light ez-icon--small-medium">
                         <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
                     </svg>
                     {uploadBtnLabel}
                 </div>
-                <div className="c-drop-area__message--filesize">
+                <div className="c-drop-area__message c-drop-area__message--filesize">
                     ({maxFileSizeMessage} {fileSizeToString(this.props.maxFileSize)})
                 </div>
                 <input
@@ -70,7 +77,7 @@ export default class DropAreaComponent extends Component {
                     name="files[]"
                     hidden
                     multiple
-                    onChange={this.handleUpload.bind(this)}
+                    onChange={this.handleUpload}
                 />
             </form>
         );
