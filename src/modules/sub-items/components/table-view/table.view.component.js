@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
 
-import './css/table.view.component.css';
-
 const KEY_CONTENT_NAME = 'ContentName';
 const KEY_DATE_MODIFIED = 'DateModified';
 const KEY_LOCATION_PRIORITY = 'LocationPriority';
@@ -140,16 +138,16 @@ export default class TableViewComponent extends Component {
                     <td className={cellHeadClass}>
                         <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
                     </td>
-                    <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName}>
+                    <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName} tabIndex="-1">
                         <span className="c-table-view__label">{headerNameLabel}</span>
                     </td>
-                    <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate}>
+                    <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate} tabIndex="-1">
                         <span className="c-table-view__label">{headerModifiedLabel}</span>
                     </td>
                     <td className={cellHeadClass}>
                         <span className="c-table-view__label">{headerContentTypeLabel}</span>
                     </td>
-                    <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority}>
+                    <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority} tabIndex="-1">
                         <span className="c-table-view__label">{headerPriorityLabel}</span>
                     </td>
                     <td className={cellHeadClass} colSpan={2}>

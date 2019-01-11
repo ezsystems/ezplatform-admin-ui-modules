@@ -1,17 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Icon from '../../../common/icon/icon';
 
 const ViewSwitcherButton = ({ id, icon, title, onClick, activeView, isDisabled }) => {
-    const baseClassName = 'c-grid-switcher__option';
+    const baseClassName = 'c-view-switcher-btn';
     const attrs = {
         id,
         onClick: () => onClick(id),
         className: baseClassName,
         title,
+        tabIndex: '-1',
+    };
+    const iconAttrs = {
+        name: icon,
+        extraClasses: 'ez-icon--secondary ez-icon--small',
     };
 
     if (activeView === id) {
         attrs.className = `${baseClassName} ${baseClassName}--active`;
+        iconAttrs.extraClasses = 'ez-icon--light ez-icon--small';
     }
 
     if (isDisabled) {
@@ -20,9 +27,7 @@ const ViewSwitcherButton = ({ id, icon, title, onClick, activeView, isDisabled }
 
     return (
         <div {...attrs}>
-            <svg className="ez-icon">
-                <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${icon}`} />
-            </svg>
+            <Icon {...iconAttrs} />
         </div>
     );
 };
