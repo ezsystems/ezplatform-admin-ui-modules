@@ -21,8 +21,6 @@ import { showErrorNotification } from '../common/services/notification.service';
 import { areSameLocations } from '../common/helpers/compare.helper';
 import deepClone from '../common/helpers/deep.clone.helper';
 
-import './css/universal.discovery.module.css';
-
 export const TAB_BROWSE = 'browse';
 export const TAB_SEARCH = 'search';
 export const TAB_CREATE = 'create';
@@ -917,7 +915,11 @@ export default class UniversalDiscoveryModule extends Component {
         const { activeTab, selectedContent, canSelectContent, isPreviewMetaReady } = this.state;
         const { multiple } = this.props;
         const onClick = multiple ? this.handleConfirm : this.handleSingleConfirm;
-        const attrs = { className: 'm-ud__action--confirm', onClick };
+        const attrs = {
+            className: 'm-ud__action m-ud__action--confirm',
+            type: 'button',
+            onClick,
+        };
 
         if (activeTab === TAB_CREATE) {
             return null;
@@ -971,7 +973,8 @@ export default class UniversalDiscoveryModule extends Component {
     renderCreateBtn() {
         const isDataSelected = this.state.selectedLanguage && this.state.selectedContentType.identifier && this.state.contentMeta;
         const attrs = {
-            className: 'm-ud__action--create-content',
+            type: 'button',
+            className: 'm-ud__action m-ud__action--create-content',
             onClick: this.setCreateModeState,
             disabled: !this.state.hasPermission || !isDataSelected || !this.state.isLocationAllowed,
         };
@@ -1083,7 +1086,7 @@ export default class UniversalDiscoveryModule extends Component {
                             <div className="m-ud__btns">
                                 {this.renderPermissionError()}
                                 {this.renderNotAllowedLocationError()}
-                                <button className="m-ud__action--cancel" onClick={this.props.onCancel}>
+                                <button type="button" className="m-ud__action m-ud__action--cancel" onClick={this.props.onCancel}>
                                     {cancelBtnLabel}
                                 </button>
                                 {this.renderConfirmBtn()}

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-
-import './css/content.meta.preview.component.css';
+import Icon from '../../../common/icon/icon';
 
 export default class ContentMetaPreviewComponent extends Component {
     constructor(props) {
@@ -26,11 +25,7 @@ export default class ContentMetaPreviewComponent extends Component {
             return null;
         }
 
-        return (
-            <svg className="ez-icon c-meta-preview__icon">
-                <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${contentTypeInfo.identifier}`} />
-            </svg>
-        );
+        return <Icon name={contentTypeInfo.identifier} extraClasses="c-meta-preview__icon ez-icon--small" />;
     }
 
     /**
@@ -95,11 +90,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const { data } = this.props;
 
         if (!data.CurrentVersion) {
-            return (
-                <svg className="c-meta-preview__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
-                </svg>
-            );
+            return <Icon name="spinner" extraClasses="c-meta-preview__loading-spinner ez-spin ez-icon-x2 ez-icon-spinner" />;
         }
 
         const imageUri = this.getImageUri(data);
@@ -139,14 +130,11 @@ export default class ContentMetaPreviewComponent extends Component {
 
         const bookmarkIconId = isBookmarked ? 'bookmark-active' : 'bookmark';
         const action = isBookmarked ? 'remove' : 'add';
-        const iconHref = `/bundles/ezplatformadminui/img/ez-icons.svg#${bookmarkIconId}`;
         const wrapperClassName = `ez-add-to-bookmarks__icon-wrapper ez-add-to-bookmarks__icon-wrapper--${action}`;
 
         return (
-            <div className={wrapperClassName} onClick={this.toggleBookmark}>
-                <svg className="ez-icon ez-icon--medium">
-                    <use xlinkHref={iconHref} />
-                </svg>
+            <div className={wrapperClassName} onClick={this.toggleBookmark} tabIndex="-1">
+                <Icon name={bookmarkIconId} extraClasses="ez-icon--medium ez-icon--secondary" />
             </div>
         );
     }

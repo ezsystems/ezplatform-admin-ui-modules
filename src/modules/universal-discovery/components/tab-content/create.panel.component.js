@@ -5,8 +5,6 @@ import TabContentPanelComponent from './tab.content.panel.component';
 import FinderComponent from '../finder/finder.component';
 import CreateComponent from '../create/create.component';
 
-import './css/create.panel.component.css';
-
 const CreatePanelComponent = (props) => {
     const wrapperAttrs = { className: 'c-create-panel' };
     const maxHeight = props.maxHeight - 24;

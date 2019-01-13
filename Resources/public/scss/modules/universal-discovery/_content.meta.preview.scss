@@ -1,0 +1,166 @@
+.c-meta-preview {
+    background: $ez-white;
+    height: 100%;
+    overflow-y: auto;
+    padding: calculateRem(10px);
+    border-radius: calculateRem(4px);
+
+    &__wrapper {
+        height: calc(100% - #{calculateRem(32px)});
+    }
+
+    &__title {
+        margin: 0;
+        font-size: calculateRem(16px);
+        font-weight: bold;
+        color: $ez-color-base-dark;
+        line-height: calculateRem(32px);
+    }
+
+    &__name {
+        font-size: calculateRem(16px);
+        font-weight: bold;
+        line-height: calculateRem(20px);
+        margin: calculateRem(8px) 0;
+        word-break: break-all;
+    }
+
+    &__content-type {
+        margin: 0 auto calculateRem(4px);
+        font-size: calculateRem(15px);
+        color: $ez-color-base-dark;
+        line-height: calculateRem(20px);
+        display: flex;
+        align-items: center;
+        width: calculateRem(190px);
+        flex: 1 1 auto;
+    }
+
+    &__image-wrapper {
+        width: calculateRem(190px);
+        height: calculateRem(190px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: $ez-ground-base-dark;
+        margin-bottom: calculateRem(10px);
+    }
+
+    &__image {
+        display: block;
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        max-height: calculateRem(190px);
+        margin: auto;
+    }
+
+    &__meta-wrapper {
+        width: calculateRem(190px);
+        margin: auto;
+    }
+
+    &__icon {
+        margin-right: calculateRem(8px);
+        fill: $ez-color-base-medium;
+    }
+
+    &__content-info {
+        color: $ez-black;
+        line-height: calculateRem(15px);
+        font-size: calculateRem(13px);
+        padding: 0 calculateRem(10px) 0 calculateRem(40px);
+    }
+
+    &__content-info {
+        & + & {
+            margin-top: calculateRem(16px);
+        }
+    }
+
+    &__subtitle {
+        line-height: calculateRem(15px);
+        font-size: calculateRem(13px);
+        margin-bottom: 0;
+    }
+
+    &__translation {
+        display: block;
+    }
+
+    &__top-wrapper {
+        width: calculateRem(190px);
+        margin: auto;
+        display: flex;
+    }
+
+    &__content-bookmark {
+        flex: 0 0 calculateRem(32px);
+        height: calculateRem(30px);
+
+        .ez-add-to-bookmarks__icon-wrapper {
+            padding: 0;
+            cursor: pointer;
+
+            &--add,
+            &--remove {
+                &:hover,
+                &:focus {
+                    .ez-icon {
+                        fill: $ez-color-secondary-hover;
+                    }
+                }
+            }
+
+            &--add:after,
+            &--remove:after {
+                content: '';
+                display: block;
+                width: calculateRem(32px);
+                height: calculateRem(32px);
+                margin-top: calculateRem(-33px);
+                margin-left: calculateRem(-4px);
+                border-radius: 50%;
+
+                animation-direction: normal;
+                animation-iteration-count: 1;
+                animation-play-state: running;
+            }
+
+            &--add:after {
+                background-color: transparent;
+                animation: background-to-transparent 0.3s $ez-admin-transition;
+            }
+
+            &--remove:after {
+                background-color: $ez-ground-base;
+                animation: background-to-base 0.3s $ez-admin-transition;
+            }
+
+            .ez-icon--secondary {
+                width: calculateRem(24px);
+                height: calculateRem(24px);
+            }
+        }
+    }
+}
+
+@keyframes background-to-base {
+    0% {
+        transform: scale(1);
+        background-color: transparent;
+    }
+    50% {
+        transform: scale(0.75);
+        box-shadow: inset calculateRem(10px) calculateRem(10px) calculateRem(10px) calculateRem(4px) rgba($ez-ground-base-medium, 0.1) inset
+                calculateRem(-10px) calculateRem(-10px) calculateRem(10px) calculateRem(4px) rgba($ez-ground-base-medium, 0.1),
+            inset calculateRem(10px) calculateRem(-10px) calculateRem(10px) calculateRem(4px) rgba($ez-ground-base-medium, 0.1),
+            inset calculateRem(-10px) calculateRem(10px) calculateRem(10px) calculateRem(4px) rgba($ez-ground-base-medium, 0.1);
+        background-color: rgba($ez-ground-base-medium, 0.1);
+    }
+    100% {
+        transform: scale(1);
+        background-color: $ez-ground-base;
+    }
+}

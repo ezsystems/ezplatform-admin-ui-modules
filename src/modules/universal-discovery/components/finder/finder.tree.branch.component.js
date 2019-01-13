@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import FinderTreeLeafComponent from './finder.tree.leaf.component';
 
-import './css/finder.tree.branch.component.css';
-
 export default class FinderTreeBranchComponent extends Component {
     constructor(props) {
         super(props);
@@ -104,7 +102,7 @@ export default class FinderTreeBranchComponent extends Component {
         const loadMoreLabel = Translator.trans(/*@Desc("Load more")*/ 'finder.branch.load_more.label', {}, 'universal_discovery_widget');
 
         return (
-            <button className="c-finder-tree-branch__load-more" onClick={this.onLoadMore}>
+            <button type="button" className="c-finder-tree-branch__load-more" onClick={this.onLoadMore}>
                 {loadMoreLabel}
             </button>
         );

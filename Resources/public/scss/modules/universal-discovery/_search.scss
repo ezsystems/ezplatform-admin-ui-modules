@@ -1,0 +1,74 @@
+.c-search {
+    height: 100%;
+    overflow: auto;
+
+    &__title {
+        font-size: calculateRem(18px);
+        font-weight: bold;
+    }
+
+    &__form {
+        margin: calculateRem(16px) 0;
+        display: flex;
+    }
+
+    &__input {
+        border: calculateRem(1px) solid rgba($ez-black, 0.3);
+        border-right: 0 none;
+        border-radius: calculateRem(4px) 0 0 calculateRem(4px);
+        background-color: $ez-white;
+        line-height: calculateRem(30px);
+        padding: 0 calculateRem(8px);
+        min-width: calculateRem(300px);
+        transition: border 0.3s $ez-admin-transition;
+
+        &:focus {
+            border-color: $ez-color-secondary;
+            outline: none;
+        }
+    }
+
+    &__submit {
+        background: $ez-color-primary;
+        line-height: calculateRem(30px);
+        color: $ez-white;
+        border-radius: 0 calculateRem(4px) calculateRem(4px) 0;
+        border: calculateRem(1px) solid $ez-color-primary;
+        padding: 0 calculateRem(8px);
+        display: flex;
+        align-items: center;
+        min-width: calculateRem(100px);
+        text-align: center;
+        transition: opacity 0.3s $ez-admin-transition, background 0.3s $ez-admin-transition;
+        cursor: pointer;
+
+        &:not([disabled]):hover,
+        &:not([disabled]):focus {
+            background: $ez-color-primary-hover;
+            outline: none;
+        }
+
+        &[disabled] {
+            cursor: not-allowed;
+            opacity: 0.3;
+        }
+
+        .ez-icon {
+            margin-right: calculateRem(8px);
+        }
+
+        &--loading {
+            justify-content: center;
+            opacity: 0.7;
+
+            &:hover,
+            &:focus {
+                background: $ez-color-primary;
+            }
+
+            .ez-icon {
+                margin-right: 0;
+            }
+        }
+    }
+}

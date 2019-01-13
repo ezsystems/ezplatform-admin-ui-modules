@@ -5,8 +5,6 @@ import FinderTreeBranchComponent from './finder.tree.branch.component';
 import { loadPreselectedLocationData, QUERY_LIMIT } from '../../services/universal.discovery.service';
 import deepClone from '../../../common/helpers/deep.clone.helper';
 
-import './css/finder.component.css';
-
 export default class FinderComponent extends Component {
     constructor(props) {
         super(props);

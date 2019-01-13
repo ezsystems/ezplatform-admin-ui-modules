@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './css/tooltip.popup.component.css';
 import Icon from '../icon/icon';
 
 const TooltipPopupComponent = (props) => {
@@ -14,8 +12,8 @@ const TooltipPopupComponent = (props) => {
         <div {...attrs}>
             <div className="c-tooltip-popup__header">
                 <div className="c-tooltip-popup__title">{props.title}</div>
-                <div className="c-tooltip-popup__close" onClick={props.onClose}>
-                    <Icon name="discard" />
+                <div className="c-tooltip-popup__close" onClick={props.onClose} tabIndex="-1">
+                    <Icon name="discard" extraClasses="ez-icon--medium" />
                 </div>
             </div>
             <div className="c-tooltip-popup__content">{props.children}</div>

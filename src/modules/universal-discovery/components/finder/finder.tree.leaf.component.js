@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
-
-import './css/finder.tree.leaf.component.css';
+import Icon from '../../../common/icon/icon';
 
 export default class FinderTreeLeafComponent extends Component {
     constructor(props) {
@@ -40,11 +39,7 @@ export default class FinderTreeLeafComponent extends Component {
             return null;
         }
 
-        return (
-            <svg className="ez-icon ez-spin ez-icon-x2">
-                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
-            </svg>
-        );
+        return <Icon name="spinner" extraClasses="ez-spin ez-icon-x2 ez-icon--small ez-icon--light" />;
     }
 
     renderSelectContentBtn() {

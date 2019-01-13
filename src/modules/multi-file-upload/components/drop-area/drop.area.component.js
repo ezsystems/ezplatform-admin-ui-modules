@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { fileSizeToString } from '../../helpers/text.helper';
+import Icon from '../../../common/icon/icon';
 
 export default class DropAreaComponent extends Component {
     constructor(props) {
@@ -60,10 +61,8 @@ export default class DropAreaComponent extends Component {
         return (
             <form className="c-drop-area" multiple onDrop={this.handleUpload}>
                 <div className="c-drop-area__message c-drop-area__message--main">{dropActionMessage}</div>
-                <div className="c-drop-area__btn-select" onClick={this.openFileSelector}>
-                    <svg className="c-drop-area__icon ez-icon ez-icon--light ez-icon--small-medium">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
-                    </svg>
+                <div className="c-drop-area__btn-select" onClick={this.openFileSelector} tabIndex="-1">
+                    <Icon name="upload" extraClasses="c-drop-area__icon ez-icon--light ez-icon--small-medium" />
                     {uploadBtnLabel}
                 </div>
                 <div className="c-drop-area__message c-drop-area__message--filesize">

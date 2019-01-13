@@ -1,0 +1,15 @@
+.c-finder {
+    height: 100%;
+
+    &__branches {
+        display: flex;
+        flex-wrap: nowrap;
+        height: 100%;
+        overflow: auto;
+        border-radius: calculateRem(4px);
+
+        .c-finder-tree-branch + .c-finder-tree-branch {
+            margin-left: calculateRem(16px);
+        }
+    }
+}

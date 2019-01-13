@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import UploadPopupComponent from './components/upload-popup/upload.popup.component';
 import { createFileStruct, publishFile, deleteFile, checkCanUpload } from './services/multi.file.upload.service';
+import Icon from '../common/icon/icon';
 
 export default class MultiFileUploadModule extends Component {
     constructor(props) {
@@ -197,9 +198,7 @@ export default class MultiFileUploadModule extends Component {
 
         return (
             <button {...attrs}>
-                <svg className="ez-icon ez-icon--light ez-icon--small-medium">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#upload" />
-                </svg>
+                <Icon name="upload" extraClasses="ez-icon--light ez-icon--small-medium" />
             </button>
         );
     }

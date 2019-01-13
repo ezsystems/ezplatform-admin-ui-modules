@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './css/search.results.item.component.css';
+import Icon from '../../../common/icon/icon';
 
 const SearchResultsItemComponent = (props) => {
     console.warn('[DEPRECATED] SearchResultsItemComponent is deprecated');
@@ -26,10 +25,8 @@ const SearchResultsItemComponent = (props) => {
                 {contentTypeName}
             </div>
             <div className="c-search-results-item__actions">
-                <button className="c-search-results-item__btn--preview" onClick={() => props.onPreview(props.data)}>
-                    <svg className="ez-icon">
-                        <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#view" />
-                    </svg>
+                <button type="button" className="c-search-results-item__preview-btn" onClick={() => props.onPreview(props.data)}>
+                    <Icon name="view" extraClasses="ez-icon--medium ez-icon--secondary" />
                 </button>
             </div>
         </div>

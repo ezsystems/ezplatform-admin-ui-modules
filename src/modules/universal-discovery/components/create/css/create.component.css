@@ -1,5 +1,0 @@
-.c-create {
-    display: grid;
-    grid-row-gap: 16px;
-    grid-template-rows: auto 1fr;
-}
