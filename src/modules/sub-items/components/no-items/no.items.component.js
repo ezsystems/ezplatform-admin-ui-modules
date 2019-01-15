@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './css/no.items.component.css';
-
 const NoItemsComponent = () => {
     const noItemsMessage = Translator.trans(/*@Desc("This location has no sub-items")*/ 'no_items.message', {}, 'sub_items');
 

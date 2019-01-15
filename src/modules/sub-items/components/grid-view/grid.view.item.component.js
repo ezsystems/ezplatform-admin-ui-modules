@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './css/grid.view.item.component.css';
+import Icon from '../../../common/icon/icon';
 
 const GridViewItemComponent = (props) => {
     const { content, location, generateLink } = props;
@@ -10,9 +9,7 @@ const GridViewItemComponent = (props) => {
     const hasImage = imageField && imageField.fieldValue && imageField.fieldValue.uri && imageField.fieldValue.path;
     let image = (
         <div className={`${imageClassName} ${imageClassName}--none`}>
-            <svg className="ez-icon">
-                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#file" />
-            </svg>
+            <Icon name="file" extraClasses="ez-icon--extra-large" />
         </div>
     );
     let contentTypeIcon = '';
@@ -21,9 +18,7 @@ const GridViewItemComponent = (props) => {
         image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`${imageField.fieldValue.path}`} />;
         contentTypeIcon = (
             <div className="c-grid-view-item__content-type">
-                <svg className="ez-icon">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#file" />
-                </svg>
+                <Icon name="file" extraClasses="ez-icon--small" />
             </div>
         );
     }

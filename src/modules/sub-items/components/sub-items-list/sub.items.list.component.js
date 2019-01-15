@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import TableViewComponent from '../table-view/table.view.component.js';
 import GridViewComponent from '../grid-view/grid.view.component.js';
 
-import './css/sub.items.list.component.css';
-
 const views = {
     table: TableViewComponent,
     grid: GridViewComponent,

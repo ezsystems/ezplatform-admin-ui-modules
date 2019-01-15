@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
-import './css/table.view.item.component.css';
+import Icon from '../../../common/icon/icon';
 
 export default class TableViewItemComponent extends PureComponent {
     constructor(props) {
@@ -13,6 +12,9 @@ export default class TableViewItemComponent extends PureComponent {
         this.handleCancel = this.handleCancel.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
         this.onSelectCheckboxChange = this.onSelectCheckboxChange.bind(this);
+        this.setPriorityInputRef = this.setPriorityInputRef.bind(this);
+
+        this._refPriorityInput = null;
 
         this.state = {
             priorityValue: props.location.priority,
@@ -94,6 +96,10 @@ export default class TableViewItemComponent extends PureComponent {
         this.props.handleEditItem(this.props.content);
     }
 
+    setPriorityInputRef(ref) {
+        this._refPriorityInput = ref;
+    }
+
     /**
      * Renders a priority cell with input field
      *
@@ -120,25 +126,17 @@ export default class TableViewItemComponent extends PureComponent {
         }
 
         return (
-            <td className="c-table-view-item__cell--priority">
+            <td className="c-table-view-item__cell c-table-view-item__cell--priority">
                 <div className="c-table-view-item__priority-wrapper" {...priorityWrapperAttrs}>
                     <div className="c-table-view-item__inner-wrapper c-table-view-item__inner-wrapper--input">
-                        <input
-                            className="c-table-view-item__priority-value"
-                            ref={(ref) => (this._refPriorityInput = ref)}
-                            {...inputAttrs}
-                        />
+                        <input className="c-table-view-item__priority-value" ref={this.setPriorityInputRef} {...inputAttrs} />
                     </div>
                     <div className="c-table-view-item__priority-actions" {...innerWrapperAttrs}>
-                        <button className="c-table-view-item__btn--submit" onClick={this.handleSubmit}>
-                            <svg className="ez-icon">
-                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#checkmark" />
-                            </svg>
+                        <button type="button" className="c-table-view-item__btn c-table-view-item__btn--submit" onClick={this.handleSubmit}>
+                            <Icon name="checkmark" extraClasses="ez-icon--medium ez-icon--light" />
                         </button>
-                        <button className="c-table-view-item__btn--cancel" onClick={this.handleCancel}>
-                            <svg className="ez-icon">
-                                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard" />
-                            </svg>
+                        <button type="button" className="c-table-view-item__btn c-table-view-item__btn--cancel" onClick={this.handleCancel}>
+                            <Icon name="discard" extraClasses="ez-icon--medium ez-icon--light" />
                         </button>
                     </div>
                 </div>
@@ -192,32 +190,35 @@ export default class TableViewItemComponent extends PureComponent {
 
         return (
             <tr className="c-table-view-item">
-                <td className="c-table-view-item__cell--checkbox">
+                <td className="c-table-view-item__cell c-table-view-item__cell--checkbox">
                     <input type="checkbox" checked={isSelected} onChange={this.onSelectCheckboxChange} />
                 </td>
-                <td className="c-table-view-item__cell--name">
+                <td className="c-table-view-item__cell c-table-view-item__cell--name">
                     <a {...linkAttrs}>{content.Name}</a>
                 </td>
-                <td className="c-table-view-item__cell--modified">
+                <td className="c-table-view-item__cell c-table-view-item__cell--modified">
                     <div className="c-table-view-item__text-wrapper">
                         {formatShortDateWithTimezone(new Date(content.lastModificationDate))}
                     </div>
                 </td>
-                <td className="c-table-view-item__cell--content-type">
+                <td className="c-table-view-item__cell c-table-view-item__cell--content-type">
                     <div className="c-table-view-item__text-wrapper">{contentTypeName}</div>
                 </td>
                 {this.renderPriorityCell()}
-                <td className="c-table-view-item__cell--translations">{translations.map(this.renderTranslation)}</td>
-                <td className="c-table-view-item__cell--actions">
-                    <div>
-                        <span title={editLabel} onClick={this.handleEdit} className="c-table-view-item__btn--edit">
-                            <div className="c-table-view-item__btn-inner">
-                                <svg className="ez-icon">
-                                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit" />
-                                </svg>
-                            </div>
-                        </span>
-                    </div>
+                <td className="c-table-view-item__cell c-table-view-item__cell--translations">
+                    {translations.map(this.renderTranslation)}
+                </td>
+                <td className="c-table-view-item__cell c-table-view-item__cell--actions">
+                    <span
+                        title={editLabel}
+                        onClick={this.handleEdit}
+                        className="c-table-view-item__btn c-table-view-item__btn--edit"
+                        tabIndex="-1"
+                    >
+                        <div className="c-table-view-item__btn-inner">
+                            <Icon name="edit" extraClasses="ez-icon--medium" />
+                        </div>
+                    </span>
                 </td>
             </tr>
         );
