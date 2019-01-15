@@ -54,5 +54,5 @@ module.exports = {
             amd: 'jquery',
         },
     },
-    plugins: [new CleanWebpackPlugin(['Resources/public/'])],
+    plugins: [new CleanWebpackPlugin(['Resources/public/js/'])],
 };

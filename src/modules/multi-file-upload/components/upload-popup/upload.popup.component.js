@@ -5,13 +5,23 @@ import TooltipPopup from '../../../common/tooltip-popup/tooltip.popup.component'
 import DropAreaComponent from '../drop-area/drop.area.component';
 import UploadListComponent from '../upload-list/upload.list.component';
 
-import './css/upload.popup.component.css';
+const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
 export default class UploadPopupModule extends Component {
     constructor(props) {
         super(props);
 
+        this.uploadFiles = this.uploadFiles.bind(this);
+
         this.state = { itemsToUpload: props.itemsToUpload };
+    }
+
+    componentDidMount() {
+        window.document.body.classList.add(CLASS_SCROLL_DISABLED);
+    }
+
+    componentWillUnmount() {
+        window.document.body.classList.remove(CLASS_SCROLL_DISABLED);
     }
 
     UNSAFE_componentWillReceiveProps(props) {
@@ -32,20 +42,22 @@ export default class UploadPopupModule extends Component {
      * @memberof UploadPopupModule
      */
     uploadFiles(itemsToUpload) {
-        this.setState((state) => Object.assign({}, state, { itemsToUpload }));
+        this.setState(() => ({ itemsToUpload }));
     }
 
     render() {
-        const listAttrs = Object.assign({}, this.props, {
+        const tooltipAttrs = this.props;
+        const listAttrs = {
+            ...tooltipAttrs,
             itemsToUpload: this.state.itemsToUpload,
-        });
+        };
         const title = Translator.trans(/*@Desc("Multi-file upload")*/ 'upload_popup.title', {}, 'multi_file_upload');
 
         return (
             <div className="c-upload-popup">
-                <TooltipPopup title={title} {...this.props}>
+                <TooltipPopup title={title} {...tooltipAttrs}>
                     <DropAreaComponent
-                        onDrop={this.uploadFiles.bind(this)}
+                        onDrop={this.uploadFiles}
                         maxFileSize={this.props.adminUiConfig.multiFileUpload.maxFileSize}
                         preventDefaultAction={this.props.preventDefaultAction}
                         processUploadedFiles={this.props.processUploadedFiles}

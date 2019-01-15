@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import UploadItemComponent from './upload.item.component';
 
-import './css/upload.list.component.css';
-
 export default class UploadListComponent extends Component {
     constructor(props) {
         super(props);
