@@ -9,8 +9,8 @@
     cursor: pointer;
     outline: none;
 
-    &:hover,
-    &:focus {
+    &:not(.c-select-content-button--selected):hover,
+    &:not(.c-select-content-button--selected):focus {
         background: $ez-ground-base-dark-hover;
         outline: none;
     }
