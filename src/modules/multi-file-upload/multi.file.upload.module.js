@@ -263,6 +263,7 @@ MultiFileUploadModule.propTypes = {
     itemsToUpload: PropTypes.array,
     withUploadButton: PropTypes.bool,
     contentCreatePermissionsConfig: PropTypes.object,
+    contentTypesMap: PropTypes.object.isRequired,
 };
 
 MultiFileUploadModule.defaultProps = {

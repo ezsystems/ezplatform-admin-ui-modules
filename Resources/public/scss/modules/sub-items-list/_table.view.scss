@@ -15,6 +15,10 @@
         &--sortable {
             cursor: pointer;
         }
+
+        &--name {
+            padding-left: 0;
+        }
     }
 
     &__label {
@@ -37,16 +41,6 @@
     }
 
     &__body {
-        .c-table-view-item__cell {
-            &:nth-child(5) {
-                width: 80px;
-            }
-
-            &:nth-child(7) {
-                width: 100px;
-            }
-        }
-
         .c-no-items {
             padding-top: 7px;
             padding-left: 39px;

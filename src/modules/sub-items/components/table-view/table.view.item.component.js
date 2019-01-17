@@ -187,11 +187,15 @@ export default class TableViewItemComponent extends PureComponent {
         const translations = content.CurrentVersion.Version.VersionInfo.VersionTranslationInfo.Language.map((langauge) => {
             return languages.mappings[langauge.languageCode].name;
         });
+        const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
 
         return (
             <tr className="c-table-view-item">
                 <td className="c-table-view-item__cell c-table-view-item__cell--checkbox">
                     <input type="checkbox" checked={isSelected} onChange={this.onSelectCheckboxChange} />
+                </td>
+                <td className="c-table-view-item__cell c-table-view-item__cell--icon">
+                    <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--medium" />
                 </td>
                 <td className="c-table-view-item__cell c-table-view-item__cell--name">
                     <a {...linkAttrs}>{content.Name}</a>

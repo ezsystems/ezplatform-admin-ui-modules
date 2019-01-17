@@ -15,7 +15,7 @@ export default class ContentMetaPreviewComponent extends Component {
      * Renders an icon related to a content type
      *
      * @method renderIcon
-     * @returns {Element}
+     * @returns {JSX.Element|null}
      * @memberof ContentMetaPreviewComponent
      */
     renderIcon() {
@@ -25,7 +25,10 @@ export default class ContentMetaPreviewComponent extends Component {
             return null;
         }
 
-        return <Icon name={contentTypeInfo.identifier} extraClasses="c-meta-preview__icon ez-icon--small" />;
+        const contentTypeIdentifier = contentTypeInfo.identifier;
+        const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
+
+        return <Icon customPath={contentTypeIconUrl} extraClasses="c-meta-preview__icon ez-icon--small" />;
     }
 
     /**

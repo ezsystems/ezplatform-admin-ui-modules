@@ -728,7 +728,7 @@ export default class SubItemsModule extends Component {
      * Renders pagination
      *
      * @method renderPagination
-     * @returns {JSX.Element}
+     * @returns {JSX.Element|null}
      * @memberof SubItemsModule
      */
     renderPagination() {

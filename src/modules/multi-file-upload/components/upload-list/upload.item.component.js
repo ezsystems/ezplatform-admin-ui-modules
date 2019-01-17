@@ -337,24 +337,43 @@ export default class UploadItemComponent extends Component {
     }
 
     /**
-     * Detects a file type of uploaded file
+     * Returns content type identifier 
+     * based on Content object returned from server after upload
      *
-     * @method detectFileType
+     * @method getContentTypeIdentifier
      * @memberof UploadItemComponent
-     * @returns {String}
+     * @returns {String|null}
      */
-    detectFileType() {
-        const filetype = this.props.data.file.type;
+    getContentTypeIdentifier() {
+        const { contentTypesMap, data } = this.props;
 
-        if (filetype.includes('/pdf')) {
-            return 'pdf-file';
-        } else if (filetype.includes('video/')) {
-            return 'file-video';
-        } else if (filetype.includes('image/')) {
-            return 'image';
+        if (!data.struct || !data.struct.Content) {
+            return null
         }
 
-        return 'file';
+        const contentTypeHref = data.struct.Content.ContentType._href;
+        const contentType = contentTypesMap ? contentTypesMap[contentTypeHref] : null;
+        const contentTypeIdentifier = contentType ? contentType.identifier : null;
+
+        return contentTypeIdentifier;
+    }
+
+    /**
+     * Renders an icon of a content type
+     *
+     * @method renderIcon
+     * @returns {JSX.Element|null}
+     */
+    renderIcon() {
+        const contentTypeIdentifier = this.getContentTypeIdentifier();
+
+        if (!contentTypeIdentifier) {
+            return null;
+        }
+
+        const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
+
+        return <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--small-medium" />;
     }
 
     /**
@@ -549,9 +568,7 @@ export default class UploadItemComponent extends Component {
 
         return (
             <div className="c-upload-list-item">
-                <div className="c-upload-list-item__icon-wrapper">
-                    <Icon name={this.detectFileType()} extraClasses="ez-icon--small-medium" />
-                </div>
+                <div className="c-upload-list-item__icon-wrapper">{this.renderIcon()}</div>
                 <div className="c-upload-list-item__meta">
                     <div className="c-upload-list-item__name">{this.props.data.file.name}</div>
                     <div className="c-upload-list-item__size">{this.state.uploaded ? this.state.totalSize : ''}</div>
@@ -598,6 +615,7 @@ UploadItemComponent.propTypes = {
         language: PropTypes.string.isRequired,
     }).isRequired,
     contentCreatePermissionsConfig: PropTypes.object,
+    contentTypesMap: PropTypes.object.isRequired,
 };
 
 UploadItemComponent.defaultProps = {

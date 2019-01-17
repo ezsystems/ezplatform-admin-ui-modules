@@ -10,6 +10,7 @@
         background: darken($ez-white, 15%);
     }
 
+    &__icon,
     &__name,
     &__type,
     &__actions {
@@ -22,8 +23,14 @@
         border-top: calculateRem(1px) solid $ez-ground-primary-inverted-light;
     }
 
+    &__icon {
+        padding-right: 0;
+        padding-left: calculateRem(32px);
+    }
+
     &__name {
         flex: 1 1 calculateRem(280px);
+        padding-left: calculateRem(10px);
     }
 
     &__type {

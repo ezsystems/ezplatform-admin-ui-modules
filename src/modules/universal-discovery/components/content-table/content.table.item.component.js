@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
+import Icon from '../../../common/icon/icon';
 
 const ContentTableItemComponent = (props) => {
     const { onPreview, data, contentTypesMap, multiple, selectedContent, onSelectContent, onItemRemove, canSelectContent } = props;
@@ -10,9 +11,13 @@ const ContentTableItemComponent = (props) => {
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : null;
     const contentTypeIdentifier = contentType ? contentType.identifier : null;
     const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : notAvailableLabel;
+    const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
 
     return (
         <div className="c-content-table-item" onClick={onPreview} tabIndex="-1">
+            <div className="c-content-table-item__icon">
+                <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--medium" />
+            </div>
             <div className="c-content-table-item__name" title={item.Name}>
                 {item.Name}
             </div>
