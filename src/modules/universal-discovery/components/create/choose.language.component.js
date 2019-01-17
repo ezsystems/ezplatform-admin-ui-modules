@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './css/choose.language.component.css';
-
 export default class ChooseLanguageComponent extends Component {
     constructor(props) {
         super(props);

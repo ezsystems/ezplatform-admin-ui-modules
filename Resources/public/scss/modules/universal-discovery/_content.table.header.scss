@@ -1,0 +1,29 @@
+.c-content-table-header {
+    &__list-headers {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    &__list-header {
+        padding: calculateRem(8px) calculateRem(16px);
+        font-weight: normal;
+        font-size: calculateRem(15px);
+        line-height: calculateRem(20px);
+        background-color: $ez-white;
+
+        &--name {
+            flex: 1 1 calculateRem(280px);
+        }
+
+        &--type {
+            flex: 1 1 calculateRem(180px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &--span {
+            flex: 0 0 calculateRem(90px);
+        }
+    }
+}

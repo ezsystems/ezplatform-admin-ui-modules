@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import TabContentPanelComponent from './tab.content.panel.component';
 import BookmarksComponent from '../bookmarks/bookmarks.component';
 
-import './css/bookmarks.panel.component.css';
-
 export default class BookmarksPanelComponent extends Component {
     getBookmarksAttrs() {
         const {

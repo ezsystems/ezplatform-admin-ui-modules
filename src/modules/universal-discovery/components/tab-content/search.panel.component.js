@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import TabContentPanelComponent from './tab.content.panel.component';
 import SearchComponent from '../search/search.component';
 
-import './css/search.panel.component.css';
-
 const SearchPanelComponent = (props) => {
     const wrapperAttrs = { className: 'c-search-panel' };
     const {

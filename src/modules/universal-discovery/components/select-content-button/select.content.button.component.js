@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import './css/select.content.button.component.css';
+import Icon from '../../../common/icon/icon';
 
 export default class SelectContentButtonComponent extends Component {
     constructor(props) {
@@ -53,21 +52,23 @@ export default class SelectContentButtonComponent extends Component {
     render() {
         const { multiple, isSelected } = this.props;
         const iconId = isSelected ? 'checkmark' : 'create';
-        const attrs = { className: 'c-select-content-button', onClick: isSelected ? this.handleUnselect : this.handleSelect };
+        const attrs = {
+            type: 'button',
+            className: 'c-select-content-button',
+            onClick: isSelected ? this.handleUnselect : this.handleSelect,
+        };
 
         if (!multiple || (!isSelected && !this.state.selectContentEnabled)) {
             return null;
         }
 
         if (isSelected) {
-            attrs.className = `${attrs.className} c-select-content-button--selected`;
+            attrs.className = `${attrs.className} ${attrs.className}--selected`;
         }
 
         return (
             <button {...attrs}>
-                <svg className="ez-icon ez-icon--small ez-icon--light">
-                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${iconId}`} />
-                </svg>
+                <Icon name={iconId} extraClasses="ez-icon--small" />
             </button>
         );
     }

@@ -3,8 +3,6 @@ import $ from 'jquery';
 import PropTypes from 'prop-types';
 import Icon from '../icon/icon';
 
-import './css/popup.component.css';
-
 const CLASS_NON_SCROLLABLE = 'ezs-non-scrollable';
 const CLASS_MODAL_OPEN = 'modal-open';
 const MODAL_CONFIG = {

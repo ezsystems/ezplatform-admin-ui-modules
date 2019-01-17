@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import './css/choose.content.type.component.css';
-
 export default class ChooseContentTypeComponent extends Component {
     constructor(props) {
         super(props);

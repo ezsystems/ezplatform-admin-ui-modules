@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import SearchPaginationComponent from './search.pagination.component';
 import SearchResultsItemComponent from './search.results.item.component';
 
-import './css/search.results.component.css';
-
 export default class SearchResultsComponent extends Component {
     constructor(props) {
         super(props);
@@ -118,9 +116,9 @@ export default class SearchResultsComponent extends Component {
                     {resultsTitle} ({this.state.items.length})
                 </div>
                 <div className="c-search-results__list-headers">
-                    <div className="c-search-results__list-header--name">{headerNameLabel}</div>
-                    <div className="c-search-results__list-header--type">{headerTypeLabel}</div>
-                    <div className="c-search-results__list-header--span" />
+                    <div className="c-search-results__list-header c-search-results__list-header--name">{headerNameLabel}</div>
+                    <div className="c-search-results__list-header c-search-results__list-header--type">{headerTypeLabel}</div>
+                    <div className="c-search-results__list-header c-search-results__list-header--span" />
                 </div>
                 <div className="c-search-results__list">{this.state.pages[this.state.activePage].map(this.renderItem)}</div>
                 {this.renderPagination()}

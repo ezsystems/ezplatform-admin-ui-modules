@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Icon from '../../../common/icon/icon';
 
 import ContentTableComponent from '../content-table/content.table.component';
-
-import './css/bookmarks.component.css';
 
 export default class BookmarksComponent extends Component {
     renderTable() {
@@ -55,11 +54,7 @@ export default class BookmarksComponent extends Component {
         const { userBookmarksCount } = this.props;
 
         if (userBookmarksCount === null) {
-            return (
-                <svg className="c-bookmarks__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
-                </svg>
-            );
+            return <Icon name="spinner" extraClasses="c-bookmarks__loading-spinner ez-spin ez-icon-x2 ez-icon-spinner" />;
         }
     }
 

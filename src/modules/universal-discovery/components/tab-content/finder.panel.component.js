@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import TabContentPanelComponent from './tab.content.panel.component';
 import FinderComponent from '../finder/finder.component';
 
-import './css/finder.panel.component.css';
-
 const FinderPanelComponent = (props) => {
     const wrapperAttrs = { className: 'c-finder-panel' };
 

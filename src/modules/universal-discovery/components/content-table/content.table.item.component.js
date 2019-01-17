@@ -3,31 +3,16 @@ import PropTypes from 'prop-types';
 
 import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
 
-import './css/content.table.item.component.css';
-
 const ContentTableItemComponent = (props) => {
-    const {
-        onItemClick,
-        onPreview,
-        data,
-        contentTypesMap,
-        multiple,
-        selectedContent,
-        onSelectContent,
-        onItemRemove,
-        canSelectContent,
-    } = props;
+    const { onPreview, data, contentTypesMap, multiple, selectedContent, onSelectContent, onItemRemove, canSelectContent } = props;
     const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_table.not_available.label', {}, 'universal_discovery_widget');
     const item = data.ContentInfo.Content;
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : null;
     const contentTypeIdentifier = contentType ? contentType.identifier : null;
     const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : notAvailableLabel;
-    const onClick = !!onItemClick ? onItemClick.bind(null, data) : null;
-    const isSelectedContent = selectedContent.find((content) => content.id === data.id);
-    const iconId = isSelectedContent ? 'checkmark' : 'create';
 
     return (
-        <div className="c-content-table-item" onClick={() => onPreview(data)}>
+        <div className="c-content-table-item" onClick={onPreview} tabIndex="-1">
             <div className="c-content-table-item__name" title={item.Name}>
                 {item.Name}
             </div>

@@ -1,0 +1,29 @@
+.c-select-content-button {
+    background: $ez-ground-base-dark;
+    border: none;
+    border-radius: 50%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+
+    &:not(.c-select-content-button--selected):hover,
+    &:not(.c-select-content-button--selected):focus {
+        background: $ez-ground-base-dark-hover;
+        outline: none;
+    }
+
+    .ez-icon {
+        fill: $ez-color-base-light;
+    }
+
+    &--selected {
+        background: $ez-color-positive;
+
+        .ez-icon {
+            fill: $ez-white;
+        }
+    }
+}

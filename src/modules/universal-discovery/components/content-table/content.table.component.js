@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Icon from '../../../common/icon/icon';
 
 import ContentTablePaginationComponent from './content.table.pagination.component';
 import ContentTableItemComponent from './content.table.item.component';
 import ContentTableHeaderComponent from './content.table.header.component';
-
-import './css/content.table.component.css';
 
 export default class ContentTableComponent extends Component {
     constructor(props) {
@@ -92,24 +91,14 @@ export default class ContentTableComponent extends Component {
      */
     renderItem(item) {
         const location = item.Location;
-        const {
-            contentTypesMap,
-            onItemSelect,
-            onItemClick,
-            selectedContent,
-            onSelectContent,
-            canSelectContent,
-            onItemRemove,
-            multiple,
-        } = this.props;
+        const { contentTypesMap, onItemSelect, selectedContent, onSelectContent, canSelectContent, onItemRemove, multiple } = this.props;
 
         return (
             <ContentTableItemComponent
                 key={location.id}
                 data={location}
                 contentTypesMap={contentTypesMap}
-                onPreview={onItemSelect}
-                onItemClick={onItemClick}
+                onPreview={() => onItemSelect(location)}
                 selectedContent={selectedContent}
                 onSelectContent={onSelectContent}
                 canSelectContent={canSelectContent}
@@ -162,11 +151,7 @@ export default class ContentTableComponent extends Component {
     }
 
     renderPageSpinner() {
-        return (
-            <svg className="c-content-table__loading-spinner ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
-            </svg>
-        );
+        return <Icon name="spinner" extraClasses="c-content-table__loading-spinner ez-spin ez-icon-x2 ez-icon-spinner" />;
     }
 
     renderPage() {

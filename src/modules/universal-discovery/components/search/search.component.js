@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import Icon from '../../../common/icon/icon';
 import ContentTableComponent from '../content-table/content.table.component';
-
-import './css/search.component.css';
 
 export default class SearchComponent extends Component {
     constructor(props) {
@@ -84,15 +82,15 @@ export default class SearchComponent extends Component {
      * @method renderSubmitBtn
      */
     renderSubmitBtn() {
-        const btnAttrs = { className: 'c-search__submit' };
-        const svgAttrs = { className: 'ez-icon' };
+        const btnAttrs = { className: 'c-search__submit', type: 'button' };
+        let svgExtraClasses = 'ez-icon--small ez-icon--light';
         const btnLabel = Translator.trans(/*@Desc("Search")*/ 'search.submit.label', {}, 'universal_discovery_widget');
         let iconIdentifier = 'search';
 
         if (this.state.isSearching) {
             btnAttrs.className = `${btnAttrs.className} c-search__submit--loading`;
             btnAttrs.disabled = true;
-            svgAttrs.className = `${svgAttrs.className} ez-spin ez-icon-x2 ez-icon-spinner`;
+            svgExtraClasses = `${svgExtraClasses} ez-spin ez-icon-x2 ez-icon-spinner`;
             iconIdentifier = 'spinner';
         } else if (this.state.submitDisabled) {
             btnAttrs.disabled = true;
@@ -102,9 +100,7 @@ export default class SearchComponent extends Component {
 
         return (
             <button {...btnAttrs}>
-                <svg {...svgAttrs}>
-                    <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${iconIdentifier}`} />
-                </svg>
+                <Icon name={iconIdentifier} extraClasses={svgExtraClasses} />
                 {!this.state.isSearching && btnLabel}
             </button>
         );

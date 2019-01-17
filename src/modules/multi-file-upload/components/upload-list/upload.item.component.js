@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import ProgressBarComponent from '../progress-bar/progress.bar.component';
 import { fileSizeToString } from '../../helpers/text.helper';
+import Icon from '../../../common/icon/icon';
 
 export default class UploadItemComponent extends Component {
     constructor(props) {
@@ -449,10 +450,13 @@ export default class UploadItemComponent extends Component {
         const label = Translator.trans(/*@Desc("Abort")*/ 'abort.label', {}, 'multi_file_upload');
 
         return (
-            <div className="c-upload-list-item__action c-upload-list-item__action--abort" onClick={this.abortUploading} title={label}>
-                <svg className="ez-icon ez-icon--small-medium">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#circle-close" />
-                </svg>
+            <div
+                className="c-upload-list-item__action c-upload-list-item__action--abort"
+                onClick={this.abortUploading}
+                title={label}
+                tabIndex="-1"
+            >
+                <Icon name="circle-close" extraClasses="ez-icon--small-medium" />
             </div>
         );
     }
@@ -498,10 +502,13 @@ export default class UploadItemComponent extends Component {
         const label = Translator.trans(/*@Desc("Edit")*/ 'edit.label', {}, 'multi_file_upload');
 
         return (
-            <div className="c-upload-list-item__action c-upload-list-item__action--edit" title={label} onClick={this.handleEditBtnClick}>
-                <svg className="ez-icon ez-icon--small-medium">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#edit" />
-                </svg>
+            <div
+                className="c-upload-list-item__action c-upload-list-item__action--edit"
+                title={label}
+                onClick={this.handleEditBtnClick}
+                tabIndex="-1"
+            >
+                <Icon name="edit" extraClasses="ez-icon--small-medium" />
             </div>
         );
     }
@@ -524,10 +531,13 @@ export default class UploadItemComponent extends Component {
         const label = Translator.trans(/*@Desc("Delete")*/ 'delete.label', {}, 'multi_file_upload');
 
         return (
-            <div className="c-upload-list-item__action c-upload-list-item__action--delete" onClick={this.deleteFile} title={label}>
-                <svg className="ez-icon ez-icon--small-medium">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#trash" />
-                </svg>
+            <div
+                className="c-upload-list-item__action c-upload-list-item__action--delete"
+                onClick={this.deleteFile}
+                title={label}
+                tabIndex="-1"
+            >
+                <Icon name="trash" extraClasses="ez-icon--small-medium" />
             </div>
         );
     }
@@ -540,9 +550,7 @@ export default class UploadItemComponent extends Component {
         return (
             <div className="c-upload-list-item">
                 <div className="c-upload-list-item__icon-wrapper">
-                    <svg className="ez-icon ez-icon--small-medium">
-                        <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${this.detectFileType()}`} />
-                    </svg>
+                    <Icon name={this.detectFileType()} extraClasses="ez-icon--small-medium" />
                 </div>
                 <div className="c-upload-list-item__meta">
                     <div className="c-upload-list-item__name">{this.props.data.file.name}</div>

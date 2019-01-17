@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './css/tab.content.panel.component.css';
-
 const TabContentPanelComponent = (props) => {
     const attrs = {
         id: props.id,

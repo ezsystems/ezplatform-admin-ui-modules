@@ -1,0 +1,55 @@
+.c-choose-content-type {
+    padding: calculateRem(8px);
+    background: $ez-color-base-pale;
+    border-radius: calculateRem(5px);
+
+    &__list-wrapper {
+        background: $ez-white;
+        padding: calculateRem(8px);
+
+        .form-control {
+            border-width: calculateRem(3px);
+        }
+    }
+
+    &__title {
+        font-weight: bold;
+        margin-bottom: calculateRem(8px);
+    }
+
+    &__list {
+        margin-top: calculateRem(8px);
+        overflow: auto;
+    }
+
+    &__group-item {
+        padding-left: calculateRem(16px);
+        cursor: pointer;
+        transition: background 0.3s $ez-admin-transition;
+
+        &:hover,
+        &:focus {
+            background: $ez-secondary-ground-pale;
+        }
+
+        &.is-selected {
+            background: $ez-secondary-ground;
+            color: $ez-white;
+
+            &:hover,
+            &:focus {
+                background: $ez-secondary-ground;
+            }
+        }
+
+        &.is-not-selectable {
+            cursor: not-allowed;
+            opacity: 0.3;
+
+            &:hover,
+            &:focus {
+                background: inherit;
+            }
+        }
+    }
+}

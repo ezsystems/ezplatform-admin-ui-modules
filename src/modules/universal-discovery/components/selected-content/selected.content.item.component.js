@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './css/selected.content.item.component.css';
+import Icon from '../../../common/icon/icon';
 
 const SelectedContentItemComponent = ({ data, onRemove }) => {
     const contentTypeInfo = data.ContentInfo.Content.ContentTypeInfo;
@@ -10,11 +9,7 @@ const SelectedContentItemComponent = ({ data, onRemove }) => {
     let icon;
 
     if (contentTypeInfo) {
-        icon = (
-            <svg className="ez-icon c-selected-content-item__icon">
-                <use xlinkHref={`/bundles/ezplatformadminui/img/ez-icons.svg#${contentTypeInfo.identifier}`} />
-            </svg>
-        );
+        icon = <Icon name={contentTypeInfo.identifier} extraClasses="c-selected-content-item__icon ez-icon--small" />;
     }
 
     return (
@@ -25,10 +20,8 @@ const SelectedContentItemComponent = ({ data, onRemove }) => {
                     {icon} {contentTypeName}
                 </div>
             </div>
-            <div className="c-selected-content-item__remove" onClick={() => onRemove(data.id)}>
-                <svg className="ez-icon">
-                    <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#discard" />
-                </svg>
+            <div className="c-selected-content-item__remove" onClick={() => onRemove(data.id)} tabIndex="-1">
+                <Icon name="discard" extraClasses="ez-icon--light ez-icon--small" />
             </div>
         </div>
     );

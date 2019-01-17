@@ -1,0 +1,38 @@
+.c-finder-tree-branch {
+    background: $ez-white;
+    height: 100%;
+    max-width: 24ch;
+    flex: 0 0 24ch;
+    border-radius: calculateRem(4px);
+    overflow: auto;
+
+    &__list-wrapper {
+        max-height: 100%;
+        overflow: auto;
+    }
+
+    &__load-more {
+        border: calculateRem(1px) solid $ez-color-secondary;
+        background: none;
+        display: block;
+        text-align: center;
+        color: $ez-color-secondary;
+        width: 80%;
+        border-radius: calculateRem(4px);
+        margin: 0 auto calculateRem(10px);
+        transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+            background: $ez-color-secondary-hover;
+            color: $ez-white;
+            outline: none;
+        }
+    }
+
+    &--collapsed {
+        flex: 0 0 3ch;
+        cursor: pointer;
+    }
+}

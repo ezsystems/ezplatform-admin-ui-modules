@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './css/content.table.pagination.component.css';
-
 const ContentTablePaginationComponent = (props) => {
     const { minIndex, activeIndex, maxIndex, onChange } = props;
     const btnFirstLabel = Translator.trans(/*@Desc("First")*/ 'pagination.first', {}, 'universal_discovery_widget');
@@ -11,20 +9,24 @@ const ContentTablePaginationComponent = (props) => {
     const btnLastLabel = Translator.trans(/*@Desc("Last")*/ 'pagination.last', {}, 'universal_discovery_widget');
     const btnClass = 'c-content-table-pagination__btn';
     const firstAttrs = {
+        type: 'button',
         onClick: () => onChange(minIndex),
-        className: `${btnClass}--first`,
+        className: `${btnClass} ${btnClass}--first`,
     };
     const prevAttrs = {
+        type: 'button',
         onClick: () => onChange(activeIndex - 1),
-        className: `${btnClass}--prev ${btnClass}--middle`,
+        className: `${btnClass} ${btnClass}--prev ${btnClass}--middle`,
     };
     const nextAttrs = {
+        type: 'button',
         onClick: () => onChange(activeIndex + 1),
-        className: `${btnClass}--next ${btnClass}--middle`,
+        className: `${btnClass} ${btnClass}--next ${btnClass}--middle`,
     };
     const lastAttrs = {
+        type: 'button',
         onClick: () => onChange(maxIndex),
-        className: `${btnClass}--last`,
+        className: `${btnClass} ${btnClass}--last`,
     };
 
     if (activeIndex === minIndex) {

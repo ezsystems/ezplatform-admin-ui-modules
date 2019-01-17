@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import SelectedContentItemComponent from './selected.content.item.component';
 import SelectedContentPopupComponent from './selected.content.popup.component';
 
-import './css/selected.content.component.css';
-
 export default class SelectedContentComponent extends PureComponent {
     constructor(props) {
         super(props);
@@ -69,7 +67,7 @@ export default class SelectedContentComponent extends PureComponent {
         let limitLabel = '';
 
         if (this.props.itemsLimit && this.props.multiple) {
-            const limitLabel = Translator.trans(
+            const limitLabelText = Translator.trans(
                 /*@Desc("Limit %items% max")*/ 'select_content.limit.label',
                 {
                     items: this.props.itemsLimit,
@@ -77,7 +75,7 @@ export default class SelectedContentComponent extends PureComponent {
                 'universal_discovery_widget'
             );
 
-            limitLabel = <small className="c-selected-content__label--limit">{limitLabel}</small>;
+            limitLabel = <small className="c-selected-content__label--limit">{limitLabelText}</small>;
         }
 
         return limitLabel;
@@ -135,7 +133,7 @@ export default class SelectedContentComponent extends PureComponent {
         return (
             <div className="c-selected-content">
                 {this.renderSelectedItems()}
-                <div className={infoCssClasses} onClick={this.togglePopup}>
+                <div className={infoCssClasses} onClick={this.togglePopup} tabIndex="-1">
                     <strong className="c-selected-content__title">{this.getTitle()}</strong>
                     {this.renderLimitLabel()}
                     <div className="c-selected-content__content-names">{titles.length ? titles : noConfirmedContentTitle}</div>

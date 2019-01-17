@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import PopupComponent from '../../../common/tooltip-popup/tooltip.popup.component';
 
-import './css/selected.content.popup.component.css';
-
 const SelectedContentPopupComponent = (props) => {
     return (
         <div className="c-selected-content-popup">

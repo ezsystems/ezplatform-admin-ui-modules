@@ -1,0 +1,19 @@
+.c-choose-language {
+    padding: calculateRem(8px);
+    background: $ez-color-base-pale;
+    border-radius: calculateRem(5px);
+    font-weight: bold;
+
+    &__title {
+        margin-bottom: calculateRem(8px);
+    }
+
+    &__select-wrapper {
+        padding: calculateRem(8px);
+        background-color: $ez-white;
+    }
+
+    &__select-wrapper .form-control {
+        border-width: calculateRem(3px);
+    }
+}

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Icon from '../../../common/icon/icon';
 
 import { loadLocation } from '../../services/universal.discovery.service';
-
-import './css/content.creator.component.css';
 
 export default class ContentCreatorComponent extends Component {
     constructor(props) {
@@ -77,11 +76,7 @@ export default class ContentCreatorComponent extends Component {
             return null;
         }
 
-        return (
-            <svg className="ez-icon ez-spin ez-icon-x2 ez-icon-spinner">
-                <use xlinkHref="/bundles/ezplatformadminui/img/ez-icons.svg#spinner" />
-            </svg>
-        );
+        return <Icon name="spinner" extraClasses="ez-spin ez-icon-x2 ez-icon-spinner" />;
     }
 
     render() {
@@ -116,10 +111,10 @@ export default class ContentCreatorComponent extends Component {
                         </div>
                         <div className="m-ud__actions">
                             <div className="m-ud__btns">
-                                <button className="m-ud__action--cancel" onClick={onCancel}>
+                                <button type="button" className="m-ud__action m-ud__action--cancel" onClick={onCancel}>
                                     {cancelLabel}
                                 </button>
-                                <button className="m-ud__action--publish" onClick={this.handlePublish}>
+                                <button type="button" className="m-ud__action m-ud__action--publish" onClick={this.handlePublish}>
                                     {publishLabel}
                                 </button>
                             </div>
