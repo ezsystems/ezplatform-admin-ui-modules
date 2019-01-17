@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 
 import ViewSwitcherButton from './view.switcher.button.component';
 
-import './css/view.switcher.component.css';
-
 const ViewSwitcherComponent = ({ onViewChange, activeView, isDisabled }) => {
-    let componentClassName = 'c-grid-switcher';
+    let componentClassName = 'c-view-switcher';
 
     if (isDisabled) {
         componentClassName = `${componentClassName} ${componentClassName}--disabled`;

@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './css/action.btn.css';
 import Icon from '../../../common/icon/icon';
 
 const ActionButton = (props) => {
@@ -12,14 +10,19 @@ const ActionButton = (props) => {
             onClick();
         }
     };
-    let className = `${baseClassName}`;
+    const attrs = {
+        className: `${baseClassName}`,
+        title: label,
+        tabIndex: '-1',
+        onClick: handleClick,
+    };
 
-    className = disabled ? `${className} ${baseClassName}--disabled` : className;
-    className = type ? `${className} ${baseClassName}--${type}` : className;
+    attrs.className = disabled ? `${attrs.className} ${baseClassName}--disabled` : attrs.className;
+    attrs.className = type ? `${attrs.className} ${baseClassName}--${type}` : attrs.className;
 
     return (
-        <div className={className} title={label} onClick={handleClick}>
-            <Icon name={type} extraClasses="ez-icon--medium" />
+        <div {...attrs}>
+            <Icon name={type} extraClasses="ez-icon--light ez-icon--medium" />
         </div>
     );
 };

@@ -14,8 +14,6 @@ import deepClone from '../common/helpers/deep.clone.helper.js';
 import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
 import { bulkMoveLocations, bulkMoveLocationsToTrash } from './services/bulk.service.js';
 
-import './css/sub.items.module.css';
-
 const ASCENDING_SORT_ORDER = 'ascending';
 const DESCENDING_SORT_ORDER = 'descending';
 const DEFAULT_SORT_ORDER = ASCENDING_SORT_ORDER;
@@ -408,7 +406,7 @@ export default class SubItemsModule extends Component {
      */
     deselectItems(locationsIds) {
         const { selectedItems } = this.state;
-        const newSelection = new Map([...selectedItems].filter(([locationId, item]) => !locationsIds.has(locationId)));
+        const newSelection = new Map([...selectedItems].filter(([locationId]) => !locationsIds.has(locationId)));
 
         this.setState(() => ({ selectedItems: newSelection }));
     }

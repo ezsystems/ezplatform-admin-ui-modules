@@ -1,0 +1,151 @@
+.c-table-view-item {
+    & + & {
+        border-top: calculateRem(1px) solid $ez-ground-primary;
+    }
+
+    &__translation {
+        display: block;
+    }
+
+    &__text-wrapper {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &__cell {
+        padding-left: calculateRem(16px);
+        font-size: calculateRem(14px);
+        line-height: calculateRem(20px);
+
+        &--translations {
+            max-width: calculateRem(100px);
+        }
+
+        &--name .c-table-view-item__text-wrapper {
+            max-width: calculateRem(260px);
+        }
+
+        &--modified .c-table-view-item__text-wrapper {
+            max-width: calculateRem(190px);
+        }
+
+        &--checkbox {
+            width: 5%;
+        }
+    }
+
+    &__inner-wrapper {
+        cursor: pointer;
+
+        &--input {
+            width: 7ch;
+        }
+
+        &--disabled {
+            position: relative;
+
+            &:before {
+                position: absolute;
+                z-index: 2;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                content: '';
+            }
+        }
+    }
+
+    &__priority-wrapper {
+        position: relative;
+    }
+
+    &__priority-actions {
+        position: absolute;
+        left: 7ch;
+        top: calculateRem(2px);
+        width: calculateRem(90px);
+    }
+
+    &__priority-value {
+        max-width: 100%;
+        height: calculateRem(40px);
+        border: calculateRem(1px) solid #b1d2e0;
+        margin: calculateRem(2px) 0;
+        padding: 0 calculateRem(10px);
+
+        &[disabled] {
+            border: 0 none;
+            background: transparent;
+            cursor: pointer;
+        }
+    }
+
+    &__btn {
+        color: $ez-white;
+        border: calculateRem(1px) solid transparent;
+        height: calculateRem(40px);
+        min-width: calculateRem(40px);
+        padding: calculateRem(7px) calculateRem(8px);
+        transition: background 0.3s $ez-admin-transition;
+        cursor: pointer;
+
+        &--submit {
+            background: $ez-color-secondary;
+        }
+
+        &--submit:hover,
+        &--submit:focus {
+            background: $ez-color-secondary-hover;
+        }
+
+        &--cancel {
+            background: $ez-color-base-medium;
+        }
+
+        &--cancel:hover,
+        &--cancel:focus {
+            background: $ez-color-base-medium-hover;
+        }
+
+        &--edit {
+            text-align: center;
+            cursor: pointer;
+            color: $ez-white;
+            display: inline-block;
+
+            .c-table-view-item__btn-inner {
+                padding: calculateRem(7px) calculateRem(14px);
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+
+            .ez-icon {
+                fill: $ez-color-primary;
+            }
+
+            &:hover,
+            &:focus {
+                .ez-icon {
+                    fill: $ez-color-primary-hover;
+                }
+            }
+        }
+    }
+
+    &__link {
+        display: block;
+        color: $ez-color-hyperlink;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.3s $ez-admin-transition;
+
+        &:hover,
+        &:focus {
+            color: $ez-color-hyperlink-hover;
+            text-decoration: underline;
+        }
+    }
+}
