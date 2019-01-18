@@ -1,6 +1,6 @@
 .c-tab-nav-item {
-    background: $ez-ground-base-dark;
     border: 0 none;
+    border-radius: calculateRem(8px) calculateRem(8px) 0 0;
     font-size: calculateRem(16px);
     line-height: calculateRem(30px);
     padding: calculateRem(4px) calculateRem(16px);
@@ -13,8 +13,7 @@
 
     &:hover,
     &:focus {
-        background: $ez-ground-base-dark-hover;
-        border-radius: calculateRem(8px) calculateRem(8px) 0 0;
+        background: $ez-ground-base-medium-hover;
         outline: none;
     }
 
