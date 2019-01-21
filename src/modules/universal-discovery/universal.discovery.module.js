@@ -1065,6 +1065,7 @@ export default class UniversalDiscoveryModule extends Component {
                     onCancel={this.props.onCancel}
                     handlePublish={this.handlePublish}
                     restInfo={this.props.restInfo}
+                    setMainContainerRef={this.setMainContainerRef}
                 />
             );
         }

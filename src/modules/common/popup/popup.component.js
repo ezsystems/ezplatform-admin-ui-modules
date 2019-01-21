@@ -88,8 +88,7 @@ class Popup extends Component {
                     className="close c-popup__btn--close"
                     data-dismiss="modal"
                     aria-label={closeBtnLabel}
-                    onClick={this.props.onClose}
-                >
+                    onClick={this.props.onClose}>
                     <Icon name="discard" extraClasses="ez-icon--medium" />
                 </button>
             </div>

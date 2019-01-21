@@ -186,6 +186,7 @@ UploadListComponent.propTypes = {
         language: PropTypes.string.isRequired,
     }).isRequired,
     uploadedItemsListTitle: PropTypes.string.isRequired,
+    contentCreatePermissionsConfig: PropTypes.object.isRequired,
 };
 
 UploadListComponent.defaultProps = {

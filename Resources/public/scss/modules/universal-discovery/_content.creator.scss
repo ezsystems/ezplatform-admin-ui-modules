@@ -9,6 +9,7 @@
         &__content {
             padding: 0;
             background: $ez-ground-base-medium;
+            position: relative;
         }
 
         &__actions {
@@ -22,6 +23,14 @@
             &:hover,
             &:focus {
                 background: $ez-color-primary-hover;
+            }
+
+            &[disabled],
+            &[disabled]:hover,
+            &[disabled]:focus {
+                cursor: not-allowed;
+                background: $ez-color-primary;
+                opacity: 0.3;
             }
         }
     }
