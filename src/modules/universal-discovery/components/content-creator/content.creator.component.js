@@ -11,23 +11,31 @@ export default class ContentCreatorComponent extends Component {
 
         this.handleIframeLoad = this.handleIframeLoad.bind(this);
         this.handlePublish = this.handlePublish.bind(this);
+        this.enablePublishBtn = this.enablePublishBtn.bind(this);
+        this.disablePublishBtn = this.disablePublishBtn.bind(this);
+        this.renderPublishBtn = this.renderPublishBtn.bind(this);
+
+        this._refIframe = null;
 
         this.state = {
             iframeLoading: true,
+            publishBtnDisabled: false,
         };
     }
 
     handlePublish() {
-        this.iframe.contentWindow.onbeforeunload = () => {};
-        this.iframe.contentWindow.document.body.querySelector('#ezrepoforms_content_edit_publish').click();
+        this._refIframe.contentWindow.onbeforeunload = () => {};
+        this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_content_edit_publish').click();
     }
 
     handleIframeLoad() {
-        const locationId = this.iframe.contentWindow.document.querySelector('meta[name="LocationID"]');
+        const iframeWindow = this._refIframe.contentWindow;
+        const iframeDoc = iframeWindow.document;
+        const locationId = iframeDoc.querySelector('meta[name="LocationID"]');
         const iframeUrl = this.generateIframeUrl();
 
-        if (this.iframe.contentWindow.location.pathname !== iframeUrl && !locationId) {
-            this.iframe.setAttribute('src', iframeUrl);
+        if (iframeWindow.location.pathname !== iframeUrl && !locationId) {
+            this._refIframe.setAttribute('src', iframeUrl);
 
             return;
         }
@@ -37,13 +45,24 @@ export default class ContentCreatorComponent extends Component {
         } else {
             this.setState((state) => Object.assign({}, state, { iframeLoading: false }));
 
-            this.iframe.contentWindow.onbeforeunload = () => {
+            iframeWindow.onbeforeunload = () => {
                 return '';
             };
-            this.iframe.contentWindow.onunload = () => {
+            iframeWindow.onunload = () => {
                 this.setState((state) => Object.assign({}, state, { iframeLoading: true }));
             };
         }
+
+        iframeDoc.body.addEventListener('fbFormBuilderLoaded', this.disablePublishBtn, false);
+        iframeDoc.body.addEventListener('fbFormBuilderUnloaded', this.enablePublishBtn, false);
+    }
+
+    enablePublishBtn() {
+        this.setState(() => ({ publishBtnDisabled: false }));
+    }
+
+    disablePublishBtn() {
+        this.setState(() => ({ publishBtnDisabled: true }));
     }
 
     loadLocationInfo(locationId) {
@@ -84,6 +103,21 @@ export default class ContentCreatorComponent extends Component {
         );
     }
 
+    renderPublishBtn() {
+        const publishLabel = Translator.trans(/*@Desc("Publish")*/ 'content_on_the_fly.publish.label', {}, 'universal_discovery_widget');
+        const attrs = {
+            className: 'm-ud__action--publish',
+            onClick: this.handlePublish,
+            type: 'button',
+        };
+
+        if (this.state.publishBtnDisabled) {
+            attrs.disabled = true;
+        }
+
+        return <button {...attrs}>{publishLabel}</button>;
+    }
+
     render() {
         const { selectedContentType, selectedLanguage, maxHeight, onCancel } = this.props;
         const title = Translator.trans(
@@ -95,20 +129,19 @@ export default class ContentCreatorComponent extends Component {
             'universal_discovery_widget'
         );
         const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'cancel.label', {}, 'universal_discovery_widget');
-        const publishLabel = Translator.trans(/*@Desc("Publish")*/ 'content_on_the_fly.publish.label', {}, 'universal_discovery_widget');
         const iframeUrl = this.generateIframeUrl();
         const contentClass = this.state.iframeLoading ? 'm-ud__content is-loading' : 'm-ud__content';
 
         return (
             <div className="m-ud__wrapper">
-                <div className="m-ud c-content-creator">
+                <div className="m-ud c-content-creator" ref={this.props.setMainContainerRef}>
                     <h1 className="m-ud__title">{title}</h1>
                     <div className="m-ud__content-wrapper">
-                        <div className={contentClass} ref={(ref) => (this._refContentContainer = ref)}>
+                        <div className={contentClass}>
                             {this.renderLoadingSpinner()}
                             <iframe
                                 src={iframeUrl}
-                                ref={(ref) => (this.iframe = ref)}
+                                ref={(ref) => (this._refIframe = ref)}
                                 className="c-content-creator__iframe"
                                 onLoad={this.handleIframeLoad}
                                 style={{ height: `${maxHeight + 32}px` }}
@@ -116,12 +149,10 @@ export default class ContentCreatorComponent extends Component {
                         </div>
                         <div className="m-ud__actions">
                             <div className="m-ud__btns">
-                                <button className="m-ud__action--cancel" onClick={onCancel}>
+                                <button className="m-ud__action--cancel" onClick={onCancel} type="button">
                                     {cancelLabel}
                                 </button>
-                                <button className="m-ud__action--publish" onClick={this.handlePublish}>
-                                    {publishLabel}
-                                </button>
+                                {this.renderPublishBtn()}
                             </div>
                         </div>
                     </div>
@@ -140,6 +171,7 @@ ContentCreatorComponent.propTypes = {
     handlePublish: PropTypes.func.isRequired,
     loadLocation: PropTypes.func,
     restInfo: PropTypes.object.isRequired,
+    setMainContainerRef: PropTypes.func.isRequired,
 };
 
 ContentCreatorComponent.defaultProps = {

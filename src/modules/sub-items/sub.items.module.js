@@ -408,7 +408,7 @@ export default class SubItemsModule extends Component {
      */
     deselectItems(locationsIds) {
         const { selectedItems } = this.state;
-        const newSelection = new Map([...selectedItems].filter(([locationId, item]) => !locationsIds.has(locationId)));
+        const newSelection = new Map([...selectedItems].filter(([locationId]) => !locationsIds.has(locationId)));
 
         this.setState(() => ({ selectedItems: newSelection }));
     }
@@ -634,8 +634,7 @@ export default class SubItemsModule extends Component {
                     onClick={this.closeBulkDeletePopup}
                     type="button"
                     className="btn btn-secondary btn--no m-sub-items__confirmation-modal-cancel-btn"
-                    data-dismiss="modal"
-                >
+                    data-dismiss="modal">
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkDeletePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
@@ -665,8 +664,7 @@ export default class SubItemsModule extends Component {
                 isLoading={false}
                 size="medium"
                 footerChildren={this.renderConfirmationPopupFooter()}
-                noHeader={true}
-            >
+                noHeader={true}>
                 <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
             </Popup>,
             this.bulkDeleteModalContainer

@@ -9,7 +9,8 @@
         "build": "webpack --config webpack.prod.js",
         "builddev": "webpack --config webpack.dev.js",
         "watch": "webpack --watch --config webpack.dev.js",
-        "watchprod": "webpack --watch --config webpack.prod.js"
+        "watchprod": "webpack --watch --config webpack.prod.js",
+        "fix-cs": "eslint --fix src/ && prettier --write src/**/*.js"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",
