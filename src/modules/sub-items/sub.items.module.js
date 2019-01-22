@@ -868,6 +868,8 @@ export default class SubItemsModule extends Component {
     }
 }
 
+eZ.addConfig('modules.SubItems', SubItemsModule);
+
 SubItemsModule.propTypes = {
     parentLocationId: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
