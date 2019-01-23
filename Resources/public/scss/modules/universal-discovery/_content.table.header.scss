@@ -2,7 +2,6 @@
     &__list-headers {
         display: flex;
         flex-wrap: nowrap;
-        background-color: $ez-white;
     }
 
     &__list-header {
@@ -10,6 +9,7 @@
         font-weight: 700;
         font-size: calculateRem(15px);
         line-height: calculateRem(20px);
+        background-color: $ez-white;
 
         &--name {
             flex: 1 1 calculateRem(280px);
