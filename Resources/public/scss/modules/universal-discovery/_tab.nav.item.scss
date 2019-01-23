@@ -8,7 +8,7 @@
     cursor: pointer;
     transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
     color: $ez-color-base-medium;
-    fill: $ez-color-base-medium;
+    fill: currentColor;
     display: flex;
     align-items: center;
 
@@ -23,7 +23,7 @@
     &--selected:focus {
         background: $ez-ground-base-dark;
         color: $ez-black;
-        fill: $ez-black;
+        fill: currentColor;
         font-weight: bold;
     }
 
