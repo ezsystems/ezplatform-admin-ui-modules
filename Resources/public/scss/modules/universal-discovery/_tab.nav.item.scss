@@ -1,20 +1,20 @@
 .c-tab-nav-item {
-    background: $ez-ground-base-dark;
     border: 0 none;
+    border-radius: calculateRem(4px) calculateRem(4px) 0 0;
     font-size: calculateRem(16px);
     line-height: calculateRem(30px);
     padding: calculateRem(4px) calculateRem(16px);
     outline: none;
     cursor: pointer;
     transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
-    color: $ez-color-base-dark;
+    color: $ez-color-base-medium;
+    fill: currentColor;
     display: flex;
     align-items: center;
 
     &:hover,
     &:focus {
         background: $ez-ground-base-dark-hover;
-        border-radius: calculateRem(8px) calculateRem(8px) 0 0;
         outline: none;
     }
 
@@ -23,6 +23,7 @@
     &--selected:focus {
         background: $ez-ground-base-dark;
         color: $ez-black;
+        fill: currentColor;
         font-weight: bold;
     }
 
