@@ -6,6 +6,7 @@ module.exports = {
         SubItems: './src/modules/sub-items/sub.items.module.js',
         UniversalDiscovery: './src/modules/universal-discovery/universal.discovery.module.js',
         MultiFileUpload: './src/modules/multi-file-upload/multi.file.upload.module.js',
+        ContentTree: './src/modules/content-tree/content.tree.module.js',
     },
     output: {
         filename: '[name].module.js',
