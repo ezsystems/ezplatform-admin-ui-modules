@@ -1,6 +1,7 @@
 .m-tree {
-    padding-right: calculateRem(3px);
+    padding: calculateRem(8px) calculateRem(3px) calculateRem(8px) 0;
     min-width: calculateRem(250px);
+    width: calculateRem(250px);
     max-width: 33vw;
 
     &__resize-handler {

@@ -10,8 +10,10 @@ const List = (props) => {
     return (
         <ul {...listAttrs}>
             {props.items.map((item) => (
-                <ListItem key {...item}>
-                    {item.subItems.length && <List items={item.subItems} />}
+                <ListItem key={item.id} {...item} selected={item.id === props.selectedLocationId} onItemClick={props.onItemClick}>
+                    {item.subItems.length ? (
+                        <List items={item.subItems} selectedLocationId={props.selectedLocationId} onItemClick={props.onItemClick} />
+                    ) : null}
                 </ListItem>
             ))}
         </ul>
@@ -20,6 +22,8 @@ const List = (props) => {
 
 List.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object).isRequired,
+    selectedLocationId: PropTypes.number,
+    onItemClick: PropTypes.func.isRequired,
 };
 
 export default List;
