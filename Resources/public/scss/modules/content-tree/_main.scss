@@ -1,0 +1,15 @@
+.m-tree {
+    padding-right: calculateRem(3px);
+    min-width: calculateRem(250px);
+    max-width: 33vw;
+
+    &__resize-handler {
+        width: calculateRem(3px);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        background: $ez-ground-base-pale;
+        cursor: col-resize;
+    }
+}
