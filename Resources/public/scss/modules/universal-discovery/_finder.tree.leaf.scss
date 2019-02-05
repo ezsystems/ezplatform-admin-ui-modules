@@ -1,5 +1,5 @@
 .c-finder-tree-leaf {
-    padding: 0 calculateRem(40px) 0 calculateRem(16px);
+    padding: 0 calculateRem(40px) 0 0;
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
@@ -10,6 +10,8 @@
     line-height: calculateRem(25px);
     font-size: calculateRem(14px);
     color: $ez-color-base-dark;
+    display: flex;
+    align-items: center;
 
     &:hover,
     &:focus {
@@ -79,12 +81,16 @@
         }
     }
 
-    &--loading {
-        .ez-icon {
-            position: absolute;
-            right: calculateRem(12px);
-            top: calculateRem(5px);
-        }
+    &__loading-icon {
+        position: absolute;
+        right: calculateRem(12px);
+        top: calculateRem(5px);
+    }
+
+    &__icon {
+        display: flex;
+        height: calculateRem(16px);
+        padding: 0 calculateRem(4px) 0 calculateRem(8px);
     }
 
     .c-select-content-button {

@@ -27,11 +27,47 @@ export default class FinderTreeLeafComponent extends Component {
         onClick(location);
     }
 
+    getContentTypeIdentifier() {
+        const { contentTypesMap, location } = this.props;
+        const contentTypeHref = location.ContentInfo.Content.ContentType._href;
+        const contentType = contentTypesMap ? contentTypesMap[contentTypeHref] : null;
+        const contentTypeIdentifier = contentType ? contentType.identifier : null;
+
+        return contentTypeIdentifier;
+    }
+
+    /**
+     * Renders an icon of a content type
+     *
+     * @method renderIcon
+     * @returns {JSX.Element|null}
+     */
+    renderIcon() {
+        const contentTypeIdentifier = this.getContentTypeIdentifier();
+
+        if (!contentTypeIdentifier) {
+            return null;
+        }
+
+        const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
+        let extraClasses = 'ez-icon--small';
+
+        if (this.props.selected) {
+            extraClasses = `${extraClasses} ez-icon--light`;
+        }
+
+        return (
+            <div className="c-finder-tree-leaf__icon">
+                <Icon customPath={contentTypeIconUrl} extraClasses={extraClasses} />
+            </div>
+        );
+    }
+
     /**
      * Renders a loading state icon
      *
      * @method renderLoadingIcon
-     * @returns {Element}
+     * @returns {JSX.Element|null}
      * @memberof FinderTreeLeafComponent
      */
     renderLoadingIcon() {
@@ -39,7 +75,7 @@ export default class FinderTreeLeafComponent extends Component {
             return null;
         }
 
-        return <Icon name="spinner" extraClasses="ez-spin ez-icon-x2 ez-icon--small ez-icon--light" />;
+        return <Icon name="spinner" extraClasses="ez-spin ez-icon-x2 ez-icon--small ez-icon--light c-finder-tree-leaf__loading-icon" />;
     }
 
     renderSelectContentBtn() {
@@ -94,6 +130,7 @@ export default class FinderTreeLeafComponent extends Component {
 
         return (
             <div {...attrs}>
+                {this.renderIcon()}
                 {location.ContentInfo.Content.Name}
                 {this.renderLoadingIcon()}
                 {this.renderSelectContentBtn()}
@@ -114,4 +151,5 @@ FinderTreeLeafComponent.propTypes = {
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
+    contentTypesMap: PropTypes.object.isRequired,
 };

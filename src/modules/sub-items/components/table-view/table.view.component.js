@@ -101,7 +101,7 @@ export default class TableViewComponent extends Component {
      * Renders table's head
      *
      * @method renderHead
-     * @returns {JSX.Element}
+     * @returns {JSX.Element|null}
      * @memberof GridViewComponent
      */
     renderHead() {
@@ -112,7 +112,7 @@ export default class TableViewComponent extends Component {
         let headClass = 'c-table-view__head';
 
         if (!items.length) {
-            return;
+            return null;
         }
 
         const { sortClause, sortOrder } = this.props;
@@ -138,6 +138,7 @@ export default class TableViewComponent extends Component {
                     <td className={cellHeadClass}>
                         <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
                     </td>
+                    <td className={cellHeadClass} />
                     <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName} tabIndex="-1">
                         <span className="c-table-view__label">{headerNameLabel}</span>
                     </td>

@@ -77,6 +77,7 @@ export default class FinderTreeBranchComponent extends Component {
                 onSelectContent={this.props.onSelectContent}
                 canSelectContent={this.props.canSelectContent}
                 onItemRemove={this.props.onItemRemove}
+                contentTypesMap={this.props.contentTypesMap}
             />
         );
     }

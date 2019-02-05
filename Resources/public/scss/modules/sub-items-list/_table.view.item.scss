@@ -33,6 +33,30 @@
         &--checkbox {
             width: 5%;
         }
+
+        &--icon {
+            padding: 0 calculateRem(8px) 0 calculateRem(16px);
+            width: calculateRem(24px);
+            text-align: right;
+            vertical-align: middle;
+            line-height: 0;
+
+            .ez-icon {
+                fill: $ez-black;
+            }
+        }
+
+        &--name {
+            padding-left: 0;
+        }
+
+        &--priority {
+            width: calculateRem(80px);
+        }
+
+        &--actions {
+            width: calculateRem(100px);
+        }
     }
 
     &__inner-wrapper {

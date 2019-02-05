@@ -11,8 +11,13 @@
         line-height: calculateRem(20px);
         background-color: $ez-white;
 
+        &--icon {
+            flex: 0 0 calculateRem(58px);
+        }
+
         &--name {
             flex: 1 1 calculateRem(280px);
+            padding-left: calculateRem(10px);
         }
 
         &--type {

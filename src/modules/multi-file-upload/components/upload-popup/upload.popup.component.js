@@ -102,6 +102,7 @@ UploadPopupModule.propTypes = {
     }).isRequired,
     preventDefaultAction: PropTypes.func.isRequired,
     processUploadedFiles: PropTypes.func.isRequired,
+    contentTypesMap: PropTypes.object.isRequired,
 };
 
 UploadPopupModule.defaultProps = {

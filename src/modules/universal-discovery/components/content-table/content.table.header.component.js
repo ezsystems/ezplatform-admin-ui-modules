@@ -6,6 +6,7 @@ const ContentTableHeaderComponent = () => {
 
     return (
         <div className="c-content-table-header__list-headers">
+            <div className="c-content-table-header__list-header c-content-table-header__list-header--icon" />
             <div className="c-content-table-header__list-header c-content-table-header__list-header--name">{nameLabel}</div>
             <div className="c-content-table-header__list-header c-content-table-header__list-header--type">{typeLabel}</div>
             <div className="c-content-table-header__list-header c-content-table-header__list-header--span" />

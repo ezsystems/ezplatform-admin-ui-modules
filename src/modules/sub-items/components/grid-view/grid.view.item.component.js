@@ -2,14 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
 
-const GridViewItemComponent = (props) => {
-    const { content, location, generateLink } = props;
+const GridViewItemComponent = ({ content, location, generateLink, contentTypesMap }) => {
     const imageField = content.CurrentVersion.Version.Fields.field.find((item) => item.fieldTypeIdentifier === 'ezimage');
     const imageClassName = 'c-grid-view-item__image';
     const hasImage = imageField && imageField.fieldValue && imageField.fieldValue.uri && imageField.fieldValue.path;
+    const contentType = contentTypesMap ? contentTypesMap[content.ContentType._href] : null;
+    const contentTypeIdentifier = contentType ? contentType.identifier : null;
+    const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
     let image = (
         <div className={`${imageClassName} ${imageClassName}--none`}>
-            <Icon name="file" extraClasses="ez-icon--extra-large" />
+            <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--extra-large" />
         </div>
     );
     let contentTypeIcon = '';
@@ -18,7 +20,7 @@ const GridViewItemComponent = (props) => {
         image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`${imageField.fieldValue.path}`} />;
         contentTypeIcon = (
             <div className="c-grid-view-item__content-type">
-                <Icon name="file" extraClasses="ez-icon--small" />
+                <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--small" />
             </div>
         );
     }
