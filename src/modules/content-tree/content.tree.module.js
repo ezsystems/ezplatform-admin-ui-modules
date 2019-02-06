@@ -80,6 +80,8 @@ export default class ContentTreeModule extends Component {
     }
 }
 
+eZ.addConfig('modules.ContentTree', ContentTreeModule);
+
 ContentTreeModule.propTypes = {
     selectedLocationId: PropTypes.number,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
