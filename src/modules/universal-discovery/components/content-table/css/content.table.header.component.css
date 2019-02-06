@@ -1,6 +1,7 @@
 .c-content-table-header__list-headers {
     display: flex;
     flex-wrap: nowrap;
+    background-color: #fff;
 }
 
 [class*="c-content-table-header__list-header--"] {
@@ -8,7 +9,6 @@
     font-weight: 700;
     font-size: 15px;
     line-height: 20px;
-    background-color: #fff;
 }
 
 .c-content-table-header__list-header--name {
