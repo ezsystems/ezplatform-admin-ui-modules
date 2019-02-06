@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
+import TableViewColumnsTogglerComponent from './table.view.columns.toggler';
 
 const KEY_CONTENT_NAME = 'ContentName';
 const KEY_DATE_MODIFIED = 'DateModified';
@@ -10,6 +11,23 @@ const SORTKEY_MAP = {
     [KEY_CONTENT_NAME]: 'name',
     [KEY_DATE_MODIFIED]: 'date',
     [KEY_LOCATION_PRIORITY]: 'priority',
+};
+const COLUMNS_VISIBILITY_LOCAL_STORAGE_DATA_KEY = 'sub-items_columns-visibility';
+const DEFAULT_COLUMNS_VISIBILITY = {
+    modified: true,
+    contentType: true,
+    priority: true,
+    translations: true,
+};
+const TABLE_CELL_CLASS = 'c-table-view__cell';
+const TABLE_HEAD_CLASS = `${TABLE_CELL_CLASS} ${TABLE_CELL_CLASS}--head`;
+const TABLE_CELL_SORT_CLASS = `${TABLE_CELL_CLASS} ${TABLE_CELL_CLASS}--sortable`;
+export const headerLabels = {
+    name: Translator.trans(/*@Desc("Name")*/ 'items_table.header.name', {}, 'sub_items'),
+    modified: Translator.trans(/*@Desc("Modified")*/ 'items_table.header.modified', {}, 'sub_items'),
+    contentType: Translator.trans(/*@Desc("Content type")*/ 'items_table.header.content_type', {}, 'sub_items'),
+    priority: Translator.trans(/*@Desc("Priority")*/ 'items_table.header.priority', {}, 'sub_items'),
+    translations: Translator.trans(/*@Desc("Translations")*/ 'items_table.header.translations', {}, 'sub_items'),
 };
 
 export default class TableViewComponent extends Component {
@@ -21,6 +39,26 @@ export default class TableViewComponent extends Component {
         this.sortByPriority = this.sortByPriority.bind(this);
         this.renderItem = this.renderItem.bind(this);
         this.selectAll = this.selectAll.bind(this);
+        this.setColumnsVisibilityInLocalStorage = this.setColumnsVisibilityInLocalStorage.bind(this);
+        this.toggleColumnVisibility = this.toggleColumnVisibility.bind(this);
+
+        this._refColumnsTogglerButton = createRef();
+
+        this.state = {
+            columnsVisibility: this.getColumnsVisibilityFromLocalStorage(),
+        };
+    }
+
+    getColumnsVisibilityFromLocalStorage() {
+        const columnsVisibilityData = localStorage.getItem(COLUMNS_VISIBILITY_LOCAL_STORAGE_DATA_KEY);
+
+        return columnsVisibilityData ? JSON.parse(columnsVisibilityData) : DEFAULT_COLUMNS_VISIBILITY;
+    }
+
+    setColumnsVisibilityInLocalStorage() {
+        const columnsVisibilityData = JSON.stringify(this.state.columnsVisibility);
+
+        localStorage.setItem(COLUMNS_VISIBILITY_LOCAL_STORAGE_DATA_KEY, columnsVisibilityData);
     }
 
     /**
@@ -62,6 +100,18 @@ export default class TableViewComponent extends Component {
         toggleAllItemsSelect(isSelectAction);
     }
 
+    toggleColumnVisibility(column) {
+        this.setState(
+            (state) => ({
+                columnsVisibility: {
+                    ...state.columnsVisibility,
+                    [column]: !state.columnsVisibility[column],
+                },
+            }),
+            this.setColumnsVisibilityInLocalStorage
+        );
+    }
+
     /**
      * Renders single list item
      *
@@ -71,6 +121,7 @@ export default class TableViewComponent extends Component {
      * @memberof TableViewComponent
      */
     renderItem(data) {
+        const { columnsVisibility } = this.state;
         const {
             contentTypesMap,
             handleItemPriorityUpdate,
@@ -93,7 +144,62 @@ export default class TableViewComponent extends Component {
                 generateLink={generateLink}
                 onItemSelect={onItemSelect}
                 isSelected={isSelected}
+                columnsVisibility={columnsVisibility}
             />
+        );
+    }
+
+    renderModifiedHeader() {
+        if (!this.state.columnsVisibility.modified) {
+            return null;
+        }
+
+        return (
+            <th
+                className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--date ${TABLE_CELL_SORT_CLASS}`}
+                onClick={this.sortByDate}
+                tabIndex="-1">
+                <span className="c-table-view__label">{headerLabels.modified}</span>
+            </th>
+        );
+    }
+
+    renderContentTypeHeader() {
+        if (!this.state.columnsVisibility.contentType) {
+            return null;
+        }
+
+        return (
+            <th className={TABLE_HEAD_CLASS}>
+                <span className="c-table-view__label">{headerLabels.contentType}</span>
+            </th>
+        );
+    }
+
+    renderPriorityHeader() {
+        if (!this.state.columnsVisibility.priority) {
+            return null;
+        }
+
+        return (
+            <th
+                className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--priority ${TABLE_CELL_SORT_CLASS}`}
+                onClick={this.sortByPriority}
+                tabIndex="-1">
+                <span className="c-table-view__label">{headerLabels.priority}</span>
+            </th>
+        );
+    }
+
+    renderTranslationsHeader() {
+        if (!this.state.columnsVisibility.translations) {
+            return null;
+        }
+
+        return (
+            <th className={`${TABLE_HEAD_CLASS}`}>
+                <span className="c-table-view__label">{headerLabels.translations}</span>
+            </th>
         );
     }
 
@@ -106,8 +212,6 @@ export default class TableViewComponent extends Component {
      */
     renderHead() {
         const cellClass = 'c-table-view__cell';
-        const cellHeadClass = `${cellClass}--head`;
-        const cellSortClass = `${cellClass}--sortable`;
         const { items } = this.props;
         let headClass = 'c-table-view__head';
 
@@ -124,36 +228,33 @@ export default class TableViewComponent extends Component {
             headClass = `${headClass} ${headSortOrderClass} ${headSortByClass}`;
         }
 
-        const headerNameLabel = Translator.trans(/*@Desc("Name")*/ 'items_table.header.name', {}, 'sub_items');
-        const headerModifiedLabel = Translator.trans(/*@Desc("Modified")*/ 'items_table.header.modified', {}, 'sub_items');
-        const headerContentTypeLabel = Translator.trans(/*@Desc("Content type")*/ 'items_table.header.content_type', {}, 'sub_items');
-        const headerPriorityLabel = Translator.trans(/*@Desc("Priority")*/ 'items_table.header.priority', {}, 'sub_items');
-        const headerTranslationsLabel = Translator.trans(/*@Desc("Translations")*/ 'items_table.header.translations', {}, 'sub_items');
+        const { columnsVisibility } = this.state;
         const { selectedLocationsIds } = this.props;
         const anyLocationSelected = !!selectedLocationsIds.size;
 
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
-                    <td className={cellHeadClass}>
+                    <th className={`${TABLE_HEAD_CLASS} ${cellClass}--checkbox`}>
                         <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
-                    </td>
-                    <td className={cellHeadClass} />
-                    <td className={`${cellHeadClass} ${cellClass}--name ${cellSortClass}`} onClick={this.sortByName} tabIndex="-1">
-                        <span className="c-table-view__label">{headerNameLabel}</span>
-                    </td>
-                    <td className={`${cellHeadClass} ${cellClass}--date ${cellSortClass}`} onClick={this.sortByDate} tabIndex="-1">
-                        <span className="c-table-view__label">{headerModifiedLabel}</span>
-                    </td>
-                    <td className={cellHeadClass}>
-                        <span className="c-table-view__label">{headerContentTypeLabel}</span>
-                    </td>
-                    <td className={`${cellHeadClass} ${cellClass}--priority ${cellSortClass}`} onClick={this.sortByPriority} tabIndex="-1">
-                        <span className="c-table-view__label">{headerPriorityLabel}</span>
-                    </td>
-                    <td className={cellHeadClass} colSpan={2}>
-                        <span className="c-table-view__label">{headerTranslationsLabel}</span>
-                    </td>
+                    </th>
+                    <th className={TABLE_HEAD_CLASS} />
+                    <th
+                        className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--name ${TABLE_CELL_SORT_CLASS}`}
+                        onClick={this.sortByName}
+                        tabIndex="-1">
+                        <span className="c-table-view__label">{headerLabels.name}</span>
+                    </th>
+                    {this.renderModifiedHeader()}
+                    {this.renderContentTypeHeader()}
+                    {this.renderPriorityHeader()}
+                    {this.renderTranslationsHeader()}
+                    <th className={`${TABLE_HEAD_CLASS} ${cellClass}--actions`}>
+                        <TableViewColumnsTogglerComponent
+                            columnsVisibility={columnsVisibility}
+                            toggleColumnVisibility={this.toggleColumnVisibility}
+                        />
+                    </th>
                 </tr>
             </thead>
         );
@@ -164,10 +265,14 @@ export default class TableViewComponent extends Component {
         const content = items.map(this.renderItem);
 
         return (
-            <table className="c-table-view">
-                {this.renderHead()}
-                <tbody className="c-table-view__body">{content}</tbody>
-            </table>
+            <div className="c-table-view__wrapper">
+                <div className="c-table-view__scroller">
+                    <table className="c-table-view">
+                        {this.renderHead()}
+                        <tbody className="c-table-view__body">{content}</tbody>
+                    </table>
+                </div>
+            </div>
         );
     }
 }

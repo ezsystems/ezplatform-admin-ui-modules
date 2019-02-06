@@ -1,8 +1,4 @@
 .c-table-view-item {
-    & + & {
-        border-top: calculateRem(1px) solid $ez-ground-primary;
-    }
-
     &__translation {
         display: block;
     }
@@ -14,12 +10,15 @@
     }
 
     &__cell {
+        border-top: calculateRem(1px) solid $ez-ground-primary;
         padding-left: calculateRem(16px);
+        padding-top: calculateRem(13px);
         font-size: calculateRem(14px);
         line-height: calculateRem(20px);
+        vertical-align: top;
 
-        &--translations {
-            max-width: calculateRem(100px);
+        &--content-type {
+            min-width: calculateRem(130px);
         }
 
         &--name .c-table-view-item__text-wrapper {
@@ -31,18 +30,25 @@
         }
 
         &--checkbox {
-            width: 5%;
+            position: absolute;
+            left: 0;
+            width: calculateRem(30px);
+            border-top: calculateRem(1px) solid $ez-ground-primary;
+            line-height: 0;
+            padding-top: calculateRem(16px);
+            margin-top: -0.5px;     // Fixes borders alignment on Safari and Edge
         }
 
         &--icon {
-            padding: 0 calculateRem(8px) 0 calculateRem(16px);
+            padding-right: calculateRem(8px);
             width: calculateRem(24px);
             text-align: right;
-            vertical-align: middle;
             line-height: 0;
+            height: calculateRem(47px);
+            padding-top: calculateRem(14px);
 
             .ez-icon {
-                fill: $ez-black;
+                fill: $ez-color-base-medium;
             }
         }
 
@@ -51,11 +57,19 @@
         }
 
         &--priority {
+            padding-top: 0;
             width: calculateRem(80px);
         }
 
         &--actions {
-            width: calculateRem(100px);
+            position: absolute;
+            display: flex;
+            align-items: center;
+            right: 0;
+            height: calculateRem(47px);
+            width: calculateRem(70px);
+            padding: 0;
+            margin-top: -0.5px;     // Fixes borders alignment on Safari and Edge
         }
     }
 
@@ -87,9 +101,9 @@
 
     &__priority-actions {
         position: absolute;
-        left: 7ch;
+        left: calculateRem(-84px);
         top: calculateRem(2px);
-        width: calculateRem(90px);
+        width: calculateRem(84px);
     }
 
     &__priority-value {

@@ -2,22 +2,98 @@
     border-collapse: collapse;
     width: 100%;
 
+    &__wrapper {
+        position: relative;
+    }
+
+    &__scroller {
+        margin-left: calculateRem(28px);
+        margin-right: calculateRem(68px);
+        overflow-x: auto;
+    }
+
+    &__columns-toggler {
+        height: 100%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__columns-toggler-btn {
+        padding: calculateRem(5px);
+        height: calculateRem(32px);
+        width: calculateRem(32px);
+    }
+
+    &__columns-toggler-panel {
+        border-radius: calculateRem(4px);
+        background: $ez-white;
+        position: absolute;
+        z-index: 10;
+        padding: calculateRem(4px) calculateRem(14px);
+        top: calculateRem(36px);
+        right: calculateRem(17px);
+        font-weight: normal;
+        box-shadow: 0 calculateRem(2px) calculateRem(4px) 0 rgba($ez-black, 0.45);
+    }
+
+    &__columns-toggler-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    &__columns-toggler-option {
+        cursor: pointer;
+
+        .form-check-inline {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: calculateRem(12px) calculateRem(4px);
+            margin-right: calculateRem(12px);
+            line-height: 0;
+        }
+    }
+
+    &__columns-toggler-option-label {
+        white-space: nowrap;
+        user-select: none;
+        font-size: calculateRem(14px);
+        cursor: pointer;
+    }
+
     &__cell {
         &--head {
-            padding-left: 16px;
+            padding-left: calculateRem(16px);
             font-weight: 700;
+        }
 
-            &:last-of-type {
-                padding-right: 100px;
-            }
+        &--checkbox {
+            position: absolute;
+            padding: 0;
+            left: 0;
+            height: calculateRem(43px);
+            width: calculateRem(30px);
+            padding-left: calculateRem(16px);
         }
 
         &--sortable {
             cursor: pointer;
+            padding-right: calculateRem(12px);
         }
 
         &--name {
             padding-left: 0;
+        }
+
+        &--actions {
+            position: absolute;
+            right: 0;
+            height: calculateRem(43px);
+            width: calculateRem(70px);
+            padding: 0;
         }
     }
 
@@ -36,14 +112,10 @@
         }
     }
 
-    &__row {
-        border-bottom: 1px solid #a8c8d5;
-    }
-
     &__body {
         .c-no-items {
-            padding-top: 7px;
-            padding-left: 39px;
+            padding-top: calculateRem(7px);
+            padding-left: calculateRem(39px);
         }
     }
 
@@ -51,17 +123,17 @@
         &--sort-by-name.c-table-view__head--sort-desc .c-table-view__cell--name .c-table-view__label:after,
         &--sort-by-date.c-table-view__head--sort-desc .c-table-view__cell--date .c-table-view__label:after,
         &--sort-by-priority.c-table-view__head--sort-desc .c-table-view__cell--priority .c-table-view__label:after {
-            border-left: 3px solid transparent;
-            border-right: 3px solid transparent;
-            border-top: 5px solid #333;
+            border-left: calculateRem(3px) solid transparent;
+            border-right: calculateRem(3px) solid transparent;
+            border-top: calculateRem(5px) solid $ez-black;
         }
 
         &--sort-by-name.c-table-view__head--sort-asc .c-table-view__cell--name .c-table-view__label:after,
         &--sort-by-date.c-table-view__head--sort-asc .c-table-view__cell--date .c-table-view__label:after,
         &--sort-by-priority.c-table-view__head--sort-asc .c-table-view__cell--priority .c-table-view__label:after {
-            border-left: 3px solid transparent;
-            border-right: 3px solid transparent;
-            border-bottom: 5px solid #333;
+            border-left: calculateRem(3px) solid transparent;
+            border-right: calculateRem(3px) solid transparent;
+            border-bottom: calculateRem(5px) solid $ez-black;
         }
     }
 }
