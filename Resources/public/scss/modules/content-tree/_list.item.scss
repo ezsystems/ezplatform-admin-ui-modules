@@ -1,24 +1,55 @@
 $list-item: '.c-list-item';
+$list-item-height: calculateRem(20px);
 
 #{$list-item} {
+    line-height: $list-item-height;
+    max-height: $list-item-height;
+
     &__label {
         display: flex;
         align-items: center;
+        white-space: nowrap;
+        position: relative;
+        font-size: calculateRem(12px);
+        padding-left: calculateRem(4px);
+
+        &:hover,
+        &:focus {
+            background: $ez-secondary-ground-pale;
+            outline: none;
+        }
+    }
+
+    &__icon {
+        height: $list-item-height;
+        display: inline-flex;
+        align-items: center;
+        margin-right: calculateRem(4px);
     }
 
     &__toggler {
         display: inline-block;
+        width: calculateRem(12px);
+        height: $list-item-height;
 
-        &:after {
+        &:before {
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: 8px 6px 0 6px;
-            border-color: $ez-black transparent transparent transparent;
-            transform: rotate(180deg);
-            transition: transform 0.2s $ez-admin-transition;
+            border-width: calculateRem(4px) 0 calculateRem(4px) calculateRem(6px);
+            border-color: transparent transparent transparent $ez-black;
             display: inline-block;
-            margin-left: calculateRem(8px);
+            position: absolute;
+            top: 50%;
+            left: calculateRem(4px);
+            transform: translateY(-50%);
+            transform-origin: center center;
+        }
+
+        &--light {
+            &:before {
+                border-color: transparent transparent transparent $ez-white;
+            }
         }
     }
 
@@ -27,13 +58,14 @@ $list-item: '.c-list-item';
         list-style: none;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s $ez-admin-transition, opacity 0.2s $ez-admin-transition;
     }
 
     &--has-sub-items {
         > #{$list-item}__label {
             #{$list-item}__toggler {
-                &:after {
+                cursor: pointer;
+
+                &:before {
                     content: '';
                 }
             }
@@ -41,15 +73,70 @@ $list-item: '.c-list-item';
     }
 
     &--is-expanded {
+        max-height: initial;
+
         > .c-list {
             opacity: 1;
             max-height: calculateRem(20000px);
         }
 
-        > #{$list-item}__label {
-            #{$list-item}__toggler {
-                &:after {
-                    transform: rotate(0deg);
+        > #{$list-item} {
+            &__label {
+                #{$list-item}__toggler {
+                    &:before {
+                        border-width: calculateRem(6px) calculateRem(4px) 0 calculateRem(4px);
+                        border-color: $ez-black transparent transparent transparent;
+                    }
+                }
+            }
+        }
+    }
+
+    &--is-hidden {
+        > #{$list-item} {
+            &__label {
+                background: $ez-ground-base;
+                opacity: 0.3;
+            }
+        }
+    }
+
+    &--is-selected {
+        > #{$list-item} {
+            &__label {
+                &,
+                &:hover,
+                &:focus {
+                    background: $ez-secondary-ground;
+                    color: $ez-white;
+                }
+
+                #{$list-item}__toggler {
+                    &--light {
+                        &,
+                        &:hover,
+                        &:focus {
+                            &:before {
+                                border-color: transparent transparent transparent $ez-white;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &#{$list-item}--is-expanded > #{$list-item} {
+            &__label {
+                #{$list-item}__toggler {
+                    &--light {
+                        &,
+                        &:hover,
+                        &:focus {
+                            &:before {
+                                border-color: $ez-white transparent transparent transparent;
+                            }
+                        }
+                    }
                 }
             }
         }
