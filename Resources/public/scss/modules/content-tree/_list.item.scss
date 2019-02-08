@@ -20,6 +20,19 @@ $list-item-height: calculateRem(20px);
         }
     }
 
+    &__link {
+        color: inherit;
+        display: flex;
+        align-items: center;
+        background: none;
+
+        &:hover,
+        &:focus {
+            text-decoration: none;
+            color: inherit;
+        }
+    }
+
     &__icon {
         height: $list-item-height;
         display: inline-flex;

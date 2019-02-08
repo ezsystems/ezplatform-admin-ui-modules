@@ -38,7 +38,7 @@ class ListItem extends Component {
     }
 
     render() {
-        const { subItems, totalSubItems, name, children, hidden, selected } = this.props;
+        const { subItems, totalSubItems, name, children, hidden, selected, href } = this.props;
         const itemClassName = 'c-list-item';
         const togglerClassName = 'c-list-item__toggler';
         const itemAttrs = { className: itemClassName };
@@ -71,9 +71,12 @@ class ListItem extends Component {
 
         return (
             <li {...itemAttrs}>
-                <a className="c-list-item__label">
-                    <span {...togglerAttrs} /> {this.renderIcon()} {name}
-                </a>
+                <div className="c-list-item__label">
+                    <span {...togglerAttrs} />{' '}
+                    <a className="c-list-item__link" href={href}>
+                        {this.renderIcon()} {name}
+                    </a>
+                </div>
                 {children}
             </li>
         );

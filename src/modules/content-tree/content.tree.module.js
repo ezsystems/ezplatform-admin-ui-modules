@@ -14,7 +14,7 @@ export default class ContentTreeModule extends Component {
         this._refTreeContainer = React.createRef();
 
         this.state = {
-            selectedLocationId: props.selectedLocationId,
+            currentLocationId: props.currentLocationId,
             locations: props.preloadedLocations,
             resizeStartPositionX: 0,
             containerWidth: 0,
@@ -63,7 +63,7 @@ export default class ContentTreeModule extends Component {
     }
 
     render() {
-        const { isResizing, containerWidth, resizedContainerWidth, selectedLocationId } = this.state;
+        const { isResizing, containerWidth, resizedContainerWidth, currentLocationId } = this.state;
         const width = isResizing ? resizedContainerWidth : containerWidth;
         const containerAttrs = { className: 'm-tree', ref: this._refTreeContainer };
 
@@ -73,7 +73,7 @@ export default class ContentTreeModule extends Component {
 
         return (
             <div {...containerAttrs}>
-                <List items={this.state.locations} selectedLocationId={selectedLocationId} />
+                <List items={this.state.locations} currentLocationId={currentLocationId} />
                 <div className="m-tree__resize-handler" onMouseDown={this.addWidthChangeListener} />
             </div>
         );
@@ -81,7 +81,7 @@ export default class ContentTreeModule extends Component {
 }
 
 ContentTreeModule.propTypes = {
-    selectedLocationId: PropTypes.number,
+    currentLocationId: PropTypes.number,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
 };
 
