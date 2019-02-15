@@ -72,7 +72,7 @@ class ListItem extends Component {
         return (
             <li {...itemAttrs}>
                 <div className="c-list-item__label">
-                    <span {...togglerAttrs} />{' '}
+                    <span {...togglerAttrs} />
                     <a className="c-list-item__link" href={href}>
                         {this.renderIcon()} {name}
                     </a>
