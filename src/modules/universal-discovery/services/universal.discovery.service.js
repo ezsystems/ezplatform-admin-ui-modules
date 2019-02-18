@@ -204,7 +204,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback)
                 Criteria: {},
                 FacetBuilders: {},
                 SortClauses: {},
-                Filter: { FullTextCriterion: query },
+                Query: { FullTextCriterion: query },
                 limit: QUERY_LIMIT,
                 offset: 0,
             },
