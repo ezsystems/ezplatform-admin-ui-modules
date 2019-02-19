@@ -175,7 +175,7 @@ export default class TableViewItemComponent extends PureComponent {
         const { content, location, isSelected, contentTypesMap, generateLink, languages } = this.props;
         const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_type.not_available.label', {}, 'sub_items');
         const editLabel = Translator.trans(/*@Desc("Edit")*/ 'edit_item_btn.label', {}, 'sub_items');
-        const { formatShortDateWithTimezone } = window.eZ.helpers.timezone;
+        const { formatDateWithTimezone } = window.eZ.helpers.timezone;
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeIdentifier = contentType ? contentType.identifier : null;
         const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : notAvailableLabel;
@@ -202,7 +202,7 @@ export default class TableViewItemComponent extends PureComponent {
                 </td>
                 <td className="c-table-view-item__cell c-table-view-item__cell--modified">
                     <div className="c-table-view-item__text-wrapper">
-                        {formatShortDateWithTimezone(new Date(content.lastModificationDate))}
+                        {formatDateWithTimezone(new Date(content.lastModificationDate))}
                     </div>
                 </td>
                 <td className="c-table-view-item__cell c-table-view-item__cell--content-type">
