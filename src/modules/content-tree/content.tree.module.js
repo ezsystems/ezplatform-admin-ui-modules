@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ContentTree from './components/content-tree/content.tree';
 import { loadLocationItems } from './services/content.tree.service';
-import deepClone from '../common/helpers/deep.clone.helper';
 
 const findItem = (items, path) => {
     const isLast = path.length === 1;
@@ -88,8 +87,6 @@ export default class ContentTreeModule extends Component {
             currentLocationId: this.props.currentLocationId,
             loadMoreSubitems: this.loadMoreSubitems,
         };
-
-        console.log('render', attrs);
 
         return <ContentTree {...attrs} />;
     }

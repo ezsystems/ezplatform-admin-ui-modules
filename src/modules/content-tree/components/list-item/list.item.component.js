@@ -122,6 +122,7 @@ class ListItem extends Component {
         const togglerAttrs = {
             className: togglerClassName,
             onClick: this.toggleExpandedState,
+            hidden: !childrenCount,
             tabIndex: -1,
         };
 
