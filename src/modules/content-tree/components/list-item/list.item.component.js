@@ -45,14 +45,20 @@ class ListItem extends Component {
     }
 
     loadMoreSubitems() {
-        this.props.loadMoreSubitems(
-            {
-                path: this.props.path,
-                parentLocationId: this.props.locationId,
-                offset: this.props.subitems.length,
-                limit: 10,
-            },
-            this.cancelLoadingState
+        const { subitems, path, locationId, loadMoreSubitems } = this.props;
+
+        this.setState(
+            () => ({ isLoading: true }),
+            () =>
+                loadMoreSubitems(
+                    {
+                        path,
+                        parentLocationId: locationId,
+                        offset: subitems.length,
+                        limit: 10,
+                    },
+                    this.cancelLoadingState
+                )
         );
     }
 
@@ -79,7 +85,7 @@ class ListItem extends Component {
                 eZ.helpers.contentType.getContentTypeIconUrl(contentType.identifier) ||
                 eZ.helpers.contentType.getContentTypeIconUrl('file');
         } else {
-            iconAttrs.customPath = '/bundles/ezplatformadminui/img/ez-icons.svg#spinner';
+            iconAttrs.name = 'spinner';
             iconAttrs.extraClasses = `${iconAttrs.extraClasses} ez-spin`;
         }
 
@@ -91,14 +97,19 @@ class ListItem extends Component {
     }
 
     renderLoadMoreBtn() {
-        console.log(!this.state.isExpanded, !this.checkCanLoadMore());
+        let loadingSpinner = null;
+
         if (!this.state.isExpanded || !this.checkCanLoadMore()) {
             return null;
         }
 
+        if (this.state.isLoading) {
+            loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small ez-icon--dark" />;
+        }
+
         return (
-            <button type="button" className="c-list-item__load-more-btn" onClick={this.loadMoreSubitems}>
-                Load more
+            <button type="button" className="c-list-item__load-more-btn btn ez-btn" onClick={this.loadMoreSubitems}>
+                {loadingSpinner} Load more
             </button>
         );
     }
