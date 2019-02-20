@@ -1,91 +1,67 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import List from './components/list/list.component';
-
-const CLASS_IS_TREE_RESIZING = 'ez-is-tree-resizing';
+import ContentTree from './components/content-tree/content.tree';
+import { loadLocationItems } from './services/content.tree.service';
+import deepClone from '../common/helpers/deep.clone.helper';
 
 export default class ContentTreeModule extends Component {
     constructor(props) {
         super(props);
 
-        this.changeContainerWidth = this.changeContainerWidth.bind(this);
-        this.addWidthChangeListener = this.addWidthChangeListener.bind(this);
-        this.removeWidthChangeListener = this.removeWidthChangeListener.bind(this);
-        this._refTreeContainer = React.createRef();
-
-        this.state = {
-            locations: props.preloadedLocations,
-            resizeStartPositionX: 0,
-            containerWidth: 0,
-            resizedContainerWidth: 0,
-            isResizing: false,
-        };
+        this.setInitialItemsState = this.setInitialItemsState.bind(this);
+        this.loadMoreSubitems = this.loadMoreSubitems.bind(this);
+        this.items = props.preloadedLocations;
     }
 
-    componentWillUnmount() {
-        this.clearDocumentResizingState();
+    componentDidMount() {
+        if (this.items.length) {
+            return;
+        }
+
+        loadLocationItems(this.props.rootLocationId, this.setInitialItemsState);
     }
 
-    changeContainerWidth({ clientX }) {
-        const currentPositionX = clientX;
+    setInitialItemsState(location) {
+        this.items = [location];
 
-        this.setState((state) => ({
-            resizedContainerWidth: state.containerWidth + (currentPositionX - state.resizeStartPositionX),
-        }));
+        this.forceUpdate();
     }
 
-    addWidthChangeListener({ nativeEvent }) {
-        const resizeStartPositionX = nativeEvent.clientX;
-        const containerWidth = parseInt(window.getComputedStyle(this._refTreeContainer.current).width, 10);
-
-        window.document.addEventListener('mousemove', this.changeContainerWidth, false);
-        window.document.addEventListener('mouseup', this.removeWidthChangeListener, false);
-        window.document.body.classList.add(CLASS_IS_TREE_RESIZING);
-
-        this.setState(() => ({ resizeStartPositionX, containerWidth, isResizing: true }));
+    loadMoreSubitems({ parentLocationId, offset, limit, path }, successCallback) {
+        loadLocationItems(
+            parentLocationId,
+            this.updateLocationsStateAfterLoadingMoreItems.bind(this, path, successCallback),
+            limit,
+            offset
+        );
     }
 
-    removeWidthChangeListener() {
-        this.clearDocumentResizingState();
+    updateLocationsStateAfterLoadingMoreItems(path, successCallback, location) {
+        console.log('updateLocationsStateAfterLoadingMoreItems', { location, path });
 
-        this.setState((state) => ({
-            resizeStartPositionX: 0,
-            containerWidth: state.resizedContainerWidth,
-            isResizing: false,
-        }));
-    }
-
-    clearDocumentResizingState() {
-        window.document.removeEventListener('mousemove', this.changeContainerWidth);
-        window.document.removeEventListener('mouseup', this.removeWidthChangeListener);
-        window.document.body.classList.remove(CLASS_IS_TREE_RESIZING);
+        successCallback();
     }
 
     render() {
-        const { isResizing, containerWidth, resizedContainerWidth } = this.state;
-        const width = isResizing ? resizedContainerWidth : containerWidth;
-        const containerAttrs = { className: 'm-tree', ref: this._refTreeContainer };
+        const attrs = {
+            items: this.items,
+            currentLocationId: this.props.currentLocationId,
+            loadMoreSubitems: this.loadMoreSubitems,
+        };
 
-        if (width) {
-            containerAttrs.style = { width: `${width}px` };
-        }
-
-        return (
-            <div {...containerAttrs}>
-                <List items={this.state.locations} currentLocationId={this.props.currentLocationId} />
-                <div className="m-tree__resize-handler" onMouseDown={this.addWidthChangeListener} />
-            </div>
-        );
+        return <ContentTree {...attrs} />;
     }
 }
 
 eZ.addConfig('modules.ContentTree', ContentTreeModule);
 
 ContentTreeModule.propTypes = {
-    currentLocationId: PropTypes.number,
+    rootLocationId: PropTypes.number.isRequired,
+    currentLocationId: PropTypes.number.isRequired,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
 };
 
 ContentTreeModule.defaultProps = {
+    rootLocationId: 2,
     preloadedLocations: [],
 };
