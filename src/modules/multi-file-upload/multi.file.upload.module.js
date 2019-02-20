@@ -238,6 +238,8 @@ export default class MultiFileUploadModule extends Component {
     }
 }
 
+eZ.addConfig('modules.MultiFileUpload', MultiFileUploadModule);
+
 MultiFileUploadModule.propTypes = {
     adminUiConfig: PropTypes.shape({
         multiFileUpload: PropTypes.shape({
