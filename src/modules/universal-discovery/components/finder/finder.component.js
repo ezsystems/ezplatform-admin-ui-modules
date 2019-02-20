@@ -5,9 +5,6 @@ import FinderTreeBranchComponent from './finder.tree.branch.component';
 import { loadPreselectedLocationData, QUERY_LIMIT } from '../../services/universal.discovery.service';
 import deepClone from '../../../common/helpers/deep.clone.helper';
 
-import './css/finder.component.css';
-
-const ROOT_LOCATION_ID = 1;
 const ROOT_LOCATION_OBJECT = null;
 
 export default class FinderComponent extends Component {
@@ -112,7 +109,7 @@ export default class FinderComponent extends Component {
         if (subitems[1]) {
             const item = createItem({ children: subitems[1], location: ROOT_LOCATION_OBJECT });
 
-            this.locationsMap[ROOT_LOCATION_ID] = item;
+            this.locationsMap[this.props.startingLocationId] = item;
             this.activeLocations[0] = ROOT_LOCATION_OBJECT;
         }
 
@@ -158,9 +155,9 @@ export default class FinderComponent extends Component {
     }
 
     setLocationData(locationData) {
-        this.setState((state) => {
+        this.setState((state, props) => {
             const { location } = locationData;
-            const locationId = location ? location.id : ROOT_LOCATION_ID;
+            const locationId = location ? location.id : props.startingLocationId;
             const locationsMap = { ...deepClone(state.locationsMap), [locationId]: locationData };
 
             return { locationsMap };
@@ -190,7 +187,7 @@ export default class FinderComponent extends Component {
      */
     onLoadMore(parentLocation) {
         const limit = this.state.limit;
-        const parentLocationId = parentLocation ? parentLocation.id : ROOT_LOCATION_ID;
+        const parentLocationId = parentLocation ? parentLocation.id : this.props.startingLocationId;
         const offset = this.state.locationsMap[parentLocationId].offset + limit;
         const sortClauses = parentLocation ? this.getLocationSortClauses(parentLocation) : {};
 
@@ -227,12 +224,13 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     loadBranchLeaves(parentLocation) {
+        const { findLocationsByParentLocationId, startingLocationId, restInfo } = this.props;
         const sortClauses = this.getLocationSortClauses(parentLocation);
         const promise = new Promise((resolve) =>
-            this.props.findLocationsByParentLocationId(
+            findLocationsByParentLocationId(
                 {
-                    ...this.props.restInfo,
-                    parentLocationId: parentLocation ? parentLocation.id : ROOT_LOCATION_ID,
+                    ...restInfo,
+                    parentLocationId: parentLocation ? parentLocation.id : startingLocationId,
                     sortClauses,
                 },
                 resolve
@@ -344,7 +342,7 @@ export default class FinderComponent extends Component {
         }
 
         const { data: childrenData, count, location } = locationData;
-        const locationId = location ? location.id : ROOT_LOCATION_ID;
+        const locationId = location ? location.id : this.props.startingLocationId;
 
         return (
             <FinderTreeBranchComponent
@@ -387,10 +385,10 @@ export default class FinderComponent extends Component {
             <div className="c-finder" style={{ maxHeight: `${this.props.maxHeight}px` }}>
                 <div className="c-finder__branches" ref={this.setBranchContainerRef}>
                     {activeLocations.map((location, index) => {
-                        const locationId = location ? location.id : ROOT_LOCATION_ID;
+                        const locationId = location ? location.id : this.props.startingLocationId;
                         const branchActiveLocation = activeLocations[index + 1];
                         const branchActiveLocationId = branchActiveLocation ? branchActiveLocation.id : null;
-                        const isBranchActiveLocationLoading = branchActiveLocationId && !this.state.locationsMap[branchActiveLocationId];
+                        const isBranchActiveLocationLoading = branchActiveLocationId && !locationsMap[branchActiveLocationId];
                         const locationData = locationsMap[locationId];
 
                         return this.renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading);
