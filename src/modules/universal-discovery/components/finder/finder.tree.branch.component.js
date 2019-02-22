@@ -11,37 +11,7 @@ export default class FinderTreeBranchComponent extends Component {
 
         this.expandBranch = this.expandBranch.bind(this);
         this.onLoadMore = this.onLoadMore.bind(this);
-        this.removeLoadingStateFromItem = this.removeLoadingStateFromItem.bind(this);
-        this.updateSelectedLocations = this.updateSelectedLocations.bind(this);
         this.renderLeaf = this.renderLeaf.bind(this);
-
-        this.state = {
-            currentlyLoadingLocationId: false,
-            selectedLocationId: null,
-        };
-    }
-
-    /**
-     * Updates selected locations state
-     *
-     * @method updateSelectedLocations
-     * @param {Object} location location struct
-     * @memberof FinderTreeBranchComponent
-     */
-    updateSelectedLocations(location) {
-        this.setState(
-            () => ({ currentlyLoadingLocationId: location.id, selectedLocationId: location.id }),
-            () =>
-                this.props.onItemClick({
-                    parent: location.id,
-                    location,
-                    onDataLoaded: this.removeLoadingStateFromItem,
-                })
-        );
-    }
-
-    removeLoadingStateFromItem() {
-        this.setState(() => ({ currentlyLoadingLocationId: false }));
     }
 
     expandBranch() {
@@ -53,24 +23,25 @@ export default class FinderTreeBranchComponent extends Component {
      *
      * @method renderLeaf
      * @param {Object} data location response
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof FinderTreeBranchComponent
      */
     renderLeaf(data) {
+        const { activeLocationId, isActiveLocationLoading, onItemClick } = this.props;
         const location = data.value.Location;
-        const isLoadingChildren = location.id === this.state.currentlyLoadingLocationId;
         const contentTypesMap = this.props.contentTypesMap;
         const contentTypeHref = location.ContentInfo.Content.ContentType._href;
         const isContainer = contentTypesMap && contentTypesMap[contentTypeHref] && contentTypesMap[contentTypeHref].isContainer;
         const isSelectable = !(this.props.allowContainersOnly && !isContainer);
-        const selected = location.id === this.state.selectedLocationId;
+        const active = location.id === activeLocationId;
+        const isLoadingChildren = active && isActiveLocationLoading;
 
         return (
             <FinderTreeLeafComponent
                 key={location.remoteId}
                 location={location}
-                onClick={this.updateSelectedLocations}
-                selected={selected}
+                onClick={onItemClick}
+                selected={active}
                 isLoadingChildren={isLoadingChildren}
                 isSelectable={isSelectable}
                 allowedLocations={this.props.allowedLocations}
@@ -91,7 +62,7 @@ export default class FinderTreeBranchComponent extends Component {
      * Render load more button
      *
      * @method renderLoadMore
-     * @returns {Element}
+     * @returns {JSX.Element}
      * @memberof FinderTreeBranchComponent
      */
     renderLoadMore() {
@@ -139,7 +110,6 @@ FinderTreeBranchComponent.propTypes = {
     parentLocation: PropTypes.object,
     onItemClick: PropTypes.func.isRequired,
     onBranchClick: PropTypes.func.isRequired,
-    selectedLocations: PropTypes.array.isRequired,
     onLoadMore: PropTypes.func.isRequired,
     maxHeight: PropTypes.number.isRequired,
     allowContainersOnly: PropTypes.bool,
@@ -150,4 +120,6 @@ FinderTreeBranchComponent.propTypes = {
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
+    activeLocationId: PropTypes.string,
+    isActiveLocationLoading: PropTypes.bool,
 };
