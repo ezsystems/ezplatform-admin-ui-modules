@@ -15,25 +15,13 @@ const findItem = (items, path) => {
         return item;
     }
 
+    if (!(item.hasOwnProperty('children') && Array.isArray(item.children))) {
+        return null;
+    }
+
     path.shift();
 
-    if (item.hasOwnProperty('subitems') && Array.isArray(item.subitems)) {
-        let result = null;
-        let subitem = null;
-        let subitemPath = [...path];
-
-        for (let i = 0; result === null && i < item.subitems.length; i++) {
-            subitem = item.subitems[i];
-
-            if (subitem.locationId === parseInt(subitemPath[0], 10)) {
-                result = subitem;
-            } else {
-                result = findItem(subitem.subitems, subitemPath);
-            }
-        }
-
-        return result;
-    }
+    return findItem(item.children, path);
 };
 
 export default class ContentTreeModule extends Component {
@@ -75,7 +63,7 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        item.subitems = [...item.subitems, ...location.subitems];
+        item.children = [...item.children, ...location.children];
 
         successCallback();
         this.forceUpdate();

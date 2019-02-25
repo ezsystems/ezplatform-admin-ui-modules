@@ -11,7 +11,7 @@ $list-item-height: calculateRem(20px);
         white-space: nowrap;
         position: relative;
         font-size: calculateRem(12px);
-        padding-left: calculateRem(4px);
+        padding-left: calculateRem(14px);
 
         &:hover,
         &:focus {
@@ -41,9 +41,8 @@ $list-item-height: calculateRem(20px);
     }
 
     &__toggler {
-        display: inline-block;
-        width: calculateRem(12px);
-        height: $list-item-height;
+        position: absolute;
+        left: 0;
 
         &:before {
             width: 0;
@@ -55,7 +54,7 @@ $list-item-height: calculateRem(20px);
             position: absolute;
             top: 50%;
             left: calculateRem(4px);
-            transform: translateY(-50%);
+            transform: translateY(-50%) scale(1, 0.8);
             transform-origin: center center;
         }
 
@@ -63,6 +62,28 @@ $list-item-height: calculateRem(20px);
             &:before {
                 border-color: transparent transparent transparent $ez-white;
             }
+        }
+    }
+
+    &__load-more-btn {
+        display: flex;
+        align-items: center;
+        padding: 0 calculateRem(12px);
+        border: 0.0625rem solid #106d95;
+        background: none;
+        display: block;
+        text-align: center;
+        color: #106d95;
+        border-radius: 4px;
+        margin-left: 26px;
+        transition: background 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer;
+        font-size: 12px;
+
+        &:hover {
+            background: #093a50;
+            color: #fff;
+            outline: none;
         }
     }
 
@@ -91,7 +112,7 @@ $list-item-height: calculateRem(20px);
         > .c-list {
             opacity: 1;
             max-height: calculateRem(20000px);
-            margin-left: calculateRem(20px);
+            // margin-left: calculateRem(20px);
         }
 
         > #{$list-item} {
@@ -100,6 +121,7 @@ $list-item-height: calculateRem(20px);
                     &:before {
                         border-width: calculateRem(6px) calculateRem(4px) 0 calculateRem(4px);
                         border-color: $ez-black transparent transparent transparent;
+                        transform: translateY(-50%) scale(0.8, 1);
                     }
                 }
             }

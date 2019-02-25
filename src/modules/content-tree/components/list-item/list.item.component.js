@@ -23,7 +23,7 @@ class ListItem extends Component {
 
     toggleExpandedState() {
         this.setState((state, props) => {
-            const isLoading = !state.isExpanded && props.childrenCount > props.subitems.length;
+            const isLoading = !state.isExpanded && props.totalChildrenCount > props.subitems.length;
             const newState = { isExpanded: !state.isExpanded, isLoading };
 
             return newState;
@@ -31,7 +31,7 @@ class ListItem extends Component {
     }
 
     handleAfterExpandedStateChange() {
-        if (this.props.childrenCount === this.props.subitems.length) {
+        if (this.props.totalChildrenCount === this.props.subitems.length) {
             return;
         }
 
