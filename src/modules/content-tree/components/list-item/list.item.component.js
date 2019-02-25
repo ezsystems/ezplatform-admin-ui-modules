@@ -63,9 +63,9 @@ class ListItem extends Component {
     }
 
     checkCanLoadMore() {
-        const { subitems, childrenCount } = this.props;
+        const { subitems, totalChildrenCount } = this.props;
 
-        return subitems.length < childrenCount;
+        return subitems.length < totalChildrenCount;
     }
 
     /**
@@ -75,14 +75,14 @@ class ListItem extends Component {
      * @returns {JSX.Element}
      */
     renderIcon() {
-        const { contentType, selected } = this.props;
+        const { contentTypeIdentifier, selected } = this.props;
         const iconAttrs = {
             extraClasses: `ez-icon--small ez-icon--${selected ? 'light' : 'dark'}`,
         };
 
         if (!this.state.isLoading) {
             iconAttrs.customPath =
-                eZ.helpers.contentType.getContentTypeIconUrl(contentType.identifier) ||
+                eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier) ||
                 eZ.helpers.contentType.getContentTypeIconUrl('file');
         } else {
             iconAttrs.name = 'spinner';
@@ -115,18 +115,18 @@ class ListItem extends Component {
     }
 
     render() {
-        const { childrenCount, children, hidden, selected, href, content } = this.props;
+        const { totalChildrenCount, children, isInvisible, selected, href, name } = this.props;
         const itemClassName = 'c-list-item';
         const togglerClassName = 'c-list-item__toggler';
         const itemAttrs = { className: itemClassName };
         const togglerAttrs = {
             className: togglerClassName,
             onClick: this.toggleExpandedState,
-            hidden: !childrenCount,
+            hidden: !totalChildrenCount,
             tabIndex: -1,
         };
 
-        if (childrenCount) {
+        if (totalChildrenCount) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--has-sub-items`;
         }
 
@@ -138,7 +138,7 @@ class ListItem extends Component {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-expanded`;
         }
 
-        if (hidden) {
+        if (isInvisible) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-hidden`;
         }
 
@@ -152,7 +152,7 @@ class ListItem extends Component {
                 <div className="c-list-item__label">
                     <span {...togglerAttrs} />
                     <a className="c-list-item__link" href={href}>
-                        {this.renderIcon()} {content.name}
+                        {this.renderIcon()} {name}
                     </a>
                 </div>
                 {children}
@@ -166,20 +166,14 @@ ListItem.propTypes = {
     path: PropTypes.string.isRequired,
     href: PropTypes.string.isRequired,
     contentTypeIdentifier: PropTypes.string.isRequired,
-    childrenCount: PropTypes.number.isRequired,
+    totalChildrenCount: PropTypes.number.isRequired,
     subitems: PropTypes.array.isRequired,
     children: PropTypes.element,
     hidden: PropTypes.bool.isRequired,
+    isContainer: PropTypes.bool.isRequired,
     selected: PropTypes.bool.isRequired,
-    content: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        id: PropTypes.number.isRequired,
-    }).isRequired,
-    contentType: PropTypes.shape({
-        identifier: PropTypes.string.isRequired,
-        container: PropTypes.bool.isRequired,
-    }).isRequired,
     locationId: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
 };
 
