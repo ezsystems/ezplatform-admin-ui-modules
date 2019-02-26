@@ -79,7 +79,7 @@ class ListItem extends Component {
             extraClasses: `ez-icon--small ez-icon--${selected ? 'light' : 'dark'}`,
         };
 
-        if (!this.state.isLoading) {
+        if (!this.state.isLoading || this.props.subitems.length) {
             iconAttrs.customPath =
                 eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier) || eZ.helpers.contentType.getContentTypeIconUrl('file');
         } else {
@@ -95,9 +95,10 @@ class ListItem extends Component {
     }
 
     renderLoadMoreBtn() {
+        const { subitems } = this.props;
         let loadingSpinner = null;
 
-        if (!this.state.isExpanded || !this.checkCanLoadMore()) {
+        if (!this.state.isExpanded || !this.checkCanLoadMore() || !subitems.length) {
             return null;
         }
 
