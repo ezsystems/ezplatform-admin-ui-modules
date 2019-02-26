@@ -104,7 +104,7 @@ class ListItem extends Component {
         }
 
         if (this.state.isLoading) {
-            loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small ez-icon--dark" />;
+            loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small ez-icon--dark c-list-item__load-more-btn-spinner" />;
         }
 
         const loadMore = Translator.trans(/*@Desc("Load More")*/ 'content_tree_list.item.load_more', {}, 'universal_discovery_widget');

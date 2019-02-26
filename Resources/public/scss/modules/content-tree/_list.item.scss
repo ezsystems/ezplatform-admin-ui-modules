@@ -92,6 +92,10 @@ $list-item-height: calculateRem(20px);
         }
     }
 
+    &__load-more-btn-spinner {
+        margin-right: calculateRem(4px);
+    }
+
     .c-list {
         opacity: 0;
         list-style: none;
