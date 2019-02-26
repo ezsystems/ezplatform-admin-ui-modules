@@ -11,17 +11,11 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path }) => {
             {items.map((item) => {
                 const hasPreviousPath = path && path.length;
                 const itemPath = `${hasPreviousPath ? path + ',' : ''}${item.locationId}`;
-                const { subitems, href, name, locationId, contentTypeIdentifier, isInvisible, totalSubitemsCount } = item;
+                const { subitems } = item;
 
                 return (
                     <ListItem
-                        subitems={subitems}
-                        href={href}
-                        name={name}
-                        locationId={locationId}
-                        contentTypeIdentifier={contentTypeIdentifier}
-                        isInvisible={isInvisible}
-                        totalSubitemsCount={totalSubitemsCount}
+                        {...item}
                         {...listItemAttrs}
                         key={item.locationId}
                         selected={item.locationId === currentLocationId}

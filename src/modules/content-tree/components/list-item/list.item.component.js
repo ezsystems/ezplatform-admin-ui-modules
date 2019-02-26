@@ -24,9 +24,8 @@ class ListItem extends Component {
     toggleExpandedState() {
         this.setState((state, props) => {
             const isLoading = !state.isExpanded && props.totalSubitemsCount > props.subitems.length;
-            const newState = { isExpanded: !state.isExpanded, isLoading };
 
-            return newState;
+            return { isExpanded: !state.isExpanded, isLoading };
         }, this.handleAfterExpandedStateChange);
     }
 
@@ -82,8 +81,7 @@ class ListItem extends Component {
 
         if (!this.state.isLoading) {
             iconAttrs.customPath =
-                eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier) ||
-                eZ.helpers.contentType.getContentTypeIconUrl('file');
+                eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier) || eZ.helpers.contentType.getContentTypeIconUrl('file');
         } else {
             iconAttrs.name = 'spinner';
             iconAttrs.extraClasses = `${iconAttrs.extraClasses} ez-spin`;
@@ -176,6 +174,7 @@ ListItem.propTypes = {
     selected: PropTypes.bool.isRequired,
     locationId: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
+    isInvisible: PropTypes.bool.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
 };
 
