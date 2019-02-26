@@ -15,13 +15,13 @@ const findItem = (items, path) => {
         return item;
     }
 
-    if (!(item.hasOwnProperty('children') && Array.isArray(item.children))) {
+    if (!(item.hasOwnProperty('subitems') && Array.isArray(item.subitems))) {
         return null;
     }
 
     path.shift();
 
-    return findItem(item.children, path);
+    return findItem(item.subitems, path);
 };
 
 export default class ContentTreeModule extends Component {
@@ -30,6 +30,7 @@ export default class ContentTreeModule extends Component {
 
         this.setInitialItemsState = this.setInitialItemsState.bind(this);
         this.loadMoreSubitems = this.loadMoreSubitems.bind(this);
+
         this.items = props.preloadedLocations;
     }
 
@@ -63,7 +64,7 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        item.children = [...item.children, ...location.children];
+        item.subitems = [...item.subitems, ...location.subitems];
 
         successCallback();
         this.forceUpdate();

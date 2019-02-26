@@ -43,6 +43,8 @@ $list-item-height: calculateRem(20px);
     &__toggler {
         position: absolute;
         left: 0;
+        height: 100%;
+        width: calculateRem(16px);
 
         &:before {
             width: 0;
@@ -69,21 +71,24 @@ $list-item-height: calculateRem(20px);
         display: flex;
         align-items: center;
         padding: 0 calculateRem(12px);
-        border: 0.0625rem solid #106d95;
+        border: calculateRem(1px) solid $ez-color-secondary;
         background: none;
-        display: block;
         text-align: center;
-        color: #106d95;
-        border-radius: 4px;
-        margin-left: 26px;
+        color: $ez-color-secondary;
+        border-radius: calculateRem(4px);
+        margin-left: calculateRem(26px);
         transition: background 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         cursor: pointer;
-        font-size: 12px;
+        font-size: calculateRem(12px);
 
         &:hover {
-            background: #093a50;
-            color: #fff;
+            background: $ez-color-secondary-hover;
+            color: $ez-white;
             outline: none;
+
+            .ez-icon {
+                fill: $ez-white;
+            }
         }
     }
 
@@ -112,7 +117,6 @@ $list-item-height: calculateRem(20px);
         > .c-list {
             opacity: 1;
             max-height: calculateRem(20000px);
-            // margin-left: calculateRem(20px);
         }
 
         > #{$list-item} {

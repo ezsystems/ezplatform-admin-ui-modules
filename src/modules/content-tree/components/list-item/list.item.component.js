@@ -23,7 +23,7 @@ class ListItem extends Component {
 
     toggleExpandedState() {
         this.setState((state, props) => {
-            const isLoading = !state.isExpanded && props.totalChildrenCount > props.subitems.length;
+            const isLoading = !state.isExpanded && props.totalSubitemsCount > props.subitems.length;
             const newState = { isExpanded: !state.isExpanded, isLoading };
 
             return newState;
@@ -31,7 +31,7 @@ class ListItem extends Component {
     }
 
     handleAfterExpandedStateChange() {
-        if (this.props.totalChildrenCount === this.props.subitems.length) {
+        if (this.props.totalSubitemsCount === this.props.subitems.length) {
             return;
         }
 
@@ -63,9 +63,9 @@ class ListItem extends Component {
     }
 
     checkCanLoadMore() {
-        const { subitems, totalChildrenCount } = this.props;
+        const { subitems, totalSubitemsCount } = this.props;
 
-        return subitems.length < totalChildrenCount;
+        return subitems.length < totalSubitemsCount;
     }
 
     /**
@@ -107,26 +107,28 @@ class ListItem extends Component {
             loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small ez-icon--dark" />;
         }
 
+        const loadMore = Translator.trans(/*@Desc("Load More")*/ 'content_tree_list.item.load_more', {}, 'universal_discovery_widget');
+
         return (
             <button type="button" className="c-list-item__load-more-btn btn ez-btn" onClick={this.loadMoreSubitems}>
-                {loadingSpinner} Load more
+                {loadingSpinner} {loadMore}
             </button>
         );
     }
 
     render() {
-        const { totalChildrenCount, children, isInvisible, selected, href, name } = this.props;
+        const { totalSubitemsCount, children, isInvisible, selected, href, name } = this.props;
         const itemClassName = 'c-list-item';
         const togglerClassName = 'c-list-item__toggler';
         const itemAttrs = { className: itemClassName };
         const togglerAttrs = {
             className: togglerClassName,
             onClick: this.toggleExpandedState,
-            hidden: !totalChildrenCount,
+            hidden: !totalSubitemsCount,
             tabIndex: -1,
         };
 
-        if (totalChildrenCount) {
+        if (totalSubitemsCount) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--has-sub-items`;
         }
 
@@ -166,7 +168,7 @@ ListItem.propTypes = {
     path: PropTypes.string.isRequired,
     href: PropTypes.string.isRequired,
     contentTypeIdentifier: PropTypes.string.isRequired,
-    totalChildrenCount: PropTypes.number.isRequired,
+    totalSubitemsCount: PropTypes.number.isRequired,
     subitems: PropTypes.array.isRequired,
     children: PropTypes.element,
     hidden: PropTypes.bool.isRequired,
