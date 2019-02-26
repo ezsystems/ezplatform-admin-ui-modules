@@ -23,20 +23,14 @@ class ListItem extends Component {
 
     toggleExpandedState() {
         this.setState((state, props) => {
-            const isLoading = !state.isExpanded && props.totalSubitemsCount > props.subitems.length;
+            const isLoading = !state.isExpanded && !props.subitems.length;
 
             return { isExpanded: !state.isExpanded, isLoading };
         }, this.handleAfterExpandedStateChange);
     }
 
     handleAfterExpandedStateChange() {
-        if (this.props.totalSubitemsCount === this.props.subitems.length) {
-            return;
-        }
-
         if (!this.state.isLoading) {
-            console.log('TODO: Think about killing a request with AbortController');
-
             return;
         }
 
@@ -54,7 +48,7 @@ class ListItem extends Component {
                         path,
                         parentLocationId: locationId,
                         offset: subitems.length,
-                        limit: 10,
+                        limit: this.props.subitemsLoadLimit,
                     },
                     this.cancelLoadingState
                 )
@@ -106,7 +100,7 @@ class ListItem extends Component {
             loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small ez-icon--dark c-list-item__load-more-btn-spinner" />;
         }
 
-        const loadMore = Translator.trans(/*@Desc("Load More")*/ 'content_tree_list.item.load_more', {}, 'universal_discovery_widget');
+        const loadMore = Translator.trans(/*@Desc("Load More")*/ 'load_more', {}, 'content_tree');
 
         return (
             <button type="button" className="c-list-item__load-more-btn btn ez-btn" onClick={this.loadMoreSubitems}>
@@ -177,6 +171,7 @@ ListItem.propTypes = {
     name: PropTypes.string.isRequired,
     isInvisible: PropTypes.bool.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
+    subitemsLoadLimit: PropTypes.number,
 };
 
 ListItem.defaultProps = {

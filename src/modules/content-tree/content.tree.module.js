@@ -3,27 +3,6 @@ import PropTypes from 'prop-types';
 import ContentTree from './components/content-tree/content.tree';
 import { loadLocationItems } from './services/content.tree.service';
 
-const findItem = (items, path) => {
-    const isLast = path.length === 1;
-    const item = items.find((element) => element.locationId === parseInt(path[0], 10));
-
-    if (!item) {
-        return null;
-    }
-
-    if (isLast) {
-        return item;
-    }
-
-    if (!(item.hasOwnProperty('subitems') && Array.isArray(item.subitems))) {
-        return null;
-    }
-
-    path.shift();
-
-    return findItem(item.subitems, path);
-};
-
 export default class ContentTreeModule extends Component {
     constructor(props) {
         super(props);
@@ -58,7 +37,7 @@ export default class ContentTreeModule extends Component {
     }
 
     updateLocationsStateAfterLoadingMoreItems(path, successCallback, location) {
-        const item = findItem(this.items, path.split(','));
+        const item = this.findItem(this.items, path.split(','));
 
         if (!item) {
             return;
@@ -70,10 +49,33 @@ export default class ContentTreeModule extends Component {
         this.forceUpdate();
     }
 
+    findItem(items, path) {
+        const isLast = path.length === 1;
+        const item = items.find((element) => element.locationId === parseInt(path[0], 10));
+
+        if (!item) {
+            return null;
+        }
+
+        if (isLast) {
+            return item;
+        }
+
+        if (!(item.hasOwnProperty('subitems') && Array.isArray(item.subitems))) {
+            return null;
+        }
+
+        path.shift();
+
+        return this.findItem(item.subitems, path);
+    }
+
     render() {
+        const { currentLocationId, subitemsLoadLimit } = this.props;
         const attrs = {
             items: this.items,
-            currentLocationId: this.props.currentLocationId,
+            currentLocationId,
+            subitemsLoadLimit,
             loadMoreSubitems: this.loadMoreSubitems,
         };
 
@@ -87,9 +89,11 @@ ContentTreeModule.propTypes = {
     rootLocationId: PropTypes.number.isRequired,
     currentLocationId: PropTypes.number.isRequired,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
+    subitemsLoadLimit: PropTypes.number,
 };
 
 ContentTreeModule.defaultProps = {
     rootLocationId: 2,
     preloadedLocations: [],
+    subitemsLoadLimit: 10,
 };

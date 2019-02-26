@@ -19,9 +19,7 @@ export const loadLocationItems = (parentLocationId, callback, limit = 50, offset
         .then((data) => {
             const location = data.ContentTreeNode;
 
-            for (let i = 0; i < location.children.length; ++i) {
-                location.children[i] = mapChildrenToSubitems(location.children[i]);
-            }
+            location.children = location.children.map(mapChildrenToSubitems)
 
             return mapChildrenToSubitems(location);
         })

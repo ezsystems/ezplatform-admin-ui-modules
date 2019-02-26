@@ -2,3 +2,4 @@ active_domains:
     - 'multi_file_upload'
     - 'sub_items'
     - 'universal_discovery_widget'
+    - 'content_tree'

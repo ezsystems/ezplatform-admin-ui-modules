@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListItem from '../list-item/list.item.component';
 
-const List = ({ items, loadMoreSubitems, currentLocationId, path }) => {
+const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit }) => {
     const listAttrs = { loadMoreSubitems, currentLocationId };
     const listItemAttrs = { loadMoreSubitems };
 
@@ -19,6 +19,7 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path }) => {
                         {...listItemAttrs}
                         key={item.locationId}
                         selected={item.locationId === currentLocationId}
+                        subitemsLoadLimit={subitemsLoadLimit}
                         path={itemPath}>
                         {subitems.length ? <List path={itemPath} items={subitems} {...listAttrs} /> : null}
                     </ListItem>
@@ -33,6 +34,7 @@ List.propTypes = {
     items: PropTypes.array.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
     currentLocationId: PropTypes.number.isRequired,
+    subitemsLoadLimit: PropTypes.number,
 };
 
 export default List;

@@ -77,7 +77,7 @@ $list-item-height: calculateRem(20px);
         color: $ez-color-secondary;
         border-radius: calculateRem(4px);
         margin-left: calculateRem(26px);
-        transition: background 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
         cursor: pointer;
         font-size: calculateRem(12px);
 
