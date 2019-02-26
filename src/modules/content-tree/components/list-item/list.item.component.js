@@ -12,7 +12,7 @@ class ListItem extends Component {
         this.handleAfterExpandedStateChange = this.handleAfterExpandedStateChange.bind(this);
 
         this.state = {
-            isExpanded: false,
+            isExpanded: !!props.subitems.length,
             isLoading: false,
         };
     }
@@ -22,22 +22,30 @@ class ListItem extends Component {
     }
 
     toggleExpandedState() {
-        this.setState((state, props) => {
-            const isLoading = !state.isExpanded && !props.subitems.length;
+        this.setState(
+            (state) => ({ isExpanded: !state.isExpanded }),
+            () => {
+                const { afterItemToggle, path } = this.props;
 
-            return { isExpanded: !state.isExpanded, isLoading };
-        }, this.handleAfterExpandedStateChange);
+                afterItemToggle(path, this.state.isExpanded);
+                this.handleAfterExpandedStateChange();
+            }
+        );
     }
 
     handleAfterExpandedStateChange() {
-        if (!this.state.isLoading) {
-            return;
-        }
+        const loadInitialItems = this.state.isExpanded && !this.props.subitems.length;
 
-        this.loadMoreSubitems();
+        if (loadInitialItems) {
+            this.loadMoreSubitems();
+        }
     }
 
     loadMoreSubitems() {
+        if (this.state.isLoading) {
+            return;
+        }
+
         const { subitems, path, locationId, loadMoreSubitems } = this.props;
 
         this.setState(
@@ -175,6 +183,7 @@ ListItem.propTypes = {
     isInvisible: PropTypes.bool.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
     subitemsLoadLimit: PropTypes.number,
+    afterItemToggle: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {

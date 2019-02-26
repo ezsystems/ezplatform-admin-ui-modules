@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListItem from '../list-item/list.item.component';
 
-const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit }) => {
-    const listAttrs = { loadMoreSubitems, currentLocationId };
-    const listItemAttrs = { loadMoreSubitems };
+const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit, afterItemToggle }) => {
+    const listAttrs = { loadMoreSubitems, currentLocationId, subitemsLoadLimit, afterItemToggle };
+    const listItemAttrs = { loadMoreSubitems, afterItemToggle };
 
     return (
         <ul className="c-list">
@@ -37,6 +37,7 @@ List.propTypes = {
     loadMoreSubitems: PropTypes.func.isRequired,
     currentLocationId: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
+    afterItemToggle: PropTypes.func.isRequired,
 };
 
 export default List;

@@ -19,7 +19,7 @@ export const loadLocationItems = (parentLocationId, callback, limit = 50, offset
         .then((data) => {
             const location = data.ContentTreeNode;
 
-            location.children = location.children.map(mapChildrenToSubitems)
+            location.children = location.children.map(mapChildrenToSubitems);
 
             return mapChildrenToSubitems(location);
         })
@@ -27,12 +27,58 @@ export const loadLocationItems = (parentLocationId, callback, limit = 50, offset
         .catch(showErrorNotification);
 };
 
+export const loadSubtree = ({ token, siteaccess }, subtree, callback) => {
+    const request = new Request(`${ENDPOINT_LOAD_SUBTREE}`, {
+        method: 'POST',
+        mode: 'same-origin',
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            LoadSubtreeRequest: {
+                "_media-type": "application/vnd.ez.api.ContentTreeLoadSubtreeRequest",
+                nodes: subtree,
+            },
+        }),
+
+        headers: {
+            Accept: 'application/vnd.ez.api.ContentTreeRoot+json',
+            'Content-Type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequest+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((data) => {
+            const loadedSubtree = data.ContentTreeRoot.ContentTreeNodeList;
+
+            return mapChildrenToSubitemsDeep(loadedSubtree);
+        })
+        .then(callback)
+        .catch(showErrorNotification);
+};
+
+const mapChildrenToSubitemsDeep = (tree) => {
+    const parsedSubtree = [];
+
+    for (const subtree of tree) {
+        mapChildrenToSubitems(subtree);
+        subtree.subitems = mapChildrenToSubitemsDeep(subtree.subitems);
+
+        parsedSubtree.push(subtree);
+    }
+
+    return parsedSubtree;
+};
+
 const mapChildrenToSubitems = (location) => {
     location.totalSubitemsCount = location.totalChildrenCount;
     location.subitems = location.children;
+    location.totalSubitemsCount = location.totalChildrenCount;
 
     delete location.totalChildrenCount;
     delete location.children;
+    delete location.displayLimit;
 
     return location;
 };

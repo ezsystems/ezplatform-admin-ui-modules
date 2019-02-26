@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ContentTree from './components/content-tree/content.tree';
-import { loadLocationItems } from './services/content.tree.service';
+import { loadLocationItems, loadSubtree } from './services/content.tree.service';
+
+const KEY_CONTENT_TREE_SUBTREE = 'ez-content-tree-subtree';
 
 export default class ContentTreeModule extends Component {
     constructor(props) {
@@ -9,12 +11,29 @@ export default class ContentTreeModule extends Component {
 
         this.setInitialItemsState = this.setInitialItemsState.bind(this);
         this.loadMoreSubitems = this.loadMoreSubitems.bind(this);
+        this.updateSubtreeAfterItemToggle = this.updateSubtreeAfterItemToggle.bind(this);
+
+        const savedSubtree = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
 
         this.items = props.preloadedLocations;
+
+        try {
+            this.subtree = savedSubtree ? JSON.parse(savedSubtree) : null;
+        } catch (e) {
+            this.subtree = null;
+        }
     }
 
     componentDidMount() {
         if (this.items.length) {
+            return;
+        }
+
+        if (this.subtree) {
+            loadSubtree(this.props.restInfo, this.subtree, (loadedSubtree) => {
+                this.setInitialItemsState(loadedSubtree[0]);
+            });
+
             return;
         }
 
@@ -23,6 +42,7 @@ export default class ContentTreeModule extends Component {
 
     setInitialItemsState(location) {
         this.items = [location];
+        this.subtree = this.generateSubtree(this.items);
 
         this.forceUpdate();
     }
@@ -45,8 +65,117 @@ export default class ContentTreeModule extends Component {
 
         item.subitems = [...item.subitems, ...location.subitems];
 
+        this.updateSubtreeAfterLoadMoreItems(path);
         successCallback();
         this.forceUpdate();
+    }
+
+    updateSubtreeAfterLoadMoreItems(path) {
+        const item = this.findItem(this.items, path.split(','));
+
+        this.updateItemInSubtree(this.subtree[0], item, path.split(','));
+        this.saveSubtree();
+    }
+
+    updateSubtreeAfterItemToggle(path, isExpanded) {
+        const item = this.findItem(this.items, path.split(','));
+
+        if (isExpanded) {
+            this.addItemToSubtree(this.subtree[0], item, path.split(','));
+        } else {
+            this.removeItemFromSubtree(this.subtree[0], item, path.split(','));
+        }
+
+        this.saveSubtree();
+    }
+
+    addItemToSubtree(subtree, item, path) {
+        const parentSubtree = this.findParentSubtree(subtree, item, path);
+
+        if (!parentSubtree) {
+            return;
+        }
+
+        const { subitemsLoadLimit } = this.props;
+
+        parentSubtree.children.push({
+            '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
+            locationId: item.locationId,
+            limit: Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit,
+            offset: 0,
+            children: [],
+        });
+    }
+
+    removeItemFromSubtree(subtree, item, path) {
+        const parentSubtree = this.findParentSubtree(subtree, item, path);
+
+        if (!parentSubtree) {
+            return;
+        }
+
+        const index = parentSubtree.children.findIndex((element) => parseInt(element.locationId, 10) === parseInt(path[1], 10));
+
+        if (index > -1) {
+            parentSubtree.children.splice(index, 1);
+        }
+    }
+
+    updateItemInSubtree(subtree, item, path) {
+        const parentSubtree = this.findParentSubtree(subtree, item, path);
+
+        if (!parentSubtree) {
+            return;
+        }
+
+        const index = parentSubtree.children.findIndex((element) => element.locationId === parseInt(path[1], 10));
+
+        if (index > -1) {
+            parentSubtree.children[index].limit = item.subitems.length;
+        }
+    }
+
+    saveSubtree() {
+        localStorage.setItem(KEY_CONTENT_TREE_SUBTREE, JSON.stringify(this.subtree));
+    }
+
+    findParentSubtree(subtree, item, path) {
+        if (path.length < 2) {
+            return;
+        }
+
+        const isParent = path.length === 2;
+
+        if (isParent) {
+            return subtree;
+        }
+
+        const subtreeSubtree = subtree.children.find((element) => element.locationId === parseInt(path[1], 10));
+
+        path.shift();
+
+        return this.findParentSubtree(subtreeSubtree, item, path);
+    }
+
+    generateSubtree(items) {
+        const itemsWithoutLeafs = [];
+        const { subitemsLoadLimit } = this.props;
+
+        for (const item of items) {
+            const isLeaf = !item.subitems.length;
+
+            if (!isLeaf) {
+                itemsWithoutLeafs.push({
+                    '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
+                    locationId: item.locationId,
+                    limit: Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit,
+                    offset: 0,
+                    children: this.generateSubtree(item.subitems),
+                });
+            }
+        }
+
+        return itemsWithoutLeafs;
     }
 
     findItem(items, path) {
@@ -77,6 +206,7 @@ export default class ContentTreeModule extends Component {
             currentLocationId,
             subitemsLoadLimit,
             loadMoreSubitems: this.loadMoreSubitems,
+            afterItemToggle: this.updateSubtreeAfterItemToggle,
         };
 
         return <ContentTree {...attrs} />;
@@ -90,6 +220,10 @@ ContentTreeModule.propTypes = {
     currentLocationId: PropTypes.number.isRequired,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
     subitemsLoadLimit: PropTypes.number,
+    restInfo: PropTypes.shape({
+        token: PropTypes.string.isRequired,
+        siteaccess: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 ContentTreeModule.defaultProps = {

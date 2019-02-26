@@ -3,6 +3,8 @@
     min-width: calculateRem(250px);
     width: calculateRem(250px);
     max-width: 33vw;
+    height: 100%;
+    overflow: auto;
 
     &__resize-handler {
         width: calculateRem(3px);
