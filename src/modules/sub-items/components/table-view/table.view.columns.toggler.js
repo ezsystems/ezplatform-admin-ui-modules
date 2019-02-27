@@ -5,6 +5,8 @@ import Icon from '../../../common/icon/icon';
 import TableViewColumnsTogglerListElement from './table.view.columns.toggler.list.element';
 import { headerLabels } from './table.view.component';
 
+const DEFAULT_PANEL_HEIGHT = 200;
+
 export default class TableViewColumnsTogglerComponent extends Component {
     constructor(props) {
         super(props);
@@ -13,10 +15,12 @@ export default class TableViewColumnsTogglerComponent extends Component {
         this.hidePanel = this.hidePanel.bind(this);
 
         this._refTogglerButton = createRef();
+        this._refPanel = createRef();
 
         this.state = {
             isOpen: false,
             buttonBottomDocumentOffset: null,
+            panelHeight: null,
         };
     }
 
@@ -26,6 +30,16 @@ export default class TableViewColumnsTogglerComponent extends Component {
         this.setState(() => ({
             buttonBottomDocumentOffset: this.getBtnBottomDocumentOffset(),
         }));
+    }
+
+    componentDidUpdate() {
+        const { isOpen, panelHeight } = this.state;
+
+        if (isOpen && panelHeight === null) {
+            this.setState({
+                panelHeight: this._refPanel.offsetHeight,
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -64,9 +78,11 @@ export default class TableViewColumnsTogglerComponent extends Component {
         }
 
         const { columnsVisibility, toggleColumnVisibility } = this.props;
-        const panelAttrs = { className: 'c-table-view-columns-toggler__panel' };
+        const { buttonBottomDocumentOffset, panelHeight: measuredPanelHeight } = this.state;
+        const panelHeight = measuredPanelHeight ? measuredPanelHeight : DEFAULT_PANEL_HEIGHT;
+        const panelAttrs = { className: 'c-table-view-columns-toggler__panel', ref: this._refPanel };
 
-        if (this.state.buttonBottomDocumentOffset < 200) {
+        if (buttonBottomDocumentOffset < panelHeight) {
             panelAttrs.className = `${panelAttrs.className} ${panelAttrs.className}--above-btn`;
         }
 
