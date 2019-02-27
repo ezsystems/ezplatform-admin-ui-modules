@@ -10,7 +10,7 @@ export default class ContentTree extends Component {
 
         this.changeContainerWidth = this.changeContainerWidth.bind(this);
         this.addWidthChangeListener = this.addWidthChangeListener.bind(this);
-        this.removeWidthChangeListener = this.removeWidthChangeListener.bind(this);
+        this.handleResizeEnd = this.handleResizeEnd.bind(this);
         this._refTreeContainer = React.createRef();
 
         this.state = {
@@ -38,13 +38,13 @@ export default class ContentTree extends Component {
         const containerWidth = this._refTreeContainer.current.getBoundingClientRect().width;
 
         window.document.addEventListener('mousemove', this.changeContainerWidth, false);
-        window.document.addEventListener('mouseup', this.removeWidthChangeListener, false);
+        window.document.addEventListener('mouseup', this.handleResizeEnd, false);
         window.document.body.classList.add(CLASS_IS_TREE_RESIZING);
 
         this.setState(() => ({ resizeStartPositionX, containerWidth, isResizing: true }));
     }
 
-    removeWidthChangeListener() {
+    handleResizeEnd() {
         this.clearDocumentResizingState();
 
         this.setState((state) => ({
@@ -56,7 +56,7 @@ export default class ContentTree extends Component {
 
     clearDocumentResizingState() {
         window.document.removeEventListener('mousemove', this.changeContainerWidth);
-        window.document.removeEventListener('mouseup', this.removeWidthChangeListener);
+        window.document.removeEventListener('mouseup', this.handleResizeEnd);
         window.document.body.classList.remove(CLASS_IS_TREE_RESIZING);
     }
 
