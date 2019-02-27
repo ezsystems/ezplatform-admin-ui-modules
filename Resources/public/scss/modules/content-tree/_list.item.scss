@@ -11,7 +11,7 @@ $list-item-height: calculateRem(20px);
         white-space: nowrap;
         position: relative;
         font-size: calculateRem(12px);
-        padding-left: calculateRem(4px);
+        padding-left: calculateRem(14px);
 
         &:hover,
         &:focus {
@@ -41,15 +41,16 @@ $list-item-height: calculateRem(20px);
     }
 
     &__toggler {
-        display: inline-block;
-        width: calculateRem(12px);
-        height: $list-item-height;
+        position: absolute;
+        left: 0;
+        height: 100%;
+        width: calculateRem(16px);
 
         &:before {
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: calculateRem(4px) 0 calculateRem(4px) calculateRem(6px);
+            border-width: calculateRem(3px) 0 calculateRem(3px) calculateRem(6px);
             border-color: transparent transparent transparent $ez-black;
             display: inline-block;
             position: absolute;
@@ -64,6 +65,36 @@ $list-item-height: calculateRem(20px);
                 border-color: transparent transparent transparent $ez-white;
             }
         }
+    }
+
+    &__load-more-btn {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        background: none;
+        text-align: center;
+        color: $ez-color-base-light;
+        border-radius: calculateRem(4px);
+        margin-left: calculateRem(26px);
+        transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
+        cursor: pointer;
+        font-size: calculateRem(12px);
+
+        &:focus {
+            box-shadow: 0 0 0 calculateRem(3px) rgba($ez-black, 0.25);
+        }
+
+        &:hover {
+            color: $ez-color-base-light;
+        }
+
+        .ez-icon {
+            fill: $ez-color-base-dark;
+        }
+    }
+
+    &__load-more-btn-spinner {
+        margin-right: calculateRem(4px);
     }
 
     .c-list {
@@ -97,8 +128,9 @@ $list-item-height: calculateRem(20px);
             &__label {
                 #{$list-item}__toggler {
                     &:before {
-                        border-width: calculateRem(6px) calculateRem(4px) 0 calculateRem(4px);
+                        border-width: calculateRem(6px) calculateRem(3px) 0 calculateRem(3px);
                         border-color: $ez-black transparent transparent transparent;
+                        transform: translateY(-50%);
                     }
                 }
             }
