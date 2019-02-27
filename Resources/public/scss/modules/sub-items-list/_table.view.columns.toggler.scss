@@ -6,6 +6,8 @@
     align-items: center;
 
     &__btn {
+        display: flex;
+        justify-content: center;
         padding: calculateRem(5px);
         height: calculateRem(32px);
         width: calculateRem(32px);
