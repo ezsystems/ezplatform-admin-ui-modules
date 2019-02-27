@@ -22,7 +22,7 @@ export default class ContentTree extends Component {
     }
 
     componentWillUnmount() {
-        this.clearDocumentResizingState();
+        this.clearDocumentResizingListeners();
     }
 
     changeContainerWidth({ clientX }) {
@@ -45,7 +45,7 @@ export default class ContentTree extends Component {
     }
 
     handleResizeEnd() {
-        this.clearDocumentResizingState();
+        this.clearDocumentResizingListeners();
 
         this.setState((state) => ({
             resizeStartPositionX: 0,
@@ -54,7 +54,7 @@ export default class ContentTree extends Component {
         }));
     }
 
-    clearDocumentResizingState() {
+    clearDocumentResizingListeners() {
         window.document.removeEventListener('mousemove', this.changeContainerWidth);
         window.document.removeEventListener('mouseup', this.handleResizeEnd);
         window.document.body.classList.remove(CLASS_IS_TREE_RESIZING);
