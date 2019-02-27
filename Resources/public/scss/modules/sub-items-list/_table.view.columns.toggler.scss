@@ -21,6 +21,11 @@
         right: calculateRem(17px);
         font-weight: normal;
         box-shadow: 0 calculateRem(2px) calculateRem(4px) 0 rgba($ez-black, 0.45);
+
+        &--above-btn {
+            bottom: calculateRem(36px);
+            top: auto;
+        }
     }
 
     &__list {

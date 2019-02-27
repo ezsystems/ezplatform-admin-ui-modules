@@ -16,15 +16,26 @@ export default class TableViewColumnsTogglerComponent extends Component {
 
         this.state = {
             isOpen: false,
+            buttonBottomDocumentOffset: null,
         };
     }
 
     componentDidMount() {
         document.addEventListener('click', this.hidePanel, false);
+
+        this.setState(() => ({
+            buttonBottomDocumentOffset: this.getBtnBottomDocumentOffset(),
+        }));
     }
 
     componentWillUnmount() {
         document.removeEventListener('click', this.hidePanel);
+    }
+
+    getBtnBottomDocumentOffset() {
+        const buttonTopOffset = this._refTogglerButton.current.getBoundingClientRect().top + window.scrollY;
+
+        return document.documentElement.scrollHeight - buttonTopOffset;
     }
 
     hidePanel({ target }) {
@@ -53,9 +64,14 @@ export default class TableViewColumnsTogglerComponent extends Component {
         }
 
         const { columnsVisibility, toggleColumnVisibility } = this.props;
+        const panelAttrs = { className: 'c-table-view-columns-toggler__panel' };
+
+        if (this.state.buttonBottomDocumentOffset < 200) {
+            panelAttrs.className = `${panelAttrs.className} ${panelAttrs.className}--above-btn`;
+        }
 
         return (
-            <div className="c-table-view-columns-toggler__panel">
+            <div {...panelAttrs}>
                 <ul className="c-table-view-columns-toggler__list">
                     {Object.entries(columnsVisibility).map(([columnKey, isColumnVisible]) => {
                         const label = headerLabels[columnKey];
