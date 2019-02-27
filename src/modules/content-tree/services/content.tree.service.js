@@ -14,17 +14,17 @@ export const loadLocationItems = (parentLocationId, callback, limit = 50, offset
         },
     });
 
-    // fetch(request)
-    //     .then(handleRequestResponse)
-    //     .then((data) => {
-    //         const location = data.ContentTreeNode;
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((data) => {
+            const location = data.ContentTreeNode;
 
-    //         location.children = location.children.map(mapChildrenToSubitems)
+            location.children = location.children.map(mapChildrenToSubitems)
 
-    //         return mapChildrenToSubitems(location);
-    //     })
-    //     .then(callback)
-    //     .catch(showErrorNotification);
+            return mapChildrenToSubitems(location);
+        })
+        .then(callback)
+        .catch(showErrorNotification);
 };
 
 const mapChildrenToSubitems = (location) => {
