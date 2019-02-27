@@ -50,13 +50,13 @@ $list-item-height: calculateRem(20px);
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: calculateRem(4px) 0 calculateRem(4px) calculateRem(6px);
+            border-width: calculateRem(3px) 0 calculateRem(3px) calculateRem(6px);
             border-color: transparent transparent transparent $ez-black;
             display: inline-block;
             position: absolute;
             top: 50%;
             left: calculateRem(4px);
-            transform: translateY(-50%) scale(1, 0.8);
+            transform: translateY(-50%);
             transform-origin: center center;
         }
 
@@ -128,9 +128,9 @@ $list-item-height: calculateRem(20px);
             &__label {
                 #{$list-item}__toggler {
                     &:before {
-                        border-width: calculateRem(6px) calculateRem(4px) 0 calculateRem(4px);
+                        border-width: calculateRem(6px) calculateRem(3px) 0 calculateRem(3px);
                         border-color: $ez-black transparent transparent transparent;
-                        transform: translateY(-50%) scale(0.8, 1);
+                        transform: translateY(-50%);
                     }
                 }
             }
