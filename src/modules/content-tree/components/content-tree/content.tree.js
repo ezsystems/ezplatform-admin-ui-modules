@@ -35,7 +35,7 @@ export default class ContentTree extends Component {
 
     addWidthChangeListener({ nativeEvent }) {
         const resizeStartPositionX = nativeEvent.clientX;
-        const containerWidth = parseInt(window.getComputedStyle(this._refTreeContainer.current).width, 10);
+        const containerWidth = this._refTreeContainer.current.getBoundingClientRect().width;
 
         window.document.addEventListener('mousemove', this.changeContainerWidth, false);
         window.document.addEventListener('mouseup', this.removeWidthChangeListener, false);
