@@ -80,6 +80,10 @@ $list-item-height: calculateRem(20px);
         cursor: pointer;
         font-size: calculateRem(12px);
 
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba($ez-black, 0.25);
+        }
+
         &:hover {
             color: $ez-color-base-light;
         }
