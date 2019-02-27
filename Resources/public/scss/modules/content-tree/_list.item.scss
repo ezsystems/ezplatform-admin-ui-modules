@@ -81,7 +81,7 @@ $list-item-height: calculateRem(20px);
         font-size: calculateRem(12px);
 
         &:focus {
-            box-shadow: 0 0 0 0.2rem rgba($ez-black, 0.25);
+            box-shadow: 0 0 0 calculateRem(3px) rgba($ez-black, 0.25);
         }
 
         &:hover {
