@@ -90,21 +90,24 @@ class ListItem extends Component {
 
     renderLoadMoreBtn() {
         const { subitems } = this.props;
-        let loadingSpinner = null;
 
         if (!this.state.isExpanded || !this.checkCanLoadMore() || !subitems.length) {
             return null;
         }
 
-        if (this.state.isLoading) {
-            loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small ez-icon--dark c-list-item__load-more-btn-spinner" />;
-        }
+        const { isLoading } = this.state;
+        let loadingSpinner = null;
+        const showMoreLabel = Translator.trans(/*@Desc("Show more")*/ 'show_more', {}, 'content_tree');
+        const loadingMoreLabel = Translator.trans(/*@Desc("Loading more...")*/ 'loading_more', {}, 'content_tree');
+        const btnLabel = isLoading ? loadingMoreLabel : showMoreLabel;
 
-        const loadMore = Translator.trans(/*@Desc("Load More")*/ 'load_more', {}, 'content_tree');
+        if (isLoading) {
+            loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small c-list-item__load-more-btn-spinner" />;
+        }
 
         return (
             <button type="button" className="c-list-item__load-more-btn btn ez-btn" onClick={this.loadMoreSubitems}>
-                {loadingSpinner} {loadMore}
+                {loadingSpinner} {btnLabel}
             </button>
         );
     }

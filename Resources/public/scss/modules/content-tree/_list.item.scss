@@ -70,11 +70,10 @@ $list-item-height: calculateRem(20px);
     &__load-more-btn {
         display: flex;
         align-items: center;
-        padding: 0 calculateRem(12px);
-        border: calculateRem(1px) solid $ez-color-secondary;
+        padding: 0;
         background: none;
         text-align: center;
-        color: $ez-color-secondary;
+        color: $ez-color-base-light;
         border-radius: calculateRem(4px);
         margin-left: calculateRem(26px);
         transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
@@ -82,13 +81,11 @@ $list-item-height: calculateRem(20px);
         font-size: calculateRem(12px);
 
         &:hover {
-            background: $ez-color-secondary-hover;
-            color: $ez-white;
-            outline: none;
+            color: $ez-color-base-light;
+        }
 
-            .ez-icon {
-                fill: $ez-white;
-            }
+        .ez-icon {
+            fill: $ez-color-base-dark;
         }
     }
 
