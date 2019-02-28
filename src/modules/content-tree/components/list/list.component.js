@@ -10,6 +10,7 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLi
         <ul className="c-list">
             {items.map((item) => {
                 const hasPreviousPath = path && path.length;
+                const locationHref = window.Routing.generate('_ezpublishLocation', { locationId: item.locationId });
                 const itemPath = `${hasPreviousPath ? path + ',' : ''}${item.locationId}`;
                 const { subitems } = item;
 
@@ -20,6 +21,7 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLi
                         key={item.locationId}
                         selected={item.locationId === currentLocationId}
                         subitemsLoadLimit={subitemsLoadLimit}
+                        href={locationHref}
                         path={itemPath}>
                         {subitems.length ? <List path={itemPath} items={subitems} {...listAttrs} /> : null}
                     </ListItem>
