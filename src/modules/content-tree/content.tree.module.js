@@ -16,28 +16,27 @@ export default class ContentTreeModule extends Component {
         const savedSubtree = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
 
         this.items = props.preloadedLocations;
-        this.subtree = savedSubtree ? JSON.parse(savedSubtree) : null;
+        this.subtree = savedSubtree ? JSON.parse(savedSubtree) : this.generateInitialSubtree();
+
+        this.expandCurrentLocationInSubtree();
     }
 
     componentDidMount() {
         if (this.items.length) {
-            return;
-        }
-
-        if (this.subtree) {
-            loadSubtree(this.props.restInfo, this.subtree, (loadedSubtree) => {
-                this.setInitialItemsState(loadedSubtree[0]);
-            });
+            this.subtree = this.generateSubtree(this.items);
+            this.saveSubtree();
 
             return;
         }
 
-        loadLocationItems(this.props.restInfo, this.props.rootLocationId, this.setInitialItemsState);
+        loadSubtree(this.props.restInfo, this.subtree, (loadedSubtree) => {
+            this.setInitialItemsState(loadedSubtree[0]);
+            this.saveSubtree();
+        });
     }
 
     setInitialItemsState(location) {
         this.items = [location];
-        this.subtree = this.generateSubtree(this.items);
 
         this.forceUpdate();
     }
@@ -149,6 +148,55 @@ export default class ContentTreeModule extends Component {
         );
     }
 
+    expandCurrentLocationInSubtree() {
+        const { rootLocationId, currentLocationPath } = this.props;
+        const path = currentLocationPath.split('/').filter((id) => !!id);
+        const rootLocationIdIndex = path.findIndex((element) => parseInt(element, 10) === rootLocationId);
+
+        if (rootLocationIdIndex === -1) {
+            return;
+        }
+
+        const pathStartingAfterRootLocation = path.slice(rootLocationIdIndex - path.length + 1);
+
+        this.expandPathInSubtree(this.subtree[0], pathStartingAfterRootLocation);
+    }
+
+    expandPathInSubtree(subtree, path) {
+        if (!path.length) {
+            return;
+        }
+
+        const locationId = parseInt(path[0], 10);
+        let nextSubtree = subtree.children.find((element) => element.locationId === locationId);
+
+        if (!nextSubtree) {
+            nextSubtree = {
+                '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
+                locationId: locationId,
+                limit: 1,
+                offset: 0,
+                children: [],
+            };
+            subtree.children.push(nextSubtree);
+        }
+
+        path.shift();
+        this.expandPathInSubtree(nextSubtree, path);
+    }
+
+    generateInitialSubtree() {
+        return [
+            {
+                '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
+                locationId: this.props.rootLocationId,
+                limit: this.props.subitemsLoadLimit,
+                offset: 0,
+                children: [],
+            },
+        ];
+    }
+
     generateSubtree(items) {
         const itemsWithoutLeafs = [];
         const { subitemsLoadLimit } = this.props;
@@ -191,11 +239,20 @@ export default class ContentTreeModule extends Component {
         return this.findItem(item.subitems, path);
     }
 
+    getCurrentLocationId() {
+        const currentLocationIdString = this.props.currentLocationPath
+            .split('/')
+            .filter((id) => !!id)
+            .pop();
+
+        return parseInt(currentLocationIdString, 10);
+    }
+
     render() {
-        const { currentLocationId, subitemsLoadLimit } = this.props;
+        const { subitemsLoadLimit } = this.props;
         const attrs = {
             items: this.items,
-            currentLocationId,
+            currentLocationId: this.getCurrentLocationId(),
             subitemsLoadLimit,
             loadMoreSubitems: this.loadMoreSubitems,
             afterItemToggle: this.updateSubtreeAfterItemToggle,
@@ -209,7 +266,7 @@ eZ.addConfig('modules.ContentTree', ContentTreeModule);
 
 ContentTreeModule.propTypes = {
     rootLocationId: PropTypes.number.isRequired,
-    currentLocationId: PropTypes.number.isRequired,
+    currentLocationPath: PropTypes.number.isRequired,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
     subitemsLoadLimit: PropTypes.number,
     restInfo: PropTypes.shape({
