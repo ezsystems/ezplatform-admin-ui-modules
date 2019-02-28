@@ -9,8 +9,10 @@ export default class ContentTreeModule extends Component {
 
         this.setInitialItemsState = this.setInitialItemsState.bind(this);
         this.loadMoreSubitems = this.loadMoreSubitems.bind(this);
+        this.handleLocationVisibilityChange = this.handleLocationVisibilityChange.bind(this);
 
         this.items = props.preloadedLocations;
+        this.currentLocationItem = null;
     }
 
     componentDidMount() {
@@ -19,6 +21,8 @@ export default class ContentTreeModule extends Component {
         }
 
         loadLocationItems(this.props.rootLocationId, this.setInitialItemsState);
+
+        document.body.addEventListener('ezLocationVisibilityChanged', this.handleLocationVisibilityChange, false);
     }
 
     setInitialItemsState(location) {
@@ -47,6 +51,38 @@ export default class ContentTreeModule extends Component {
 
         successCallback();
         this.forceUpdate();
+    }
+
+    handleLocationVisibilityChange(event) {
+        const { locationId, isInvisible } = event.detail;
+        const locationItem = this.findItemBfs(this.items[0], locationId);
+
+        if (!locationItem) {
+            return;
+        }
+
+        locationItem.isInvisible = isInvisible;
+        this.forceUpdate();
+    }
+
+    findItemBfs(rootItem, locationId) {
+        const queue = [];
+
+        queue.unshift(rootItem);
+
+        while (queue.length > 0) {
+            const currentItem = queue.pop();
+
+            if (currentItem.locationId === locationId) {
+                return currentItem;
+            }
+
+            currentItem.subitems.forEach((item) => {
+                queue.unshift(item);
+            });
+        }
+
+        return null;
     }
 
     findItem(items, path) {

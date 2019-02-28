@@ -113,7 +113,7 @@ class ListItem extends Component {
     }
 
     render() {
-        const { totalSubitemsCount, children, isInvisible, selected, href, name } = this.props;
+        const { totalSubitemsCount, children, isInvisible, selected, href, name, isParentInvisible } = this.props;
         const itemClassName = 'c-list-item';
         const togglerClassName = 'c-list-item__toggler';
         const itemAttrs = { className: itemClassName };
@@ -136,7 +136,7 @@ class ListItem extends Component {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-expanded`;
         }
 
-        if (isInvisible) {
+        if (isInvisible || isParentInvisible) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-hidden`;
         }
 
@@ -174,6 +174,7 @@ ListItem.propTypes = {
     name: PropTypes.string.isRequired,
     isInvisible: PropTypes.bool.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
+    isParentInvisible: PropTypes.bool.isRequired,
     subitemsLoadLimit: PropTypes.number,
 };
 

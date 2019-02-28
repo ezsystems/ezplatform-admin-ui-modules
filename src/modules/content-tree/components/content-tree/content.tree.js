@@ -64,10 +64,19 @@ export default class ContentTree extends Component {
         const { isResizing, containerWidth, resizedContainerWidth } = this.state;
         const { items, loadMoreSubitems, currentLocationId, subitemsLoadLimit } = this.props;
         const width = isResizing ? resizedContainerWidth : containerWidth;
-        const rootLocationSubitems = items.length ? items[0].subitems : [];
-        const rootLocationPath = items.length ? '' + items[0].locationId : '';
+        const rootLocation = items.length ? items[0] : null;
+        const rootLocationSubitems = rootLocation ? rootLocation.subitems : [];
+        const rootLocationPath = rootLocation ? '' + rootLocation.locationId : '';
+        const rootLocationIsInvisible = rootLocation ? rootLocation.isInvisible : null;
         const containerAttrs = { className: 'm-tree', ref: this._refTreeContainer };
-        const listAttrs = { items: rootLocationSubitems, path: rootLocationPath, loadMoreSubitems, currentLocationId, subitemsLoadLimit };
+        const listAttrs = {
+            loadMoreSubitems,
+            currentLocationId,
+            subitemsLoadLimit,
+            items: rootLocationSubitems,
+            path: rootLocationPath,
+            isParentInvisible: rootLocationIsInvisible,
+        };
 
         if (width) {
             containerAttrs.style = { width: `${width}px` };

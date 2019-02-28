@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListItem from '../list-item/list.item.component';
 
-const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit }) => {
-    const listAttrs = { loadMoreSubitems, currentLocationId };
+const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit, isParentInvisible }) => {
+    const listAttrs = { loadMoreSubitems, currentLocationId, subitemsLoadLimit };
     const listItemAttrs = { loadMoreSubitems };
 
     return (
@@ -20,8 +20,9 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLi
                         key={item.locationId}
                         selected={item.locationId === currentLocationId}
                         subitemsLoadLimit={subitemsLoadLimit}
+                        isParentInvisible={isParentInvisible}
                         path={itemPath}>
-                        {subitems.length ? <List path={itemPath} items={subitems} {...listAttrs} /> : null}
+                        {subitems.length ? <List path={itemPath} items={subitems} isParentInvisible={item.isInvisible} {...listAttrs} /> : null}
                     </ListItem>
                 );
             })}
@@ -34,6 +35,7 @@ List.propTypes = {
     items: PropTypes.array.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
     currentLocationId: PropTypes.number.isRequired,
+    isParentInvisible: PropTypes.bool.isRequired,
     subitemsLoadLimit: PropTypes.number,
 };
 
