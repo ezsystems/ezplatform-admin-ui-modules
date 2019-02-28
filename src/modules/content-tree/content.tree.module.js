@@ -144,7 +144,7 @@ export default class ContentTreeModule extends Component {
         path.pop();
 
         return path.reduce(
-            (subtree, locationId) => subtree.children.find((element) => element.locationId === parseInt(locationId, 10)),
+            (subtreeChild, locationId) => subtreeChild.children.find((element) => element.locationId === parseInt(locationId, 10)),
             subtree
         );
     }
