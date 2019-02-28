@@ -73,7 +73,7 @@ $list-item-height: calculateRem(20px);
         padding: 0;
         background: none;
         text-align: center;
-        color: $ez-color-base-light;
+        color: $ez-color-base-dark;
         border-radius: calculateRem(4px);
         margin-left: calculateRem(26px);
         transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
@@ -85,7 +85,7 @@ $list-item-height: calculateRem(20px);
         }
 
         &:hover {
-            color: $ez-color-base-light;
+            color: $ez-color-base-dark;
         }
 
         .ez-icon {
@@ -101,7 +101,6 @@ $list-item-height: calculateRem(20px);
         opacity: 0;
         list-style: none;
         max-height: 0;
-        overflow: hidden;
     }
 
     &--has-sub-items {
