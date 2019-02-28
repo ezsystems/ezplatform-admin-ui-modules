@@ -32,7 +32,7 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        loadLocationItems(this.props.rootLocationId, this.setInitialItemsState);
+        loadLocationItems(this.props.restInfo, this.props.rootLocationId, this.setInitialItemsState);
     }
 
     setInitialItemsState(location) {
@@ -44,6 +44,7 @@ export default class ContentTreeModule extends Component {
 
     loadMoreSubitems({ parentLocationId, offset, limit, path }, successCallback) {
         loadLocationItems(
+            this.props.restInfo,
             parentLocationId,
             this.updateLocationsStateAfterLoadingMoreItems.bind(this, path, successCallback),
             limit,
@@ -109,7 +110,7 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        const index = parentSubtree.children.findIndex((element) => element.locationId === parseInt(path[1], 10));
+        const index = parentSubtree.children.findIndex((element) => element.locationId === item.locationId);
 
         if (index > -1) {
             parentSubtree.children.splice(index, 1);
@@ -123,7 +124,7 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        const index = parentSubtree.children.findIndex((element) => element.locationId === parseInt(path[1], 10));
+        const index = parentSubtree.children.findIndex((element) => element.locationId === item.locationId);
 
         if (index > -1) {
             parentSubtree.children[index].limit = item.subitems.length;
@@ -139,17 +140,13 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        const isParent = path.length === 2;
-
-        if (isParent) {
-            return subtree;
-        }
-
-        const subtreeSubtree = subtree.children.find((element) => element.locationId === parseInt(path[1], 10));
-
         path.shift();
+        path.pop();
 
-        return this.findParentSubtree(subtreeSubtree, path);
+        return path.reduce(
+            (subtree, locationId) => subtree.children.find((element) => element.locationId === parseInt(locationId, 10)),
+            subtree
+        );
     }
 
     generateSubtree(items) {
