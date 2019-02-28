@@ -16,12 +16,7 @@ export default class ContentTreeModule extends Component {
         const savedSubtree = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
 
         this.items = props.preloadedLocations;
-
-        try {
-            this.subtree = savedSubtree ? JSON.parse(savedSubtree) : null;
-        } catch (e) {
-            this.subtree = null;
-        }
+        this.subtree = savedSubtree ? JSON.parse(savedSubtree) : null;
     }
 
     componentDidMount() {
@@ -90,7 +85,7 @@ export default class ContentTreeModule extends Component {
     }
 
     addItemToSubtree(subtree, item, path) {
-        const parentSubtree = this.findParentSubtree(subtree, item, path);
+        const parentSubtree = this.findParentSubtree(subtree, path);
 
         if (!parentSubtree) {
             return;
@@ -108,13 +103,13 @@ export default class ContentTreeModule extends Component {
     }
 
     removeItemFromSubtree(subtree, item, path) {
-        const parentSubtree = this.findParentSubtree(subtree, item, path);
+        const parentSubtree = this.findParentSubtree(subtree, path);
 
         if (!parentSubtree) {
             return;
         }
 
-        const index = parentSubtree.children.findIndex((element) => parseInt(element.locationId, 10) === parseInt(path[1], 10));
+        const index = parentSubtree.children.findIndex((element) => element.locationId === parseInt(path[1], 10));
 
         if (index > -1) {
             parentSubtree.children.splice(index, 1);
@@ -122,7 +117,7 @@ export default class ContentTreeModule extends Component {
     }
 
     updateItemInSubtree(subtree, item, path) {
-        const parentSubtree = this.findParentSubtree(subtree, item, path);
+        const parentSubtree = this.findParentSubtree(subtree, path);
 
         if (!parentSubtree) {
             return;
@@ -139,7 +134,7 @@ export default class ContentTreeModule extends Component {
         localStorage.setItem(KEY_CONTENT_TREE_SUBTREE, JSON.stringify(this.subtree));
     }
 
-    findParentSubtree(subtree, item, path) {
+    findParentSubtree(subtree, path) {
         if (path.length < 2) {
             return;
         }
@@ -154,7 +149,7 @@ export default class ContentTreeModule extends Component {
 
         path.shift();
 
-        return this.findParentSubtree(subtreeSubtree, item, path);
+        return this.findParentSubtree(subtreeSubtree, path);
     }
 
     generateSubtree(items) {

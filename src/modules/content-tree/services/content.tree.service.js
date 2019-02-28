@@ -34,11 +34,10 @@ export const loadSubtree = ({ token, siteaccess }, subtree, callback) => {
         credentials: 'same-origin',
         body: JSON.stringify({
             LoadSubtreeRequest: {
-                "_media-type": "application/vnd.ez.api.ContentTreeLoadSubtreeRequest",
+                '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequest',
                 nodes: subtree,
             },
         }),
-
         headers: {
             Accept: 'application/vnd.ez.api.ContentTreeRoot+json',
             'Content-Type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequest+json',
@@ -58,23 +57,17 @@ export const loadSubtree = ({ token, siteaccess }, subtree, callback) => {
         .catch(showErrorNotification);
 };
 
-const mapChildrenToSubitemsDeep = (tree) => {
-    const parsedSubtree = [];
-
-    for (const subtree of tree) {
+const mapChildrenToSubitemsDeep = (tree) =>
+    tree.map((subtree) => {
         mapChildrenToSubitems(subtree);
         subtree.subitems = mapChildrenToSubitemsDeep(subtree.subitems);
 
-        parsedSubtree.push(subtree);
-    }
-
-    return parsedSubtree;
-};
+        return subtree;
+    });
 
 const mapChildrenToSubitems = (location) => {
     location.totalSubitemsCount = location.totalChildrenCount;
     location.subitems = location.children;
-    location.totalSubitemsCount = location.totalChildrenCount;
 
     delete location.totalChildrenCount;
     delete location.children;
