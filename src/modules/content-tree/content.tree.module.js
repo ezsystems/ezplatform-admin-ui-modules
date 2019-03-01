@@ -12,6 +12,7 @@ export default class ContentTreeModule extends Component {
         this.setInitialItemsState = this.setInitialItemsState.bind(this);
         this.loadMoreSubitems = this.loadMoreSubitems.bind(this);
         this.updateSubtreeAfterItemToggle = this.updateSubtreeAfterItemToggle.bind(this);
+        this.handleCollapseAllItems = this.handleCollapseAllItems.bind(this);
 
         const savedSubtree = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
 
@@ -31,7 +32,6 @@ export default class ContentTreeModule extends Component {
 
         loadSubtree(this.props.restInfo, this.subtree, (loadedSubtree) => {
             this.setInitialItemsState(loadedSubtree[0]);
-            this.saveSubtree();
         });
     }
 
@@ -248,6 +248,18 @@ export default class ContentTreeModule extends Component {
         return parseInt(currentLocationIdString, 10);
     }
 
+    handleCollapseAllItems() {
+        this.items = [];
+        this.forceUpdate();
+
+        this.subtree = this.generateInitialSubtree();
+        this.saveSubtree();
+
+        loadSubtree(this.props.restInfo, this.subtree, (loadedSubtree) => {
+            this.setInitialItemsState(loadedSubtree[0]);
+        });
+    }
+
     render() {
         const { subitemsLoadLimit } = this.props;
         const attrs = {
@@ -256,6 +268,7 @@ export default class ContentTreeModule extends Component {
             subitemsLoadLimit,
             loadMoreSubitems: this.loadMoreSubitems,
             afterItemToggle: this.updateSubtreeAfterItemToggle,
+            onCollapseAppItems: this.handleCollapseAllItems,
         };
 
         return <ContentTree {...attrs} />;

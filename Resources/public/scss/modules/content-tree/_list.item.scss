@@ -101,6 +101,8 @@ $list-item-height: calculateRem(20px);
         opacity: 0;
         list-style: none;
         max-height: 0;
+        max-width: 0;
+        overflow: hidden;
     }
 
     &--has-sub-items {
@@ -121,6 +123,8 @@ $list-item-height: calculateRem(20px);
         > .c-list {
             opacity: 1;
             max-height: calculateRem(20000px);
+            max-width: initial;
+            overflow: initial;
         }
 
         > #{$list-item} {
