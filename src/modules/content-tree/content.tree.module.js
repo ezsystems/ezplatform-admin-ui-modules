@@ -174,7 +174,7 @@ export default class ContentTreeModule extends Component {
             nextSubtree = {
                 '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
                 locationId: locationId,
-                limit: 1,
+                limit: this.props.subitemsLoadLimit,
                 offset: 0,
                 children: [],
             };
