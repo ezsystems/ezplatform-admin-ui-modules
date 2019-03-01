@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Icon from '../../../common/icon/icon';
 
 export default class ChooseContentTypeComponent extends Component {
     constructor(props) {
@@ -64,13 +65,15 @@ export default class ChooseContentTypeComponent extends Component {
     }
 
     renderItem(item, index) {
-        const isNotSelectable = this.props.allowedContentTypes.length && !this.props.allowedContentTypes.includes(item.identifier);
+        const { name, identifier } = item;
+        const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(identifier);
+        const isNotSelectable = this.props.allowedContentTypes.length && !this.props.allowedContentTypes.includes(identifier);
         const attrs = {
             className: 'c-choose-content-type__group-item',
             key: index,
         };
 
-        if (this.state.selectedContentType.identifier === item.identifier) {
+        if (this.state.selectedContentType.identifier === identifier) {
             attrs.className = `${attrs.className} is-selected`;
         }
 
@@ -82,11 +85,18 @@ export default class ChooseContentTypeComponent extends Component {
             attrs.onClick = this.updateSelectedItem.bind(this, item);
         }
 
-        if (this.state.filterQuery && !item.name.toLowerCase().includes(this.state.filterQuery)) {
+        if (this.state.filterQuery && !name.toLowerCase().includes(this.state.filterQuery)) {
             attrs.hidden = true;
         }
 
-        return <div {...attrs}>{item.name}</div>;
+        return (
+            <div {...attrs}>
+                <div className="c-choose-content-type__group-item-icon">
+                    <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--small" />
+                </div>
+                {name}
+            </div>
+        );
     }
 
     renderGroup(groupName, index) {
