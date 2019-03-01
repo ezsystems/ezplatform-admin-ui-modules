@@ -13,13 +13,18 @@ export default class ContentTreeModule extends Component {
         this.loadMoreSubitems = this.loadMoreSubitems.bind(this);
         this.updateSubtreeAfterItemToggle = this.updateSubtreeAfterItemToggle.bind(this);
         this.handleCollapseAllItems = this.handleCollapseAllItems.bind(this);
+        this.limitSubitemsInSubtree = this.limitSubitemsInSubtree.bind(this);
 
-        const savedSubtree = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
+        const savedSubtreeStringified = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
+        const savedSubtree = JSON.parse(savedSubtreeStringified);
+        const isSavedSubtreeValid = savedSubtree && savedSubtree[0].locationId === props.rootLocationId;
 
         this.items = props.preloadedLocations;
-        this.subtree = savedSubtree ? JSON.parse(savedSubtree) : this.generateInitialSubtree();
+        this.subtree = isSavedSubtreeValid ? savedSubtree : this.generateInitialSubtree();
 
         this.expandCurrentLocationInSubtree();
+        this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
+        this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
     }
 
     componentDidMount() {
@@ -91,12 +96,13 @@ export default class ContentTreeModule extends Component {
             return;
         }
 
-        const { subitemsLoadLimit } = this.props;
+        const { subitemsLoadLimit, subitemsLimit } = this.props;
+        const limit = Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit;
 
         parentSubtree.children.push({
             '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
             locationId: item.locationId,
-            limit: Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit,
+            limit: Math.min(subitemsLimit, limit),
             offset: 0,
             children: [],
         });
@@ -174,7 +180,7 @@ export default class ContentTreeModule extends Component {
             nextSubtree = {
                 '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
                 locationId: locationId,
-                limit: this.props.subitemsLoadLimit,
+                limit: this.props.subitemsLimit,
                 offset: 0,
                 children: [],
             };
@@ -183,6 +189,21 @@ export default class ContentTreeModule extends Component {
 
         path.shift();
         this.expandPathInSubtree(nextSubtree, path);
+    }
+
+    clipTooDeepSubtreeBranches(subtree, maxDepth) {
+        if (maxDepth <= 0) {
+            subtree.children = [];
+
+            return;
+        }
+
+        subtree.children.forEach((subtreeChild) => this.clipTooDeepSubtreeBranches(subtreeChild, maxDepth - 1));
+    }
+
+    limitSubitemsInSubtree(subtree) {
+        subtree.limit = Math.min(this.props.subitemsLimit, subtree.limit);
+        subtree.children.forEach(this.limitSubitemsInSubtree);
     }
 
     generateInitialSubtree() {
@@ -199,16 +220,18 @@ export default class ContentTreeModule extends Component {
 
     generateSubtree(items) {
         const itemsWithoutLeafs = [];
-        const { subitemsLoadLimit } = this.props;
+        const { subitemsLoadLimit, subitemsLimit } = this.props;
 
         for (const item of items) {
             const isLeaf = !item.subitems.length;
 
             if (!isLeaf) {
+                const limit = Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit;
+
                 itemsWithoutLeafs.push({
                     '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
                     locationId: item.locationId,
-                    limit: Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit,
+                    limit: Math.min(subitemsLimit, limit),
                     offset: 0,
                     children: this.generateSubtree(item.subitems),
                 });
@@ -261,11 +284,13 @@ export default class ContentTreeModule extends Component {
     }
 
     render() {
-        const { subitemsLoadLimit } = this.props;
+        const { subitemsLimit, subitemsLoadLimit, treeMaxDepth } = this.props;
         const attrs = {
             items: this.items,
             currentLocationId: this.getCurrentLocationId(),
+            subitemsLimit,
             subitemsLoadLimit,
+            treeMaxDepth,
             loadMoreSubitems: this.loadMoreSubitems,
             afterItemToggle: this.updateSubtreeAfterItemToggle,
             onCollapseAllItems: this.handleCollapseAllItems,
@@ -281,7 +306,9 @@ ContentTreeModule.propTypes = {
     rootLocationId: PropTypes.number.isRequired,
     currentLocationPath: PropTypes.number.isRequired,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
-    subitemsLoadLimit: PropTypes.number,
+    subitemsLimit: PropTypes.number.isRequired,
+    subitemsLoadLimit: PropTypes.number.isRequired,
+    treeMaxDepth: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
@@ -289,7 +316,9 @@ ContentTreeModule.propTypes = {
 };
 
 ContentTreeModule.defaultProps = {
-    rootLocationId: 2,
     preloadedLocations: [],
-    subitemsLoadLimit: 10,
+    rootLocationId: window.eZ.adminUiConfig.contentTree.treeRootLocationId,
+    subitemsLimit: window.eZ.adminUiConfig.contentTree.childrenLoadMaxLimit,
+    subitemsLoadLimit: window.eZ.adminUiConfig.contentTree.loadMoreLimit,
+    treeMaxDepth: window.eZ.adminUiConfig.contentTree.treeMaxDepth,
 };

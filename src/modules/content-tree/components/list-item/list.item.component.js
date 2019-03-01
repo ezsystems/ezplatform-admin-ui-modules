@@ -22,6 +22,21 @@ class ListItem extends Component {
     }
 
     toggleExpandedState() {
+        const { path, treeMaxDepth } = this.props;
+        const currentDepth = path.split(',').length - 1;
+
+        if (currentDepth >= treeMaxDepth) {
+            const notificationMessage = Translator.trans(
+                /*@Desc("Cannot expand subtree. You reached the limit of tree depth.")*/ 'expand_item.limit.message',
+                {},
+                'content_tree'
+            );
+
+            window.eZ.helpers.notification.showInfoNotification(notificationMessage);
+
+            return;
+        }
+
         this.setState(
             (state) => ({ isExpanded: !state.isExpanded }),
             () => {
@@ -46,7 +61,19 @@ class ListItem extends Component {
             return;
         }
 
-        const { subitems, path, locationId, loadMoreSubitems } = this.props;
+        const { subitems, path, locationId, subitemsLimit, subitemsLoadLimit, loadMoreSubitems } = this.props;
+
+        if (subitems.length >= subitemsLimit) {
+            const notificationMessage = Translator.trans(
+                /*@Desc("Cannot show more. You reached the limit of loaded subitems.")*/ 'show_more.limit.message',
+                {},
+                'content_tree'
+            );
+
+            window.eZ.helpers.notification.showInfoNotification(notificationMessage);
+
+            return;
+        }
 
         this.setState(
             () => ({ isLoading: true }),
@@ -56,7 +83,7 @@ class ListItem extends Component {
                         path,
                         parentLocationId: locationId,
                         offset: subitems.length,
-                        limit: this.props.subitemsLoadLimit,
+                        limit: subitemsLoadLimit,
                     },
                     this.cancelLoadingState
                 )
@@ -182,7 +209,9 @@ ListItem.propTypes = {
     name: PropTypes.string.isRequired,
     isInvisible: PropTypes.bool.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
+    subitemsLimit: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
+    treeMaxDepth: PropTypes.number.isRequired,
     afterItemToggle: PropTypes.func.isRequired,
 };
 
