@@ -23,6 +23,8 @@
     }
 
     &__group-item {
+        display: flex;
+        align-items: center;
         padding-left: calculateRem(16px);
         cursor: pointer;
         transition: background 0.3s $ez-admin-transition;
@@ -51,5 +53,10 @@
                 background: inherit;
             }
         }
+    }
+
+    &__group-item-icon {
+        display: flex;
+        padding-right: calculateRem(4px);
     }
 }
