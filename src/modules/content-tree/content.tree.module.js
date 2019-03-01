@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ContentTree from './components/content-tree/content.tree';
 import { loadLocationItems, loadSubtree } from './services/content.tree.service';
 
-const KEY_CONTENT_TREE_SUBTREE = 'ez-content-tree-subtree';
+const KEY_CONTENT_TREE_SUBTREE = 'ez-content-tree-subtrees';
 
 export default class ContentTreeModule extends Component {
     constructor(props) {
@@ -15,12 +15,10 @@ export default class ContentTreeModule extends Component {
         this.handleCollapseAllItems = this.handleCollapseAllItems.bind(this);
         this.limitSubitemsInSubtree = this.limitSubitemsInSubtree.bind(this);
 
-        const savedSubtreeStringified = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
-        const savedSubtree = JSON.parse(savedSubtreeStringified);
-        const isSavedSubtreeValid = savedSubtree && savedSubtree[0].locationId === props.rootLocationId;
+        const savedSubtree = this.readSubtree();
 
         this.items = props.preloadedLocations;
-        this.subtree = isSavedSubtreeValid ? savedSubtree : this.generateInitialSubtree();
+        this.subtree = savedSubtree ? savedSubtree : this.generateInitialSubtree();
 
         this.expandCurrentLocationInSubtree();
         this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
@@ -136,8 +134,23 @@ export default class ContentTreeModule extends Component {
         }
     }
 
+    readSubtree() {
+        const { rootLocationId } = this.props;
+        const savedSubtrees = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
+        const subtrees = savedSubtrees ? JSON.parse(savedSubtrees) : null;
+        const savedSubtree = subtrees ? subtrees[rootLocationId] : null;
+        const subtree = savedSubtree ? JSON.parse(savedSubtree) : null;
+
+        return subtree;
+    }
+
     saveSubtree() {
-        localStorage.setItem(KEY_CONTENT_TREE_SUBTREE, JSON.stringify(this.subtree));
+        const savedSubtreesStringified = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
+        const subtrees = savedSubtreesStringified ? JSON.parse(savedSubtreesStringified) : {};
+
+        subtrees[this.props.rootLocationId] = JSON.stringify(this.subtree);
+
+        localStorage.setItem(KEY_CONTENT_TREE_SUBTREE, JSON.stringify(subtrees));
     }
 
     findParentSubtree(subtree, path) {
