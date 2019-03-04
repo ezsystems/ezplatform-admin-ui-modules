@@ -21,8 +21,9 @@ export default class ContentTreeModule extends Component {
         this.subtree = savedSubtree ? savedSubtree : this.generateInitialSubtree();
 
         this.expandCurrentLocationInSubtree();
-        // this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
-        // this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
+        this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
+        this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
+        this.saveSubtree();
     }
 
     componentDidMount() {
@@ -331,7 +332,7 @@ ContentTreeModule.propTypes = {
 ContentTreeModule.defaultProps = {
     preloadedLocations: [],
     rootLocationId: window.eZ.adminUiConfig.contentTree.treeRootLocationId,
-    subitemsLimit: 1, //window.eZ.adminUiConfig.contentTree.childrenLoadMaxLimit,
-    subitemsLoadLimit:  1, //window.eZ.adminUiConfig.contentTree.loadMoreLimit,
-    treeMaxDepth:  2, //window.eZ.adminUiConfig.contentTree.treeMaxDepth,
+    subitemsLimit: window.eZ.adminUiConfig.contentTree.childrenLoadMaxLimit,
+    subitemsLoadLimit:  window.eZ.adminUiConfig.contentTree.loadMoreLimit,
+    treeMaxDepth:  window.eZ.adminUiConfig.contentTree.treeMaxDepth,
 };
