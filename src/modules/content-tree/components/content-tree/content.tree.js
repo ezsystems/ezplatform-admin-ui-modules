@@ -60,6 +60,16 @@ export default class ContentTree extends Component {
         window.document.body.classList.remove(CLASS_IS_TREE_RESIZING);
     }
 
+    renderCollapseAllBtn() {
+        const collapseAllLabel = Translator.trans(/*@Desc("Collapse all")*/ 'collapse_all', {}, 'content_tree');
+
+        return (
+            <div tabIndex={-1} className="m-tree__collapse-all-btn" onClick={this.props.onCollapseAllItems}>
+                {collapseAllLabel}
+            </div>
+        );
+    }
+
     render() {
         const { isResizing, containerWidth, resizedContainerWidth } = this.state;
         const { items, loadMoreSubitems, currentLocationId, subitemsLoadLimit, afterItemToggle } = this.props;
@@ -82,8 +92,11 @@ export default class ContentTree extends Component {
 
         return (
             <div {...containerAttrs}>
-                <List {...listAttrs} />
+                <div className="m-tree__scrollable-wrapper">
+                    <List {...listAttrs} />
+                </div>
                 <div className="m-tree__resize-handler" onMouseDown={this.addWidthChangeListener} />
+                {this.renderCollapseAllBtn()}
             </div>
         );
     }
@@ -95,4 +108,5 @@ ContentTree.propTypes = {
     currentLocationId: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
     afterItemToggle: PropTypes.func.isRequired,
+    onCollapseAllItems: PropTypes.func.isRequired,
 };

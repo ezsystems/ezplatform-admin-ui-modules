@@ -6,6 +6,11 @@
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
+      <trans-unit id="75cce764c5cf98a1b20b2daa756c7ef90077677c" resname="collapse_all">
+        <source>Collapse all</source>
+        <target state="new">Collapse all</target>
+        <note>key: collapse_all</note>
+      </trans-unit>
       <trans-unit id="9042dc6dc12016a1ffce82c61781eb8df00d3a66" resname="loading_more">
         <source>Loading more...</source>
         <target state="new">Loading more...</target>
