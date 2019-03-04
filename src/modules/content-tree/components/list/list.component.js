@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListItem from '../list-item/list.item.component';
 
-const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle }) => {
+const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle, isRoot }) => {
     const commonAttrs = { loadMoreSubitems, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle };
     const listAttrs = { ...commonAttrs, currentLocationId };
     const listItemAttrs = commonAttrs;
@@ -22,8 +22,9 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLi
                         key={item.locationId}
                         selected={item.locationId === currentLocationId}
                         href={locationHref}
+                        isRootItem={isRoot}
                         path={itemPath}>
-                        {subitems.length ? <List path={itemPath} items={subitems} {...listAttrs} /> : null}
+                        {subitems.length ? <List path={itemPath} items={subitems} isRoot={false} {...listAttrs} /> : null}
                     </ListItem>
                 );
             })}
@@ -40,6 +41,11 @@ List.propTypes = {
     subitemsLoadLimit: PropTypes.number,
     treeMaxDepth: PropTypes.number.isRequired,
     afterItemToggle: PropTypes.func.isRequired,
+    isRoot: PropTypes.bool.isRequired,
+};
+
+List.defaultProps = {
+    isRoot: false,
 };
 
 export default List;

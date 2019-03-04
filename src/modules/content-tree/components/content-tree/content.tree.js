@@ -89,6 +89,7 @@ export default class ContentTree extends Component {
             subitemsLoadLimit,
             treeMaxDepth,
             afterItemToggle,
+            isRoot: true,
         };
 
         return (

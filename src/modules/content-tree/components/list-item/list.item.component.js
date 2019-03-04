@@ -87,10 +87,6 @@ class ListItem extends Component {
         return subitems.length < totalSubitemsCount;
     }
 
-    isRoot() {
-        return this.props.path.split(',').length === 1;
-    }
-
     /**
      * Renders an icon of a content type
      *
@@ -157,7 +153,7 @@ class ListItem extends Component {
     }
 
     renderItemLabel() {
-        if (this.isRoot()) {
+        if (this.props.isRootItem) {
             return null;
         }
 
@@ -213,7 +209,7 @@ class ListItem extends Component {
             togglerAttrs.className = `${togglerAttrs.className} ${togglerClassName}--light`;
         }
 
-        if (this.isRoot()) {
+        if (this.props.isRootItem) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-root-item`;
         }
 
@@ -246,10 +242,12 @@ ListItem.propTypes = {
     subitemsLoadLimit: PropTypes.number,
     treeMaxDepth: PropTypes.number.isRequired,
     afterItemToggle: PropTypes.func.isRequired,
+    isRootItem: PropTypes.bool.isRequired,
 };
 
 ListItem.defaultProps = {
     hidden: false,
+    isRootItem: false,
 };
 
 export default ListItem;
