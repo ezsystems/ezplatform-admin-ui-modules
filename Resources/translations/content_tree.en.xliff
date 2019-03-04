@@ -12,8 +12,8 @@
         <note>key: collapse_all</note>
       </trans-unit>
       <trans-unit id="0cba8ae8f7a758a11886b6be4e7ce7e570063f8f" resname="expand_item.limit.message">
-        <source>Cannot expand subtree. You reached the limit of tree depth.</source>
-        <target state="new">Cannot expand subtree. You reached the limit of tree depth.</target>
+        <source>Cannot load subitems for given location due to performance limits. You reached max tree depth.</source>
+        <target state="new">Cannot load subitems for given location due to performance limits. You reached max tree depth.</target>
         <note>key: expand_item.limit.message</note>
       </trans-unit>
       <trans-unit id="9042dc6dc12016a1ffce82c61781eb8df00d3a66" resname="loading_more">
@@ -26,10 +26,10 @@
         <target state="new">Show more</target>
         <note>key: show_more</note>
       </trans-unit>
-      <trans-unit id="3806cf634c9d1ce315ca6d9e46619b58f848ee15" resname="show_more.limit.message">
-        <source>Cannot show more. You reached the limit of loaded subitems.</source>
-        <target state="new">Cannot show more. You reached the limit of loaded subitems.</target>
-        <note>key: show_more.limit.message</note>
+      <trans-unit id="fa32f3cd5131d17d3c18b13089f0c93216a1e85c" resname="show_more.limit_reached">
+        <source>Loading limit reached</source>
+        <target state="new">Loading limit reached</target>
+        <note>key: show_more.limit_reached</note>
       </trans-unit>
     </body>
   </file>

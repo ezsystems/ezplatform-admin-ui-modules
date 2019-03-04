@@ -77,7 +77,6 @@ $list-item-height: calculateRem(20px);
         border-radius: calculateRem(4px);
         margin-left: calculateRem(26px);
         transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
-        cursor: pointer;
         font-size: calculateRem(12px);
 
         &:focus {
@@ -90,6 +89,23 @@ $list-item-height: calculateRem(20px);
 
         .ez-icon {
             fill: $ez-color-base-dark;
+        }
+
+        &--loading-limit-reached {
+            color: $ez-secondary-ground;
+            font-style: italic;
+
+            &.btn[disabled] {
+                opacity: 1;
+            }
+
+            &:focus {
+                box-shadow: 0 0 0 calculateRem(3px) rgba($ez-secondary-ground, 0.25);
+            }
+
+            &:hover {
+                color: $ez-secondary-ground;
+            }
         }
     }
 
