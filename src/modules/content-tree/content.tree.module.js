@@ -268,7 +268,7 @@ export default class ContentTreeModule extends Component {
             subitemsLoadLimit,
             loadMoreSubitems: this.loadMoreSubitems,
             afterItemToggle: this.updateSubtreeAfterItemToggle,
-            onCollapseAppItems: this.handleCollapseAllItems,
+            onCollapseAllItems: this.handleCollapseAllItems,
         };
 
         return <ContentTree {...attrs} />;

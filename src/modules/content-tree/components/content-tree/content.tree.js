@@ -64,7 +64,7 @@ export default class ContentTree extends Component {
         const collapseAllLabel = Translator.trans(/*@Desc("Collapse all")*/ 'collapse_all', {}, 'content_tree');
 
         return (
-            <div tabIndex={-1} className="m-tree__collapse-all-btn" onClick={this.props.onCollapseAppItems}>
+            <div tabIndex={-1} className="m-tree__collapse-all-btn" onClick={this.props.onCollapseAllItems}>
                 {collapseAllLabel}
             </div>
         );
@@ -108,5 +108,5 @@ ContentTree.propTypes = {
     currentLocationId: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
     afterItemToggle: PropTypes.func.isRequired,
-    onCollapseAppItems: PropTypes.func.isRequired,
+    onCollapseAllItems: PropTypes.func.isRequired,
 };
