@@ -11,7 +11,7 @@ export const loadLocationItems = ({ siteaccess }, parentLocationId, callback, li
         credentials: 'same-origin',
         headers: {
             Accept: 'application/vnd.ez.api.ContentTreeNode+json',
-            'X-Siteaccess': siteaccess
+            'X-Siteaccess': siteaccess,
         },
     });
 
