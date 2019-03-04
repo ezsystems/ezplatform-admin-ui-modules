@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import List from '../list/list.component';
+import Icon from '../../../common/icon/icon';
 
 const CLASS_IS_TREE_RESIZING = 'ez-is-tree-resizing';
 
@@ -70,14 +71,18 @@ export default class ContentTree extends Component {
         );
     }
 
-    render() {
-        const { isResizing, containerWidth, resizedContainerWidth } = this.state;
-        const { items, loadMoreSubitems, currentLocationId, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle } = this.props;
-        const width = isResizing ? resizedContainerWidth : containerWidth;
-        const rootLocationSubitems = items.length ? items[0].subitems : [];
-        const rootLocationPath = items.length ? '' + items[0].locationId : '';
-        const containerAttrs = { className: 'm-tree', ref: this._refTreeContainer };
-        const listAttrs = {
+    renderList() {
+        const { items } = this.props;
+
+        if (!items || !items.length) {
+            return;
+        }
+
+        const { loadMoreSubitems, currentLocationId, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle } = this.props;
+        const rootLocationSubitems = items[0].subitems;
+        const rootLocationPath = '' + items[0].locationId;
+
+        const attrs = {
             items: rootLocationSubitems,
             path: rootLocationPath,
             loadMoreSubitems,
@@ -88,17 +93,42 @@ export default class ContentTree extends Component {
             afterItemToggle,
         };
 
+        return (
+            <div className="m-tree__scrollable-wrapper">
+                <List {...attrs} />
+            </div>
+        );
+    }
+
+    renderLoadingSpinner() {
+        const { items } = this.props;
+
+        if (items && items.length) {
+            return;
+        }
+
+        return (
+            <div className="m-tree__loading-spinner">
+                <Icon name="spinner" extraClasses="ez-icon--medium ez-spin" />
+            </div>
+        );
+    }
+
+    render() {
+        const { isResizing, containerWidth, resizedContainerWidth } = this.state;
+        const width = isResizing ? resizedContainerWidth : containerWidth;
+        const containerAttrs = { className: 'm-tree', ref: this._refTreeContainer };
+
         if (width) {
             containerAttrs.style = { width: `${width}px` };
         }
 
         return (
             <div {...containerAttrs}>
-                <div className="m-tree__scrollable-wrapper">
-                    <List {...listAttrs} />
-                </div>
-                <div className="m-tree__resize-handler" onMouseDown={this.addWidthChangeListener} />
+                {this.renderList()}
+                {this.renderLoadingSpinner()}
                 {this.renderCollapseAllBtn()}
+                <div className="m-tree__resize-handler" onMouseDown={this.addWidthChangeListener} />
             </div>
         );
     }
