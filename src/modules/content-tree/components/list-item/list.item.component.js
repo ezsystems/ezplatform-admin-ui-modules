@@ -115,34 +115,41 @@ class ListItem extends Component {
     }
 
     renderLoadMoreBtn() {
-        const { subitems } = this.props;
+        const { subitems, subitemsLimit } = this.props;
+        const subitemsLimitReached = subitems.length >= subitemsLimit;
 
-        if (!this.state.isExpanded || !this.checkCanLoadMore() || !subitems.length) {
+        if (!this.state.isExpanded || subitemsLimitReached || !this.checkCanLoadMore() || !subitems.length) {
             return null;
         }
 
-        const { subitemsLimit } = this.props;
         const { isLoading } = this.state;
-        const subitemsLimitReached = subitems.length >= subitemsLimit;
+        const showMoreLabel = Translator.trans(/*@Desc("Show more")*/ 'show_more', {}, 'content_tree');
+        const loadingMoreLabel = Translator.trans(/*@Desc("Loading more...")*/ 'loading_more', {}, 'content_tree');
+        const btnLabel = isLoading ? loadingMoreLabel : showMoreLabel;
         let loadingSpinner = null;
-        let btnClassName = 'btn ez-btn c-list-item__load-more-btn';
-        let btnLabel = null;
 
         if (isLoading) {
             loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small c-list-item__load-more-btn-spinner" />;
-            btnLabel = Translator.trans(/*@Desc("Loading more...")*/ 'loading_more', {}, 'content_tree');
-        } else if (subitemsLimitReached) {
-            btnLabel = Translator.trans(/*@Desc("Loading limit reached")*/ 'show_more.limit_reached', {}, 'content_tree');
-            btnClassName = `${btnClassName} c-list-item__load-more-btn--loading-limit-reached`;
-        } else {
-            btnLabel = Translator.trans(/*@Desc("Show more")*/ 'show_more', {}, 'content_tree');
         }
 
         return (
-            <button type="button" className={btnClassName} disabled={subitemsLimitReached} onClick={this.loadMoreSubitems}>
+            <button type="button" className="c-list-item__load-more-btn btn ez-btn" onClick={this.loadMoreSubitems}>
                 {loadingSpinner} {btnLabel}
             </button>
         );
+    }
+
+    renderSubitemsLimitReachedInfo() {
+        const { subitems, subitemsLimit } = this.props;
+        const subitemsLimitReached = subitems.length >= subitemsLimit;
+
+        if (!subitemsLimitReached) {
+            return null;
+        }
+
+        const message = Translator.trans(/*@Desc("Loading limit reached")*/ 'show_more.limit_reached', {}, 'content_tree');
+
+        return <div className="c-list-item__load-more-limit-info">{message}</div>;
     }
 
     render() {
@@ -188,6 +195,7 @@ class ListItem extends Component {
                 </div>
                 {children}
                 {this.renderLoadMoreBtn()}
+                {this.renderSubitemsLimitReachedInfo()}
             </li>
         );
     }

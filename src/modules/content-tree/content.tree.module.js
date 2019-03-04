@@ -333,6 +333,6 @@ ContentTreeModule.defaultProps = {
     preloadedLocations: [],
     rootLocationId: window.eZ.adminUiConfig.contentTree.treeRootLocationId,
     subitemsLimit: window.eZ.adminUiConfig.contentTree.childrenLoadMaxLimit,
-    subitemsLoadLimit:  window.eZ.adminUiConfig.contentTree.loadMoreLimit,
-    treeMaxDepth:  window.eZ.adminUiConfig.contentTree.treeMaxDepth,
+    subitemsLoadLimit: window.eZ.adminUiConfig.contentTree.loadMoreLimit,
+    treeMaxDepth: window.eZ.adminUiConfig.contentTree.treeMaxDepth,
 };

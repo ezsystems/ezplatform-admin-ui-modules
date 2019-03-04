@@ -90,27 +90,17 @@ $list-item-height: calculateRem(20px);
         .ez-icon {
             fill: $ez-color-base-dark;
         }
-
-        &--loading-limit-reached {
-            color: $ez-secondary-ground;
-            font-style: italic;
-
-            &.btn[disabled] {
-                opacity: 1;
-            }
-
-            &:focus {
-                box-shadow: 0 0 0 calculateRem(3px) rgba($ez-secondary-ground, 0.25);
-            }
-
-            &:hover {
-                color: $ez-secondary-ground;
-            }
-        }
     }
 
     &__load-more-btn-spinner {
         margin-right: calculateRem(4px);
+    }
+
+    &__load-more-limit-info {
+        margin-left: calculateRem(26px);
+        color: $ez-secondary-ground;
+        font-size: calculateRem(12px);
+        font-style: italic;
     }
 
     .c-list {
