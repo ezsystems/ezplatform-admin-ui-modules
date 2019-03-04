@@ -111,6 +111,12 @@ $list-item-height: calculateRem(20px);
         overflow: hidden;
     }
 
+    &--is-root-item {
+        > .c-list {
+            padding-left: 0;
+        }
+    }
+
     &--has-sub-items {
         > #{$list-item}__label {
             #{$list-item}__toggler {

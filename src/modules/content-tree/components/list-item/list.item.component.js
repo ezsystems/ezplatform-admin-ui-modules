@@ -87,6 +87,10 @@ class ListItem extends Component {
         return subitems.length < totalSubitemsCount;
     }
 
+    isRoot() {
+        return this.props.path.split(',').length === 1;
+    }
+
     /**
      * Renders an icon of a content type
      *
@@ -152,8 +156,32 @@ class ListItem extends Component {
         return <div className="c-list-item__load-more-limit-info">{message}</div>;
     }
 
+    renderItemLabel() {
+        if (this.isRoot()) {
+            return null;
+        }
+
+        const { totalSubitemsCount, href, name } = this.props;
+        const togglerClassName = 'c-list-item__toggler';
+        const togglerAttrs = {
+            className: togglerClassName,
+            onClick: this.toggleExpandedState,
+            hidden: !totalSubitemsCount,
+            tabIndex: -1,
+        };
+
+        return (
+            <div className="c-list-item__label">
+                <span {...togglerAttrs} />
+                <a className="c-list-item__link" href={href}>
+                    {this.renderIcon()} {name}
+                </a>
+            </div>
+        );
+    }
+
     render() {
-        const { totalSubitemsCount, children, isInvisible, selected, href, name } = this.props;
+        const { totalSubitemsCount, children, isInvisible, selected } = this.props;
         const itemClassName = 'c-list-item';
         const togglerClassName = 'c-list-item__toggler';
         const itemAttrs = { className: itemClassName };
@@ -185,14 +213,13 @@ class ListItem extends Component {
             togglerAttrs.className = `${togglerAttrs.className} ${togglerClassName}--light`;
         }
 
+        if (this.isRoot()) {
+            itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-root-item`;
+        }
+
         return (
             <li {...itemAttrs}>
-                <div className="c-list-item__label">
-                    <span {...togglerAttrs} />
-                    <a className="c-list-item__link" href={href}>
-                        {this.renderIcon()} {name}
-                    </a>
-                </div>
+                {this.renderItemLabel()}
                 {children}
                 {this.renderLoadMoreBtn()}
                 {this.renderSubitemsLimitReachedInfo()}
