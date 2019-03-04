@@ -136,20 +136,26 @@ export default class ContentTreeModule extends Component {
     }
 
     readSubtree() {
-        const { rootLocationId } = this.props;
+        const { rootLocationId, userId } = this.props;
         const savedSubtrees = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
         const subtrees = savedSubtrees ? JSON.parse(savedSubtrees) : null;
-        const savedSubtree = subtrees ? subtrees[rootLocationId] : null;
+        const userSubtrees = subtrees ? subtrees[userId] : null;
+        const savedSubtree = userSubtrees ? userSubtrees[rootLocationId] : null;
         const subtree = savedSubtree ? JSON.parse(savedSubtree) : null;
 
         return subtree;
     }
 
     saveSubtree() {
+        const { rootLocationId, userId } = this.props;
         const savedSubtreesStringified = localStorage.getItem(KEY_CONTENT_TREE_SUBTREE);
         const subtrees = savedSubtreesStringified ? JSON.parse(savedSubtreesStringified) : {};
 
-        subtrees[this.props.rootLocationId] = JSON.stringify(this.subtree);
+        if (!subtrees[userId]) {
+            subtrees[userId] = {};
+        }
+
+        subtrees[userId][rootLocationId] = JSON.stringify(this.subtree);
 
         localStorage.setItem(KEY_CONTENT_TREE_SUBTREE, JSON.stringify(subtrees));
     }
@@ -319,6 +325,7 @@ eZ.addConfig('modules.ContentTree', ContentTreeModule);
 ContentTreeModule.propTypes = {
     rootLocationId: PropTypes.number.isRequired,
     currentLocationPath: PropTypes.number.isRequired,
+    userId: PropTypes.number.isRequired,
     preloadedLocations: PropTypes.arrayOf(PropTypes.object),
     subitemsLimit: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number.isRequired,
