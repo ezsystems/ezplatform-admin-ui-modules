@@ -72,7 +72,7 @@ export default class ContentTree extends Component {
 
     render() {
         const { isResizing, containerWidth, resizedContainerWidth } = this.state;
-        const { items, loadMoreSubitems, currentLocationId, subitemsLoadLimit, afterItemToggle } = this.props;
+        const { items, loadMoreSubitems, currentLocationId, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle } = this.props;
         const width = isResizing ? resizedContainerWidth : containerWidth;
         const rootLocationSubitems = items.length ? items[0].subitems : [];
         const rootLocationPath = items.length ? '' + items[0].locationId : '';
@@ -82,7 +82,9 @@ export default class ContentTree extends Component {
             path: rootLocationPath,
             loadMoreSubitems,
             currentLocationId,
+            subitemsLimit,
             subitemsLoadLimit,
+            treeMaxDepth,
             afterItemToggle,
         };
 
@@ -106,7 +108,9 @@ ContentTree.propTypes = {
     items: PropTypes.array.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
     currentLocationId: PropTypes.number.isRequired,
+    subitemsLimit: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
+    treeMaxDepth: PropTypes.number.isRequired,
     afterItemToggle: PropTypes.func.isRequired,
     onCollapseAllItems: PropTypes.func.isRequired,
 };

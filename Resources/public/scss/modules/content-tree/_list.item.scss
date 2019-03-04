@@ -77,7 +77,6 @@ $list-item-height: calculateRem(20px);
         border-radius: calculateRem(4px);
         margin-left: calculateRem(26px);
         transition: background 0.3s $ez-admin-transition, color 0.3s $ez-admin-transition;
-        cursor: pointer;
         font-size: calculateRem(12px);
 
         &:focus {
@@ -95,6 +94,13 @@ $list-item-height: calculateRem(20px);
 
     &__load-more-btn-spinner {
         margin-right: calculateRem(4px);
+    }
+
+    &__load-more-limit-info {
+        margin-left: calculateRem(26px);
+        color: $ez-secondary-ground;
+        font-size: calculateRem(12px);
+        font-style: italic;
     }
 
     .c-list {

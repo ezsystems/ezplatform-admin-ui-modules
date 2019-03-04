@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ListItem from '../list-item/list.item.component';
 
-const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit, afterItemToggle }) => {
-    const listAttrs = { loadMoreSubitems, currentLocationId, subitemsLoadLimit, afterItemToggle };
-    const listItemAttrs = { loadMoreSubitems, afterItemToggle };
+const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle }) => {
+    const commonAttrs = { loadMoreSubitems, subitemsLoadLimit, subitemsLimit, treeMaxDepth, afterItemToggle };
+    const listAttrs = { ...commonAttrs, currentLocationId };
+    const listItemAttrs = commonAttrs;
 
     return (
         <ul className="c-list">
@@ -20,7 +21,6 @@ const List = ({ items, loadMoreSubitems, currentLocationId, path, subitemsLoadLi
                         {...listItemAttrs}
                         key={item.locationId}
                         selected={item.locationId === currentLocationId}
-                        subitemsLoadLimit={subitemsLoadLimit}
                         href={locationHref}
                         path={itemPath}>
                         {subitems.length ? <List path={itemPath} items={subitems} {...listAttrs} /> : null}
@@ -36,7 +36,9 @@ List.propTypes = {
     items: PropTypes.array.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
     currentLocationId: PropTypes.number.isRequired,
+    subitemsLimit: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
+    treeMaxDepth: PropTypes.number.isRequired,
     afterItemToggle: PropTypes.func.isRequired,
 };
 

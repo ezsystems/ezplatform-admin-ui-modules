@@ -22,6 +22,21 @@ class ListItem extends Component {
     }
 
     toggleExpandedState() {
+        const { path, treeMaxDepth } = this.props;
+        const currentDepth = path.split(',').length - 1;
+
+        if (currentDepth >= treeMaxDepth) {
+            const notificationMessage = Translator.trans(
+                /*@Desc("Cannot load subitems for given location due to performance limits. You reached max tree depth.")*/ 'expand_item.limit.message',
+                {},
+                'content_tree'
+            );
+
+            window.eZ.helpers.notification.showWarningNotification(notificationMessage);
+
+            return;
+        }
+
         this.setState(
             (state) => ({ isExpanded: !state.isExpanded }),
             () => {
@@ -42,11 +57,14 @@ class ListItem extends Component {
     }
 
     loadMoreSubitems() {
-        if (this.state.isLoading) {
+        const { subitems, subitemsLimit } = this.props;
+        const subitemsLimitReached = subitems.length >= subitemsLimit;
+
+        if (this.state.isLoading || subitemsLimitReached) {
             return;
         }
 
-        const { subitems, path, locationId, loadMoreSubitems } = this.props;
+        const { path, locationId, subitemsLoadLimit, loadMoreSubitems } = this.props;
 
         this.setState(
             () => ({ isLoading: true }),
@@ -56,7 +74,7 @@ class ListItem extends Component {
                         path,
                         parentLocationId: locationId,
                         offset: subitems.length,
-                        limit: this.props.subitemsLoadLimit,
+                        limit: subitemsLoadLimit,
                     },
                     this.cancelLoadingState
                 )
@@ -97,17 +115,18 @@ class ListItem extends Component {
     }
 
     renderLoadMoreBtn() {
-        const { subitems } = this.props;
+        const { subitems, subitemsLimit } = this.props;
+        const subitemsLimitReached = subitems.length >= subitemsLimit;
 
-        if (!this.state.isExpanded || !this.checkCanLoadMore() || !subitems.length) {
+        if (!this.state.isExpanded || subitemsLimitReached || !this.checkCanLoadMore() || !subitems.length) {
             return null;
         }
 
         const { isLoading } = this.state;
-        let loadingSpinner = null;
         const showMoreLabel = Translator.trans(/*@Desc("Show more")*/ 'show_more', {}, 'content_tree');
         const loadingMoreLabel = Translator.trans(/*@Desc("Loading more...")*/ 'loading_more', {}, 'content_tree');
         const btnLabel = isLoading ? loadingMoreLabel : showMoreLabel;
+        let loadingSpinner = null;
 
         if (isLoading) {
             loadingSpinner = <Icon name="spinner" extraClasses="ez-spin ez-icon--small c-list-item__load-more-btn-spinner" />;
@@ -118,6 +137,19 @@ class ListItem extends Component {
                 {loadingSpinner} {btnLabel}
             </button>
         );
+    }
+
+    renderSubitemsLimitReachedInfo() {
+        const { subitems, subitemsLimit } = this.props;
+        const subitemsLimitReached = subitems.length >= subitemsLimit;
+
+        if (!subitemsLimitReached) {
+            return null;
+        }
+
+        const message = Translator.trans(/*@Desc("Loading limit reached")*/ 'show_more.limit_reached', {}, 'content_tree');
+
+        return <div className="c-list-item__load-more-limit-info">{message}</div>;
     }
 
     render() {
@@ -163,6 +195,7 @@ class ListItem extends Component {
                 </div>
                 {children}
                 {this.renderLoadMoreBtn()}
+                {this.renderSubitemsLimitReachedInfo()}
             </li>
         );
     }
@@ -182,7 +215,9 @@ ListItem.propTypes = {
     name: PropTypes.string.isRequired,
     isInvisible: PropTypes.bool.isRequired,
     loadMoreSubitems: PropTypes.func.isRequired,
+    subitemsLimit: PropTypes.number.isRequired,
     subitemsLoadLimit: PropTypes.number,
+    treeMaxDepth: PropTypes.number.isRequired,
     afterItemToggle: PropTypes.func.isRequired,
 };
 
