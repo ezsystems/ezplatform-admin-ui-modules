@@ -21,6 +21,14 @@
         padding-top: calculateRem(8px);
     }
 
+    &__loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+    }
+
     &__collapse-all-btn {
         width: 100%;
         position: absolute;
