@@ -12,9 +12,10 @@ const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
  * Loads preselected location data
  *
  * @function loadPreselectedLocationData
- * @param {String} startingLocationId
- * @param {String} locationId
- * @param {Number} limit
+ * @param {Object} params
+ * @param {String} params.startingLocationId
+ * @param {String} params.locationId
+ * @param {Number} [params.limit]
  * @param {Function} callback
  */
 export const loadPreselectedLocationData = ({ startingLocationId, locationId, limit = QUERY_LIMIT }, callback) => {
