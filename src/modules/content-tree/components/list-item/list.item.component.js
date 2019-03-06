@@ -143,7 +143,7 @@ class ListItem extends Component {
         const { subitems, subitemsLimit } = this.props;
         const subitemsLimitReached = subitems.length >= subitemsLimit;
 
-        if (!subitemsLimitReached) {
+        if (!this.state.isExpanded || !subitemsLimitReached) {
             return null;
         }
 
