@@ -30,7 +30,7 @@ const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 const CONTENT_META_PREVIEW_BASE_STATE = {
     contentMeta: null,
     isPreviewMetaReady: false,
-    isLocationAllowed: true,
+    isLocationAllowed: false,
 };
 
 export default class UniversalDiscoveryModule extends Component {
