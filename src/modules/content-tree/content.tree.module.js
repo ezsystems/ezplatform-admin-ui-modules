@@ -41,7 +41,9 @@ export default class ContentTreeModule extends Component {
 
     setInitialItemsState(location) {
         this.items = [location];
-
+        this.subtree = this.generateSubtree(this.items);
+            
+        this.saveSubtree();
         this.forceUpdate();
     }
 
@@ -184,8 +186,9 @@ export default class ContentTreeModule extends Component {
         }
 
         const pathStartingAfterRootLocation = path.slice(rootLocationIdIndex - path.length + 1);
+        const pathWithoutLeaf = pathStartingAfterRootLocation.slice(0, pathStartingAfterRootLocation.length - 1);
 
-        this.expandPathInSubtree(this.subtree[0], pathStartingAfterRootLocation);
+        this.expandPathInSubtree(this.subtree[0], pathWithoutLeaf);
     }
 
     expandPathInSubtree(subtree, path) {
