@@ -246,10 +246,11 @@ export default class ContentTreeModule extends Component {
         const { subitemsLoadLimit, subitemsLimit } = this.props;
 
         for (const item of items) {
-            const isLeaf = !item.subitems.length;
+            const subitemsCount = item.subitems.length;
+            const isLeaf = !subitemsCount;
 
             if (!isLeaf || isRoot) {
-                const limit = Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit;
+                const limit = subitemsCount ? Math.ceil(subitemsCount / subitemsLoadLimit) * subitemsLoadLimit : subitemsLoadLimit;
 
                 itemsWithoutLeafs.push({
                     '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
