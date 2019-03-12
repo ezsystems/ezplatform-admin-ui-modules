@@ -28,7 +28,7 @@ export default class ContentTreeModule extends Component {
 
     componentDidMount() {
         if (this.items.length) {
-            this.subtree = this.generateSubtree(this.items);
+            this.subtree = this.generateSubtree(this.items, true);
             this.saveSubtree();
 
             return;
@@ -41,7 +41,7 @@ export default class ContentTreeModule extends Component {
 
     setInitialItemsState(location) {
         this.items = [location];
-        this.subtree = this.generateSubtree(this.items);
+        this.subtree = this.generateSubtree(this.items, true);
             
         this.saveSubtree();
         this.forceUpdate();
@@ -241,14 +241,14 @@ export default class ContentTreeModule extends Component {
         ];
     }
 
-    generateSubtree(items) {
+    generateSubtree(items, isRoot) {
         const itemsWithoutLeafs = [];
         const { subitemsLoadLimit, subitemsLimit } = this.props;
 
         for (const item of items) {
             const isLeaf = !item.subitems.length;
 
-            if (!isLeaf) {
+            if (!isLeaf || isRoot) {
                 const limit = Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit;
 
                 itemsWithoutLeafs.push({
@@ -256,7 +256,7 @@ export default class ContentTreeModule extends Component {
                     locationId: item.locationId,
                     limit: Math.min(subitemsLimit, limit),
                     offset: 0,
-                    children: this.generateSubtree(item.subitems),
+                    children: this.generateSubtree(item.subitems, false),
                 });
             }
         }
