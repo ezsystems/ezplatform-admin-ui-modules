@@ -15,6 +15,7 @@ export default class ContentTreeModule extends Component {
         this.handleCollapseAllItems = this.handleCollapseAllItems.bind(this);
         this.limitSubitemsInSubtree = this.limitSubitemsInSubtree.bind(this);
 
+        try {
         const savedSubtree = this.readSubtree();
 
         this.items = props.preloadedLocations;
@@ -24,11 +25,16 @@ export default class ContentTreeModule extends Component {
         this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
         this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
         this.saveSubtree();
+        } catch(error) {
+            this.items = [];
+            this.subtree = this.generateInitialSubtree();
+            this.saveSubtree();
+        }
     }
 
     componentDidMount() {
         if (this.items.length) {
-            this.subtree = this.generateSubtree(this.items);
+            this.subtree = this.generateSubtree(this.items, true);
             this.saveSubtree();
 
             return;
@@ -41,7 +47,7 @@ export default class ContentTreeModule extends Component {
 
     setInitialItemsState(location) {
         this.items = [location];
-        this.subtree = this.generateSubtree(this.items);
+        this.subtree = this.generateSubtree(this.items, true);
             
         this.saveSubtree();
         this.forceUpdate();
@@ -241,22 +247,23 @@ export default class ContentTreeModule extends Component {
         ];
     }
 
-    generateSubtree(items) {
+    generateSubtree(items, isRoot) {
         const itemsWithoutLeafs = [];
         const { subitemsLoadLimit, subitemsLimit } = this.props;
 
         for (const item of items) {
-            const isLeaf = !item.subitems.length;
+            const subitemsCount = item.subitems.length;
+            const isLeaf = !subitemsCount;
 
-            if (!isLeaf) {
-                const limit = Math.ceil(item.subitems.length / subitemsLoadLimit) * subitemsLoadLimit;
+            if (!isLeaf || isRoot) {
+                const limit = subitemsCount ? Math.ceil(subitemsCount / subitemsLoadLimit) * subitemsLoadLimit : subitemsLoadLimit;
 
                 itemsWithoutLeafs.push({
                     '_media-type': 'application/vnd.ez.api.ContentTreeLoadSubtreeRequestNode',
                     locationId: item.locationId,
                     limit: Math.min(subitemsLimit, limit),
                     offset: 0,
-                    children: this.generateSubtree(item.subitems),
+                    children: this.generateSubtree(item.subitems, false),
                 });
             }
         }
