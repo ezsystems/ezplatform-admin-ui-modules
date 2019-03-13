@@ -15,6 +15,7 @@ export default class ContentTreeModule extends Component {
         this.handleCollapseAllItems = this.handleCollapseAllItems.bind(this);
         this.limitSubitemsInSubtree = this.limitSubitemsInSubtree.bind(this);
 
+        try {
         const savedSubtree = this.readSubtree();
 
         this.items = props.preloadedLocations;
@@ -24,6 +25,11 @@ export default class ContentTreeModule extends Component {
         this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
         this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
         this.saveSubtree();
+        } catch(error) {
+            this.items = [];
+            this.subtree = this.generateInitialSubtree();
+            this.saveSubtree();
+        }
     }
 
     componentDidMount() {
