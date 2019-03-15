@@ -195,9 +195,9 @@ export const findLocationsByParentLocationId = (
  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
  * @param {String} query
  * @param {Function} callback
- * @param {Integer} limit
+ * @param {Number} limit
  */
-export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit) => {
+export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit = QUERY_LIMIT) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-search-query-${query}`,
