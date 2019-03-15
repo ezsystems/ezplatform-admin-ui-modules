@@ -176,9 +176,9 @@ export default class ContentMetaPreviewComponent extends Component {
         );
 
         return (
-            <div className="c-meta-preview__wrapper">
+            <div className="c-meta-preview__wrapper" style={{ maxHeight: `${maxHeight}px` }}>
                 <h1 className="c-meta-preview__title">{title}</h1>
-                <div className="c-meta-preview" style={{ maxHeight: `${maxHeight - 64}px` }}>
+                <div className="c-meta-preview">
                     <div className="c-meta-preview__top-wrapper">
                         <div className="c-meta-preview__content-type">
                             {this.renderIcon()} {contentTypeName}

@@ -1,4 +1,5 @@
 .c-meta-preview {
+    flex: 1 1 auto;
     background: #fff;
     height: 100%;
     overflow-y: auto;
@@ -7,7 +8,9 @@
 }
 
 .c-meta-preview__wrapper {
-    height: calc(100% - 32px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .c-meta-preview__title {
