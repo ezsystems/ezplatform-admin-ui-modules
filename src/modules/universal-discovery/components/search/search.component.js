@@ -39,7 +39,7 @@ export default class SearchComponent extends Component {
             () => ({ isSearching: true }),
             () => {
                 const promise = new Promise((resolve) =>
-                    this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve)
+                    this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve, this.props.searchResultsLimit)
                 );
 
                 promise
@@ -179,6 +179,7 @@ SearchComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
     searchResultsPerPage: PropTypes.number.isRequired,
+    searchResultsLimit: PropTypes.number.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,

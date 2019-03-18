@@ -10,7 +10,7 @@ const ENDPOINT_BULK = '/api/ezp/v2/bulk';
 export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
     const requestBodyOperations = getBulkMoveRequestOperations(locations, newLocationHref);
 
-    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, 201, callback));
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
 
 export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
@@ -33,12 +33,12 @@ const getBulkMoveRequestOperations = (locations, destination) => {
     return operations;
 };
 
-const processBulkResponse = (locations, successCode, callback, response) => {
+const processBulkResponse = (locations, callback, response) => {
     const { operations } = response.BulkOperationResponse;
     const locationsMatches = Object.entries(operations).reduce(
         (locationsMatches, [locationId, response]) => {
             const respectiveItem = locations.find((location) => location.id === parseInt(locationId, 10));
-            const isSuccess = response.statusCode === successCode;
+            const isSuccess = 200 <= response.statusCode && response.statusCode <= 299;
 
             if (isSuccess) {
                 locationsMatches.success.push(respectiveItem);
