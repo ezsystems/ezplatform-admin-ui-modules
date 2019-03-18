@@ -140,7 +140,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const bookmarkIconId = isBookmarked ? 'bookmark-active' : 'bookmark';
         const action = isBookmarked ? 'remove' : 'add';
         const iconHref = `/bundles/ezplatformadminui/img/ez-icons.svg#${bookmarkIconId}`;
-        const wrapperClassName = `ez-add-to-bookmarks__icon-wrapper ez-add-to-bookmarks__icon-wrapper--${action}`;
+        const wrapperClassName = `c-meta-preview__content-bookmark c-meta-preview__content-bookmark--${action}`;
 
         return (
             <div className={wrapperClassName} onClick={this.toggleBookmark}>
@@ -183,7 +183,7 @@ export default class ContentMetaPreviewComponent extends Component {
                         <div className="c-meta-preview__content-type">
                             {this.renderIcon()} {contentTypeName}
                         </div>
-                        <div className="c-meta-preview__content-bookmark">{this.renderBookmarkIcon()}</div>
+                        {this.renderBookmarkIcon()}
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
                         <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>

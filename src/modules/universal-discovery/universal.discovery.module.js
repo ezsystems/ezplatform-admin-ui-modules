@@ -684,7 +684,7 @@ export default class UniversalDiscoveryModule extends Component {
                     restInfo={restInfo}
                     contentTypesMap={contentTypesMap}
                     languages={languages}
-                    maxHeight={maxHeight}
+                    maxHeight={maxHeight - 32}
                     activeTab={activeTab}
                     ready={isPreviewMetaReady}
                 />
