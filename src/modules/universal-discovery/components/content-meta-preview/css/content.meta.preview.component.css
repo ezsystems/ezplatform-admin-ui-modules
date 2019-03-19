@@ -1,13 +1,16 @@
 .c-meta-preview {
+    flex: 1 1 auto;
     background: #fff;
     height: 100%;
     overflow-y: auto;
-    padding: 10px;
+    padding: 8px 10px 10px 10px;
     border-radius: 4px;
 }
 
 .c-meta-preview__wrapper {
-    height: calc(100% - 32px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .c-meta-preview__title {
@@ -27,7 +30,7 @@
 }
 
 .c-meta-preview__content-type {
-    margin: 0 auto 4px;
+    margin: 0 auto 6px;
     font-size: 15px;
     color: #515151;
     line-height: 20px;
@@ -92,28 +95,33 @@
 
 .c-meta-preview__top-wrapper {
     width: 190px;
-    margin: auto;
     display: flex;
+    align-items: flex-end;
+    position: relative;
+    margin: auto;
 }
 
 .c-meta-preview__content-bookmark {
     flex: 0 0 32px;
-    height: 30px;
-}
-
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper {
-    padding: 0;
+    height: 32px;
+    position: relative;
+    transition: all 0.25s ease-in;
     cursor: pointer;
+    margin-bottom: 2px;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add::after,
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove::after {
+.c-meta-preview__content-bookmark .ez-icon {
+    position: absolute;
+    top: 3px;
+    left: 4px;
+}
+
+.c-meta-preview__content-bookmark--add::before,
+.c-meta-preview__content-bookmark--remove::before {
     content: '';
     display: block;
     width: 32px;
     height: 32px;
-    margin-top: -33px;
-    margin-left: -4px;
     border-radius: 50%;
 
     animation-direction: normal;
@@ -121,21 +129,21 @@
     animation-play-state: running;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add::after {
+.c-meta-preview__content-bookmark--add::before {
     background-color: transparent;
     animation: background-to-transparent 0.25s ease-in;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove::after {
+.c-meta-preview__content-bookmark--remove::before {
     background-color: #f3f3f3;
     animation: background-to-base 0.25s ease-in;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--remove [class^='ez-icon'] {
+.c-meta-preview__content-bookmark--remove [class^='ez-icon'] {
     fill: #106d95;
 }
 
-.c-meta-preview__content-bookmark .ez-add-to-bookmarks__icon-wrapper--add [class^='ez-icon'] {
+.c-meta-preview__content-bookmark--add [class^='ez-icon'] {
     fill: #106d95;
 }
 
