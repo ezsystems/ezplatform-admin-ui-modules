@@ -7,7 +7,6 @@
     flex-wrap: nowrap;
     height: 100%;
     overflow: auto;
-    border-radius: 4px;
 }
 
 .c-finder__branches .c-finder-tree-branch + .c-finder-tree-branch {
