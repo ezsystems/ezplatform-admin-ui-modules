@@ -2,11 +2,13 @@
     background: $ez-white;
     height: 100%;
     overflow-y: auto;
-    padding: calculateRem(10px);
+    padding: calculateRem(8px) calculateRem(10px) calculateRem(10px) calculateRem(10px);
     border-radius: calculateRem(4px);
 
     &__wrapper {
-        height: calc(100% - #{calculateRem(32px)});
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     &__title {
@@ -26,7 +28,7 @@
     }
 
     &__content-type {
-        margin: 0 auto calculateRem(4px);
+        margin: 0 auto calculateRem(6px);
         font-size: calculateRem(15px);
         color: $ez-color-base-dark;
         line-height: calculateRem(20px);
@@ -91,57 +93,47 @@
 
     &__top-wrapper {
         width: calculateRem(190px);
-        margin: auto;
         display: flex;
+        align-items: flex-end;
+        position: relative;
+        margin: auto;
     }
 
     &__content-bookmark {
         flex: 0 0 calculateRem(32px);
-        height: calculateRem(30px);
+        height: calculateRem(32px);
+        position: relative;
+        transition: all 0.25s ease-in;
+        cursor: pointer;
+        margin-bottom: calculateRem(2px);
 
-        .ez-add-to-bookmarks__icon-wrapper {
-            padding: 0;
-            cursor: pointer;
+        &--add:after,
+        &--remove:after {
+            content: '';
+            display: block;
+            width: calculateRem(32px);
+            height: calculateRem(32px);
+            border-radius: 50%;
 
-            &--add,
-            &--remove {
-                &:hover,
-                &:focus {
-                    .ez-icon {
-                        fill: $ez-color-secondary-hover;
-                    }
-                }
-            }
+            animation-direction: normal;
+            animation-iteration-count: 1;
+            animation-play-state: running;
+        }
 
-            &--add:after,
-            &--remove:after {
-                content: '';
-                display: block;
-                width: calculateRem(32px);
-                height: calculateRem(32px);
-                margin-top: calculateRem(-33px);
-                margin-left: calculateRem(-4px);
-                border-radius: 50%;
+        &--add:after {
+            background-color: transparent;
+            animation: background-to-transparent 0.3s $ez-admin-transition;
+        }
 
-                animation-direction: normal;
-                animation-iteration-count: 1;
-                animation-play-state: running;
-            }
+        &--remove:after {
+            background-color: $ez-ground-base;
+            animation: background-to-base 0.3s $ez-admin-transition;
+        }
 
-            &--add:after {
-                background-color: transparent;
-                animation: background-to-transparent 0.3s $ez-admin-transition;
-            }
-
-            &--remove:after {
-                background-color: $ez-ground-base;
-                animation: background-to-base 0.3s $ez-admin-transition;
-            }
-
-            .ez-icon--secondary {
-                width: calculateRem(24px);
-                height: calculateRem(24px);
-            }
+        .ez-icon {
+            position: absolute;
+            top: 3px;
+            left: 4px;
         }
     }
 }
