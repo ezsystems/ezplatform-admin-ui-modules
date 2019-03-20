@@ -382,7 +382,7 @@ export default class FinderComponent extends Component {
         const { locationsMap } = this.state;
 
         return (
-            <div className="c-finder" style={{ maxHeight: `${this.props.maxHeight}px` }}>
+            <div className="c-finder">
                 <div className="c-finder__branches" ref={this.setBranchContainerRef}>
                     {activeLocations.map((location, index) => {
                         const locationId = location ? location.id : this.props.startingLocationId;
