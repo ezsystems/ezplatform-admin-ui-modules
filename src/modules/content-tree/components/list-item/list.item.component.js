@@ -157,7 +157,7 @@ class ListItem extends Component {
             return null;
         }
 
-        const { totalSubitemsCount, href, name } = this.props;
+        const { totalSubitemsCount, href, name, selected } = this.props;
         const togglerClassName = 'c-list-item__toggler';
         const togglerAttrs = {
             className: togglerClassName,
@@ -165,6 +165,10 @@ class ListItem extends Component {
             hidden: !totalSubitemsCount,
             tabIndex: -1,
         };
+
+        if (selected) {
+            togglerAttrs.className = `${togglerAttrs.className} ${togglerClassName}--light`;
+        }
 
         return (
             <div className="c-list-item__label">
@@ -179,14 +183,7 @@ class ListItem extends Component {
     render() {
         const { totalSubitemsCount, children, isInvisible, selected } = this.props;
         const itemClassName = 'c-list-item';
-        const togglerClassName = 'c-list-item__toggler';
         const itemAttrs = { className: itemClassName };
-        const togglerAttrs = {
-            className: togglerClassName,
-            onClick: this.toggleExpandedState,
-            hidden: !totalSubitemsCount,
-            tabIndex: -1,
-        };
 
         if (totalSubitemsCount) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--has-sub-items`;
@@ -206,7 +203,6 @@ class ListItem extends Component {
 
         if (selected) {
             itemAttrs.className = `${itemAttrs.className} ${itemClassName}--is-selected`;
-            togglerAttrs.className = `${togglerAttrs.className} ${togglerClassName}--light`;
         }
 
         if (this.props.isRootItem) {
