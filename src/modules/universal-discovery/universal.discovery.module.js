@@ -607,10 +607,8 @@ export default class UniversalDiscoveryModule extends Component {
         const isAlreadySelected = selectedContent.find((item) => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
         const isOverLimit = !!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit;
         const contentTypeInfo = contentTypesMap[data.ContentInfo.Content.ContentType._href];
-        const isAllowedContentType =
-            !this.props.cotfAllowedContentTypes.length || this.props.cotfAllowedContentTypes.includes(contentTypeInfo.identifier);
 
-        if (isAlreadySelected || isOverLimit || !isAllowedContentType) {
+        if (isAlreadySelected || isOverLimit) {
             return callback(false);
         }
 
@@ -678,7 +676,6 @@ export default class UniversalDiscoveryModule extends Component {
                 <ContentMetaPreviewComponent
                     data={contentMeta}
                     isBookmarked={isContentBookmarked}
-                    canSelectContent={this.canSelectContent}
                     toggleBookmark={this.toggleBookmark}
                     loadContentInfo={loadContentInfo}
                     restInfo={restInfo}
