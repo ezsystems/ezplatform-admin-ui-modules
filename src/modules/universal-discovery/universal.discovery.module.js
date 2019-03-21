@@ -961,7 +961,9 @@ export default class UniversalDiscoveryModule extends Component {
      * @param {Object} response
      */
     updatePermissionsState(response) {
-        this.setState(() => ({ hasPermission: response.access }));
+        if (this.state.hasPermission !== response.access) {
+            this.setState(() => ({ hasPermission: response.access }));
+        }
     }
 
     /**
