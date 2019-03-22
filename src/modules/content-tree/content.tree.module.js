@@ -14,6 +14,7 @@ export default class ContentTreeModule extends Component {
         this.updateSubtreeAfterItemToggle = this.updateSubtreeAfterItemToggle.bind(this);
         this.handleCollapseAllItems = this.handleCollapseAllItems.bind(this);
         this.limitSubitemsInSubtree = this.limitSubitemsInSubtree.bind(this);
+        this.refreshContentTree = this.refreshContentTree.bind(this);
 
         try {
         const savedSubtree = this.readSubtree();
@@ -33,6 +34,8 @@ export default class ContentTreeModule extends Component {
     }
 
     componentDidMount() {
+        document.body.addEventListener('ez-content-tree-refresh', this.refreshContentTree, false);
+
         if (this.items.length) {
             this.subtree = this.generateSubtree(this.items, true);
             this.saveSubtree();
@@ -61,6 +64,15 @@ export default class ContentTreeModule extends Component {
             limit,
             offset
         );
+    }
+
+    refreshContentTree() {
+        this.items = [];
+        this.forceUpdate();
+
+        loadSubtree(this.props.restInfo, this.subtree, (loadedSubtree) => {
+            this.setInitialItemsState(loadedSubtree[0]);
+        });
     }
 
     updateLocationsStateAfterLoadingMoreItems(path, successCallback, location) {
