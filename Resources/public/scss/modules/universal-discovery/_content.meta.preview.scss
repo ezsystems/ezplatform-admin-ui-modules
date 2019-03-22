@@ -107,8 +107,8 @@
         cursor: pointer;
         margin-bottom: calculateRem(2px);
 
-        &--add:after,
-        &--remove:after {
+        &--add:before,
+        &--remove:before {
             content: '';
             display: block;
             width: calculateRem(32px);
@@ -120,12 +120,12 @@
             animation-play-state: running;
         }
 
-        &--add:after {
+        &--add:before {
             background-color: transparent;
             animation: background-to-transparent 0.3s $ez-admin-transition;
         }
 
-        &--remove:after {
+        &--remove:before {
             background-color: $ez-ground-base;
             animation: background-to-base 0.3s $ez-admin-transition;
         }
