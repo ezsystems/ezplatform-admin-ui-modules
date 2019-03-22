@@ -5,10 +5,10 @@
 .c-content-table__title {
     font-size: 17px;
     border-radius: 4px 4px 0 0;
-    background-color: #445A64;
+    background-color: #445a64;
     color: #fff;
     line-height: 50px;
-    padding: 0 16px
+    padding: 0 16px;
 }
 
 .c-content-table__list-headers,
@@ -17,7 +17,7 @@
     flex-wrap: nowrap;
 }
 
-[class*="c-content-table__list-header--"] {
+[class*='c-content-table__list-header--'] {
     padding: 8px 16px;
     font-weight: 700;
     font-size: 15px;
@@ -45,4 +45,10 @@
     min-width: 50px;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.c-content-table__no-items {
+    background: white;
+    font-size: 14px;
+    padding: 11px 22px;
 }

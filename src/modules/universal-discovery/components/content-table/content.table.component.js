@@ -82,6 +82,16 @@ export default class ContentTableComponent extends Component {
         this.setState(() => ({ activePage }));
     }
 
+    renderNoItemsMessage() {
+        const { count, noItemsMessage } = this.props;
+
+        if (count || !noItemsMessage) {
+            return null;
+        }
+
+        return <div className="c-content-table__no-items">{noItemsMessage}</div>;
+    }
+
     /**
      * Renders single item
      *
@@ -185,9 +195,9 @@ export default class ContentTableComponent extends Component {
     }
 
     render() {
-        const { title, count } = this.props;
+        const { title, count, noItemsMessage } = this.props;
 
-        if (!count) {
+        if (!count && !noItemsMessage) {
             return null;
         }
 
@@ -196,6 +206,7 @@ export default class ContentTableComponent extends Component {
                 <div className="c-content-table__title">
                     {title} ({count})
                 </div>
+                {this.renderNoItemsMessage()}
                 {this.renderHeader()}
                 <div className="c-content-table__list">{this.renderPage()}</div>
                 {this.renderPagination()}

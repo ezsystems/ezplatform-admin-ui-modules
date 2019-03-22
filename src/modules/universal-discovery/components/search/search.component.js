@@ -10,7 +10,8 @@ export default class SearchComponent extends Component {
         super(props);
 
         this.state = {
-            items: [],
+            items: null,
+            lastSearchText: null,
             isSearching: false,
             submitDisabled: true,
         };
@@ -37,11 +38,13 @@ export default class SearchComponent extends Component {
             return;
         }
 
+        const searchText = this._refSearchInput.value;
+
         this.setState(
-            () => ({ isSearching: true }),
+            () => ({ isSearching: true, lastSearchText: searchText }),
             () => {
                 const promise = new Promise((resolve) =>
-                    this.props.findContentBySearchQuery(this.props.restInfo, this._refSearchInput.value, resolve, this.props.searchResultsLimit)
+                    this.props.findContentBySearchQuery(this.props.restInfo, searchText, resolve, this.props.searchResultsLimit)
                 );
 
                 promise
@@ -130,20 +133,93 @@ export default class SearchComponent extends Component {
         this._refSearchInput = ref;
     }
 
-    render() {
+    renderSearchTips() {
+        const { items } = this.state;
+
+        if (items === null || items.length) {
+            return null;
+        }
+
+        const searchTipsTitle = Translator.trans(/*@Desc("Some helpful search tips:")*/ 'search.tips.headline', {}, 'search');
+        const searchTipCheckSpelling = Translator.trans(
+            /*@Desc("Check spelling of keywords.")*/ 'search.tips.check_spelling',
+            {},
+            'search'
+        );
+        const searchTipDifferentKeywords = Translator.trans(
+            /*@Desc("Try different keywords.")*/ 'search.tips.different_keywords',
+            {},
+            'search'
+        );
+        const searchTipMoreGeneralKeywords = Translator.trans(
+            /*@Desc("Try more general keywords.")*/ 'search.tips.more_general_keywords',
+            {},
+            'search'
+        );
+        const searchTipFewerKeywords = Translator.trans(
+            /*@Desc("Try fewer keywords. Reducing keywords result in more matches.")*/ 'search.tips.fewer_keywords',
+            {},
+            'search'
+        );
+
+        return (
+            <div className="c-search__search-tips">
+                <h6>{searchTipsTitle}</h6>
+                <ul>
+                    <li>{searchTipCheckSpelling}</li>
+                    <li>{searchTipDifferentKeywords}</li>
+                    <li>{searchTipMoreGeneralKeywords}</li>
+                    <li>{searchTipFewerKeywords}</li>
+                </ul>
+            </div>
+        );
+    }
+
+    renderResultsTable() {
+        if (this.state.items === null) {
+            return null;
+        }
+
+        const { items, lastSearchText } = this.state;
         const {
             onItemSelect,
             searchResultsPerPage,
             contentTypesMap,
-            maxHeight,
             selectedContent,
             onSelectContent,
             canSelectContent,
             onItemRemove,
             multiple,
         } = this.props;
-        const title = Translator.trans(/*@Desc("Search")*/ 'search.title', {}, 'universal_discovery_widget');
         const tableTitle = Translator.trans(/*@Desc("Search results")*/ 'search.content_table.title', {}, 'universal_discovery_widget');
+        const noItemsMessage = Translator.trans(
+            /*@Desc("Sorry, no results were found for "%query%".")*/ 'search.no_result',
+            { query: lastSearchText },
+            'search'
+        );
+
+        return (
+            <ContentTableComponent
+                items={items}
+                count={items.length}
+                requireItemsCount={this.onRequireItemsCount}
+                onItemSelect={onItemSelect}
+                perPage={searchResultsPerPage}
+                contentTypesMap={contentTypesMap}
+                title={tableTitle}
+                selectedContent={selectedContent}
+                onSelectContent={onSelectContent}
+                canSelectContent={canSelectContent}
+                onItemRemove={onItemRemove}
+                multiple={multiple}
+                noItemsMessage={noItemsMessage}
+            />
+        );
+    }
+
+    render() {
+        const { maxHeight } = this.props;
+        const title = Translator.trans(/*@Desc("Search")*/ 'search.title', {}, 'universal_discovery_widget');
 
         return (
             <div className="c-search" style={{ maxHeight: `${maxHeight - 32}px` }}>
@@ -158,20 +234,8 @@ export default class SearchComponent extends Component {
                     />
                     {this.renderSubmitBtn()}
                 </div>
-                <ContentTableComponent
-                    items={this.state.items}
-                    count={this.state.items.length}
-                    requireItemsCount={this.onRequireItemsCount}
-                    onItemSelect={onItemSelect}
-                    perPage={searchResultsPerPage}
-                    contentTypesMap={contentTypesMap}
-                    title={tableTitle}
-                    selectedContent={selectedContent}
-                    onSelectContent={onSelectContent}
-                    canSelectContent={canSelectContent}
-                    onItemRemove={onItemRemove}
-                    multiple={multiple}
-                />
+                {this.renderResultsTable()}
+                {this.renderSearchTips()}
             </div>
         );
     }
