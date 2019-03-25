@@ -438,6 +438,7 @@ export default class SubItemsModule extends Component {
     afterBulkMove(selectedItems, location, movedLocations, notMovedLocations) {
         const { totalCount } = this.state;
 
+        this.refreshContentTree();
         this.updateTotalCountState(totalCount - movedLocations.length);
         this.deselectAllItems();
         this.discardActivePageItems();
@@ -537,6 +538,7 @@ export default class SubItemsModule extends Component {
     afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {
         const { totalCount } = this.state;
 
+        this.refreshContentTree();
         this.updateTotalCountState(totalCount - deletedLocations.length);
         this.deselectAllItems();
         this.discardActivePageItems();
@@ -620,6 +622,10 @@ export default class SubItemsModule extends Component {
 
             showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
         });
+    }
+
+    refreshContentTree() {
+        document.body.dispatchEvent(new CustomEvent('ez-content-tree-refresh'));
     }
 
     renderConfirmationPopupFooter() {
