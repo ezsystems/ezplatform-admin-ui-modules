@@ -45,7 +45,8 @@
 }
 
 .c-search__submit[disabled] {
-    opacity: 0.75;
+    opacity: 0.3;
+    cursor: not-allowed;
 }
 
 .c-search__submit--loading {
@@ -76,4 +77,8 @@
 
 .c-search__submit--loading .ez-icon {
     margin-right: 0;
+}
+
+.c-search__search-tips {
+    padding-top: 48px;
 }
