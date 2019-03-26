@@ -23,11 +23,6 @@ export default class BookmarksComponent extends Component {
             onItemRemove,
             multiple,
         } = this.props;
-        const noBookmarksMessage = Translator.trans(
-            /*@Desc("No content items. Content items you bookmark will appear here.")*/ 'bookmarks_table.no_bookmarks.message',
-            {},
-            'universal_discovery_widget'
-        );
         const tableTitle = Translator.trans(/*@Desc("Bookmarks")*/ 'bookmarks_table.title', {}, 'universal_discovery_widget');
 
         return (
@@ -40,7 +35,6 @@ export default class BookmarksComponent extends Component {
                 perPage={bookmarksPerPage}
                 contentTypesMap={contentTypesMap}
                 title={tableTitle}
-                noItemsMessage={noBookmarksMessage}
                 selectedContent={selectedContent}
                 onSelectContent={onSelectContent}
                 canSelectContent={canSelectContent}

@@ -71,4 +71,8 @@
             }
         }
     }
+
+    &__search-tips {
+        padding-top: calculateRem(48px);
+    }
 }

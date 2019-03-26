@@ -22,4 +22,10 @@
         margin-top: calculateRem(20px);
         margin-bottom: calculateRem(20px);
     }
+
+    &__no-items {
+        background: white;
+        font-size: calculateRem(14px);
+        padding: calculateRem(11px) calculateRem(22px);
+    }
 }
