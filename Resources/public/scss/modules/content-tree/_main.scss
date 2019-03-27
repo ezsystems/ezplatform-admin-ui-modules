@@ -41,4 +41,10 @@
         color: $ez-color-base-light;
         cursor: pointer;
     }
+
+    &__no-items-message {
+        padding: calculateRem(10px);
+        font-size: calculateRem(20px);
+        color: $ez-color-base-light;
+    }
 }

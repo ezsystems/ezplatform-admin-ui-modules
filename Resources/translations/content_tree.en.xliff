@@ -21,6 +21,11 @@
         <target state="new">Loading more...</target>
         <note>key: loading_more</note>
       </trans-unit>
+      <trans-unit id="493d808c2fef6e72becec01dd34b5157a2fc3b51" resname="no_subitems">
+        <source>This location has no sub-items</source>
+        <target state="new">This location has no sub-items</target>
+        <note>key: no_subitems</note>
+      </trans-unit>
       <trans-unit id="2be9699b658299055002412aa53431dc89281fcf" resname="show_more">
         <source>Show more</source>
         <target state="new">Show more</target>
