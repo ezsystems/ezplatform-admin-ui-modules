@@ -7,8 +7,8 @@
     </header>
     <body>
       <trans-unit id="35e03083bfdfafc073cf343c74385bec3945b4ac" resname="bulk_delete.error.message">
-        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ placeholder }} Please contact your Administrator to obtain permissions.</source>
-        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ placeholder }} Please contact your Administrator to obtain permissions.</target>
+        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</source>
+        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
         <note>key: bulk_delete.error.message</note>
       </trans-unit>
       <trans-unit id="23c9d6861623cc0b2f5f454afa841f1e368123cc" resname="bulk_delete.error.modal.table_title">
@@ -42,8 +42,8 @@
         <note>key: bulk_delete.success.message</note>
       </trans-unit>
       <trans-unit id="364a3498e021163497d9110380736b876beb326f" resname="bulk_move.error.message">
-        <source>%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ placeholder }} Please contact your Administrator to obtain permissions.</source>
-        <target state="new">%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ placeholder }} Please contact your Administrator to obtain permissions.</target>
+        <source>%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</source>
+        <target state="new">%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
         <note>key: bulk_move.error.message</note>
       </trans-unit>
       <trans-unit id="44a971e3ea91b95b9fbbd596f54ca632ef0865d4" resname="bulk_move.error.modal.table_title">
@@ -62,8 +62,8 @@
         <note>key: bulk_move.success.link_to_location</note>
       </trans-unit>
       <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
-        <source>The selected content item(s) have been sent to {{ placeholder }}</source>
-        <target state="new">The selected content item(s) have been sent to {{ placeholder }}</target>
+        <source>The selected content item(s) have been sent to {{ locationLink }}</source>
+        <target state="new">The selected content item(s) have been sent to {{ locationLink }}</target>
         <note>key: bulk_move.success.message</note>
       </trans-unit>
       <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">
