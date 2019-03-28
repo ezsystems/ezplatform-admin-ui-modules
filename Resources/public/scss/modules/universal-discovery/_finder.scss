@@ -1,10 +1,7 @@
 .c-finder {
-    height: 100%;
-
     &__branches {
         display: flex;
         flex-wrap: nowrap;
-        height: 100%;
         overflow: auto;
 
         .c-finder-tree-branch + .c-finder-tree-branch {

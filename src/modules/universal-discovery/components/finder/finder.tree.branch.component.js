@@ -84,7 +84,6 @@ export default class FinderTreeBranchComponent extends Component {
         const items = this.props.items;
         const attrs = {
             className: 'c-finder-tree-branch',
-            style: { height: `${this.props.maxHeight}px` },
         };
 
         if (!items.length) {
