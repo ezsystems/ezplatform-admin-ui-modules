@@ -15,6 +15,7 @@
 
 .c-create-panel__second-step {
     grid-area: second-step;
+    min-width: 0;
 }
 
 .c-create-panel__step-title {
