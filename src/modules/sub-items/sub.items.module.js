@@ -455,28 +455,42 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
+                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
                 {
                     notMovedCount: notMovedLocations.length,
                     totalCount: movedLocations.length + notMovedLocations.length,
                 },
                 'sub_items'
             );
+            const rawPlaceholdersMap = {
+                moreInformationLink: Translator.trans(
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_move.error.more_info',
+                    {},
+                    'sub_items'
+                )
+            };
 
-            this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage);
+            this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap);
         }
 
         if (movedLocations.length) {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to <u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.message',
-                {
-                    locationName: location.ContentInfo.Content.Name,
-                    locationHref: this.props.generateLink(location.id),
-                },
+                /*@Desc("The selected content item(s) have been sent to {{ locationLink }}")*/ 'bulk_move.success.message',
+                {},
                 'sub_items'
             );
+            const rawPlaceholdersMap = {
+                locationLink: Translator.trans(
+                    /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.link_to_location',
+                    {
+                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
+                        locationHref: this.props.generateLink(location.id),
+                    },
+                    'sub_items'
+                ),
+            };
 
-            window.eZ.helpers.notification.showSuccessNotification(message);
+            window.eZ.helpers.notification.showSuccessNotification(message, () => {}, rawPlaceholdersMap);
         }
     }
 
@@ -554,7 +568,7 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const message = Translator.trans(
-                /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. <u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
+                /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
                 {
                     notDeletedCount: notDeletedLocations.length,
                     totalCount: deletedLocations.length + notDeletedLocations.length,
@@ -562,7 +576,15 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
 
-            this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message);
+            const rawPlaceholdersMap = {
+                moreInformationLink: Translator.trans(
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_delete.error.more_info',
+                    {},
+                    'sub_items'
+                )
+            };
+
+            this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message, rawPlaceholdersMap);
         } else {
             const message = Translator.trans(
                 /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
@@ -598,8 +620,9 @@ export default class SubItemsModule extends Component {
      * @param {Array} failedLocations
      * @param {String} modalTableTitle
      * @param {String} notificationMessage
+     * @param {Object} rawPlaceholdersMap
      */
-    handleBulkOperationFailedNotification(selectedItems, failedLocations, modalTableTitle, notificationMessage) {
+    handleBulkOperationFailedNotification(selectedItems, failedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap) {
         const { contentTypesMap } = this.state;
         const failedItemsData = failedLocations.map(({ id: locationId }) => {
             const item = selectedItems.get(locationId);
@@ -621,7 +644,7 @@ export default class SubItemsModule extends Component {
             }
 
             showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
-        });
+        }, rawPlaceholdersMap);
     }
 
     renderConfirmationPopupFooter() {
