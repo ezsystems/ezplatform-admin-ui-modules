@@ -64,10 +64,10 @@ export default class ContentTree extends Component {
     renderNoSubitemMessage() {
         const { items } = this.props;
         const rootLocation = items[0];
-        const itemsLoaded = !!rootLocation;
+        const isRootLoaded = rootLocation;
         const noSubitemsMessage = Translator.trans(/*@Desc("This location has no sub-items")*/ 'no_subitems', {}, 'content_tree');
 
-        if (!itemsLoaded || (rootLocation.subitems && rootLocation.subitems.length)) {
+        if (!isRootLoaded || (rootLocation.subitems && rootLocation.subitems.length)) {
             return;
         }
 

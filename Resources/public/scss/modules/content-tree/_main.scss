@@ -44,7 +44,8 @@
 
     &__no-items-message {
         padding: calculateRem(10px);
-        font-size: calculateRem(20px);
-        color: $ez-color-base-light;
+        font-size: calculateRem(12px);
+        font-style: italic;
+        color: $ez-color-base-dark;
     }
 }
