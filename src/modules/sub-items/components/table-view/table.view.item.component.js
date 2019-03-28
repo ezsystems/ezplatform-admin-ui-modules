@@ -154,11 +154,11 @@ export default class TableViewItemComponent extends PureComponent {
         }
 
         const { content } = this.props;
-        const { formatShortDateWithTimezone } = window.eZ.helpers.timezone;
+        const { formatShortDateTime } = window.eZ.helpers.timezone;
 
         return (
             <td className="c-table-view-item__cell c-table-view-item__cell--modified">
-                <div className="c-table-view-item__text-wrapper">{formatShortDateWithTimezone(new Date(content.lastModificationDate))}</div>
+                <div className="c-table-view-item__text-wrapper">{formatShortDateTime(new Date(content.lastModificationDate))}</div>
             </td>
         );
     }
