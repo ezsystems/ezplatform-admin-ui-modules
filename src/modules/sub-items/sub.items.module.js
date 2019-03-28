@@ -455,7 +455,7 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ placeholder }} Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
+                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
                 {
                     notMovedCount: notMovedLocations.length,
                     totalCount: movedLocations.length + notMovedLocations.length,
@@ -463,7 +463,7 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const rawPlaceholdersMap = {
-                placeholder: Translator.trans(
+                moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_move.error.more_info',
                     {},
                     'sub_items'
@@ -475,12 +475,12 @@ export default class SubItemsModule extends Component {
 
         if (movedLocations.length) {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to {{ placeholder }}")*/ 'bulk_move.success.message',
+                /*@Desc("The selected content item(s) have been sent to {{ locationLink }}")*/ 'bulk_move.success.message',
                 {},
                 'sub_items'
             );
             const rawPlaceholdersMap = {
-                placeholder: Translator.trans(
+                locationLink: Translator.trans(
                     /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.link_to_location',
                     {
                         locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
@@ -568,7 +568,7 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const message = Translator.trans(
-                /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ placeholder }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
+                /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
                 {
                     notDeletedCount: notDeletedLocations.length,
                     totalCount: deletedLocations.length + notDeletedLocations.length,
@@ -577,7 +577,7 @@ export default class SubItemsModule extends Component {
             );
 
             const rawPlaceholdersMap = {
-                placeholder: Translator.trans(
+                moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_delete.error.more_info',
                     {},
                     'sub_items'
