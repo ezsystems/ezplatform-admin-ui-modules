@@ -385,7 +385,7 @@ export default class FinderComponent extends Component {
 
         return (
             <div className="c-finder">
-                <div className="c-finder__branches" ref={this.setBranchContainerRef}>
+                <div className="c-finder__branches" style={{ height: `${this.props.maxHeight}px` }} ref={this.setBranchContainerRef}>
                     {activeLocations.map((location, index) => {
                         const locationId = location ? location.id : this.props.startingLocationId;
                         const branchActiveLocation = activeLocations[index + 1];
