@@ -602,11 +602,11 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         const { selectedContent, contentTypesMap } = this.state;
+        const { allowedContentTypes } = this.props;
         const isAlreadySelected = selectedContent.find((item) => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
         const isOverLimit = !!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit;
         const contentTypeInfo = contentTypesMap[data.ContentInfo.Content.ContentType._href];
-        const isAllowedContentType =
-            !this.props.cotfAllowedContentTypes.length || this.props.cotfAllowedContentTypes.includes(contentTypeInfo.identifier);
+        const isAllowedContentType = !allowedContentTypes.length || allowedContentTypes.includes(contentTypeInfo.identifier);
 
         if (isAlreadySelected || isOverLimit || !isAllowedContentType) {
             return callback(false);
@@ -1145,6 +1145,7 @@ UniversalDiscoveryModule.propTypes = {
     // @Deprecated - to be removed in 2.0
     cotfForcedLanguage: PropTypes.string,
 
+    allowedContentTypes: PropTypes.array,
     cotfPreselectedLanguage: PropTypes.string,
     cotfAllowedLanguages: PropTypes.array,
     cotfPreselectedContentType: PropTypes.string,
@@ -1176,6 +1177,7 @@ UniversalDiscoveryModule.defaultProps = {
     contentTypes: window.eZ.adminUiConfig.contentTypes,
     allowContainersOnly: false,
     onlyContentOnTheFly: false,
+    allowedContentTypes: [],
     cotfForcedLanguage: '',
     cotfPreselectedLanguage: '',
     cotfAllowedLanguages: [],
