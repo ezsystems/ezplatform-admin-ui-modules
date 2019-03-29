@@ -189,7 +189,7 @@ export default class SearchComponent extends Component {
         } = this.props;
         const tableTitle = Translator.trans(/*@Desc("Search results")*/ 'search.content_table.title', {}, 'universal_discovery_widget');
         const noItemsMessage = Translator.trans(
-            /*@Desc("Sorry, no results were found for "%query%".")*/ 'search.no_result',
+            /*@Desc("Sorry, no results were found for ""%query%"".")*/ 'search.no_result',
             { query: lastSearchText },
             'search'
         );
