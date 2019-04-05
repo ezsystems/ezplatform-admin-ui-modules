@@ -54,6 +54,7 @@ export default class UploadItemComponent extends Component {
             isUploaded,
             checkCanUpload,
             contentCreatePermissionsConfig,
+            currentLanguage,
         } = this.props;
 
         this.contentInfoInput = window.document.querySelector('#form_subitems_content_edit_content_info');
@@ -90,6 +91,7 @@ export default class UploadItemComponent extends Component {
         createFileStruct(data.file, {
             parentInfo,
             config: adminUiConfig,
+            languageCode: currentLanguage,
         }).then(this.initPublishFile.bind(this, adminUiConfig));
     }
 
@@ -592,8 +594,10 @@ UploadItemComponent.propTypes = {
         language: PropTypes.string.isRequired,
     }).isRequired,
     contentCreatePermissionsConfig: PropTypes.object,
+    currentLanguage: PropTypes.string,
 };
 
 UploadItemComponent.defaultProps = {
     isUploaded: false,
+    currentLanguage: '',
 };
