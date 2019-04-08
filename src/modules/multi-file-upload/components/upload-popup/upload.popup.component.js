@@ -103,9 +103,11 @@ UploadPopupModule.propTypes = {
     preventDefaultAction: PropTypes.func.isRequired,
     processUploadedFiles: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
+    currentLanguage: PropTypes.string,
 };
 
 UploadPopupModule.defaultProps = {
     visible: true,
     itemsToUpload: [],
+    currentLanguage: '',
 };

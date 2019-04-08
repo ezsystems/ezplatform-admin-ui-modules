@@ -53,6 +53,7 @@ export default class UploadItemComponent extends Component {
             isUploaded,
             checkCanUpload,
             contentCreatePermissionsConfig,
+            currentLanguage,
         } = this.props;
 
         this.contentInfoInput = window.document.querySelector('#form_subitems_content_edit_content_info');
@@ -89,6 +90,7 @@ export default class UploadItemComponent extends Component {
         createFileStruct(data.file, {
             parentInfo,
             config: adminUiConfig,
+            languageCode: currentLanguage,
         }).then(this.initPublishFile.bind(this, adminUiConfig));
     }
 
@@ -337,7 +339,7 @@ export default class UploadItemComponent extends Component {
     }
 
     /**
-     * Returns content type identifier 
+     * Returns content type identifier
      * based on Content object returned from server after upload
      *
      * @method getContentTypeIdentifier
@@ -348,7 +350,7 @@ export default class UploadItemComponent extends Component {
         const { contentTypesMap, data } = this.props;
 
         if (!data.struct || !data.struct.Content) {
-            return null
+            return null;
         }
 
         const contentTypeHref = data.struct.Content.ContentType._href;
@@ -473,8 +475,7 @@ export default class UploadItemComponent extends Component {
                 className="c-upload-list-item__action c-upload-list-item__action--abort"
                 onClick={this.abortUploading}
                 title={label}
-                tabIndex="-1"
-            >
+                tabIndex="-1">
                 <Icon name="circle-close" extraClasses="ez-icon--small-medium" />
             </div>
         );
@@ -525,8 +526,7 @@ export default class UploadItemComponent extends Component {
                 className="c-upload-list-item__action c-upload-list-item__action--edit"
                 title={label}
                 onClick={this.handleEditBtnClick}
-                tabIndex="-1"
-            >
+                tabIndex="-1">
                 <Icon name="edit" extraClasses="ez-icon--small-medium" />
             </div>
         );
@@ -554,8 +554,7 @@ export default class UploadItemComponent extends Component {
                 className="c-upload-list-item__action c-upload-list-item__action--delete"
                 onClick={this.deleteFile}
                 title={label}
-                tabIndex="-1"
-            >
+                tabIndex="-1">
                 <Icon name="trash" extraClasses="ez-icon--small-medium" />
             </div>
         );
@@ -616,8 +615,10 @@ UploadItemComponent.propTypes = {
     }).isRequired,
     contentCreatePermissionsConfig: PropTypes.object,
     contentTypesMap: PropTypes.object.isRequired,
+    currentLanguage: PropTypes.string,
 };
 
 UploadItemComponent.defaultProps = {
     isUploaded: false,
+    currentLanguage: '',
 };

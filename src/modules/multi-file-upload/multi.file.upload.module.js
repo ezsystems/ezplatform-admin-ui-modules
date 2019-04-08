@@ -266,6 +266,7 @@ MultiFileUploadModule.propTypes = {
     withUploadButton: PropTypes.bool,
     contentCreatePermissionsConfig: PropTypes.object,
     contentTypesMap: PropTypes.object.isRequired,
+    currentLanguage: PropTypes.string,
 };
 
 MultiFileUploadModule.defaultProps = {
@@ -276,4 +277,5 @@ MultiFileUploadModule.defaultProps = {
     publishFile,
     itemsToUpload: [],
     withUploadButton: true,
+    currentLanguage: '',
 };

@@ -131,7 +131,7 @@ const getContentTypeByIdentifier = ({ token, siteaccess }, identifier) => {
  * @param {Object} data file data containing File object and FileReader object
  * @returns {Promise}
  */
-const prepareStruct = ({ parentInfo, config }, data) => {
+const prepareStruct = ({ parentInfo, config, languageCode }, data) => {
     let parentLocation = `/api/ezp/v2/content/locations${parentInfo.locationPath}`;
 
     parentLocation = parentLocation.endsWith('/') ? parentLocation.slice(0, -1) : parentLocation;
@@ -153,7 +153,7 @@ const prepareStruct = ({ parentInfo, config }, data) => {
             const struct = {
                 ContentCreate: {
                     ContentType: { _href: response.ContentTypeInfoList.ContentType[0]._href },
-                    mainLanguageCode: parentInfo.language,
+                    mainLanguageCode: languageCode || parentInfo.language,
                     LocationCreate: { ParentLocation: { _href: parentLocation }, sortField: 'PATH', sortOrder: 'ASC' },
                     Section: null,
                     alwaysAvailable: true,
