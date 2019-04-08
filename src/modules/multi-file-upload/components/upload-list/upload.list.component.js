@@ -130,7 +130,7 @@ export default class UploadListComponent extends Component {
      * @returns {Element}
      */
     renderItem(item, customAttrs) {
-        const { adminUiConfig, parentInfo, contentCreatePermissionsConfig } = this.props;
+        const { adminUiConfig, parentInfo, contentCreatePermissionsConfig, currentLanguage } = this.props;
         const attrs = Object.assign(
             {
                 key: item.id,
@@ -138,6 +138,7 @@ export default class UploadListComponent extends Component {
                 adminUiConfig,
                 parentInfo,
                 contentCreatePermissionsConfig,
+                currentLanguage,
             },
             customAttrs
         );
@@ -189,8 +190,10 @@ UploadListComponent.propTypes = {
     }).isRequired,
     uploadedItemsListTitle: PropTypes.string.isRequired,
     contentCreatePermissionsConfig: PropTypes.object.isRequired,
+    currentLanguage: PropTypes.string,
 };
 
 UploadListComponent.defaultProps = {
     itemsToUpload: [],
+    currentLanguage: '',
 };
