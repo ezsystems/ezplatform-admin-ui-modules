@@ -24,7 +24,19 @@ export default class ContentCreatorComponent extends Component {
 
     handlePublish() {
         this._refIframe.contentWindow.onbeforeunload = () => {};
-        this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_content_edit_publish').click();
+        this.submitForm();
+    }
+
+    submitForm() {
+        const contentEditSubmit = this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_content_edit_publish');
+        if(contentEditSubmit) {
+            contentEditSubmit.click();
+        }
+
+        const createUserSubmit = this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_user_create_create');
+        if(createUserSubmit) {
+            createUserSubmit.click();
+        }
     }
 
     handleIframeLoad() {
