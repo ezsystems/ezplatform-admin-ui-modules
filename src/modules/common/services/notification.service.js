@@ -1,7 +1,7 @@
 export const NOTIFICATION_INFO_LABEL = 'info';
 export const NOTIFICATION_SUCCESS_LABEL = 'success';
 export const NOTIFICATION_WARNING_LABEL = 'warning';
-export const NOTIFICATION_ERROR_LABEL = 'danger';
+export const NOTIFICATION_ERROR_LABEL = 'error';
 
 /**
  * Dispatches notification event
