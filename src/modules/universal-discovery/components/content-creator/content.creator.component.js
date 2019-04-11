@@ -28,14 +28,15 @@ export default class ContentCreatorComponent extends Component {
     }
 
     submitForm() {
-        const contentEditSubmit = this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_content_edit_publish');
-        if(contentEditSubmit) {
-            contentEditSubmit.click();
-        }
+        const selectors = ['#ezrepoforms_content_edit_publish', '#ezrepoforms_user_create_create'];
 
-        const createUserSubmit = this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_user_create_create');
-        if(createUserSubmit) {
-            createUserSubmit.click();
+        for(let selector of selectors) {
+            let submit = this._refIframe.contentWindow.document.body.querySelector(selector);
+            if(submit) {
+                submit.click();
+
+                return;
+            }
         }
     }
 
