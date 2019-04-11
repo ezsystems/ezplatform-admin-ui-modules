@@ -1,9 +1,6 @@
 .c-finder-tree-leaf {
     padding: 0 calculateRem(40px) 0 0;
     cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     transition: background 0.3s $ez-admin-transition;
     position: relative;
     background: $ez-white;
@@ -91,6 +88,12 @@
         display: flex;
         height: calculateRem(16px);
         padding: 0 calculateRem(4px) 0 calculateRem(8px);
+    }
+
+    &__content-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .c-select-content-button {
