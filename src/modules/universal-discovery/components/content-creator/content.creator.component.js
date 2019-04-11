@@ -28,15 +28,10 @@ export default class ContentCreatorComponent extends Component {
     }
 
     submitForm() {
-        const selectors = ['#ezrepoforms_content_edit_publish', '#ezrepoforms_user_create_create'];
+        const submit = this._refIframe.contentWindow.document.body.querySelector('[type="submit"]');
 
-        for(let selector of selectors) {
-            let submit = this._refIframe.contentWindow.document.body.querySelector(selector);
-            if(submit) {
-                submit.click();
-
-                return;
-            }
+        if (submit) {
+            submit.click();
         }
     }
 
