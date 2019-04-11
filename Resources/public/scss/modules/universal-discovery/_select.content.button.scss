@@ -9,10 +9,13 @@
     cursor: pointer;
     outline: none;
 
-    &:not(.c-select-content-button--selected):hover,
-    &:not(.c-select-content-button--selected):focus {
-        background: $ez-ground-base-dark-hover;
+    &:hover,
+    &:focus {
         outline: none;
+
+        &:not(.c-select-content-button--selected) {
+            background: $ez-ground-base-dark-hover;
+        }
     }
 
     .ez-icon {
