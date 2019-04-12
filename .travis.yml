@@ -9,7 +9,7 @@ env:
     # For acceptance tests
     - EZPLATFORM_REPO="https://github.com/ezsystems/ezplatform.git"
     - COMPOSE_FILE="doc/docker/base-dev.yml:doc/docker/selenium.yml"
-    - BEHAT_OPTS="--profile=adminuimodules --no-interaction -vv"
+    - BEHAT_OPTS="--profile=adminui --suite=adminuimodules --no-interaction -vv"
     - SYMFONY_ENV=behat
 
 # test only master and stable branches (+ Pull requests)
