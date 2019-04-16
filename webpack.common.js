@@ -7,6 +7,7 @@ module.exports = {
         UniversalDiscovery: './src/modules/universal-discovery/universal.discovery.module.js',
         MultiFileUpload: './src/modules/multi-file-upload/multi.file.upload.module.js',
         ContentTree: './src/modules/content-tree/content.tree.module.js',
+        UDW: './src/modules/udw/udw.module.js',
     },
     output: {
         filename: '[name].module.js',
