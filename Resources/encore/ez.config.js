@@ -11,5 +11,14 @@ module.exports = (Encore) => {
         .addEntry('ezplatform-admin-ui-modules-content-tree-js', [
             path.resolve(__dirname, '../../src/modules/content-tree/content.tree.module.js'),
         ])
-        .addEntry('ezplatform-admin-ui-modules-udw-v2-js', [path.resolve(__dirname, '../../src/modules/udw/udw.module.js')]);
+        .addEntry('ezplatform-admin-ui-modules-udw-v2-js', [path.resolve(__dirname, '../../src/modules/udw/udw.module.js')])
+        .addEntry('ezplatform-admin-ui-modules-udw-v2-tab-browse-js', [
+            path.resolve(__dirname, '../../src/modules/udw/tabs/browse/browse.tab.module.js'),
+        ])
+        .addEntry('ezplatform-admin-ui-modules-udw-v2-tab-search-js', [
+            path.resolve(__dirname, '../../src/modules/udw/tabs/search/search.tab.module.js'),
+        ])
+        .addEntry('ezplatform-admin-ui-modules-udw-v2-tab-create-js', [
+            path.resolve(__dirname, '../../src/modules/udw/tabs/create/create.tab.module.js'),
+        ]);
 };

@@ -166,8 +166,10 @@ class Popup extends Component {
 
 Popup.propTypes = {
     isVisible: PropTypes.bool,
+    // to be removed in v3.0
     isLoading: PropTypes.bool,
     onClose: PropTypes.func.isRequired,
+    // to be removed in v3.0
     onConfigIframeLoad: PropTypes.func,
     children: PropTypes.element.isRequired,
     title: PropTypes.string,
