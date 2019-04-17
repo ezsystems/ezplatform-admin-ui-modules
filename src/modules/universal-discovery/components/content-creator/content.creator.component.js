@@ -24,7 +24,15 @@ export default class ContentCreatorComponent extends Component {
 
     handlePublish() {
         this._refIframe.contentWindow.onbeforeunload = () => {};
-        this._refIframe.contentWindow.document.body.querySelector('#ezrepoforms_content_edit_publish').click();
+        this.submitForm();
+    }
+
+    submitForm() {
+        const submit = this._refIframe.contentWindow.document.body.querySelector('[data-action="publish"]');
+
+        if (submit) {
+            submit.click();
+        }
     }
 
     handleIframeLoad() {
