@@ -1,26 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Popup from '../common/popup/popup.component';
 
-const UDWModule = ({ title, ...props }) => {
-    const [state, setState] = useState({ activeTab: props.tabs.find((tab) => tab.active).id });
+const UDWModule = ({ title, onClose, ...props }) => {
+    const [state, setState] = useState(() => {
+        let activeTabId = null;
+
+        if (props.tabs.length) {
+            const tab = props.tabs.find((tab) => tab.active);
+
+            activeTabId = tab ? tab.id : null;
+        }
+
+        return { activeTabId };
+    });
     const attrs = {
         isVisible: true,
         title,
+        onClose,
     };
-    const setActiveTab = ({ target }) => setState({ activeTab: target.dataset.tabId });
+    const setActiveTab = ({ target }) => setState({ activeTabId: target.dataset.tabId });
     const renderTab = (tab) => {
         const btnClassName = classNames({
             'udw-popup__tab': true,
-            'udw-popup__tab--is-active': state.activeTab === tab.id,
+            'udw-popup__tab--is-active': state.activeTabId === tab.id,
         });
         const attrs = {
             className: btnClassName,
             type: 'button',
             onClick: setActiveTab,
             'data-tab-id': tab.id,
-            key: `${tab.id}-${state.activeTab}`,
+            key: `${tab.id}-${state.activeTabId}`,
         };
 
         return <button {...attrs}>{tab.title}</button>;
@@ -28,26 +39,32 @@ const UDWModule = ({ title, ...props }) => {
     const renderPanel = (tab) => {
         const Panel = tab.panel;
 
-        if (tab.id !== state.activeTab) {
+        if (tab.id !== state.activeTabId) {
             return null;
         }
 
         return <Panel key={tab.id} {...tab.attrs} />;
     };
-
-    return (
-        <Popup {...attrs}>
-            <div className="udw-popup__tabs">{props.tabs.map(renderTab)}</div>
-            <div className="udw-popup__panels">{props.tabs.map(renderPanel)}</div>
-        </Popup>
+    const renderPopupContent = () => {
+        return (
+            <Fragment>
+                <div className="udw-popup__tabs" data-testid="udw-tabs">
+                    {props.tabs.map(renderTab)}
+                </div>
+                <div className="udw-popup__panels" data-testid="udw-panels">
+                    {props.tabs.map(renderPanel)}
+                </div>
+            </Fragment>
+        );
+    };
+    const renderNoTabsMessage = () => (
+        <div className="udw-popup__message udw-popup__message--no-tabs">Nothing to display. There are no tabs defined.</div>
     );
+
+    return <Popup {...attrs}>{props.tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>;
 };
 
 UDWModule.propTypes = {
-    restInfo: PropTypes.shape({
-        token: PropTypes.string.isRequired,
-        siteaccess: PropTypes.string.isRequired,
-    }).isRequired,
     title: PropTypes.string,
     multiple: PropTypes.bool,
     selectedItemsLimit: PropTypes.number,
@@ -64,6 +81,7 @@ UDWModule.propTypes = {
     maxHeight: PropTypes.number,
     languages: PropTypes.object,
     contentTypes: PropTypes.object,
+    onClose: PropTypes.func,
 };
 
 UDWModule.defaultProps = {
@@ -76,6 +94,7 @@ UDWModule.defaultProps = {
     maxHeight: 500,
     languages: window.eZ.adminUiConfig.languages,
     contentTypes: window.eZ.adminUiConfig.contentTypes,
+    onClose: () => {},
 };
 
 eZ.addConfig('modules.UDW', UDWModule);
