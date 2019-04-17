@@ -28,7 +28,7 @@ export default class ContentCreatorComponent extends Component {
     }
 
     submitForm() {
-        const submit = this._refIframe.contentWindow.document.body.querySelector('[data-action="submit"]');
+        const submit = this._refIframe.contentWindow.document.body.querySelector('[data-action="publish"]');
 
         if (submit) {
             submit.click();
