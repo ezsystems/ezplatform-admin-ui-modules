@@ -4,13 +4,14 @@ import classNames from 'classnames';
 import Popup from '../common/popup/popup.component';
 
 const UDWModule = ({ title, onClose, ...props }) => {
+    // useReducer maybe?
     const [state, setState] = useState(() => {
         let activeTabId = null;
 
         if (props.tabs.length) {
             const tab = props.tabs.find((tab) => tab.active);
 
-            activeTabId = tab ? tab.id : null;
+            activeTabId = tab ? tab.id : props.tabs[0].id;
         }
 
         return { activeTabId };
@@ -75,6 +76,7 @@ UDWModule.propTypes = {
             title: PropTypes.string.isRequired,
             panel: PropTypes.func.isRequired,
             attrs: PropTypes.object,
+            active: PropTypes.bool,
         })
     ),
     startingLocationId: PropTypes.number,
