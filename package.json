@@ -10,17 +10,17 @@
         "test": "jest --config ./jest.config.js"
     },
     "dependencies": {
-        "classnames": "^2.2.6",
         "react": "^16.2.0",
         "react-dom": "^16.2.0"
     },
     "devDependencies": {
         "@babel/core": "^7.4.3",
+        "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
         "@babel/preset-env": "^7.4.3",
         "@babel/preset-react": "^7.0.0",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^8.0.5",
-        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "classnames": "^2.2.6",
         "clean-webpack-plugin": "^0.1.17",
         "css-loader": "^0.28.11",
         "eslint": "^5.0.1",
