@@ -196,6 +196,20 @@ export default class TableViewItemComponent extends PureComponent {
         );
     }
 
+    renderChildrenCountCell() {
+        if (!this.props.columnsVisibility.childrenCount) {
+            return null;
+        }
+
+        const { location } = this.props;
+
+        return (
+            <td className="c-table-view-item__cell c-table-view-item__cell--child-count">
+                <div className="c-table-view-item__text-wrapper">{location.childCount}</div>
+            </td>
+        );
+    }
+
     /**
      * Renders a translation item
      *
@@ -249,6 +263,7 @@ export default class TableViewItemComponent extends PureComponent {
                 {this.renderModifiedCell()}
                 {this.renderContentTypeCell()}
                 {this.renderPriorityCell()}
+                {this.renderChildrenCountCell()}
                 {this.renderTranslationsCell()}
                 <td className="c-table-view-item__cell c-table-view-item__cell--actions">
                     <span

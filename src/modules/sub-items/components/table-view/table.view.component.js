@@ -18,6 +18,7 @@ const DEFAULT_COLUMNS_VISIBILITY = {
     contentType: true,
     priority: true,
     translations: true,
+    childrenCount:true,
 };
 const TABLE_CELL_CLASS = 'c-table-view__cell';
 const TABLE_HEAD_CLASS = `${TABLE_CELL_CLASS} ${TABLE_CELL_CLASS}--head`;
@@ -28,6 +29,7 @@ export const headerLabels = {
     contentType: Translator.trans(/*@Desc("Content type")*/ 'items_table.header.content_type', {}, 'sub_items'),
     priority: Translator.trans(/*@Desc("Priority")*/ 'items_table.header.priority', {}, 'sub_items'),
     translations: Translator.trans(/*@Desc("Translations")*/ 'items_table.header.translations', {}, 'sub_items'),
+    childrenCount: Translator.trans(/*@Desc("Children count")*/ 'items_table.header.children_count', {}, 'sub_items'),
 };
 
 export default class TableViewComponent extends Component {
@@ -191,6 +193,21 @@ export default class TableViewComponent extends Component {
         );
     }
 
+    renderChildrenCountHeader() {
+        if (!this.state.columnsVisibility.childrenCount) {
+            return null;
+        }
+
+        return (
+            <th
+                className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--children-count ${TABLE_CELL_SORT_CLASS}`}
+                onClick={this.sortByChild}
+                tabIndex="-1">
+                <span className="c-table-view__label">{headerLabels.childrenCount}</span>
+            </th>
+        );
+    }
+
     renderTranslationsHeader() {
         if (!this.state.columnsVisibility.translations) {
             return null;
@@ -234,28 +251,29 @@ export default class TableViewComponent extends Component {
 
         return (
             <thead className={headClass}>
-                <tr className="c-table-view__row">
-                    <th className={`${TABLE_HEAD_CLASS} ${cellClass}--checkbox`}>
-                        <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
-                    </th>
-                    <th className={TABLE_HEAD_CLASS} />
-                    <th
-                        className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--name ${TABLE_CELL_SORT_CLASS}`}
-                        onClick={this.sortByName}
-                        tabIndex="-1">
-                        <span className="c-table-view__label">{headerLabels.name}</span>
-                    </th>
-                    {this.renderModifiedHeader()}
-                    {this.renderContentTypeHeader()}
-                    {this.renderPriorityHeader()}
-                    {this.renderTranslationsHeader()}
-                    <th className={`${TABLE_HEAD_CLASS} ${cellClass}--actions`}>
-                        <TableViewColumnsTogglerComponent
-                            columnsVisibility={columnsVisibility}
-                            toggleColumnVisibility={this.toggleColumnVisibility}
-                        />
-                    </th>
-                </tr>
+            <tr className="c-table-view__row">
+                <th className={`${TABLE_HEAD_CLASS} ${cellClass}--checkbox`}>
+                    <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
+                </th>
+                <th className={TABLE_HEAD_CLASS} />
+                <th
+                    className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--name ${TABLE_CELL_SORT_CLASS}`}
+                    onClick={this.sortByName}
+                    tabIndex="-1">
+                    <span className="c-table-view__label">{headerLabels.name}</span>
+                </th>
+                {this.renderModifiedHeader()}
+                {this.renderContentTypeHeader()}
+                {this.renderPriorityHeader()}
+                {this.renderChildrenCountHeader()}
+                {this.renderTranslationsHeader()}
+                <th className={`${TABLE_HEAD_CLASS} ${cellClass}--actions`}>
+                    <TableViewColumnsTogglerComponent
+                        columnsVisibility={columnsVisibility}
+                        toggleColumnVisibility={this.toggleColumnVisibility}
+                    />
+                </th>
+            </tr>
             </thead>
         );
     }
