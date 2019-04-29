@@ -60,10 +60,7 @@ export const loadContentInfo = ({ token, siteaccess }, contentId, callback) => {
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
         body,
         mode: 'same-origin',
         credentials: 'same-origin',
@@ -99,10 +96,7 @@ export const loadLocation = ({ token, siteaccess, locationId, limit = QUERY_LIMI
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
         body,
         mode: 'same-origin',
         credentials: 'same-origin',
@@ -167,10 +161,7 @@ export const findLocationsByParentLocationId = (
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
         body,
         mode: 'same-origin',
         credentials: 'same-origin',
@@ -214,10 +205,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback,
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
         body,
         mode: 'same-origin',
         credentials: 'same-origin',
