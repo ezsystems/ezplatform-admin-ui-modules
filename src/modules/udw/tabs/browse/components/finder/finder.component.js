@@ -8,11 +8,9 @@ import {
     QUERY_LIMIT,
     findLocationsByParentLocationId,
 } from '../../../../services/universal.discovery.service';
+import { restInfo } from '../../../../common/rest-info/rest.info';
 
 const ROOT_LOCATION_OBJECT = null;
-const token = window.document.querySelector('meta[name="CSRF-Token"]').content;
-const siteaccess = window.document.querySelector('meta[name="SiteAccess"]').content;
-const restInfo = { token, siteaccess };
 
 export default class FinderComponent extends Component {
     constructor(props) {
@@ -345,8 +343,6 @@ export default class FinderComponent extends Component {
         const { data: childrenData, count, location } = locationData;
         const locationId = location ? location.id : this.props.startingLocationId;
 
-        console.log('renderBranch', { locationId, locationData }, this.props.startingLocationId);
-
         return (
             <FinderTreeBranchComponent
                 key={locationId}
@@ -422,4 +418,6 @@ FinderComponent.propTypes = {
 
 FinderComponent.defaultProps = {
     allowedLocations: [],
+    sortFieldMappings: window.eZ.adminUiConfig.sortFieldMappings,
+    sortOrderMappings: window.eZ.adminUiConfig.sortOrderMappings,
 };

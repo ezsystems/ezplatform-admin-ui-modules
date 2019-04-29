@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
+import LoadingSpinnerComponent from '../../../../common/loading-spinner/loading.spinner.component';
 import Icon from '../../../../../common/icon/icon';
 
 export default class FinderTreeLeafComponent extends Component {
@@ -75,7 +76,7 @@ export default class FinderTreeLeafComponent extends Component {
             return null;
         }
 
-        return <Icon name="spinner" extraClasses="ez-spin ez-icon-x2 ez-icon--small ez-icon--light c-finder-tree-leaf__loading-icon" />;
+        return <LoadingSpinnerComponent extraClasses="ez-icon--small ez-icon--light c-finder-tree-leaf__loading-icon" />;
     }
 
     renderSelectContentBtn() {

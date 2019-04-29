@@ -5,7 +5,6 @@ import Popup from '../common/popup/popup.component';
 
 const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
     // useReducer maybe?
-    console.log('udw.module.js', { props });
     const [state, setState] = useState(() => {
         let activeTabId = null;
 
@@ -50,8 +49,6 @@ const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
             ...tab.attrs,
             startingLocationId,
         };
-
-        console.log('renderPanel', { attrs });
 
         return <Panel {...attrs} />;
     };
