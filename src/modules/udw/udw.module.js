@@ -50,8 +50,6 @@ const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
             ...tab.attrs,
         };
 
-        console.log('renderPanel', { ...attrs });
-
         return <Panel {...attrs} />;
     };
     const renderPopupContent = () => {
