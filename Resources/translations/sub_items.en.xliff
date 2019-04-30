@@ -115,7 +115,7 @@
         <source>Children count</source>
         <target>Children count</target>
         <note>key: items_table.header.children_count</note>
-        </trans-unit>
+      </trans-unit>
       <trans-unit id="b8c369db292d50595af6db4380326dbdf549bc4b" resname="load_content_items.invalid_response_format.error.message">
         <source>Invalid response format</source>
         <target>Invalid response format</target>

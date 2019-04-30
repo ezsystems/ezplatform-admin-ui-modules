@@ -201,7 +201,6 @@ export default class TableViewComponent extends Component {
         return (
             <th
                 className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--children-count ${TABLE_CELL_SORT_CLASS}`}
-                onClick={this.sortByChild}
                 tabIndex="-1">
                 <span className="c-table-view__label">{headerLabels.childrenCount}</span>
             </th>
@@ -251,29 +250,29 @@ export default class TableViewComponent extends Component {
 
         return (
             <thead className={headClass}>
-            <tr className="c-table-view__row">
-                <th className={`${TABLE_HEAD_CLASS} ${cellClass}--checkbox`}>
-                    <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
-                </th>
-                <th className={TABLE_HEAD_CLASS} />
-                <th
-                    className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--name ${TABLE_CELL_SORT_CLASS}`}
-                    onClick={this.sortByName}
-                    tabIndex="-1">
-                    <span className="c-table-view__label">{headerLabels.name}</span>
-                </th>
-                {this.renderModifiedHeader()}
-                {this.renderContentTypeHeader()}
-                {this.renderPriorityHeader()}
-                {this.renderChildrenCountHeader()}
-                {this.renderTranslationsHeader()}
-                <th className={`${TABLE_HEAD_CLASS} ${cellClass}--actions`}>
-                    <TableViewColumnsTogglerComponent
-                        columnsVisibility={columnsVisibility}
-                        toggleColumnVisibility={this.toggleColumnVisibility}
-                    />
-                </th>
-            </tr>
+                <tr className="c-table-view__row">
+                    <th className={`${TABLE_HEAD_CLASS} ${cellClass}--checkbox`}>
+                        <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
+                    </th>
+                    <th className={TABLE_HEAD_CLASS} />
+                    <th
+                        className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--name ${TABLE_CELL_SORT_CLASS}`}
+                        onClick={this.sortByName}
+                        tabIndex="-1">
+                        <span className="c-table-view__label">{headerLabels.name}</span>
+                    </th>
+                    {this.renderModifiedHeader()}
+                    {this.renderContentTypeHeader()}
+                    {this.renderPriorityHeader()}
+                    {this.renderChildrenCountHeader()}
+                    {this.renderTranslationsHeader()}
+                    <th className={`${TABLE_HEAD_CLASS} ${cellClass}--actions`}>
+                        <TableViewColumnsTogglerComponent
+                            columnsVisibility={columnsVisibility}
+                            toggleColumnVisibility={this.toggleColumnVisibility}
+                        />
+                    </th>
+                </tr>
             </thead>
         );
     }
