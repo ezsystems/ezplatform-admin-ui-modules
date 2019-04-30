@@ -1,0 +1,30 @@
+$browse-tab: '.ez-browse-tab';
+#{$browse-tab} {
+    display: grid;
+    grid-template-areas:
+        'finder finder'
+        'items actions';
+    grid-gap: calculateRem(16px);
+
+    &--with-preview {
+        grid-template-areas:
+            'finder preview'
+            'items actions';
+    }
+
+    &__finder {
+        grid-area: finder;
+    }
+
+    &__preview {
+        grid-area: preview;
+    }
+
+    &__selected-items {
+        grid-area: items;
+    }
+
+    &__actions {
+        grid-area: actions;
+    }
+}
