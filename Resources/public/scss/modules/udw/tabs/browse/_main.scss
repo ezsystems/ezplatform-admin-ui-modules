@@ -4,6 +4,7 @@ $browse-tab: '.ez-browse-tab';
     grid-template-areas:
         'finder finder'
         'items actions';
+    grid-template-columns: 1fr calculateRem(230px);
     grid-gap: calculateRem(16px);
 
     &--with-preview {
