@@ -1,69 +1,34 @@
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SelectedContentItemComponent from './selected.content.item.component';
-import SelectedContentPopupComponent from './selected.content.popup.component';
+import PopupComponent from '../../../common/tooltip-popup/tooltip.popup.component';
 import { classnames } from '../../../common/classnames/classnames';
 
-export default class SelectedContentComponent extends PureComponent {
-    constructor(props) {
-        super(props);
+const SelectedContentComponent = ({ items, itemsLimit, onItemRemove }) => {
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const togglePopup = () => setIsPopupVisible(!isPopupVisible && !!items.length);
+    const hidePopup = () => setIsPopupVisible(false);
+    const getTitle = () => {
+        let title = Translator.trans(/*@Desc("Confirmed items")*/ 'select_content.confirmed_items.title', {}, 'universal_discovery_widget');
+        const total = items.length;
 
-        this.state = {
-            isPopupVisible: false,
-        };
+        if (total) {
+            title = `${title} (${total})`;
+        }
 
-        this.hidePopup = this.hidePopup.bind(this);
-        this.togglePopup = this.togglePopup.bind(this);
-        this.renderSelectedItem = this.renderSelectedItem.bind(this);
-    }
-
-    /**
-     * Toggles popup visible state
-     *
-     * @method togglePopup
-     * @memberof SelectedContentComponent
-     */
-    togglePopup() {
-        this.setState((state, props) => ({ isPopupVisible: !state.isPopupVisible && !!props.items.length }));
-    }
-
-    /**
-     * Hides popup
-     *
-     * @method hidePopup
-     * @memberof SelectedContentComponent
-     */
-    hidePopup() {
-        this.setState(() => ({ isPopupVisible: false }));
-    }
-
-    /**
-     * Renders a selected content item
-     *
-     * @method renderSelectedItem
-     * @param {Object} item
-     * @returns {Element}
-     * @memberof SelectedContentComponent
-     */
-    renderSelectedItem(item) {
-        return <SelectedContentItemComponent key={item.remoteId} data={item} onRemove={this.props.onItemRemove} />;
-    }
-
-    /**
-     * Renders a limit information label
-     *
-     * @method renderLimitLabel
-     * @returns {Element}
-     * @memberof SelectedContentComponent
-     */
-    renderLimitLabel() {
+        return title;
+    };
+    const renderSelectedItem = (item) => {
+        return <SelectedContentItemComponent key={item.remoteId} data={item} onRemove={onItemRemove} />;
+    };
+    const renderLimitLabel = () => {
         let limitLabel = '';
 
-        if (!!this.props.itemsLimit) {
+        if (!!itemsLimit) {
             const limitLabelText = Translator.trans(
                 /*@Desc("Limit %items% max")*/ 'select_content.limit.label',
                 {
-                    items: this.props.itemsLimit,
+                    items: itemsLimit,
                 },
                 'universal_discovery_widget'
             );
@@ -72,74 +37,47 @@ export default class SelectedContentComponent extends PureComponent {
         }
 
         return limitLabel;
-    }
-
-    /**
-     * Renders selected items info
-     *
-     * @method renderSelectedItems
-     * @returns {Element}
-     * @memberof SelectedContentComponent
-     */
-    renderSelectedItems() {
-        if (!this.props.items.length) {
+    };
+    const renderSelectedItems = () => {
+        if (!items.length) {
             return null;
         }
 
         return (
-            <SelectedContentPopupComponent title={this.getTitle()} visible={this.state.isPopupVisible} onClose={this.hidePopup}>
-                {this.props.items.map(this.renderSelectedItem)}
-            </SelectedContentPopupComponent>
-        );
-    }
-
-    /**
-     * Gets component title
-     *
-     * @method getTitle
-     * @returns {String}
-     * @memberof SelectedContentComponent
-     */
-    getTitle() {
-        let title = Translator.trans(/*@Desc("Confirmed items")*/ 'select_content.confirmed_items.title', {}, 'universal_discovery_widget');
-        const total = this.props.items.length;
-
-        if (total) {
-            title = `${title} (${total})`;
-        }
-
-        return title;
-    }
-
-    render() {
-        const { items } = this.props;
-        const titles = items.map((item) => item.ContentInfo.Content.Name).join(', ');
-        const anyItemSelected = !!items.length;
-        const infoCssClasses = classnames({
-            'c-selected-content__info': true,
-            'c-selected-content__info--any-item-selected': anyItemSelected,
-        });
-        const noConfirmedContentTitle = Translator.trans(
-            /*@Desc("No confirmed content yet")*/ 'select_content.no_confirmed_content.title',
-            {},
-            'universal_discovery_widget'
-        );
-
-        return (
-            <div className="c-selected-content">
-                {this.renderSelectedItems()}
-                <div className={infoCssClasses} onClick={this.togglePopup} tabIndex="-1">
-                    <strong className="c-selected-content__title">{this.getTitle()}</strong>
-                    {this.renderLimitLabel()}
-                    <div className="c-selected-content__content-names">{titles.length ? titles : noConfirmedContentTitle}</div>
-                </div>
+            <div className="c-selected-content-popup">
+                <PopupComponent title={getTitle()} visible={isPopupVisible} onClose={hidePopup}>
+                    {items.map(renderSelectedItem)}
+                </PopupComponent>
             </div>
         );
-    }
-}
+    };
+    const titles = items.map((item) => item.ContentInfo.Content.Name).join(', ');
+    const btnClassNames = classnames({
+        'c-selected-content__info': true,
+        'c-selected-content__info--any-item-selected': !!items.length,
+    });
+    const noConfirmedContentTitle = Translator.trans(
+        /*@Desc("No confirmed content yet")*/ 'select_content.no_confirmed_content.title',
+        {},
+        'universal_discovery_widget'
+    );
+
+    return (
+        <div className="c-selected-content">
+            {renderSelectedItems()}
+            <button type="button" className={btnClassNames} onClick={togglePopup}>
+                <strong className="c-selected-content__title">{getTitle()}</strong>
+                {renderLimitLabel()}
+                <span className="c-selected-content__content-names">{titles.length ? titles : noConfirmedContentTitle}</span>
+            </button>
+        </div>
+    );
+};
 
 SelectedContentComponent.propTypes = {
     items: PropTypes.array.isRequired,
     itemsLimit: PropTypes.number.isRequired,
     onItemRemove: PropTypes.func.isRequired,
 };
+
+export default SelectedContentComponent;

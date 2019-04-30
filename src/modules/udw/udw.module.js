@@ -64,7 +64,11 @@ const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
     );
     const popupAttrs = { isVisible: true, title, onClose };
 
-    return <Popup {...popupAttrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>;
+    return (
+        <div className="ez-udw-module">
+            <Popup {...popupAttrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>
+        </div>
+    );
 };
 
 UDWModule.propTypes = {

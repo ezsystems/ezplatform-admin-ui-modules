@@ -6,7 +6,7 @@ const SelectedContentItemComponent = ({ data, onRemove }) => {
     const contentTypeInfo = data.ContentInfo.Content.ContentTypeInfo;
     const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'select_content.not_available.label', {}, 'universal_discovery_widget');
     const contentTypeName = contentTypeInfo ? contentTypeInfo.names.value[0]['#text'] : notAvailableLabel;
-    let icon;
+    let icon = null;
 
     if (contentTypeInfo) {
         icon = <Icon name={contentTypeInfo.identifier} extraClasses="c-selected-content-item__icon ez-icon--small" />;
