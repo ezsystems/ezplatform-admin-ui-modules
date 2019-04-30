@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import LoadingSpinnerComponent from '../../../../common/loading-spinner/loading.spinner.component';
+import LoadingSpinnerComponent from '../../../../../common/loading-spinner/loading.spinner.component';
 
 const getImageUri = (version) => {
     if (!version) {

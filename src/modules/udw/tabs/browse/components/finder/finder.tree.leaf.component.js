@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import SelectContentButtonComponent from '../select-content-button/select.content.button.component';
-import LoadingSpinnerComponent from '../../../../common/loading-spinner/loading.spinner.component';
+import LoadingSpinnerComponent from '../../../../../common/loading-spinner/loading.spinner.component';
 import Icon from '../../../../../common/icon/icon';
 
 export default class FinderTreeLeafComponent extends Component {

@@ -8,7 +8,7 @@ import {
     QUERY_LIMIT,
     findLocationsByParentLocationId,
 } from '../../../../services/universal.discovery.service';
-import { restInfo } from '../../../../common/rest-info/rest.info';
+import { restInfo } from '../../../../../common/rest-info/rest.info';
 
 const ROOT_LOCATION_OBJECT = null;
 
