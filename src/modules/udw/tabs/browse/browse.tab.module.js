@@ -13,6 +13,7 @@ const UDWBrowseTab = (props) => {
     const [contentTypesMap, setContentTypesMap] = useState(null);
     const [showContentMetaPreview, setShowContentMetaPreviewState] = useState(false);
     const [contentMeta, setContentMeta] = useState(null);
+    const [selectedContent, setSelectedContent] = useState([]);
     const addContentTypeInfoToItem = (item) => {
         const clonedItem = deepClone(item);
         const contentType = clonedItem.ContentInfo.Content.ContentType;
@@ -39,6 +40,16 @@ const UDWBrowseTab = (props) => {
 
         setShowContentMetaPreviewState(true);
     };
+    const markContentAsSelected = (content) => {
+        const alreadySelectedContent = deepClone(selectedContent);
+
+        setSelectedContent([...alreadySelectedContent, content]);
+    };
+    const unmarkContentAsSelected = (locationId) => {
+        const alreadySelectedContent = deepClone(selectedContent);
+
+        setSelectedContent(alreadySelectedContent.filter((item) => item.id !== locationId));
+    };
     const updateContentTypesMapState = (response) => {
         if (!response || !response.ContentTypeInfoList) {
             return;
@@ -56,7 +67,13 @@ const UDWBrowseTab = (props) => {
         isVisible: showContentMetaPreview && !!contentMeta,
         location: contentMeta,
     };
-    const finderAttrs = { onItemSelect, ...props };
+    const finderAttrs = {
+        onItemSelect,
+        selectedContent,
+        onSelectContent: markContentAsSelected,
+        onItemRemove: unmarkContentAsSelected,
+        ...props,
+    };
 
     useEffect(() => loadContentTypes(restInfo, updateContentTypesMapState), []);
 
