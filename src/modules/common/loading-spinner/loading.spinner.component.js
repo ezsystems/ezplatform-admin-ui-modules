@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from '../../../common/icon/icon';
+import Icon from '../icon/icon';
 
 const LoadingSpinnerComponent = ({ extraClasses }) => {
-    const iconClasses = `${extraClasses} c-loading-spinner ez-spin ez-icon-x2 ez-icon-spinner`;
+    const iconClasses = `c-loading-spinner ez-spin ez-icon-x2 ez-icon-spinner ${extraClasses}`;
 
     return <Icon name="spinner" extraClasses={iconClasses} />;
 };
