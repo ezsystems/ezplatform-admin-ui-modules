@@ -80,7 +80,7 @@ UDWBrowseTab.propTypes = {
     canSelectContent: PropTypes.func,
 };
 
-UDWBrowseTab.propTypes = {
+UDWBrowseTab.defaultProps = {
     multiple: false,
     startingLocationId: 1,
     allowContainersOnly: false,
