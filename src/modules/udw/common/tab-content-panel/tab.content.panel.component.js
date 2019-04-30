@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TabContentPanelComponent = (props) => {
+const TabContentPanelComponent = ({ id, isVisible, children }) => {
     const attrs = {
-        id: props.id,
+        id,
         className: 'c-tab-content-panel',
     };
 
-    if (!props.isVisible) {
+    if (!isVisible) {
         attrs.hidden = true;
     }
 
-    return <div {...attrs}>{props.children}</div>;
+    return <div {...attrs}>{children}</div>;
 };
 
 TabContentPanelComponent.propTypes = {

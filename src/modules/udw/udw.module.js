@@ -1,17 +1,17 @@
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import { classnames } from '../common/classnames/classnames';
 import Popup from '../common/popup/popup.component';
 
-const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
+const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
     // useReducer maybe?
     const [state, setState] = useState(() => {
         let activeTabId = null;
 
-        if (props.tabs.length) {
-            const tab = props.tabs.find((tab) => tab.active);
+        if (tabs.length) {
+            const tab = tabs.find((tab) => tab.active);
 
-            activeTabId = tab ? tab.id : props.tabs[0].id;
+            activeTabId = tab ? tab.id : tabs[0].id;
         }
 
         return { activeTabId };
@@ -23,7 +23,7 @@ const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
     };
     const setActiveTab = ({ target }) => setState({ activeTabId: target.dataset.tabId });
     const renderTab = (tab) => {
-        const btnClassName = classNames({
+        const btnClassName = classnames({
             'udw-popup__tab': true,
             'udw-popup__tab--is-active': state.activeTabId === tab.id,
         });
@@ -46,9 +46,11 @@ const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
 
         const attrs = {
             key: tab.id,
+            maxHeight,
             ...tab.attrs,
-            startingLocationId,
         };
+
+        console.log('renderPanel', { ...attrs });
 
         return <Panel {...attrs} />;
     };
@@ -56,10 +58,10 @@ const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
         return (
             <Fragment>
                 <div className="udw-popup__tabs" data-testid="udw-tabs">
-                    {props.tabs.map(renderTab)}
+                    {tabs.map(renderTab)}
                 </div>
                 <div className="udw-popup__panels" data-testid="udw-panels">
-                    {props.tabs.map(renderPanel)}
+                    {tabs.map(renderPanel)}
                 </div>
             </Fragment>
         );
@@ -68,14 +70,11 @@ const UDWModule = ({ title, onClose, startingLocationId, ...props }) => {
         <div className="udw-popup__message udw-popup__message--no-tabs">Nothing to display. There are no tabs defined.</div>
     );
 
-    return <Popup {...attrs}>{props.tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>;
+    return <Popup {...attrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>;
 };
 
 UDWModule.propTypes = {
     title: PropTypes.string,
-    multiple: PropTypes.bool,
-    selectedItemsLimit: PropTypes.number,
-    canSelectContent: PropTypes.func,
     tabs: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string.isRequired,
@@ -85,23 +84,14 @@ UDWModule.propTypes = {
             active: PropTypes.bool,
         })
     ),
-    startingLocationId: PropTypes.number,
     maxHeight: PropTypes.number,
-    languages: PropTypes.object,
-    contentTypes: PropTypes.object,
     onClose: PropTypes.func,
 };
 
 UDWModule.defaultProps = {
     title: 'Find content',
-    multiple: true,
-    selectedItemsLimit: 0,
-    canSelectContent: (item, callback) => callback(true),
     tabs: window.eZ.adminUiConfig.universalDiscoveryWidget.extraTabs || [],
-    startingLocationId: 1,
     maxHeight: 500,
-    languages: window.eZ.adminUiConfig.languages,
-    contentTypes: window.eZ.adminUiConfig.contentTypes,
     onClose: () => {},
 };
 

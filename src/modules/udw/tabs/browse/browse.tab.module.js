@@ -1,5 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
-import BrowsePanelComponent from './components/panel/browse.panel.component';
+import PropTypes from 'prop-types';
+import TabContentPanelComponent from '../../common/tab-content-panel/tab.content.panel.component';
+import FinderComponent from './components/finder/finder.component';
 import ContentMetaPreviewComponent from './components/content-meta-preview/content.meta.preview.component';
 import { loadContentTypes, loadContentInfo } from '../../services/universal.discovery.service';
 import { restInfo } from '../../common/rest-info/rest.info';
@@ -54,18 +56,35 @@ const UDWBrowseTab = (props) => {
         isVisible: showContentMetaPreview && !!contentMeta,
         location: contentMeta,
     };
-    const panelAttrs = { ...props, isVisible: true, onItemSelect };
+    const finderAttrs = { onItemSelect, ...props };
 
-    useEffect(() => {
-        loadContentTypes(restInfo, updateContentTypesMapState);
-    }, []);
+    useEffect(() => loadContentTypes(restInfo, updateContentTypesMapState), []);
 
     return (
         <ContentTypesContext.Provider value={contentTypesMap}>
-            <BrowsePanelComponent {...panelAttrs} />
+            <TabContentPanelComponent id="browse" isVisible={true}>
+                <FinderComponent {...finderAttrs} />
+            </TabContentPanelComponent>
             <ContentMetaPreviewComponent {...previewAttrs} />
         </ContentTypesContext.Provider>
     );
+};
+
+UDWBrowseTab.propTypes = {
+    onConfirm: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    maxHeight: PropTypes.number.isRequired,
+    multiple: PropTypes.bool,
+    startingLocationId: PropTypes.number,
+    allowContainersOnly: PropTypes.bool,
+    canSelectContent: PropTypes.func,
+};
+
+UDWBrowseTab.propTypes = {
+    multiple: false,
+    startingLocationId: 1,
+    allowContainersOnly: false,
+    canSelectContent: (item, callback) => callback(true),
 };
 
 eZ.addConfig('udwTabs.Browse', UDWBrowseTab);
