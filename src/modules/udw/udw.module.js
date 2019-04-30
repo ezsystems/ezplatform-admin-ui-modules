@@ -16,11 +16,6 @@ const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
 
         return { activeTabId };
     });
-    const attrs = {
-        isVisible: true,
-        title,
-        onClose,
-    };
     const setActiveTab = ({ target }) => setState({ activeTabId: target.dataset.tabId });
     const renderTab = (tab) => {
         const btnClassName = classnames({
@@ -67,8 +62,9 @@ const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
     const renderNoTabsMessage = () => (
         <div className="udw-popup__message udw-popup__message--no-tabs">Nothing to display. There are no tabs defined.</div>
     );
+    const popupAttrs = { isVisible: true, title, onClose };
 
-    return <Popup {...attrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>;
+    return <Popup {...popupAttrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>;
 };
 
 UDWModule.propTypes = {

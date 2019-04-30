@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import TabContentPanelComponent from '../../common/tab-content-panel/tab.content.panel.component';
 import FinderComponent from './components/finder/finder.component';
 import ContentMetaPreviewComponent from './components/content-meta-preview/content.meta.preview.component';
+import SelectedContentComponent from '../../common/selected-content/selected.content.component';
 import { loadContentTypes, loadContentInfo } from '../../services/universal.discovery.service';
-import { restInfo } from '../../common/rest-info/rest.info';
+import { restInfo } from '../../../common/rest-info/rest.info';
+import { classnames } from '../../../common/classnames/classnames';
 import deepClone from '../../../common/helpers/deep.clone.helper';
 
 const ContentTypesContext = createContext();
 
-const UDWBrowseTab = (props) => {
+const UDWBrowseTab = ({ selectedItemsLimit, ...props }) => {
     const [contentTypesMap, setContentTypesMap] = useState(null);
     const [showContentMetaPreview, setShowContentMetaPreviewState] = useState(false);
     const [contentMeta, setContentMeta] = useState(null);
@@ -31,7 +33,6 @@ const UDWBrowseTab = (props) => {
         updatedContentMeta = addContentTypeInfoToItem(updatedContentMeta);
 
         setContentMeta(updatedContentMeta);
-        // this.setState(() => ({ contentMeta: updatedContentMeta, isPreviewMetaReady: true }));
     };
     const onItemSelect = (contentMeta) => {
         const contentId = contentMeta.ContentInfo.Content._id;
@@ -74,15 +75,39 @@ const UDWBrowseTab = (props) => {
         onItemRemove: unmarkContentAsSelected,
         ...props,
     };
+    const selectedContentAttrs = {
+        items: selectedContent,
+        selectedItemsLimit,
+        onItemRemove: unmarkContentAsSelected,
+    };
+    const tabAttrs = {
+        className: classnames({
+            'ez-browse-tab': true,
+            'ez-browse-tab--with-preview': !!contentMeta,
+        }),
+    };
 
     useEffect(() => loadContentTypes(restInfo, updateContentTypesMapState), []);
 
     return (
         <ContentTypesContext.Provider value={contentTypesMap}>
-            <TabContentPanelComponent id="browse" isVisible={true}>
-                <FinderComponent {...finderAttrs} />
-            </TabContentPanelComponent>
-            <ContentMetaPreviewComponent {...previewAttrs} />
+            <div {...tabAttrs}>
+                <div className="ez-browse-tab__finder">
+                    <TabContentPanelComponent id="browse" isVisible={true}>
+                        <FinderComponent {...finderAttrs} />
+                    </TabContentPanelComponent>
+                </div>
+                <div className="ez-browse-tab__preview">
+                    <ContentMetaPreviewComponent {...previewAttrs} />
+                </div>
+                <div className="ez-browse-tab__selected-items">
+                    <SelectedContentComponent {...selectedContentAttrs} />
+                </div>
+                <div className="ez-browse-tab__actions">
+                    <button type="button">Cancel</button>
+                    <button type="button">Confirm</button>
+                </div>
+            </div>
         </ContentTypesContext.Provider>
     );
 };
@@ -92,6 +117,7 @@ UDWBrowseTab.propTypes = {
     onCancel: PropTypes.func.isRequired,
     maxHeight: PropTypes.number.isRequired,
     multiple: PropTypes.bool,
+    selectedItemsLimit: PropTypes.number,
     startingLocationId: PropTypes.number,
     allowContainersOnly: PropTypes.bool,
     canSelectContent: PropTypes.func,
@@ -100,6 +126,7 @@ UDWBrowseTab.propTypes = {
 UDWBrowseTab.defaultProps = {
     multiple: false,
     startingLocationId: 1,
+    selectedItemsLimit: 0,
     allowContainersOnly: false,
     canSelectContent: (item, callback) => callback(true),
 };
