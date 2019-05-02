@@ -1,5 +1,11 @@
 export const classnames = (classes) => {
-    return Object.entries(classes).reduce((total, [name, condition]) => {
-        return `${total} ${condition ? name : ''}`;
-    }, '');
+    if (Object.prototype.toString.call(classes) !== '[object Object]') {
+        return '';
+    }
+
+    return Object.entries(classes)
+        .reduce((total, [name, condition]) => {
+            return `${total} ${condition ? name : ''}`;
+        }, '')
+        .trim();
 };
