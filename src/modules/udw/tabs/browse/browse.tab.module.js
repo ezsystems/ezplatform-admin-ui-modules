@@ -11,7 +11,7 @@ import deepClone from '../../../common/helpers/deep.clone.helper';
 
 const ContentTypesContext = createContext();
 
-const UDWBrowseTab = ({ selectedItemsLimit, ...props }) => {
+const UDWBrowseTab = ({ selectedItemsLimit, onCancel, onConfirm, ...props }) => {
     const [contentTypesMap, setContentTypesMap] = useState(null);
     const [showContentMetaPreview, setShowContentMetaPreviewState] = useState(false);
     const [contentMeta, setContentMeta] = useState(null);
@@ -24,27 +24,32 @@ const UDWBrowseTab = ({ selectedItemsLimit, ...props }) => {
 
         return clonedItem;
     };
-    const updateContentMetaWithCurrentVersion = (contentMeta, response) => {
-        let updatedContentMeta = deepClone(contentMeta);
-        const currentVersion = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion;
+    const updateContentMetaWithCurrentVersion = (contentMeta, currentVersion) => {
+        const updatedContentMeta = deepClone(contentMeta);
 
         updatedContentMeta.CurrentVersion = currentVersion;
 
-        updatedContentMeta = addContentTypeInfoToItem(updatedContentMeta);
-
-        setContentMeta(updatedContentMeta);
+        return updatedContentMeta;
     };
-    const onItemSelect = (contentMeta) => {
+    const addMissingContentMeta = (contentMeta, callback) => {
         const contentId = contentMeta.ContentInfo.Content._id;
 
-        loadContentInfo(restInfo, contentId, (response) => updateContentMetaWithCurrentVersion(contentMeta, response));
+        loadContentInfo(restInfo, contentId, (response) => {
+            const currentVersion = response.View.Result.searchHits.searchHit[0].value.Content.CurrentVersion;
+            const updatedContentMeta = addContentTypeInfoToItem(updateContentMetaWithCurrentVersion(contentMeta, currentVersion));
 
+            callback(updatedContentMeta);
+        });
+    };
+    const onItemSelect = (contentMeta) => {
+        addMissingContentMeta(contentMeta, (updatedContentMeta) => setContentMeta(updatedContentMeta));
         setShowContentMetaPreviewState(true);
     };
-    const markContentAsSelected = (content) => {
+    const markContentAsSelected = (contentMeta) => {
         const alreadySelectedContent = deepClone(selectedContent);
+        const afterUpdate = (updatedContentMeta) => setSelectedContent([...alreadySelectedContent, updatedContentMeta]);
 
-        setSelectedContent([...alreadySelectedContent, content]);
+        addMissingContentMeta(contentMeta, afterUpdate);
     };
     const unmarkContentAsSelected = (locationId) => {
         const alreadySelectedContent = deepClone(selectedContent);
@@ -64,6 +69,7 @@ const UDWBrowseTab = ({ selectedItemsLimit, ...props }) => {
 
         setContentTypesMap(contentTypesMap);
     };
+    const confirmSelection = () => onConfirm(selectedContent);
     const previewAttrs = {
         isVisible: showContentMetaPreview && !!contentMeta,
         location: contentMeta,
@@ -86,6 +92,17 @@ const UDWBrowseTab = ({ selectedItemsLimit, ...props }) => {
             'ez-browse-tab--with-preview': !!contentMeta,
         }),
     };
+    const confirmBtnAttrs = {
+        className: 'ez-browse-tab__action',
+        disabled: !selectedContent.length,
+        onClick: confirmSelection,
+        type: 'button',
+    };
+    const cancelBtnAttrs = {
+        className: 'ez-browse-tab__action',
+        type: 'button',
+        onClick: onCancel,
+    };
 
     useEffect(() => loadContentTypes(restInfo, updateContentTypesMapState), []);
 
@@ -104,8 +121,8 @@ const UDWBrowseTab = ({ selectedItemsLimit, ...props }) => {
                     <SelectedContentComponent {...selectedContentAttrs} />
                 </div>
                 <div className="ez-browse-tab__actions">
-                    <button type="button">Cancel</button>
-                    <button type="button">Confirm</button>
+                    <button {...cancelBtnAttrs}>Cancel</button>
+                    <button {...confirmBtnAttrs}>Confirm</button>
                 </div>
             </div>
         </ContentTypesContext.Provider>
