@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Icon from '../../../../../common/icon/icon';
-import LoadingSpinnerComponent from '../../../../../common/loading-spinner/loading.spinner.component';
-import { showErrorNotification } from '../../../../../common/services/notification.service';
-import { checkIsBookmarked, addBookmark, removeBookmark } from '../../../../services/bookmark.service';
-import { restInfo } from '../../../../../common/rest-info/rest.info';
+import { checkIsBookmarked, addBookmark, removeBookmark } from '../../services/bookmark.service';
+import Icon from '../../../common/icon/icon';
+import LoadingSpinnerComponent from '../../../common/loading-spinner/loading.spinner.component';
+import { showErrorNotification } from '../../../common/services/notification.service';
+import { restInfo } from '../../../common/rest-info/rest.info';
 
 const BookmarkIconComponent = ({ locationId }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Icon from '../../../../../common/icon/icon';
+import Icon from '../../../common/icon/icon';
 
 const ContentTypeIconComponent = ({ identifier }) => {
     if (!identifier) {
