@@ -8,15 +8,24 @@ const TEXT_NOT_AVAILABLE = Translator.trans(/*@Desc("N/A")*/ 'content_table.not_
 
 const ContentTableItemComponent = (props) => {
     const contentTypesMap = useContext(ContentTypesContext);
-    const { onPreview, data, multiple, selectedContent, onSelectContent, onItemRemove, canSelectContent } = props;
-    const item = data.ContentInfo.Content;
+    const { onContainerClick, location, shouldDisplaySelectContentBtn, onItemSelect, onItemDeselect, canSelectContent } = props;
+    const item = location.ContentInfo.Content;
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : null;
     const contentTypeIdentifier = contentType ? contentType.identifier : null;
     const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : TEXT_NOT_AVAILABLE;
-    const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
+    const contentTypeIconUrl = window.eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
+    const handleContainerClick = () => onContainerClick(location);
+    const selectContentBtn = shouldDisplaySelectContentBtn ? (
+        <SelectContentButtonComponent
+            location={location}
+            onSelect={onItemSelect}
+            onDeselect={onItemDeselect}
+            canSelectContent={canSelectContent}
+        />
+    ) : null;
 
     return (
-        <div className="c-content-table-item" onClick={onPreview} tabIndex="-1">
+        <div className="c-content-table-item" onClick={handleContainerClick} tabIndex="-1">
             <div className="c-content-table-item__icon">
                 <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--medium" />
             </div>
@@ -26,30 +35,18 @@ const ContentTableItemComponent = (props) => {
             <div className="c-content-table-item__type" title={contentTypeName}>
                 {contentTypeName}
             </div>
-            <div className="c-content-table-item__actions">
-                <SelectContentButtonComponent
-                    multiple={multiple}
-                    selectedContent={selectedContent}
-                    location={data}
-                    onSelectContent={onSelectContent}
-                    onItemRemove={onItemRemove}
-                    canSelectContent={canSelectContent}
-                />
-            </div>
+            <div className="c-content-table-item__actions">{selectContentBtn}</div>
         </div>
     );
 };
 
 ContentTableItemComponent.propTypes = {
-    data: PropTypes.object.isRequired,
-    onPreview: PropTypes.func.isRequired,
-    contentTypesMap: PropTypes.object.isRequired,
-    onItemClick: PropTypes.func,
-    selectedContent: PropTypes.array.isRequired,
-    onSelectContent: PropTypes.func.isRequired,
+    location: PropTypes.object.isRequired,
+    onContainerClick: PropTypes.func.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
-    multiple: PropTypes.bool.isRequired,
+    onItemDeselect: PropTypes.func.isRequired,
+    shouldDisplaySelectContentBtn: PropTypes.bool.isRequired,
 };
 
 export default ContentTableItemComponent;

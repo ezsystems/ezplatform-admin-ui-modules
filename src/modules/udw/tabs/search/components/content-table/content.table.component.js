@@ -1,130 +1,31 @@
-import React, { Component } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Icon from '../../../../../common/icon/icon';
 import ContentTablePaginationComponent from './content.table.pagination.component';
 import ContentTableItemComponent from './content.table.item.component';
 import ContentTableHeaderComponent from './content.table.header.component';
+import LoadingSpinnerComponent from '../../../../../common/loading-spinner/loading.spinner.component';
 
-export default class ContentTableComponent extends Component {
-    constructor(props) {
-        super(props);
+const splitToPages = (items, perPage) => {
+    return items.reduce((pages, item, index) => {
+        const pageIndex = Math.floor(index / perPage);
 
-        this.state = {
-            items: props.items,
-            perPage: props.perPage,
-            activePage: 0,
-            pages: this.splitToPages(props.items, props.perPage),
-            count: props.count,
-        };
-
-        this.setActivePage = this.setActivePage.bind(this);
-        this.renderItem = this.renderItem.bind(this);
-    }
-
-    UNSAFE_componentWillMount() {
-        this.ensurePageItemsLoaded(0);
-    }
-
-    UNSAFE_componentWillReceiveProps({ items, perPage, count }) {
-        const maxPage = !count ? 0 : Math.floor((count - 1) / perPage);
-
-        this.setState((state) => ({
-            items,
-            count,
-            activePage: state.activePage <= maxPage ? state.activePage : maxPage,
-            pages: this.splitToPages(items, perPage),
-        }));
-    }
-
-    /**
-     * Splits items into pages
-     *
-     * @method splitToPages
-     * @param {Array} items
-     * @param {Number} perPage
-     * @returns {Array}
-     * @memberof ContentTableComponent
-     */
-    splitToPages(items, perPage) {
-        return items.reduce((pages, item, index) => {
-            const pageIndex = Math.floor(index / perPage);
-
-            if (!pages[pageIndex]) {
-                pages[pageIndex] = [];
-            }
-
-            pages[pageIndex].push(item);
-
-            return pages;
-        }, []);
-    }
-
-    ensurePageItemsLoaded(activePage) {
-        const { requireItemsCount } = this.props;
-        const { count, perPage } = this.state;
-        const itemsNeededCount = Math.min(perPage * (activePage + 1), count);
-
-        requireItemsCount(itemsNeededCount);
-    }
-
-    /**
-     * Sets active page index state
-     *
-     * @method setActivePage
-     * @param {Number} activePage
-     * @memberof ContentTableComponent
-     */
-    setActivePage(activePage) {
-        this.ensurePageItemsLoaded(activePage);
-
-        this.setState(() => ({ activePage }));
-    }
-
-    renderNoItemsMessage() {
-        const { count, noItemsMessage } = this.props;
-
-        if (count || !noItemsMessage) {
-            return null;
+        if (!pages[pageIndex]) {
+            pages[pageIndex] = [];
         }
 
-        return <div className="c-content-table__no-items">{noItemsMessage}</div>;
-    }
+        pages[pageIndex].push(item);
 
-    /**
-     * Renders single item
-     *
-     * @method renderItem
-     * @param {Object} item
-     * @returns {Element}
-     * @memberof ContentTableComponent
-     */
-    renderItem(item) {
-        const location = item.Location;
-        const { onItemSelect, selectedContent, onSelectContent, canSelectContent, onItemRemove, multiple } = this.props;
+        return pages;
+    }, []);
+};
+const getMaxAllowedPageIndex = (totalCount, perPage) => (!totalCount ? 0 : Math.floor((totalCount - 1) / perPage));
 
-        return (
-            <ContentTableItemComponent
-                key={location.id}
-                data={location}
-                onPreview={() => onItemSelect(location)}
-                selectedContent={selectedContent}
-                onSelectContent={onSelectContent}
-                canSelectContent={canSelectContent}
-                onItemRemove={onItemRemove}
-                multiple={multiple}
-            />
-        );
-    }
-
-    /**
-     * Renders single search results item
-     *
-     * @method renderHeader
-     * @returns {Element}
-     * @memberof ContentTableComponent
-     */
-    renderHeader() {
-        const { items } = this.state;
+const ContentTableComponent = (props) => {
+    const { items, perPage, totalCount, noItemsMessage, title, shouldDisplaySelectContentBtn } = props;
+    const { onItemSelect, selectedContent, onSelectContent, canSelectContent, onItemRemove } = props;
+    const [activePage, setActivePage] = useState(0);
+    const [pages, setPages] = useState({});
+    const renderHeader = () => {
         const showHeader = !!items.length;
 
         if (!showHeader) {
@@ -132,88 +33,113 @@ export default class ContentTableComponent extends Component {
         }
 
         return <ContentTableHeaderComponent />;
-    }
+    };
+    const renderNoItemsMessage = () => {
+        if (totalCount || !noItemsMessage) {
+            return null;
+        }
 
-    /**
-     * Renders pagination
-     *
-     * @method renderPagination
-     * @returns {Element}
-     * @memberof ContentTableComponent
-     */
-    renderPagination() {
-        const { activePage, count, perPage } = this.state;
-        const pagesCount = !count ? 0 : Math.floor((count - 1) / perPage) + 1;
+        return <div className="c-content-table__no-items">{noItemsMessage}</div>;
+    };
+    const handlePaginationItemClick = (activePage) => setActivePage(activePage);
+    const handleItemSelection = useCallback((location) => onItemSelect(location), [onItemSelect]);
+    const renderItem = (item) => {
+        const location = item.Location;
+
+        return (
+            <ContentTableItemComponent
+                key={location.id}
+                location={location}
+                onContainerClick={handleItemSelection}
+                selectedContent={selectedContent}
+                onItemSelect={onSelectContent}
+                canSelectContent={canSelectContent}
+                onItemDeselect={onItemRemove}
+                shouldDisplaySelectContentBtn={shouldDisplaySelectContentBtn}
+            />
+        );
+    };
+    const renderPagination = () => {
+        const maxIndex = getMaxAllowedPageIndex(totalCount, perPage);
         const paginationAttrs = {
             minIndex: 0,
-            maxIndex: pagesCount - 1,
+            maxIndex,
             activeIndex: activePage,
-            onChange: this.setActivePage,
+            onChange: handlePaginationItemClick,
         };
 
-        if (!pagesCount || paginationAttrs.minIndex === paginationAttrs.maxIndex) {
+        if (!maxIndex) {
             return null;
         }
 
         return <ContentTablePaginationComponent {...paginationAttrs} />;
-    }
-
-    renderPageSpinner() {
-        return <Icon name="spinner" extraClasses="c-content-table__loading-spinner ez-spin ez-icon-x2 ez-icon-spinner" />;
-    }
-
-    renderPage() {
-        const { pages, activePage, perPage, count } = this.state;
-        const itemsCount = this.state.items.length;
-        const neededItemsCount = Math.min((activePage + 1) * perPage, count);
+    };
+    const renderPage = () => {
+        const itemsCount = items.length;
+        const neededItemsCount = Math.min((activePage + 1) * perPage, totalCount);
         const allNeededItemsLoaded = itemsCount >= neededItemsCount;
 
         if (!allNeededItemsLoaded) {
-            return this.renderPageSpinner();
+            return <LoadingSpinnerComponent extraClasses="c-content-table__loading-spinner" />;
         }
 
-        const pageToRender = !itemsCount ? [] : pages[activePage];
-
-        return pageToRender.map(this.renderItem);
-    }
-
-    render() {
-        const { title, count, noItemsMessage } = this.props;
-
-        if (!count && !noItemsMessage) {
+        if (!itemsCount) {
             return null;
+        } else if (pages.hasOwnProperty(activePage)) {
+            return pages[activePage].map(renderItem);
         }
 
-        return (
-            <div className="c-content-table">
-                <div className="c-content-table__title">
-                    {title} ({count})
-                </div>
-                {this.renderNoItemsMessage()}
-                {this.renderHeader()}
-                <div className="c-content-table__list">{this.renderPage()}</div>
-                {this.renderPagination()}
-            </div>
-        );
+        return null;
+    };
+
+    useEffect(() => {
+        const maxAllowedPageIndex = getMaxAllowedPageIndex(totalCount, perPage);
+        const shouldChangeActivePage = activePage <= maxAllowedPageIndex ? activePage : maxAllowedPageIndex;
+
+        if (shouldChangeActivePage) {
+            setActivePage(maxAllowedPageIndex);
+        }
+    }, [activePage, totalCount, perPage]);
+
+    useEffect(() => {
+        setPages(splitToPages(items, perPage));
+    }, [items, perPage]);
+
+    if (!totalCount) {
+        return null;
     }
-}
+
+    return (
+        <div className="c-content-table">
+            <div className="c-content-table__title">
+                {title} ({totalCount})
+            </div>
+            {renderNoItemsMessage()}
+            {renderHeader()}
+            <div className="c-content-table__list">{renderPage()}</div>
+            {renderPagination()}
+        </div>
+    );
+};
 
 ContentTableComponent.propTypes = {
     items: PropTypes.array.isRequired,
-    count: PropTypes.number.isRequired,
+    totalCount: PropTypes.number.isRequired,
     perPage: PropTypes.number.isRequired,
-    onItemSelect: PropTypes.func.isRequired,
-    onItemClick: PropTypes.func,
     title: PropTypes.string.isRequired,
     noItemsMessage: PropTypes.string,
     requireItemsCount: PropTypes.func.isRequired,
     selectedContent: PropTypes.array.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
+    onItemRemove: PropTypes.func.isRequired,
+    onItemClick: PropTypes.func,
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
-    multiple: PropTypes.bool.isRequired,
+    shouldDisplaySelectContentBtn: PropTypes.bool.isRequired,
 };
 
 ContentTableComponent.defaultProps = {
     onItemClick: null,
 };
+
+export default ContentTableComponent;
