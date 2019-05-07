@@ -9,7 +9,6 @@ import { classnames } from '../../../../../common/classnames/classnames';
 
 const TEXT_SEARCH_COMPONENT_TITLE = Translator.trans(/*@Desc("Search")*/ 'search.title', {}, 'search');
 const TEXT_CANNOT_FIND_ITEMS = Translator.trans(/*@Desc("Cannot find content")*/ 'search.cannot.find.content', {}, 'search');
-const TEXT_ALL_ITEMS_LOADED = Translator.trans(/*@Desc("All items loaded.")*/ 'search.all.items.loaded', {}, 'search');
 const TEXT_SEARCH_TIPS_TITLE = Translator.trans(/*@Desc("Some helpful search tips:")*/ 'search.tips.headline', {}, 'search');
 const TEXT_SEARCH_BTN_LABEL = Translator.trans(/*@Desc("Search")*/ 'search.submit.label', {}, 'search');
 const TEXT_RESULTS_TABLE_TITLE = Translator.trans(/*@Desc("Search results")*/ 'search.content_table.title', {}, 'search');
@@ -60,11 +59,6 @@ const SearchComponent = ({ maxHeight, ...props }) => {
     const updateItemsState = (response) => {
         setItems(response.View.Result.searchHits.searchHit.map((item) => item.value));
         setIsSearching(false);
-    };
-    const onRequireItemsCount = (count) => {
-        if (count > items.length) {
-            throw new Error(TEXT_ALL_ITEMS_LOADED);
-        }
     };
     const renderSubmitBtn = () => {
         const svgExtraClasses = 'ez-icon--small ez-icon--light';
@@ -127,8 +121,7 @@ const SearchComponent = ({ maxHeight, ...props }) => {
         return (
             <ContentTableComponent
                 items={items}
-                count={items.length}
-                requireItemsCount={onRequireItemsCount}
+                totalCount={items.length}
                 perPage={searchResultsPerPage}
                 title={TEXT_RESULTS_TABLE_TITLE}
                 selectedContent={selectedContent}
@@ -136,13 +129,11 @@ const SearchComponent = ({ maxHeight, ...props }) => {
                 canSelectContent={canSelectContent}
                 onItemSelect={onItemSelect}
                 onItemRemove={onItemRemove}
-                multiple={multiple}
+                shouldDisplaySelectContentBtn={!multiple}
                 noItemsMessage={noItemsMessage}
             />
         );
     };
-
-    console.warn('TODO: dokoncz refactor');
 
     return (
         <div className="c-search" style={{ maxHeight: `${maxHeight - 32}px` }}>
