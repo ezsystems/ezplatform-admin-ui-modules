@@ -361,7 +361,7 @@ export default class FinderComponent extends Component {
                 selectedContent={this.props.selectedContent}
                 onSelectContent={this.props.onSelectContent}
                 canSelectContent={this.props.canSelectContent}
-                onItemRemove={this.props.onItemRemove}
+                onItemDeselect={this.props.onItemDeselect}
             />
         );
     }
@@ -412,7 +412,7 @@ FinderComponent.propTypes = {
     selectedContent: PropTypes.array.isRequired,
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
+    onItemDeselect: PropTypes.func.isRequired,
 };
 
 FinderComponent.defaultProps = {

@@ -97,11 +97,10 @@ export default class FinderTreeLeafComponent extends Component {
 
         return (
             <SelectContentButtonComponent
-                multiple={multiple}
                 isSelected={!!selectedContent.find((content) => content.id === location.id)}
                 location={location}
-                onSelectContent={onSelectContent}
-                onItemRemove={onItemRemove}
+                onSelect={onSelectContent}
+                onDeselect={onItemRemove}
                 canSelectContent={canSelectContent}
             />
         );
