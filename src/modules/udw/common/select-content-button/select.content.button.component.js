@@ -1,93 +1,57 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
+import { classnames } from '../../../common/classnames/classnames';
 
-export default class SelectContentButtonComponent extends Component {
-    constructor(props) {
-        super(props);
-
-        this.toggleEnabledState = this.toggleEnabledState.bind(this);
-        this.handleSelect = this.handleSelect.bind(this);
-        this.handleUnselect = this.handleUnselect.bind(this);
-
-        this.state = {
-            selectContentEnabled: true,
-        };
-    }
-
-    componentDidMount() {
-        this.checkCanSelectContent();
-    }
-
-    componentDidUpdate() {
-        this.checkCanSelectContent();
-    }
-
-    checkCanSelectContent() {
-        const { location, canSelectContent } = this.props;
-
-        canSelectContent(location, this.toggleEnabledState);
-    }
-
-    toggleEnabledState(selectContentEnabled) {
-        if (this.state.selectContentEnabled === selectContentEnabled) {
+const SelectContentButtonComponent = ({ canSelectContent, location, onSelect, onDeselect, isSelected }) => {
+    const [isSelectContentEnabled, setIsSelectContentEnabled] = useState(true);
+    const handleSelect = () => onSelect(location);
+    const handleDeselect = () => onDeselect(location.id);
+    const toggleEnabledState = (selectContentEnabled) => {
+        if (isSelectContentEnabled === selectContentEnabled) {
             return;
         }
 
-        this.setState((state) => ({ ...state, selectContentEnabled }));
+        setIsSelectContentEnabled(selectContentEnabled);
+    };
+
+    useEffect(() => {
+        canSelectContent(location, toggleEnabledState);
+    });
+
+    const iconId = isSelected ? 'checkmark' : 'create';
+    const attrs = {
+        type: 'button',
+        className: classnames({
+            'c-select-content-button': true,
+            'c-select-content-button--selected': isSelected,
+        }),
+        onClick: isSelected ? handleDeselect : handleSelect,
+    };
+
+    if (!isSelected && !isSelectContentEnabled) {
+        return null;
     }
 
-    handleSelect(event) {
-        event.stopPropagation();
-
-        this.props.onSelectContent(this.props.location);
-    }
-
-    handleUnselect(event) {
-        event.stopPropagation();
-
-        this.props.onItemRemove(this.props.location.id);
-    }
-
-    render() {
-        const { multiple, isSelected } = this.props;
-        const iconId = isSelected ? 'checkmark' : 'create';
-        const attrs = {
-            type: 'button',
-            className: 'c-select-content-button',
-            onClick: isSelected ? this.handleUnselect : this.handleSelect,
-        };
-
-        if (!multiple || (!isSelected && !this.state.selectContentEnabled)) {
-            return null;
-        }
-
-        if (isSelected) {
-            attrs.className = `${attrs.className} ${attrs.className}--selected`;
-        }
-
-        return (
-            <button {...attrs}>
-                <Icon name={iconId} extraClasses="ez-icon--small" />
-            </button>
-        );
-    }
-}
+    return (
+        <button {...attrs}>
+            <Icon name={iconId} extraClasses="ez-icon--small" />
+        </button>
+    );
+};
 
 SelectContentButtonComponent.propTypes = {
-    data: PropTypes.object.isRequired,
-    onPreview: PropTypes.func.isRequired,
-    contentTypesMap: PropTypes.object.isRequired,
-    onItemClick: PropTypes.func,
-    labels: PropTypes.shape({
-        contentTableItem: PropTypes.shape({
-            notAvailable: PropTypes.string.isRequired,
-        }).isRequired,
-    }).isRequired,
-    location: PropTypes.object.isRequired,
-    isSelected: PropTypes.bool.isRequired,
-    onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
-    multiple: PropTypes.bool.isRequired,
+    location: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+    }).isRequired,
+    onSelect: PropTypes.func.isRequired,
+    onDeselect: PropTypes.func.isRequired,
+    isSelected: PropTypes.bool.isRequired,
 };
+
+SelectContentButtonComponent.defaultProps = {
+    isSelected: false,
+};
+
+export default SelectContentButtonComponent;
