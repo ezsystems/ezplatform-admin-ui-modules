@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Icon from '../../../../../common/icon/icon';
+import Icon from '../../../common/icon/icon';
 
 export default class SelectContentButtonComponent extends Component {
     constructor(props) {

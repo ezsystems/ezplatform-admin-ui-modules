@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import FinderTreeBranchComponent from './finder.tree.branch.component';
 import deepClone from '../../../../../common/helpers/deep.clone.helper';
 import {

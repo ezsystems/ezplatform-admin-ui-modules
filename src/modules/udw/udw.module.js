@@ -1,9 +1,27 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect, createContext } from 'react';
 import PropTypes from 'prop-types';
 import { classnames } from '../common/classnames/classnames';
 import Popup from '../common/popup/popup.component';
+import { loadContentTypes } from './services/universal.discovery.service';
+import { restInfo } from '../common/rest-info/rest.info';
+
+export const ContentTypesContext = createContext();
+const getContentTypesFromResponse = (response) => {
+    if (!response || !response.ContentTypeInfoList) {
+        return {};
+    }
+
+    const contentTypesMap = response.ContentTypeInfoList.ContentType.reduce((total, item) => {
+        total[item._href] = item;
+
+        return total;
+    }, {});
+
+    return contentTypesMap;
+};
 
 const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
+    const [contentTypesMap, setContentTypesMap] = useState(null);
     // useReducer maybe?
     const [state, setState] = useState(() => {
         let activeTabId = null;
@@ -64,10 +82,14 @@ const UDWModule = ({ title, onClose, tabs, maxHeight }) => {
     );
     const popupAttrs = { isVisible: true, title, onClose };
 
+    useEffect(() => loadContentTypes(restInfo, (response) => setContentTypesMap(getContentTypesFromResponse(response))), []);
+
     return (
-        <div className="ez-udw-module">
-            <Popup {...popupAttrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>
-        </div>
+        <ContentTypesContext.Provider value={contentTypesMap}>
+            <div className="ez-udw-module">
+                <Popup {...popupAttrs}>{tabs.length ? renderPopupContent() : renderNoTabsMessage()}</Popup>
+            </div>
+        </ContentTypesContext.Provider>
     );
 };
 
