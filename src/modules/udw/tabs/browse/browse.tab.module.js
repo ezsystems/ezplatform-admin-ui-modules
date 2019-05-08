@@ -9,7 +9,14 @@ import BaseTabComponent from '../base.tab.component';
 
 const UDWBrowseTab = ({ selectedItemsLimit, onCancel, onConfirm, ...props }) => {
     const renderTab = (parentProps) => {
-        const { showContentMetaPreview, contentMeta, selectedContent, markContentAsSelected, unmarkContentAsSelected } = parentProps;
+        const {
+            showContentMetaPreview,
+            contentMeta,
+            selectedContent,
+            markContentAsSelected,
+            unmarkContentAsSelected,
+            onItemMarked,
+        } = parentProps;
         const confirmSelection = () => onConfirm(selectedContent);
         const previewAttrs = {
             isVisible: showContentMetaPreview && !!contentMeta,
@@ -17,6 +24,7 @@ const UDWBrowseTab = ({ selectedItemsLimit, onCancel, onConfirm, ...props }) => 
         };
         const finderAttrs = {
             selectedContent,
+            onItemMarked,
             onItemSelect: markContentAsSelected,
             onItemDeselect: unmarkContentAsSelected,
             ...props,

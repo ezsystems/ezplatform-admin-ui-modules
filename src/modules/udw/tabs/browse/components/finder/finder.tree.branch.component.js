@@ -120,4 +120,6 @@ FinderTreeBranchComponent.propTypes = {
     onItemRemove: PropTypes.func.isRequired,
     activeLocationId: PropTypes.string,
     isActiveLocationLoading: PropTypes.bool,
+    onItemSelect: PropTypes.func.isRequired,
+    onItemDeselect: PropTypes.func.isRequired,
 };

@@ -272,7 +272,7 @@ export default class FinderComponent extends Component {
             return;
         }
 
-        this.props.onItemSelect(location);
+        this.props.onItemMarked(location);
         this.updateSelectedBranches(location);
 
         if (!location.childCount) {
@@ -359,6 +359,7 @@ export default class FinderComponent extends Component {
                 allowedLocations={this.props.allowedLocations}
                 multiple={this.props.multiple}
                 selectedContent={this.props.selectedContent}
+                onItemMarked={this.props.onItemMarked}
                 onItemSelect={this.props.onItemSelect}
                 checkCanSelectContent={this.props.checkCanSelectContent}
                 onItemDeselect={this.props.onItemDeselect}
@@ -410,7 +411,7 @@ FinderComponent.propTypes = {
     sortFieldMappings: PropTypes.object.isRequired,
     sortOrderMappings: PropTypes.object.isRequired,
     selectedContent: PropTypes.array.isRequired,
-    onItemSelect: PropTypes.func.isRequired,
+    onItemMarked: PropTypes.func.isRequired,
     checkCanSelectContent: PropTypes.func.isRequired,
     onItemDeselect: PropTypes.func.isRequired,
 };
