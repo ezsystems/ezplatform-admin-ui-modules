@@ -1,36 +1,23 @@
-import React, { Component } from 'react';
+import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
-
+import { ContentTypesContext } from '../../../../udw.module';
 import FinderTreeLeafComponent from './finder.tree.leaf.component';
+import { classnames } from '../../../../../common/classnames/classnames';
 
-export default class FinderTreeBranchComponent extends Component {
-    constructor(props) {
-        super(props);
+const TEXT_LOAD_MORE = Translator.trans(/*@Desc("Load more")*/ 'finder.branch.load_more.label', {}, 'universal_discovery_widget');
 
-        this.expandBranch = this.expandBranch.bind(this);
-        this.onLoadMore = this.onLoadMore.bind(this);
-        this.renderLeaf = this.renderLeaf.bind(this);
-    }
-
-    expandBranch() {
-        this.props.onBranchClick(this.props.parentLocation);
-    }
-
-    /**
-     * Renders leaf (the single content item)
-     *
-     * @method renderLeaf
-     * @param {Object} data location response
-     * @returns {JSX.Element}
-     * @memberof FinderTreeBranchComponent
-     */
-    renderLeaf(data) {
-        const { activeLocationId, isActiveLocationLoading, onItemClick } = this.props;
+const FinderTreeBranchComponent = (props) => {
+    const { activeLocationId, isActiveLocationLoading, allowContainersOnly, allowedLocations } = props;
+    const { multiple, selectedContent, checkCanSelectContent, parentLocation, items, total } = props;
+    const { onItemSelect, onLoadMore, onItemDeselect, onBranchClick, onItemClick } = props;
+    const contentTypesMap = useContext(ContentTypesContext);
+    const expandBranch = useCallback(() => onBranchClick(parentLocation), [onBranchClick, parentLocation]);
+    const handleLoadMore = useCallback(() => onLoadMore(parentLocation), [onLoadMore, parentLocation]);
+    const renderLeaf = (data) => {
         const location = data.value.Location;
-        const contentTypesMap = this.props.contentTypesMap;
         const contentTypeHref = location.ContentInfo.Content.ContentType._href;
         const isContainer = contentTypesMap && contentTypesMap[contentTypeHref] && contentTypesMap[contentTypeHref].isContainer;
-        const isSelectable = !(this.props.allowContainersOnly && !isContainer);
+        const isSelectable = !(allowContainersOnly && !isContainer);
         const active = location.id === activeLocationId;
         const isLoadingChildren = active && isActiveLocationLoading;
 
@@ -39,68 +26,47 @@ export default class FinderTreeBranchComponent extends Component {
                 key={location.remoteId}
                 location={location}
                 onClick={onItemClick}
-                selected={active}
+                isMarked={active}
                 isLoadingChildren={isLoadingChildren}
                 isSelectable={isSelectable}
-                allowedLocations={this.props.allowedLocations}
-                multiple={this.props.multiple}
-                selectedContent={this.props.selectedContent}
-                onItemSelect={this.props.onItemSelect}
-                checkCanSelectContent={this.props.checkCanSelectContent}
-                onItemDeselect={this.props.onItemDeselect}
-                contentTypesMap={this.props.contentTypesMap}
+                allowedLocations={allowedLocations}
+                multiple={multiple}
+                isSelected={!!selectedContent.find((content) => content.id === location.id)}
+                onItemSelect={onItemSelect}
+                checkCanSelectContent={checkCanSelectContent}
+                onItemDeselect={onItemDeselect}
             />
         );
-    }
-
-    onLoadMore() {
-        this.props.onLoadMore(this.props.parentLocation);
-    }
-
-    /**
-     * Render load more button
-     *
-     * @method renderLoadMore
-     * @returns {JSX.Element}
-     * @memberof FinderTreeBranchComponent
-     */
-    renderLoadMore() {
-        const { items, total } = this.props;
-
+    };
+    const renderLoadMore = () => {
         if (!items.length || items.length === total) {
             return null;
         }
 
-        const loadMoreLabel = Translator.trans(/*@Desc("Load more")*/ 'finder.branch.load_more.label', {}, 'universal_discovery_widget');
-
         return (
-            <button type="button" className="c-finder-tree-branch__load-more" onClick={this.onLoadMore}>
-                {loadMoreLabel}
+            <button type="button" className="c-finder-tree-branch__load-more" onClick={handleLoadMore}>
+                {TEXT_LOAD_MORE}
             </button>
         );
-    }
+    };
 
-    render() {
-        const items = this.props.items;
-        const attrs = {
-            className: 'c-finder-tree-branch',
-        };
+    const wrapperAttrs = {
+        className: classnames({
+            'c-finder-tree-branch': true,
+            'c-finder-tree-branch--collapsed': !items.length,
+        }),
+        onClick: !items.length ? expandBranch : undefined,
+    };
 
-        if (!items.length) {
-            attrs.className = `${attrs.className} c-finder-tree-branch--collapsed`;
-            attrs.onClick = this.expandBranch;
-        }
-
-        return (
-            <div {...attrs}>
-                <div className="c-finder-tree-branch__list-wrapper">
-                    {this.props.items.map(this.renderLeaf)}
-                    {this.renderLoadMore()}
-                </div>
+    return (
+        <div {...wrapperAttrs}>
+            <div className="c-finder-tree-branch__list-wrapper">
+                {items.map(renderLeaf)}
+                {renderLoadMore()}
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 FinderTreeBranchComponent.propTypes = {
     items: PropTypes.array.isRequired,
@@ -123,3 +89,5 @@ FinderTreeBranchComponent.propTypes = {
     onItemSelect: PropTypes.func.isRequired,
     onItemDeselect: PropTypes.func.isRequired,
 };
+
+export default FinderTreeBranchComponent;
