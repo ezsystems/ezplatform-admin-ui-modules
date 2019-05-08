@@ -36,6 +36,7 @@
         "react/jsx-uses-vars": "error",
         "jsx-quotes": ["error", "prefer-double"],
         "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn"
+        "react-hooks/exhaustive-deps": "warn",
+        "react/no-unused-prop-types": "warn"
     }
 }
