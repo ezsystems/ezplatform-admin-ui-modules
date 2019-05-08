@@ -45,9 +45,9 @@ export default class FinderTreeBranchComponent extends Component {
                 allowedLocations={this.props.allowedLocations}
                 multiple={this.props.multiple}
                 selectedContent={this.props.selectedContent}
-                onSelectContent={this.props.onSelectContent}
+                onItemSelect={this.props.onItemSelect}
                 checkCanSelectContent={this.props.checkCanSelectContent}
-                onItemRemove={this.props.onItemRemove}
+                onItemDeselect={this.props.onItemDeselect}
                 contentTypesMap={this.props.contentTypesMap}
             />
         );

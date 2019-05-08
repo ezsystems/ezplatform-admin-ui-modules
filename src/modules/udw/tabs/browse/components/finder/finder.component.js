@@ -359,7 +359,7 @@ export default class FinderComponent extends Component {
                 allowedLocations={this.props.allowedLocations}
                 multiple={this.props.multiple}
                 selectedContent={this.props.selectedContent}
-                onSelectContent={this.props.onSelectContent}
+                onItemSelect={this.props.onItemSelect}
                 checkCanSelectContent={this.props.checkCanSelectContent}
                 onItemDeselect={this.props.onItemDeselect}
             />
@@ -410,7 +410,7 @@ FinderComponent.propTypes = {
     sortFieldMappings: PropTypes.object.isRequired,
     sortOrderMappings: PropTypes.object.isRequired,
     selectedContent: PropTypes.array.isRequired,
-    onSelectContent: PropTypes.func.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
     checkCanSelectContent: PropTypes.func.isRequired,
     onItemDeselect: PropTypes.func.isRequired,
 };
