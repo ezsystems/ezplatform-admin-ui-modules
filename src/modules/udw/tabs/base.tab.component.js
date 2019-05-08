@@ -26,7 +26,6 @@ const BaseTabComponent = ({ children }) => {
         return updatedContentMeta;
     };
     const addMissingContentMeta = (contentMeta, callback) => {
-        console.log('addMissingContentMeta', contentMeta);
         const contentId = contentMeta.ContentInfo.Content._id;
 
         loadContentInfo(restInfo, contentId, (response) => {
@@ -36,7 +35,7 @@ const BaseTabComponent = ({ children }) => {
             callback(updatedContentMeta);
         });
     };
-    const onItemSelect = (contentMeta) => {
+    const onItemMarked = (contentMeta) => {
         addMissingContentMeta(contentMeta, (updatedContentMeta) => setContentMeta(updatedContentMeta));
         setShowContentMetaPreviewState(true);
     };
@@ -58,7 +57,7 @@ const BaseTabComponent = ({ children }) => {
         addContentTypeInfoToItem,
         updateContentMetaWithCurrentVersion,
         addMissingContentMeta,
-        onItemSelect,
+        onItemMarked,
         markContentAsSelected,
         unmarkContentAsSelected,
     };

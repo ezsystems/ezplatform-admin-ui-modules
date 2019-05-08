@@ -87,7 +87,7 @@ export default class FinderTreeLeafComponent extends Component {
             location,
             onSelectContent,
             onItemRemove,
-            canSelectContent,
+            checkCanSelectContent,
             isLoadingChildren,
         } = this.props;
 
@@ -101,7 +101,7 @@ export default class FinderTreeLeafComponent extends Component {
                 location={location}
                 onSelect={onSelectContent}
                 onDeselect={onItemRemove}
-                canSelectContent={canSelectContent}
+                checkCanSelectContent={checkCanSelectContent}
             />
         );
     }
@@ -149,7 +149,7 @@ FinderTreeLeafComponent.propTypes = {
     multiple: PropTypes.bool.isRequired,
     selectedContent: PropTypes.array.isRequired,
     onSelectContent: PropTypes.func.isRequired,
-    canSelectContent: PropTypes.func.isRequired,
+    checkCanSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     contentTypesMap: PropTypes.object.isRequired,
 };

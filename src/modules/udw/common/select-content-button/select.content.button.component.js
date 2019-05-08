@@ -1,23 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
 import { classnames } from '../../../common/classnames/classnames';
 
-const SelectContentButtonComponent = ({ canSelectContent, location, onSelect, onDeselect, isSelected }) => {
+const SelectContentButtonComponent = ({ checkCanSelectContent, location, onSelect, onDeselect, isSelected }) => {
     const [isSelectContentEnabled, setIsSelectContentEnabled] = useState(true);
-    const handleSelect = () => onSelect(location);
-    const handleDeselect = () => onDeselect(location.id);
-    const toggleEnabledState = (selectContentEnabled) => {
-        if (isSelectContentEnabled === selectContentEnabled) {
-            return;
-        }
+    const handleSelect = useCallback(
+        (event) => {
+            event.stopPropagation();
 
-        setIsSelectContentEnabled(selectContentEnabled);
-    };
+            onSelect(location);
+        },
+        [location, onSelect]
+    );
+    const handleDeselect = useCallback(
+        (event) => {
+            event.stopPropagation();
+
+            onDeselect(location.id);
+        },
+        [location.id, onDeselect]
+    );
+    const toggleEnabledState = useCallback(
+        (selectContentEnabled) => {
+            if (isSelectContentEnabled === selectContentEnabled) {
+                return;
+            }
+
+            setIsSelectContentEnabled(selectContentEnabled);
+        },
+        [isSelectContentEnabled]
+    );
 
     useEffect(() => {
-        canSelectContent(location, toggleEnabledState);
-    });
+        checkCanSelectContent(location, toggleEnabledState);
+    }, [checkCanSelectContent, location, toggleEnabledState]);
 
     const iconId = isSelected ? 'checkmark' : 'create';
     const attrs = {
@@ -41,7 +58,7 @@ const SelectContentButtonComponent = ({ canSelectContent, location, onSelect, on
 };
 
 SelectContentButtonComponent.propTypes = {
-    canSelectContent: PropTypes.func.isRequired,
+    checkCanSelectContent: PropTypes.func.isRequired,
     location: PropTypes.shape({
         id: PropTypes.string.isRequired,
     }).isRequired,

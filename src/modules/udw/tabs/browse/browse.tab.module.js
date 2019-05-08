@@ -84,7 +84,7 @@ UDWBrowseTab.propTypes = {
     selectedItemsLimit: PropTypes.number,
     startingLocationId: PropTypes.number,
     allowContainersOnly: PropTypes.bool,
-    canSelectContent: PropTypes.func,
+    checkCanSelectContent: PropTypes.func,
 };
 
 UDWBrowseTab.defaultProps = {
@@ -92,7 +92,7 @@ UDWBrowseTab.defaultProps = {
     startingLocationId: 1,
     selectedItemsLimit: 0,
     allowContainersOnly: false,
-    canSelectContent: (item, callback) => callback(true),
+    checkCanSelectContent: (item, callback) => callback(true),
 };
 
 eZ.addConfig('udwTabs.Browse', UDWBrowseTab);

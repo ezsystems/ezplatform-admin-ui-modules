@@ -33,7 +33,18 @@ const TEXT_SEARCH_TIP_FEWER_KEYWORDS = Translator.trans(
     'search'
 );
 
-const SearchComponent = ({ maxHeight, ...props }) => {
+const SearchComponent = (props) => {
+    const {
+        maxHeight,
+        onItemMarked,
+        onItemSelect,
+        onItemDeselect,
+        selectedContent,
+        checkCanSelectContent,
+        multiple,
+        searchResultsPerPage,
+        searchResultsLimit,
+    } = props;
     const [items, setItems] = useState(null);
     const [lastSearchText, setLastSearchText] = useState(null);
     const [isSearching, setIsSearching] = useState(false);
@@ -52,7 +63,7 @@ const SearchComponent = ({ maxHeight, ...props }) => {
         setIsSearching(true);
         setLastSearchText(searchText);
 
-        const promise = new Promise((resolve) => findContentBySearchQuery(restInfo, searchText, resolve, props.searchResultsLimit));
+        const promise = new Promise((resolve) => findContentBySearchQuery(restInfo, searchText, resolve, searchResultsLimit));
 
         promise.then(updateItemsState).catch(() => window.eZ.helpers.notification.showErrorNotification(TEXT_CANNOT_FIND_ITEMS));
     };
@@ -105,13 +116,11 @@ const SearchComponent = ({ maxHeight, ...props }) => {
             </div>
         );
     };
-
     const renderResultsTable = () => {
         if (!items) {
             return null;
         }
 
-        const { onItemSelect, searchResultsPerPage, selectedContent, onSelectContent, canSelectContent, onItemRemove, multiple } = props;
         const noItemsMessage = Translator.trans(
             /*@Desc("Sorry, no results were found for ""%query%"".")*/ 'search.no_result',
             { query: lastSearchText },
@@ -124,11 +133,11 @@ const SearchComponent = ({ maxHeight, ...props }) => {
                 totalCount={items.length}
                 perPage={searchResultsPerPage}
                 title={TEXT_RESULTS_TABLE_TITLE}
-                selectedContent={selectedContent}
-                onSelectContent={onSelectContent}
-                canSelectContent={canSelectContent}
                 onItemSelect={onItemSelect}
-                onItemRemove={onItemRemove}
+                selectedContent={selectedContent}
+                checkCanSelectContent={checkCanSelectContent}
+                onItemMarked={onItemMarked}
+                onItemDeselect={onItemDeselect}
                 shouldDisplaySelectContentBtn={!multiple}
                 noItemsMessage={noItemsMessage}
             />
@@ -155,14 +164,13 @@ const SearchComponent = ({ maxHeight, ...props }) => {
 };
 
 SearchComponent.propTypes = {
-    onItemSelect: PropTypes.func.isRequired,
+    onItemMarked: PropTypes.func.isRequired,
     maxHeight: PropTypes.number.isRequired,
     searchResultsPerPage: PropTypes.number.isRequired,
     searchResultsLimit: PropTypes.number.isRequired,
-    selectedContent: PropTypes.array.isRequired,
-    onSelectContent: PropTypes.func.isRequired,
-    canSelectContent: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
+    onItemSelect: PropTypes.func.isRequired,
+    checkCanSelectContent: PropTypes.func.isRequired,
+    onItemDeselect: PropTypes.func.isRequired,
     multiple: PropTypes.bool.isRequired,
 };
 

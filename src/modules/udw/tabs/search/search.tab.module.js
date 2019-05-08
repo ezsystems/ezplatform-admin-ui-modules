@@ -7,16 +7,17 @@ import SelectedContentComponent from '../../common/selected-content/selected.con
 import { classnames } from '../../../common/classnames/classnames';
 import BaseTabComponent from '../base.tab.component';
 
-const UDWSearchTab = ({
-    multiple,
-    maxHeight,
-    selectedItemsLimit,
-    searchResultsPerPage,
-    searchResultsLimit,
-    onCancel,
-    onConfirm,
-    canSelectContent,
-}) => {
+const UDWSearchTab = (props) => {
+    const {
+        multiple,
+        maxHeight,
+        selectedItemsLimit,
+        searchResultsPerPage,
+        searchResultsLimit,
+        onCancel,
+        onConfirm,
+        checkCanSelectContent,
+    } = props;
     const renderTab = (parentProps) => {
         const {
             showContentMetaPreview,
@@ -24,7 +25,7 @@ const UDWSearchTab = ({
             selectedContent,
             markContentAsSelected,
             unmarkContentAsSelected,
-            onItemSelect,
+            onItemMarked,
         } = parentProps;
         const confirmSelection = () => onConfirm(selectedContent);
         const wrapperAttrs = {
@@ -38,10 +39,11 @@ const UDWSearchTab = ({
             maxHeight,
             searchResultsPerPage,
             searchResultsLimit,
-            markContentAsSelected,
-            unmarkContentAsSelected,
-            canSelectContent,
-            onItemSelect,
+            selectedContent,
+            onItemSelect: markContentAsSelected,
+            onItemDeselect: unmarkContentAsSelected,
+            checkCanSelectContent,
+            onItemMarked,
         };
         const confirmBtnAttrs = {
             className: 'ez-browse-tab__action',
@@ -94,14 +96,14 @@ UDWSearchTab.propTypes = {
     searchResultsPerPage: PropTypes.number,
     searchResultsLimit: PropTypes.number,
     multiple: PropTypes.bool,
-    canSelectContent: PropTypes.func,
+    checkCanSelectContent: PropTypes.func,
 };
 
 UDWSearchTab.defaultProps = {
     multiple: false,
     searchResultsPerPage: 10,
     searchResultsLimit: 50,
-    canSelectContent: (item, callback) => callback(true),
+    checkCanSelectContent: (item, callback) => callback(true),
 };
 
 eZ.addConfig('udwTabs.Search', UDWSearchTab);

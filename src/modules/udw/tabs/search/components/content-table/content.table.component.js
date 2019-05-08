@@ -21,8 +21,8 @@ const splitToPages = (items, perPage) => {
 const getMaxAllowedPageIndex = (totalCount, perPage) => (!totalCount ? 0 : Math.floor((totalCount - 1) / perPage));
 
 const ContentTableComponent = (props) => {
-    const { items, perPage, totalCount, noItemsMessage, title, shouldDisplaySelectContentBtn } = props;
-    const { onItemSelect, selectedContent, onSelectContent, canSelectContent, onItemRemove } = props;
+    const { items, totalCount, perPage, title, noItemsMessage, shouldDisplaySelectContentBtn } = props;
+    const { onItemMarked, onItemSelect, checkCanSelectContent, onItemDeselect, selectedContent } = props;
     const [activePage, setActivePage] = useState(0);
     const [pages, setPages] = useState({});
     const renderHeader = () => {
@@ -42,20 +42,18 @@ const ContentTableComponent = (props) => {
         return <div className="c-content-table__no-items">{noItemsMessage}</div>;
     };
     const handlePaginationItemClick = (activePage) => setActivePage(activePage);
-    const handleItemSelection = useCallback((location) => onItemSelect(location), [onItemSelect]);
+    const handleItemMarked = useCallback((location) => onItemMarked(location), [onItemMarked]);
     const renderItem = (item) => {
-        const location = item.Location;
-
         return (
             <ContentTableItemComponent
-                key={location.id}
-                location={location}
-                onContainerClick={handleItemSelection}
-                selectedContent={selectedContent}
-                onItemSelect={onSelectContent}
-                canSelectContent={canSelectContent}
-                onItemDeselect={onItemRemove}
+                key={item.Location.id}
+                location={item.Location}
+                onItemMarked={handleItemMarked}
+                checkCanSelectContent={checkCanSelectContent}
+                onItemSelect={onItemSelect}
+                onItemDeselect={onItemDeselect}
                 shouldDisplaySelectContentBtn={shouldDisplaySelectContentBtn}
+                isSelected={selectedContent.find((contentItem) => contentItem.id === item.Location.id)}
             />
         );
     };
@@ -128,18 +126,12 @@ ContentTableComponent.propTypes = {
     perPage: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     noItemsMessage: PropTypes.string,
-    requireItemsCount: PropTypes.func.isRequired,
-    selectedContent: PropTypes.array.isRequired,
-    onItemSelect: PropTypes.func.isRequired,
-    onItemRemove: PropTypes.func.isRequired,
-    onItemClick: PropTypes.func,
-    onSelectContent: PropTypes.func.isRequired,
-    canSelectContent: PropTypes.func.isRequired,
     shouldDisplaySelectContentBtn: PropTypes.bool.isRequired,
-};
-
-ContentTableComponent.defaultProps = {
-    onItemClick: null,
+    onItemSelect: PropTypes.func.isRequired,
+    onItemDeselect: PropTypes.func.isRequired,
+    onItemMarked: PropTypes.func.isRequired,
+    checkCanSelectContent: PropTypes.func.isRequired,
+    selectedContent: PropTypes.array.isRequired,
 };
 
 export default ContentTableComponent;

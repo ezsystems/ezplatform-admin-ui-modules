@@ -46,7 +46,7 @@ export default class FinderTreeBranchComponent extends Component {
                 multiple={this.props.multiple}
                 selectedContent={this.props.selectedContent}
                 onSelectContent={this.props.onSelectContent}
-                canSelectContent={this.props.canSelectContent}
+                checkCanSelectContent={this.props.checkCanSelectContent}
                 onItemRemove={this.props.onItemRemove}
                 contentTypesMap={this.props.contentTypesMap}
             />
@@ -116,7 +116,7 @@ FinderTreeBranchComponent.propTypes = {
     multiple: PropTypes.bool.isRequired,
     selectedContent: PropTypes.array.isRequired,
     onSelectContent: PropTypes.func.isRequired,
-    canSelectContent: PropTypes.func.isRequired,
+    checkCanSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     activeLocationId: PropTypes.string,
     isActiveLocationLoading: PropTypes.bool,
