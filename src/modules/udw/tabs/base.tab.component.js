@@ -39,7 +39,8 @@ const BaseTabComponent = ({ children }) => {
         setSelectedContent((content) => content.map((item) => (item.id === updatedContentMeta.id ? updatedContentMeta : item)));
     };
     const onItemMarked = (contentMeta) => {
-        addMissingContentMeta(contentMeta, (updatedContentMeta) => setContentMeta(updatedContentMeta));
+        setContentMeta(() => contentMeta);
+        addMissingContentMeta(contentMeta, (updatedContentMeta) => setContentMeta(() => updatedContentMeta));
         setShowContentMetaPreviewState(true);
     };
     const markContentAsSelected = (contentMeta) => {

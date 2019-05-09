@@ -7,7 +7,6 @@ const SelectContentButtonComponent = ({ checkCanSelectContent, location, onSelec
     const [isSelectContentEnabled, setIsSelectContentEnabled] = useState(true);
     const handleSelect = useCallback(
         (event) => {
-            console.log(Date.now());
             event.stopPropagation();
 
             onSelect(location);

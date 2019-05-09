@@ -4,6 +4,21 @@ import ContentImagePreviewComponent from './content.image.preview.component';
 import BookmarkIconComponent from './bookmark.icon.component';
 import ContentTypeIconComponent from './content.type.icon.component';
 
+const TEXT_LAST_MODIFIED = Translator.trans(
+    /*@Desc("Last modified")*/ 'content_meta_preview.last_modified.label',
+    {},
+    'universal_discovery_widget'
+);
+const TEXT_CREATION_DATE = Translator.trans(
+    /*@Desc("Creation date")*/ 'content_meta_preview.creation_date.label',
+    {},
+    'universal_discovery_widget'
+);
+const TEXT_TRANSLATIONS = Translator.trans(
+    /*@Desc("Translations")*/ 'content_meta_preview.translations.label',
+    {},
+    'universal_discovery_widget'
+);
 const getTranslations = (location) => {
     if (!location || !location.CurrentVersion) {
         return [];
@@ -30,26 +45,17 @@ const ContentMetaPreviewComponent = ({ location, maxHeight, isVisible }) => {
     };
 
     const content = location.ContentInfo.Content;
-    const contentTypeIdentifier = content.ContentTypeInfo.identifier;
-    const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+    let contentTypeIdentifier = null;
+    let contentTypeName = '';
+
+    if (content.ContentTypeInfo) {
+        contentTypeIdentifier = content.ContentTypeInfo.identifier;
+        contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+    }
+
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const translations = getTranslations(location);
     const title = Translator.trans(/*@Desc("Content Meta Preview")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');
-    const lastModifiedLabel = Translator.trans(
-        /*@Desc("Last modified")*/ 'content_meta_preview.last_modified.label',
-        {},
-        'universal_discovery_widget'
-    );
-    const creationDateLabel = Translator.trans(
-        /*@Desc("Creation date")*/ 'content_meta_preview.creation_date.label',
-        {},
-        'universal_discovery_widget'
-    );
-    const translationsLabel = Translator.trans(
-        /*@Desc("Translations")*/ 'content_meta_preview.translations.label',
-        {},
-        'universal_discovery_widget'
-    );
     const version = location.CurrentVersion ? location.CurrentVersion.Version : null;
 
     return (
@@ -68,15 +74,15 @@ const ContentMetaPreviewComponent = ({ location, maxHeight, isVisible }) => {
                     </div>
                     <div className="c-meta-preview__name">{content.Name}</div>
                     <div className="c-meta-preview__content-info">
-                        <h3 className="c-meta-preview__subtitle">{lastModifiedLabel}:</h3>
+                        <h3 className="c-meta-preview__subtitle">{TEXT_LAST_MODIFIED}:</h3>
                         {formatShortDateTime(new Date(content.lastModificationDate))}
                     </div>
                     <div className="c-meta-preview__content-info">
-                        <h3 className="c-meta-preview__subtitle">{creationDateLabel}:</h3>
+                        <h3 className="c-meta-preview__subtitle">{TEXT_CREATION_DATE}:</h3>
                         {formatShortDateTime(new Date(content.publishedDate))}
                     </div>
                     <div className="c-meta-preview__content-info">
-                        <h3 className="c-meta-preview__subtitle">{translationsLabel}:</h3>
+                        <h3 className="c-meta-preview__subtitle">{TEXT_TRANSLATIONS}:</h3>
                         {translations.map(renderTranslation)}
                     </div>
                 </div>

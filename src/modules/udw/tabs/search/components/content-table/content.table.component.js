@@ -41,7 +41,7 @@ const ContentTableComponent = (props) => {
 
         return <div className="c-content-table__no-items">{noItemsMessage}</div>;
     };
-    const handlePaginationItemClick = (activePage) => setActivePage(activePage);
+    const handlePaginationItemClick = (activePage) => setActivePage(() => activePage);
     const handleItemMarked = useCallback((location) => onItemMarked(location), [onItemMarked]);
     const renderItem = (item) => {
         return (
@@ -56,21 +56,6 @@ const ContentTableComponent = (props) => {
                 isSelected={selectedContent.find((contentItem) => contentItem.id === item.Location.id)}
             />
         );
-    };
-    const renderPagination = () => {
-        const maxIndex = getMaxAllowedPageIndex(totalCount, perPage);
-        const paginationAttrs = {
-            minIndex: 0,
-            maxIndex,
-            activeIndex: activePage,
-            onChange: handlePaginationItemClick,
-        };
-
-        if (!maxIndex) {
-            return null;
-        }
-
-        return <ContentTablePaginationComponent {...paginationAttrs} />;
     };
     const renderPage = () => {
         const itemsCount = items.length;
@@ -92,7 +77,7 @@ const ContentTableComponent = (props) => {
 
     useEffect(() => {
         const maxAllowedPageIndex = getMaxAllowedPageIndex(totalCount, perPage);
-        const shouldChangeActivePage = activePage <= maxAllowedPageIndex ? activePage : maxAllowedPageIndex;
+        const shouldChangeActivePage = activePage > maxAllowedPageIndex;
 
         if (shouldChangeActivePage) {
             setActivePage(maxAllowedPageIndex);
@@ -107,6 +92,13 @@ const ContentTableComponent = (props) => {
         return null;
     }
 
+    const paginationAttrs = {
+        minIndex: 0,
+        maxIndex: getMaxAllowedPageIndex(totalCount, perPage),
+        activeIndex: activePage,
+        onChange: handlePaginationItemClick,
+    };
+
     return (
         <div className="c-content-table">
             <div className="c-content-table__title">
@@ -115,7 +107,7 @@ const ContentTableComponent = (props) => {
             {renderNoItemsMessage()}
             {renderHeader()}
             <div className="c-content-table__list">{renderPage()}</div>
-            {renderPagination()}
+            <ContentTablePaginationComponent {...paginationAttrs} />;
         </div>
     );
 };

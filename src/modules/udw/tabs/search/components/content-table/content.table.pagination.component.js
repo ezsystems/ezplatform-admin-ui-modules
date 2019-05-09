@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-const ContentTablePaginationComponent = (props) => {
-    const { minIndex, activeIndex, maxIndex, onChange } = props;
+const ContentTablePaginationComponent = ({ minIndex, activeIndex, maxIndex, onChange }) => {
     const btnFirstLabel = Translator.trans(/*@Desc("First")*/ 'pagination.first', {}, 'universal_discovery_widget');
     const btnPrevLabel = Translator.trans(/*@Desc("Previous")*/ 'pagination.prev', {}, 'universal_discovery_widget');
     const btnNextLabel = Translator.trans(/*@Desc("Next")*/ 'pagination.next', {}, 'universal_discovery_widget');
@@ -10,24 +9,28 @@ const ContentTablePaginationComponent = (props) => {
     const btnClass = 'c-content-table-pagination__btn';
     const firstAttrs = {
         type: 'button',
-        onClick: () => onChange(minIndex),
+        onClick: useCallback(() => onChange(minIndex), [minIndex, onChange]),
         className: `${btnClass} ${btnClass}--first`,
     };
     const prevAttrs = {
         type: 'button',
-        onClick: () => onChange(activeIndex - 1),
+        onClick: useCallback(() => onChange(activeIndex - 1), [activeIndex, onChange]),
         className: `${btnClass} ${btnClass}--prev ${btnClass}--middle`,
     };
     const nextAttrs = {
         type: 'button',
-        onClick: () => onChange(activeIndex + 1),
+        onClick: useCallback(() => onChange(activeIndex + 1), [activeIndex, onChange]),
         className: `${btnClass} ${btnClass}--next ${btnClass}--middle`,
     };
     const lastAttrs = {
         type: 'button',
-        onClick: () => onChange(maxIndex),
+        onClick: useCallback(() => onChange(maxIndex), [maxIndex, onChange]),
         className: `${btnClass} ${btnClass}--last`,
     };
+
+    if (!maxIndex) {
+        return null;
+    }
 
     if (activeIndex === minIndex) {
         firstAttrs.disabled = true;
