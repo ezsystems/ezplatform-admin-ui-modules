@@ -35,20 +35,19 @@ const BaseTabComponent = ({ children }) => {
             callback(updatedContentMeta);
         });
     };
+    const afterUpdatingMissingContentMeta = (updatedContentMeta) => {
+        setSelectedContent((content) => content.map((item) => (item.id === updatedContentMeta.id ? updatedContentMeta : item)));
+    };
     const onItemMarked = (contentMeta) => {
         addMissingContentMeta(contentMeta, (updatedContentMeta) => setContentMeta(updatedContentMeta));
         setShowContentMetaPreviewState(true);
     };
     const markContentAsSelected = (contentMeta) => {
-        const alreadySelectedContent = deepClone(selectedContent);
-        const afterUpdate = (updatedContentMeta) => setSelectedContent([...alreadySelectedContent, updatedContentMeta]);
-
-        addMissingContentMeta(contentMeta, afterUpdate);
+        setSelectedContent((content) => [...deepClone(content), contentMeta]);
+        addMissingContentMeta(contentMeta, afterUpdatingMissingContentMeta);
     };
     const unmarkContentAsSelected = (locationId) => {
-        const alreadySelectedContent = deepClone(selectedContent);
-
-        setSelectedContent(alreadySelectedContent.filter((item) => item.id !== locationId));
+        setSelectedContent((content) => deepClone(content).filter((item) => item.id !== locationId));
     };
     const attrs = {
         selectedContent,

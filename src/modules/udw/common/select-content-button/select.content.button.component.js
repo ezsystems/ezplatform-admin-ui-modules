@@ -5,12 +5,11 @@ import { classnames } from '../../../common/classnames/classnames';
 
 const SelectContentButtonComponent = ({ checkCanSelectContent, location, onSelect, onDeselect, isSelected }) => {
     const [isSelectContentEnabled, setIsSelectContentEnabled] = useState(true);
-    const [isContentSelected, setIsContentSelected] = useState(false);
     const handleSelect = useCallback(
         (event) => {
+            console.log(Date.now());
             event.stopPropagation();
 
-            setIsContentSelected(true);
             onSelect(location);
         },
         [location, onSelect]
@@ -19,10 +18,9 @@ const SelectContentButtonComponent = ({ checkCanSelectContent, location, onSelec
         (event) => {
             event.stopPropagation();
 
-            setIsContentSelected(false);
             onDeselect(location.id);
         },
-        [location.id, onDeselect]
+        [location, onDeselect]
     );
     const toggleEnabledState = useCallback(
         (selectContentEnabled) => {
@@ -44,7 +42,7 @@ const SelectContentButtonComponent = ({ checkCanSelectContent, location, onSelec
         type: 'button',
         className: classnames({
             'c-select-content-button': true,
-            'c-select-content-button--selected': isContentSelected || isSelected,
+            'c-select-content-button--selected': isSelected,
         }),
         onClick: isSelected ? handleDeselect : handleSelect,
     };
