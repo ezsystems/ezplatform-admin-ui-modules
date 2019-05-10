@@ -34,6 +34,7 @@
         "no-extra-boolean-cast": "off",
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
+        "react/require-default-props": "warn",
         "jsx-quotes": ["error", "prefer-double"],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",

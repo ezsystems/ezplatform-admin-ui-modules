@@ -106,7 +106,7 @@ UDWModule.propTypes = {
             panel: PropTypes.func.isRequired,
             attrs: PropTypes.object,
             active: PropTypes.bool,
-        })
+        }).isRequired
     ),
     maxHeight: PropTypes.number,
     onClose: PropTypes.func,
