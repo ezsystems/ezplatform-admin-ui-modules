@@ -19,6 +19,11 @@ const TEXT_TRANSLATIONS = Translator.trans(
     {},
     'universal_discovery_widget'
 );
+const TEXT_CONTAINER_TITLE = Translator.trans(
+    /*@Desc("Content Meta Preview")*/ 'content_meta_preview.title',
+    {},
+    'universal_discovery_widget'
+);
 const getTranslations = (location) => {
     if (!location || !location.CurrentVersion) {
         return [];
@@ -43,7 +48,6 @@ const ContentMetaPreviewComponent = ({ location, maxHeight, isVisible }) => {
             </span>
         );
     };
-
     const content = location.ContentInfo.Content;
     let contentTypeIdentifier = null;
     let contentTypeName = '';
@@ -55,12 +59,11 @@ const ContentMetaPreviewComponent = ({ location, maxHeight, isVisible }) => {
 
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const translations = getTranslations(location);
-    const title = Translator.trans(/*@Desc("Content Meta Preview")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');
     const version = location.CurrentVersion ? location.CurrentVersion.Version : null;
 
     return (
         <div className="c-meta-preview__wrapper" style={{ maxHeight: `${maxHeight}px` }}>
-            <h3 className="c-meta-preview__title">{title}</h3>
+            <h3 className="c-meta-preview__title">{TEXT_CONTAINER_TITLE}</h3>
             <div className="c-meta-preview">
                 <div className="c-meta-preview__top-wrapper">
                     <div className="c-meta-preview__content-type">
