@@ -1,8 +1,8 @@
 {
     "presets": [
-        ["react"],
+        ["@babel/preset-react"],
         [
-            "env",
+            "@babel/preset-env",
             {
                 "targets": {
                     "browsers": [
@@ -16,7 +16,5 @@
             }
         ]
     ],
-    "plugins": [
-        "transform-object-rest-spread"
-    ]
+    "plugins": ["@babel/plugin-proposal-object-rest-spread"]
 }
