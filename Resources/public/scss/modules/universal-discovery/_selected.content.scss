@@ -7,6 +7,7 @@
         display: inline-block;
         border-radius: calculateRem(4px);
         background: $ez-ground-base-dark;
+        border: none;
 
         &--any-item-selected {
             cursor: pointer;
@@ -19,6 +20,7 @@
     }
 
     &__content-names {
+        display: block;
         max-width: calculateRem(320px);
         white-space: nowrap;
         overflow: hidden;
