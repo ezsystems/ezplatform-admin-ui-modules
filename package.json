@@ -10,8 +10,8 @@
         "test": "jest --config ./jest.config.js"
     },
     "dependencies": {
-        "react": "^16.2.0",
-        "react-dom": "^16.2.0"
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6"
     },
     "devDependencies": {
         "@babel/core": "^7.4.3",

@@ -1,29 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import TabContentPanelComponent from './tab.content.panel.component';
 import FinderComponent from '../finder/finder.component';
 import CreateComponent from '../create/create.component';
+
+const chooseLanguageAndContentTypeTitle = Translator.trans(
+    /*@Desc("Choose Language and Content Type")*/ 'content_on_the_fly.choose_language_and_content_type.title',
+    {},
+    'universal_discovery_widget'
+);
+const selectLocationTitle = Translator.trans(
+    /*@Desc("Select Location")*/ 'content_on_the_fly.select_location.title',
+    {},
+    'universal_discovery_widget'
+);
 
 const CreatePanelComponent = (props) => {
     const wrapperAttrs = { className: 'c-create-panel' };
     const maxHeight = props.maxHeight - 24;
     const componentProps = { ...props, maxHeight, allowContainersOnly: true };
     const finderProps = { ...componentProps, multiple: false };
-    const chooseLanguageAndContentTypeTitle = Translator.trans(
-        /*@Desc("Choose Language and Content Type")*/ 'content_on_the_fly.choose_language_and_content_type.title',
-        {},
-        'universal_discovery_widget'
-    );
-    const selectLocationTitle = Translator.trans(
-        /*@Desc("Select Location")*/ 'content_on_the_fly.select_location.title',
-        {},
-        'universal_discovery_widget'
-    );
 
     if (!props.isVisible) {
         wrapperAttrs.hidden = true;
     }
+
+    console.log({ componentProps, finderProps });
 
     return (
         <div {...wrapperAttrs}>
@@ -62,6 +64,10 @@ CreatePanelComponent.propTypes = {
     allowedLanguages: PropTypes.array.isRequired,
     sortFieldMappings: PropTypes.object.isRequired,
     sortOrderMappings: PropTypes.object.isRequired,
+};
+
+CreatePanelComponent.defaultProps = {
+    preselectedLocation: null,
 };
 
 export default CreatePanelComponent;
