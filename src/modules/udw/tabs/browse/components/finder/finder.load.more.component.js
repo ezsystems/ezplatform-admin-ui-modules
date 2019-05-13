@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const TEXT_LOAD_MORE = Translator.trans(/*@Desc("Load more")*/ 'finder.branch.load_more.label', {}, 'universal_discovery_widget');
+
 const FinderLoadMoreComponent = ({ isVisible, onClick }) => {
     if (!isVisible) {
         return null;
     }
 
-    const loadMoreLabel = Translator.trans(/*@Desc("Load more")*/ 'finder.branch.load_more.label', {}, 'universal_discovery_widget');
-
     return (
         <button type="button" className="c-finder-load-more" onClick={onClick}>
-            {loadMoreLabel}
+            {TEXT_LOAD_MORE}
         </button>
     );
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
 import ContentTypeIconComponent from '../content-type-icon/content.type.icon.component';
 
-const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'select_content.not_available.label', {}, 'universal_discovery_widget');
+const TEXT_NOT_AVAILABLE = Translator.trans(/*@Desc("N/A")*/ 'select_content.not_available.label', {}, 'universal_discovery_widget');
 const SelectedContentItemComponent = ({ contentName, locationId, contentTypeIdentifier, contentTypeName, onRemove }) => {
     let icon = null;
 
@@ -36,7 +36,7 @@ SelectedContentItemComponent.propTypes = {
 
 SelectedContentItemComponent.defaultProps = {
     contentTypeIdentifier: null,
-    contentTypeName: notAvailableLabel,
+    contentTypeName: TEXT_NOT_AVAILABLE,
 };
 
 export default SelectedContentItemComponent;

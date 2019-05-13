@@ -2,6 +2,11 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import LoadingSpinnerComponent from '../../../common/loading-spinner/loading.spinner.component';
 
+const TEXT_NO_PREVIEW = Translator.trans(
+    /*@Desc("Content preview is not available")*/ 'content_meta_preview.image_preview_not_available.info',
+    {},
+    'universal_discovery_widget'
+);
 const getImageUri = (version) => {
     if (!version) {
         return '';
@@ -18,14 +23,9 @@ const ContentImagePreviewComponent = ({ version }) => {
     }
 
     const imageUri = getImageUri(version);
-    const imagePreviewNotAvailableLabel = Translator.trans(
-        /*@Desc("Content preview is not available")*/ 'content_meta_preview.image_preview_not_available.info',
-        {},
-        'universal_discovery_widget'
-    );
 
     if (!imageUri.length) {
-        return <Fragment>{imagePreviewNotAvailableLabel}</Fragment>;
+        return <Fragment>{TEXT_NO_PREVIEW}</Fragment>;
     }
 
     return <img className="c-content-image-preview" src={imageUri} alt="" />;

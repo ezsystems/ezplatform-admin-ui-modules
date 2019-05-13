@@ -4,13 +4,18 @@ import SelectedContentItemComponent from './selected.content.item.component';
 import PopupComponent from '../../../common/tooltip-popup/tooltip.popup.component';
 import { createCssClassNames } from '../../../common/css-class-names/css.class.names';
 
-const noConfirmedContentTitle = Translator.trans(
+const TEXT_NO_CONFIRMED_CONTENT = Translator.trans(
     /*@Desc("No confirmed content yet")*/ 'select_content.no_confirmed_content.title',
     {},
     'universal_discovery_widget'
 );
+const TEXT_CONFIRMED_ITEMS = Translator.trans(
+    /*@Desc("Confirmed items")*/ 'select_content.confirmed_items.title',
+    {},
+    'universal_discovery_widget'
+);
 const getTitle = (total) => {
-    let title = Translator.trans(/*@Desc("Confirmed items")*/ 'select_content.confirmed_items.title', {}, 'universal_discovery_widget');
+    let title = `${TEXT_CONFIRMED_ITEMS}`;
 
     if (total) {
         title = `${title} (${total})`;
@@ -78,7 +83,7 @@ const SelectedContentComponent = ({ items, itemsLimit, onItemRemove }) => {
             <button type="button" className={btnClassNames} onClick={togglePopup}>
                 <strong className="c-selected-content__title">{getTitle(itemsCount)}</strong>
                 {renderLimitLabel(itemsLimit)}
-                <span className="c-selected-content__content-names">{titles.length ? titles : noConfirmedContentTitle}</span>
+                <span className="c-selected-content__content-names">{titles.length ? titles : TEXT_NO_CONFIRMED_CONTENT}</span>
             </button>
         </div>
     );
