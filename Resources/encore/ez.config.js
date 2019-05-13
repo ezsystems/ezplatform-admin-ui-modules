@@ -14,5 +14,8 @@ module.exports = (Encore) => {
         .addEntry('ezplatform-admin-ui-modules-udw-v2-js', [path.resolve(__dirname, '../../src/modules/udw/udw.module.js')])
         .addEntry('ezplatform-admin-ui-modules-udw-v2-tab-browse-js', [
             path.resolve(__dirname, '../../src/modules/udw/tabs/browse/browse.tab.module.js'),
+        ])
+        .addEntry('ezplatform-admin-ui-modules-udw-v2-tab-create-js', [
+            path.resolve(__dirname, '../../src/modules/udw/tabs/create/create.tab.module.js'),
         ]);
 };
