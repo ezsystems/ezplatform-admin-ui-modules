@@ -1,16 +1,19 @@
+dist: trusty
 language: php
-
-cache:
-    directories:
-      - $HOME/.composer/cache
+php:
+  - 7.1
 
 env:
   global:
-    # For acceptance tests
     - EZPLATFORM_REPO="https://github.com/ezsystems/ezplatform.git"
     - COMPOSE_FILE="doc/docker/base-dev.yml:doc/docker/selenium.yml"
-    - BEHAT_OPTS="--profile=adminui --suite=adminuimodules --no-interaction -vv"
+    - BEHAT_OPTS="--mode=behat --profile=adminui --suite=adminuimodules"
     - SYMFONY_ENV=behat
+    - SYMFONY_DEBUG=1
+
+cache:
+  directories:
+    - $HOME/.composer/cache
 
 # test only master and stable branches (+ Pull requests)
 branches:
@@ -37,5 +40,4 @@ install:
     - ./.travis/prepare_ezplatform.sh
 
 script:
-    - cd "$HOME/build/ezplatform"; 
-    - docker-compose exec --user www-data app sh -c "./bin/behat $BEHAT_OPTS"
+    - cd "$HOME/build/ezplatform"; docker-compose exec --user www-data app sh -c "./bin/ezbehat $BEHAT_OPTS"
