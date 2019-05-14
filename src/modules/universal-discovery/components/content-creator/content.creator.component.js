@@ -60,8 +60,8 @@ export default class ContentCreatorComponent extends Component {
             };
         }
 
-        iframeDoc.body.addEventListener('fbFormBuilderLoaded', this.disablePublishBtn, false);
-        iframeDoc.body.addEventListener('fbFormBuilderUnloaded', this.enablePublishBtn, false);
+        iframeDoc.body.addEventListener('ez-form-builder-loaded', this.disablePublishBtn, false);
+        iframeDoc.body.addEventListener('ez-form-builder-unloaded', this.enablePublishBtn, false);
     }
 
     enablePublishBtn() {
