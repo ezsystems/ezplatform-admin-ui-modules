@@ -111,6 +111,11 @@
         <target>Translations</target>
         <note>key: items_table.header.translations</note>
       </trans-unit>
+      <trans-unit id="4dd94e21c9ca1c43d784ad33e2bcecd64af573bb" resname="items_table.header.children_count">
+        <source>Children count</source>
+        <target>Children count</target>
+        <note>key: items_table.header.children_count</note>
+      </trans-unit>
       <trans-unit id="b8c369db292d50595af6db4380326dbdf549bc4b" resname="load_content_items.invalid_response_format.error.message">
         <source>Invalid response format</source>
         <target>Invalid response format</target>
