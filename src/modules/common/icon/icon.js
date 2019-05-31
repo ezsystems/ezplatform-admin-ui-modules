@@ -10,7 +10,7 @@ const Icon = (props) => {
     }
 
     return (
-        <svg className={className}>
+        <svg className={className} style={props.style}>
             <use xlinkHref={linkHref} />
         </svg>
     );
@@ -20,11 +20,13 @@ Icon.propTypes = {
     extraClasses: PropTypes.string.isRequired,
     name: PropTypes.string,
     customPath: PropTypes.string,
+    style: PropTypes.object,
 };
 
 Icon.defaultProps = {
     customPath: null,
     name: null,
+    style: null,
 };
 
 export default Icon;
