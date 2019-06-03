@@ -27,7 +27,7 @@ const ContentTableItemComponent = (props) => {
             <div className="c-content-table-item__actions">
                 <SelectContentButtonComponent
                     multiple={multiple}
-                    selectedContent={selectedContent}
+                    isSelected={!!selectedContent.find((content) => content.id === data.id)}
                     location={data}
                     onSelectContent={onSelectContent}
                     onItemRemove={onItemRemove}
