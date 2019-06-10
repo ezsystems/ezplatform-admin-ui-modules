@@ -43,7 +43,7 @@ class EzPlatformAdminUiModulesExtension extends Extension implements PrependExte
      */
     private function prependBazingaJsTranslationConfiguration(ContainerBuilder $container)
     {
-        $configFile = __DIR__ . '/../Resources/config/bazinga_js_translation.yml';
+        $configFile = __DIR__ . '/../Resources/config/bazinga_js_translation.yaml';
         $config = Yaml::parseFile($configFile);
         $container->prependExtensionConfig('bazinga_js_translation', $config);
         $container->addResource(new FileResource($configFile));
