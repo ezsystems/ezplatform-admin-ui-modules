@@ -1,12 +1,11 @@
 {
-    "plugins": ["react", "prettier", "react-hooks"],
+    "plugins": ["react", "prettier"],
     "extends": ["prettier", "prettier/react", "eslint:recommended", "plugin:react/recommended"],
     "env": {
         "browser": true,
         "commonjs": true,
         "es6": true,
-        "node": true,
-        "jest": true
+        "node": true
     },
     "globals": {
         "Translator": true,
@@ -34,10 +33,6 @@
         "no-extra-boolean-cast": "off",
         "react/jsx-uses-react": "error",
         "react/jsx-uses-vars": "error",
-        "react/require-default-props": "warn",
-        "jsx-quotes": ["error", "prefer-double"],
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "warn",
-        "react/no-unused-prop-types": "warn"
+        "jsx-quotes": ["error", "prefer-double"]
     }
 }
