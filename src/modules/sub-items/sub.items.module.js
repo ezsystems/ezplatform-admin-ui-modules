@@ -12,7 +12,7 @@ import Icon from '../common/icon/icon.js';
 
 import deepClone from '../common/helpers/deep.clone.helper.js';
 import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
-import { bulkMoveLocations, bulkMoveLocationsToTrash } from './services/bulk.service.js';
+import { bulkMoveLocations, bulkDeleteItems } from './services/bulk.service.js';
 
 const ASCENDING_SORT_ORDER = 'ascending';
 const DESCENDING_SORT_ORDER = 'descending';
@@ -466,7 +466,7 @@ export default class SubItemsModule extends Component {
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_move.error.more_info',
                     {},
                     'sub_items'
-                )
+                ),
             };
 
             this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap);
@@ -544,9 +544,9 @@ export default class SubItemsModule extends Component {
 
         const { restInfo } = this.props;
         const { selectedItems } = this.state;
-        const locationsToDelete = [...selectedItems.values()].map(({ location }) => location);
+        const itemsToDelete = [...selectedItems.values()];
 
-        bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete.bind(this, selectedItems));
+        bulkDeleteItems(restInfo, itemsToDelete, this.afterBulkDelete.bind(this, selectedItems));
     }
 
     afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {
@@ -581,7 +581,7 @@ export default class SubItemsModule extends Component {
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_delete.error.more_info',
                     {},
                     'sub_items'
-                )
+                ),
             };
 
             this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message, rawPlaceholdersMap);
@@ -679,7 +679,7 @@ export default class SubItemsModule extends Component {
         }
 
         const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message',
+            /*@Desc("Are you sure you want to remove the selected content item(s)?")*/ 'bulk_delete.popup.message',
             {},
             'sub_items'
         );

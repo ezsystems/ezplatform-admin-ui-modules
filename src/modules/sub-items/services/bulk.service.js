@@ -5,33 +5,72 @@ const HEADERS_BULK = {
     'Content-Type': 'application/vnd.ez.api.BulkOperation+json',
 };
 const TRASH_FAKE_LOCATION = '/api/ezp/v2/content/trash';
+const USER_ENDPOINT = '/api/ezp/v2/user/users';
 const ENDPOINT_BULK = '/api/ezp/v2/bulk';
 
 export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
-    const requestBodyOperations = getBulkMoveRequestOperations(locations, newLocationHref);
+    const requestBodyOperations = {};
+
+    locations.forEach((location) => {
+        requestBodyOperations[location.id] = getBulkMoveRequestOperation(location, newLocationHref);
+    });
 
     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
 
-export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
-    bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
-};
+// export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
+//     // bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
 
-const getBulkMoveRequestOperations = (locations, destination) => {
-    const operations = {};
+//     const requestBodyOperations = getBulkDeleteUserRequestOperations(locations);
 
-    locations.forEach((location) => {
-        operations[location.id] = {
-            uri: location._href,
-            method: 'MOVE',
-            headers: {
-                Destination: destination,
-            },
-        };
+//     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
+// };
+
+export const bulkDeleteItems = (restInfo, items, callback) => {
+    const locations = items.map(({ location }) => location);
+    const requestBodyOperations = {};
+
+    items.forEach(({ location, content }) => {
+        const isUserContentItem = content.ContentType._href === '/api/ezp/v2/content/types/4';
+
+        if (isUserContentItem) {
+            requestBodyOperations[location.id] = getBulkDeleteUserRequestOperation(content);
+        } else {
+            requestBodyOperations[location.id] = getBulkMoveRequestOperation(location, TRASH_FAKE_LOCATION);
+        }
     });
 
-    return operations;
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
+
+const getBulkDeleteUserRequestOperation = (content) => ({
+    uri: `${USER_ENDPOINT}/${content._id}`,
+    method: 'DELETE',
+});
+
+const getBulkMoveRequestOperation = (location, destination) => ({
+    uri: location._href,
+    method: 'MOVE',
+    headers: {
+        Destination: destination,
+    },
+});
+
+// const getBulkMoveRequestOperations = (locations, destination) => {
+//     const operations = {};
+
+//     locations.forEach((location) => {
+//         operations[location.id] = {
+//             uri: location._href,
+//             method: 'MOVE',
+//             headers: {
+//                 Destination: destination,
+//             },
+//         };
+//     });
+
+//     return operations;
+// };
 
 const processBulkResponse = (locations, callback, response) => {
     const { operations } = response.BulkOperationResponse;

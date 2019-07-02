@@ -32,8 +32,8 @@
         <note>key: bulk_delete.popup.confirm</note>
       </trans-unit>
       <trans-unit id="02d93b03435046c6bcf08ce15ae7970f7ff8f746" resname="bulk_delete.popup.message">
-        <source>Are you sure you want to send the selected content item(s) to trash?</source>
-        <target state="new">Are you sure you want to send the selected content item(s) to trash?</target>
+        <source>Are you sure you want to remove the selected content item(s)?</source>
+        <target>Are you sure you want to remove the selected content item(s)?</target>
         <note>key: bulk_delete.popup.message</note>
       </trans-unit>
       <trans-unit id="684c07e2248d815e6eb6bc3f92d3cd49c6952cbe" resname="bulk_delete.success.message">
