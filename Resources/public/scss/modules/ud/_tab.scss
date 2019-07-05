@@ -1,0 +1,29 @@
+.c-tab {
+    height: 100vh;
+    display: grid;
+    grid-template-areas:
+        'top-bar top-bar top-bar'
+        'left-sidebar main right-sidebar';
+    grid-template-rows: auto 1fr;
+    grid-template-columns: calculateRem(200px) 1fr calculateRem(250px);
+
+    &__top-bar {
+        grid-area: top-bar;
+        background-color: $ez-color-base-pale;
+    }
+
+    &__left-sidebar {
+        grid-area: left-sidebar;
+        background-color: $ez-ground-base-medium;
+    }
+
+    &__main {
+        grid-area: main;
+        background-color: $ez-ground-base-pale;
+    }
+
+    &__right-sidebar {
+        grid-area: right-sidebar;
+        background-color: $ez-white;
+    }
+}
