@@ -1,0 +1,67 @@
+.c-grid-item {
+    position: relative;
+    margin-bottom: calculateRem(30px);
+    border-radius: calculateRem(4px);
+    box-shadow: 0 calculateRem(2px) calculateRem(4px) 0 rgba(51, 51, 51, 0.1);
+    margin-right: calculateRem(30px);
+    cursor: pointer;
+
+    &:hover {
+        .c-grid-item__selection-button {
+            opacity: 1;
+        }
+    }
+
+    &__name {
+        min-height: calculateRem(30px);
+        padding-left: calculateRem(8px);
+    }
+
+    &__preview {
+        width: calculateRem(165px);
+        height: calculateRem(165px);
+        background-color: $ez-color-base-pale;
+        border-top-left-radius: calculateRem(4px);
+        border-top-right-radius: calculateRem(4px);
+    }
+
+    &__selection-button {
+        position: absolute;
+        top: calculateRem(5px);
+        right: calculateRem(5px);
+        border: none;
+        border-radius: 50%;
+        background: $ez-white;
+        height: calculateRem(20px);
+        width: calculateRem(20px);
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+
+        .ez-icon {
+            fill: $ez-color-base-medium;
+        }
+
+        &--selected {
+            background-color: $ez-color-positive;
+            opacity: 1;
+
+            .ez-icon {
+                fill: $ez-white;
+            }
+        }
+    }
+
+    &--marked {
+        border: calculateRem(1px) solid $ez-color-secondary;
+
+        .c-grid-item {
+            &__name {
+                background-color: $ez-color-secondary;
+                color: $ez-white;
+            }
+        }
+    }
+}

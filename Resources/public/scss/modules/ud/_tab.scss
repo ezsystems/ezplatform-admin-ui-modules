@@ -5,7 +5,7 @@
         'top-bar top-bar top-bar'
         'left-sidebar main right-sidebar';
     grid-template-rows: auto 1fr;
-    grid-template-columns: calculateRem(200px) 1fr calculateRem(250px);
+    grid-template-columns: calculateRem(260px) 1fr calculateRem(250px);
 
     &__top-bar {
         grid-area: top-bar;
@@ -25,5 +25,13 @@
     &__right-sidebar {
         grid-area: right-sidebar;
         background-color: $ez-white;
+    }
+}
+
+.m-ud--locations-selected {
+    .c-tab {
+        &__left-sidebar {
+            position: relative;
+        }
     }
 }
