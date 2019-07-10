@@ -1,0 +1,27 @@
+.c-content-meta-preview {
+    padding: calculateRem(10px) calculateRem(20px);
+
+    &__preview {
+        width: calculateRem(210px);
+        height: calculateRem(210px);
+        background-color: $ez-color-base-pale;
+        border-radius: calculateRem(4px);
+    }
+
+    &__details-item {
+        display: flex;
+        font-size: calculateRem(10px);
+        justify-content: space-between;
+        color: $ez-color-base-light;
+        margin-top: calculateRem(4px);
+    }
+
+    &__info {
+        margin-top: calculateRem(20px);
+    }
+
+    &__content-type-name {
+        font-size: calculateRem(13px);
+        color: $ez-color-base-light;
+    }
+}
