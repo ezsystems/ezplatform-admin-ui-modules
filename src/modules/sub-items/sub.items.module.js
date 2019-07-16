@@ -543,10 +543,10 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(true);
 
         const { restInfo } = this.props;
-        const { selectedItems } = this.state;
+        const { selectedItems, contentTypesMap } = this.state;
         const itemsToDelete = [...selectedItems.values()];
 
-        bulkDeleteItems(restInfo, itemsToDelete, this.afterBulkDelete.bind(this, selectedItems));
+        bulkDeleteItems(restInfo, itemsToDelete, contentTypesMap, this.afterBulkDelete.bind(this, selectedItems));
     }
 
     afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {

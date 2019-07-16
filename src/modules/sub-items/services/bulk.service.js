@@ -18,20 +18,22 @@ export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback
     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
 
-// export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
-//     // bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
+export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
+    console.warn('[DEPRECATED] bulkMoveLocationsToTrash function is deprecated');
+    console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
+    console.warn('[DEPRECATED] use bulkDeleteItems instead');
 
-//     const requestBodyOperations = getBulkDeleteUserRequestOperations(locations);
+    bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
+};
 
-//     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
-// };
-
-export const bulkDeleteItems = (restInfo, items, callback) => {
+export const bulkDeleteItems = (restInfo, items, contentTypesMap, callback) => {
     const locations = items.map(({ location }) => location);
     const requestBodyOperations = {};
 
     items.forEach(({ location, content }) => {
-        const isUserContentItem = content.ContentType._href === '/api/ezp/v2/content/types/4';
+        const contentType = contentTypesMap[content.ContentType._href];
+        const contentTypeIdentifier = contentType.identifier;
+        const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
 
         if (isUserContentItem) {
             requestBodyOperations[location.id] = getBulkDeleteUserRequestOperation(content);
@@ -55,22 +57,6 @@ const getBulkMoveRequestOperation = (location, destination) => ({
         Destination: destination,
     },
 });
-
-// const getBulkMoveRequestOperations = (locations, destination) => {
-//     const operations = {};
-
-//     locations.forEach((location) => {
-//         operations[location.id] = {
-//             uri: location._href,
-//             method: 'MOVE',
-//             headers: {
-//                 Destination: destination,
-//             },
-//         };
-//     });
-
-//     return operations;
-// };
 
 const processBulkResponse = (locations, callback, response) => {
     const { operations } = response.BulkOperationResponse;
