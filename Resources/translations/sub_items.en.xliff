@@ -12,8 +12,8 @@
         <note>key: bulk_delete.error.message</note>
       </trans-unit>
       <trans-unit id="23c9d6861623cc0b2f5f454afa841f1e368123cc" resname="bulk_delete.error.modal.table_title">
-        <source>Content item(s) cannot be sent to trash (%itemsCount%)</source>
-        <target state="new">Content item(s) cannot be sent to trash (%itemsCount%)</target>
+        <source>Content item(s) cannot be deleted (%itemsCount%)</source>
+        <target state="new">Content item(s) cannot be deleted (%itemsCount%)</target>
         <note>key: bulk_delete.error.modal.table_title</note>
       </trans-unit>
       <trans-unit id="c1ffafa700d4b0ba80a626363f9dfe853571e080" resname="bulk_delete.error.more_info">
@@ -27,18 +27,18 @@
         <note>key: bulk_delete.popup.cancel</note>
       </trans-unit>
       <trans-unit id="a668a561527cc0e3e2c7952fbf300558d9d4f877" resname="bulk_delete.popup.confirm">
-        <source>Send to trash</source>
-        <target state="new">Send to trash</target>
+        <source>Delete</source>
+        <target state="new">Delete</target>
         <note>key: bulk_delete.popup.confirm</note>
       </trans-unit>
       <trans-unit id="02d93b03435046c6bcf08ce15ae7970f7ff8f746" resname="bulk_delete.popup.message">
-        <source>Are you sure you want to remove the selected content item(s)?</source>
-        <target>Are you sure you want to remove the selected content item(s)?</target>
+        <source>Are you sure you want to delete the selected content item(s)?</source>
+        <target>Are you sure you want to delete the selected content item(s)?</target>
         <note>key: bulk_delete.popup.message</note>
       </trans-unit>
       <trans-unit id="684c07e2248d815e6eb6bc3f92d3cd49c6952cbe" resname="bulk_delete.success.message">
-        <source>The selected content item(s) have been sent to trash</source>
-        <target state="new">The selected content item(s) have been sent to trash</target>
+        <source>The selected content item(s) have been deleted</source>
+        <target state="new">The selected content item(s) have been deleted</target>
         <note>key: bulk_delete.success.message</note>
       </trans-unit>
       <trans-unit id="364a3498e021163497d9110380736b876beb326f" resname="bulk_move.error.message">

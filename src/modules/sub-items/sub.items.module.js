@@ -561,7 +561,7 @@ export default class SubItemsModule extends Component {
 
         if (notDeletedLocations.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Content item(s) cannot be sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title',
+                /*@Desc("Content item(s) cannot be deleted (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title',
                 {
                     itemsCount: notDeletedLocations.length,
                 },
@@ -587,7 +587,7 @@ export default class SubItemsModule extends Component {
             this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message, rawPlaceholdersMap);
         } else {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
+                /*@Desc("The selected content item(s) have been deleted")*/ 'bulk_delete.success.message',
                 {},
                 'sub_items'
             );
@@ -653,7 +653,7 @@ export default class SubItemsModule extends Component {
 
     renderConfirmationPopupFooter() {
         const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_delete.popup.cancel', {}, 'sub_items');
-        const confirmLabel = Translator.trans(/*@Desc("Send to trash")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
+        const confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
 
         return (
             <Fragment>
@@ -679,7 +679,7 @@ export default class SubItemsModule extends Component {
         }
 
         const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to remove the selected content item(s)?")*/ 'bulk_delete.popup.message',
+            /*@Desc("Are you sure you want to delete the selected content item(s)?")*/ 'bulk_delete.popup.message',
             {},
             'sub_items'
         );
