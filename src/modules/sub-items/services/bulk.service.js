@@ -5,33 +5,58 @@ const HEADERS_BULK = {
     'Content-Type': 'application/vnd.ez.api.BulkOperation+json',
 };
 const TRASH_FAKE_LOCATION = '/api/ezp/v2/content/trash';
+const USER_ENDPOINT = '/api/ezp/v2/user/users';
 const ENDPOINT_BULK = '/api/ezp/v2/bulk';
 
 export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
-    const requestBodyOperations = getBulkMoveRequestOperations(locations, newLocationHref);
+    const requestBodyOperations = {};
+
+    locations.forEach((location) => {
+        requestBodyOperations[location.id] = getBulkMoveRequestOperation(location, newLocationHref);
+    });
 
     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
 
 export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
+    console.warn('[DEPRECATED] bulkMoveLocationsToTrash function is deprecated');
+    console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
+    console.warn('[DEPRECATED] use bulkDeleteItems instead');
+
     bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
 };
 
-const getBulkMoveRequestOperations = (locations, destination) => {
-    const operations = {};
+export const bulkDeleteItems = (restInfo, items, contentTypesMap, callback) => {
+    const locations = items.map(({ location }) => location);
+    const requestBodyOperations = {};
 
-    locations.forEach((location) => {
-        operations[location.id] = {
-            uri: location._href,
-            method: 'MOVE',
-            headers: {
-                Destination: destination,
-            },
-        };
+    items.forEach(({ location, content }) => {
+        const contentType = contentTypesMap[content.ContentType._href];
+        const contentTypeIdentifier = contentType.identifier;
+        const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
+
+        if (isUserContentItem) {
+            requestBodyOperations[location.id] = getBulkDeleteUserRequestOperation(content);
+        } else {
+            requestBodyOperations[location.id] = getBulkMoveRequestOperation(location, TRASH_FAKE_LOCATION);
+        }
     });
 
-    return operations;
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
+
+const getBulkDeleteUserRequestOperation = (content) => ({
+    uri: `${USER_ENDPOINT}/${content._id}`,
+    method: 'DELETE',
+});
+
+const getBulkMoveRequestOperation = (location, destination) => ({
+    uri: location._href,
+    method: 'MOVE',
+    headers: {
+        Destination: destination,
+    },
+});
 
 const processBulkResponse = (locations, callback, response) => {
     const { operations } = response.BulkOperationResponse;

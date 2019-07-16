@@ -12,7 +12,7 @@ import Icon from '../common/icon/icon.js';
 
 import deepClone from '../common/helpers/deep.clone.helper.js';
 import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
-import { bulkMoveLocations, bulkMoveLocationsToTrash } from './services/bulk.service.js';
+import { bulkMoveLocations, bulkDeleteItems } from './services/bulk.service.js';
 
 const ASCENDING_SORT_ORDER = 'ascending';
 const DESCENDING_SORT_ORDER = 'descending';
@@ -466,7 +466,7 @@ export default class SubItemsModule extends Component {
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_move.error.more_info',
                     {},
                     'sub_items'
-                )
+                ),
             };
 
             this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap);
@@ -543,10 +543,10 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(true);
 
         const { restInfo } = this.props;
-        const { selectedItems } = this.state;
-        const locationsToDelete = [...selectedItems.values()].map(({ location }) => location);
+        const { selectedItems, contentTypesMap } = this.state;
+        const itemsToDelete = [...selectedItems.values()];
 
-        bulkMoveLocationsToTrash(restInfo, locationsToDelete, this.afterBulkDelete.bind(this, selectedItems));
+        bulkDeleteItems(restInfo, itemsToDelete, contentTypesMap, this.afterBulkDelete.bind(this, selectedItems));
     }
 
     afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {
@@ -561,7 +561,7 @@ export default class SubItemsModule extends Component {
 
         if (notDeletedLocations.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Content item(s) cannot be sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title',
+                /*@Desc("Content item(s) cannot be deleted (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title',
                 {
                     itemsCount: notDeletedLocations.length,
                 },
@@ -581,13 +581,13 @@ export default class SubItemsModule extends Component {
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_delete.error.more_info',
                     {},
                     'sub_items'
-                )
+                ),
             };
 
             this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message, rawPlaceholdersMap);
         } else {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to trash")*/ 'bulk_delete.success.message',
+                /*@Desc("The selected content item(s) have been deleted")*/ 'bulk_delete.success.message',
                 {},
                 'sub_items'
             );
@@ -653,7 +653,7 @@ export default class SubItemsModule extends Component {
 
     renderConfirmationPopupFooter() {
         const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_delete.popup.cancel', {}, 'sub_items');
-        const confirmLabel = Translator.trans(/*@Desc("Send to trash")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
+        const confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
 
         return (
             <Fragment>
@@ -679,7 +679,7 @@ export default class SubItemsModule extends Component {
         }
 
         const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message',
+            /*@Desc("Are you sure you want to delete the selected content item(s)?")*/ 'bulk_delete.popup.message',
             {},
             'sub_items'
         );
