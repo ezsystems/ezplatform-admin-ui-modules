@@ -469,7 +469,13 @@ export default class SubItemsModule extends Component {
                 ),
             };
 
-            this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap);
+            this.handleBulkOperationFailedNotification(
+                selectedItems,
+                notMovedLocations,
+                modalTableTitle,
+                notificationMessage,
+                rawPlaceholdersMap
+            );
         }
 
         if (movedLocations.length) {
@@ -636,15 +642,19 @@ export default class SubItemsModule extends Component {
             };
         });
 
-        window.eZ.helpers.notification.showWarningNotification(notificationMessage, (notificationNode) => {
-            const showModalBtn = notificationNode.querySelector('.ez-notification-btn--show-modal');
+        window.eZ.helpers.notification.showWarningNotification(
+            notificationMessage,
+            (notificationNode) => {
+                const showModalBtn = notificationNode.querySelector('.ez-notification-btn--show-modal');
 
-            if (!showModalBtn) {
-                return;
-            }
+                if (!showModalBtn) {
+                    return;
+                }
 
-            showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
-        }, rawPlaceholdersMap);
+                showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
+            },
+            rawPlaceholdersMap
+        );
     }
 
     refreshContentTree() {
@@ -671,6 +681,34 @@ export default class SubItemsModule extends Component {
         );
     }
 
+    getSelectionInfo() {
+        const { contentTypesMap } = this.props;
+        const { selectedItems } = this.state;
+        let isUserContentItemSelected = false;
+        let isNonUserContentItemSelected = false;
+
+        for (const [locationId, { content }] of selectedItems) {
+            if (isUserContentItemSelected && isNonUserContentItemSelected) {
+                break;
+            }
+
+            const contentType = contentTypesMap[content.ContentType._href];
+            const contentTypeIdentifier = contentType.identifier;
+            const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
+
+            if (isUserContentItem) {
+                isUserContentItemSelected = true;
+            } else {
+                isNonUserContentItemSelected = true;
+            }
+        }
+
+        return {
+            isUserContentItemSelected,
+            isNonUserContentItemSelected,
+        };
+    }
+
     renderConfirmationPopup() {
         const { isBulkDeletePopupVisible } = this.state;
 
@@ -678,11 +716,31 @@ export default class SubItemsModule extends Component {
             return null;
         }
 
-        const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to delete the selected content item(s)?")*/ 'bulk_delete.popup.message',
+        const confirmationMessageUsers = Translator.trans(
+            /*@Desc("Are you sure you want to delete the selected user(s)?")*/ 'bulk_delete.popup.message.users',
             {},
             'sub_items'
         );
+        const confirmationMessageNonUsers = Translator.trans(
+            /*@Desc("Are you sure you want to send to the trash the selected content item(s)?")*/ 'bulk_delete.popup.message.nonusers',
+            {},
+            'sub_items'
+        );
+        const confirmationMessageUsersAndNonUsers = Translator.trans(
+            /*@Desc("Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?")*/ 'bulk_delete.popup.message.users_and_nonusers',
+            {},
+            'sub_items'
+        );
+        const { isUserContentItemSelected, isNonUserContentItemSelected } = this.getSelectionInfo();
+        let confirmationMessage = '';
+
+        if (isUserContentItemSelected && isNonUserContentItemSelected) {
+            confirmationMessage = confirmationMessageUsersAndNonUsers;
+        } else if (isUserContentItemSelected) {
+            confirmationMessage = confirmationMessageUsers;
+        } else {
+            confirmationMessage = confirmationMessageNonUsers;
+        }
 
         return ReactDOM.createPortal(
             <Popup

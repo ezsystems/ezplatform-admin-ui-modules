@@ -31,10 +31,20 @@
         <target state="new">Delete</target>
         <note>key: bulk_delete.popup.confirm</note>
       </trans-unit>
-      <trans-unit id="02d93b03435046c6bcf08ce15ae7970f7ff8f746" resname="bulk_delete.popup.message">
-        <source>Are you sure you want to delete the selected content item(s)?</source>
-        <target>Are you sure you want to delete the selected content item(s)?</target>
-        <note>key: bulk_delete.popup.message</note>
+      <trans-unit id="e98d09770399a6f52a15068a0573a18fc2b0b60d" resname="bulk_delete.popup.message.nonusers">
+        <source>Are you sure you want to send to the trash the selected content item(s)?</source>
+        <target state="new">Are you sure you want to send to the trash the selected content item(s)?</target>
+        <note>key: bulk_delete.popup.message.nonusers</note>
+      </trans-unit>
+      <trans-unit id="7717885c80083a259220eb0617f818b9cd8f315e" resname="bulk_delete.popup.message.users">
+        <source>Are you sure you want to delete the selected user(s)?</source>
+        <target state="new">Are you sure you want to delete the selected user(s)?</target>
+        <note>key: bulk_delete.popup.message.users</note>
+      </trans-unit>
+      <trans-unit id="2cdb743eef9079753dcad70ba92907bff413ceb0" resname="bulk_delete.popup.message.users_and_nonusers">
+        <source>Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?</source>
+        <target state="new">Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?</target>
+        <note>key: bulk_delete.popup.message.users_and_nonusers</note>
       </trans-unit>
       <trans-unit id="684c07e2248d815e6eb6bc3f92d3cd49c6952cbe" resname="bulk_delete.success.message">
         <source>The selected content item(s) have been deleted</source>
