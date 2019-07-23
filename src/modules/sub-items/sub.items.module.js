@@ -786,7 +786,7 @@ export default class SubItemsModule extends Component {
             'sub_items'
         );
         const confirmationMessageNonUsers = Translator.trans(
-            /*@Desc("Are you sure you want to send to the trash the selected content item(s)?")*/ 'bulk_delete.popup.message.nonusers',
+            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message.nonusers',
             {},
             'sub_items'
         );

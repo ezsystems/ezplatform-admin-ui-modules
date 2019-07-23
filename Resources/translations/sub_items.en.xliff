@@ -52,8 +52,8 @@
         <note>key: bulk_delete.popup.confirm</note>
       </trans-unit>
       <trans-unit id="e98d09770399a6f52a15068a0573a18fc2b0b60d" resname="bulk_delete.popup.message.nonusers">
-        <source>Are you sure you want to send to the trash the selected content item(s)?</source>
-        <target state="new">Are you sure you want to send to the trash the selected content item(s)?</target>
+        <source>Are you sure you want to send the selected content item(s) to trash?</source>
+        <target state="new">Are you sure you want to send the selected content item(s) to trash?</target>
         <note>key: bulk_delete.popup.message.nonusers</note>
       </trans-unit>
       <trans-unit id="7717885c80083a259220eb0617f818b9cd8f315e" resname="bulk_delete.popup.message.users">
