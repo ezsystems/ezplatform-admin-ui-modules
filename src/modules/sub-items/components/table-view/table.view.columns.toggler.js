@@ -5,7 +5,7 @@ import Icon from '../../../common/icon/icon';
 import TableViewColumnsTogglerListElement from './table.view.columns.toggler.list.element';
 import { headerLabels } from './table.view.component';
 
-const DEFAULT_PANEL_HEIGHT = 200;
+const DEFAULT_PANEL_HEIGHT = 450;
 
 export default class TableViewColumnsTogglerComponent extends Component {
     constructor(props) {
@@ -37,7 +37,7 @@ export default class TableViewColumnsTogglerComponent extends Component {
 
         if (isOpen && panelHeight === null) {
             this.setState({
-                panelHeight: this._refPanel.offsetHeight,
+                panelHeight: this._refPanel.current.offsetHeight,
             });
         }
     }

@@ -18,8 +18,9 @@ const SubItemsListComponent = (props) => {
 SubItemsListComponent.propTypes = {
     activeView: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.object),
-    contentTypesMap: PropTypes.object.isRequired,
     handleItemPriorityUpdate: PropTypes.func.isRequired,
+    handleEditItem: PropTypes.func.isRequired,
+    generateLink: PropTypes.func.isRequired,
     languages: PropTypes.object.isRequired,
     onItemSelect: PropTypes.func.isRequired,
     toggleAllItemsSelect: PropTypes.func.isRequired,

@@ -116,11 +116,6 @@
         <target state="new">An unexpected error occurred while deleting the content item(s). Please try again later.</target>
         <note>key: bulk_request.error.message</note>
       </trans-unit>
-      <trans-unit id="e95c7e2e8f7a1a4bb1f64cc48ca2eae0b0af78b6" resname="content_type.not_available.label">
-        <source>N/A</source>
-        <target>N/A</target>
-        <note>key: content_type.not_available.label</note>
-      </trans-unit>
       <trans-unit id="5e1792d4a193550fe8afd9a4be6d0a8c3f6596e9" resname="edit_item_btn.label">
         <source>Edit</source>
         <target>Edit</target>
@@ -136,6 +131,26 @@
         <target>Content type</target>
         <note>key: items_table.header.content_type</note>
       </trans-unit>
+      <trans-unit id="d8bac590d6c8bf7c4e58ad1d7dbe4aad57e54e43" resname="items_table.header.contributor">
+        <source>Contributor</source>
+        <target state="new">Contributor</target>
+        <note>key: items_table.header.contributor</note>
+      </trans-unit>
+      <trans-unit id="0cc77521bf45c4018b51099ec6e7faa02892be10" resname="items_table.header.creator">
+        <source>Creator</source>
+        <target state="new">Creator</target>
+        <note>key: items_table.header.creator</note>
+      </trans-unit>
+      <trans-unit id="fdb8e418a944ccd7b2b8575c09abf1838589d51b" resname="items_table.header.location_id">
+        <source>Location ID</source>
+        <target state="new">Location ID</target>
+        <note>key: items_table.header.location_id</note>
+      </trans-unit>
+      <trans-unit id="86e7d70a1dee14408d841d5f2f7bc3bf4d4579a3" resname="items_table.header.location_remote_id">
+        <source>Location remote ID</source>
+        <target state="new">Location remote ID</target>
+        <note>key: items_table.header.location_remote_id</note>
+      </trans-unit>
       <trans-unit id="8f1583d031a1cc60061659b8a55291496f0a40c6" resname="items_table.header.modified">
         <source>Modified</source>
         <target>Modified</target>
@@ -146,20 +161,50 @@
         <target>Name</target>
         <note>key: items_table.header.name</note>
       </trans-unit>
+      <trans-unit id="725a35139d6927f9c5ac199aa42a0baf362986fb" resname="items_table.header.object_id">
+        <source>Object ID</source>
+        <target state="new">Object ID</target>
+        <note>key: items_table.header.object_id</note>
+      </trans-unit>
+      <trans-unit id="d8a8032b67e3e3626e01d4983b4d76a4e9d2c999" resname="items_table.header.object_remote_id">
+        <source>Object remote ID</source>
+        <target state="new">Object remote ID</target>
+        <note>key: items_table.header.object_remote_id</note>
+      </trans-unit>
       <trans-unit id="ee6e79244a03c8adceb13aa6a7aff2cb496cb9d0" resname="items_table.header.priority">
         <source>Priority</source>
         <target>Priority</target>
         <note>key: items_table.header.priority</note>
+      </trans-unit>
+      <trans-unit id="9194a0b943ca204c20acd7695c577b976ce4c964" resname="items_table.header.pubished">
+        <source>Published</source>
+        <target state="new">Published</target>
+        <note>key: items_table.header.pubished</note>
+      </trans-unit>
+      <trans-unit id="ed4e5502d8ec6f16e9e87bdd0704d0a5af38dcc5" resname="items_table.header.section">
+        <source>Section</source>
+        <target state="new">Section</target>
+        <note>key: items_table.header.section</note>
       </trans-unit>
       <trans-unit id="2efb1da52dd6f25dd90474e85b5c73761adb4183" resname="items_table.header.translations">
         <source>Translations</source>
         <target>Translations</target>
         <note>key: items_table.header.translations</note>
       </trans-unit>
-      <trans-unit id="b8c369db292d50595af6db4380326dbdf549bc4b" resname="load_content_items.invalid_response_format.error.message">
-        <source>Invalid response format</source>
-        <target>Invalid response format</target>
-        <note>key: load_content_items.invalid_response_format.error.message</note>
+      <trans-unit id="9f055743ae2bf600810c4935ab10873ca4dac6d9" resname="items_table.header.visibility">
+        <source>Visibility</source>
+        <target state="new">Visibility</target>
+        <note>key: items_table.header.visibility</note>
+      </trans-unit>
+      <trans-unit id="0d59826a85ae0f5cc7f6d56efa18d2b9cbe7c687" resname="items_table.row.not_visible.label">
+        <source>Not Visible</source>
+        <target state="new">Not Visible</target>
+        <note>key: items_table.row.not_visible.label</note>
+      </trans-unit>
+      <trans-unit id="e971be69cde4dc46bcceb65cd0cb255ced2b9bba" resname="items_table.row.visible.label">
+        <source>Visible</source>
+        <target state="new">Visible</target>
+        <note>key: items_table.row.visible.label</note>
       </trans-unit>
       <trans-unit id="e3c395cec9466f06c8f2f3f4b2bfcd9021537714" resname="move_btn.label">
         <source>Move selected items</source>
@@ -170,11 +215,6 @@
         <source>This location has no sub-items</source>
         <target>This location has no sub-items</target>
         <note>key: no_items.message</note>
-      </trans-unit>
-      <trans-unit id="a0e2bd4beeb6680ff81add5686bbf2ee9b8ad0ca" resname="page.loading_error.message">
-        <source>An error occurred while loading items in the Sub Items module</source>
-        <target state="new">An error occurred while loading items in the Sub Items module</target>
-        <note>key: page.loading_error.message</note>
       </trans-unit>
       <trans-unit id="af3bcdfcdcd33a16838a6f2b88c845c92fcb0938" resname="pagination.back">
         <source>Back</source>

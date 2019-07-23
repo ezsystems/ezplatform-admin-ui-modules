@@ -2,42 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
 
-const GridViewItemComponent = ({ content, location, generateLink, contentTypesMap }) => {
-    const imageField = content.CurrentVersion.Version.Fields.field.find((item) => item.fieldTypeIdentifier === 'ezimage');
+const GridViewItemComponent = ({ item, generateLink }) => {
+    const { id: locationId, content } = item;
     const imageClassName = 'c-grid-view-item__image';
-    const hasImage = imageField && imageField.fieldValue && imageField.fieldValue.uri && imageField.fieldValue.path;
-    const contentType = contentTypesMap ? contentTypesMap[content.ContentType._href] : null;
-    const contentTypeIdentifier = contentType ? contentType.identifier : null;
+    const contentTypeIdentifier = content._info.contentType.identifier;
     const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
-    let image = (
-        <div className={`${imageClassName} ${imageClassName}--none`}>
-            <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--extra-large" />
-        </div>
-    );
-    let contentTypeIcon = '';
+    let image = null;
+    let contentTypeIcon = null;
 
-    if (hasImage) {
-        image = <img className={imageClassName} src={imageField.fieldValue.uri} alt={`${imageField.fieldValue.path}`} />;
+    if (content._thumbnail) {
+        const { uri, alternativeText } = content._thumbnail;
+
+        image = <img className={imageClassName} src={uri} alt={alternativeText} />;
         contentTypeIcon = (
             <div className="c-grid-view-item__content-type">
                 <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--small" />
             </div>
         );
+    } else {
+        image = (
+            <div className={`${imageClassName} ${imageClassName}--none`}>
+                <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--extra-large" />
+            </div>
+        );
     }
 
     return (
-        <a className="c-grid-view-item" href={generateLink(location.id)}>
+        <a className="c-grid-view-item" href={generateLink(locationId)}>
             {contentTypeIcon}
             <div className="c-grid-view-item__image-wrapper">{image}</div>
-            <div className="c-grid-view-item__title">{content.Name}</div>
+            <div className="c-grid-view-item__title">{content._info.name}</div>
         </a>
     );
 };
 
 GridViewItemComponent.propTypes = {
-    content: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    contentTypesMap: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired,
     generateLink: PropTypes.func.isRequired,
 };
 
