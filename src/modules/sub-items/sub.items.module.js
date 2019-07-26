@@ -469,7 +469,13 @@ export default class SubItemsModule extends Component {
                 ),
             };
 
-            this.handleBulkOperationFailedNotification(selectedItems, notMovedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap);
+            this.handleBulkOperationFailedNotification(
+                selectedItems,
+                notMovedLocations,
+                modalTableTitle,
+                notificationMessage,
+                rawPlaceholdersMap
+            );
         }
 
         if (movedLocations.length) {
@@ -550,7 +556,15 @@ export default class SubItemsModule extends Component {
     }
 
     afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {
-        const { totalCount } = this.state;
+        const { totalCount, contentTypesMap } = this.state;
+        const isUserLocation = ({ id: locationId }) => {
+            const item = selectedItems.get(locationId);
+            const contentType = contentTypesMap[item.content.ContentType._href];
+            const contentTypeIdentifier = contentType.identifier;
+            const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
+
+            return isUserContentItem;
+        };
 
         this.refreshContentTree();
         this.updateTotalCountState(totalCount - deletedLocations.length);
@@ -560,22 +574,10 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(false);
 
         if (notDeletedLocations.length) {
-            const modalTableTitle = Translator.trans(
-                /*@Desc("Content item(s) cannot be deleted (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title',
-                {
-                    itemsCount: notDeletedLocations.length,
-                },
-                'sub_items'
-            );
-            const message = Translator.trans(
-                /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message',
-                {
-                    notDeletedCount: notDeletedLocations.length,
-                    totalCount: deletedLocations.length + notDeletedLocations.length,
-                },
-                'sub_items'
-            );
-
+            const hadUserContentItemFailed = notDeletedLocations.some(isUserLocation);
+            const hadNonUserContentItemFailed = notDeletedLocations.some((location) => !isUserLocation(location));
+            let modalTableTitle = null;
+            let message = null;
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_delete.error.more_info',
@@ -584,13 +586,81 @@ export default class SubItemsModule extends Component {
                 ),
             };
 
+            if (hadUserContentItemFailed && hadNonUserContentItemFailed) {
+                modalTableTitle = Translator.trans(
+                    /*@Desc("Content item(s) cannot be deleted or sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users_with_nonusers',
+                    {
+                        itemsCount: notDeletedLocations.length,
+                    },
+                    'sub_items'
+                );
+                message = Translator.trans(
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users_with_nonusers',
+                    {
+                        notDeletedCount: notDeletedLocations.length,
+                        totalCount: deletedLocations.length + notDeletedLocations.length,
+                    },
+                    'sub_items'
+                );
+            } else if (hadUserContentItemFailed) {
+                modalTableTitle = Translator.trans(
+                    /*@Desc("User(s) cannot be deleted (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users',
+                    {
+                        itemsCount: notDeletedLocations.length,
+                    },
+                    'sub_items'
+                );
+                message = Translator.trans(
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users',
+                    {
+                        notDeletedCount: notDeletedLocations.length,
+                        totalCount: deletedLocations.length + notDeletedLocations.length,
+                    },
+                    'sub_items'
+                );
+            } else {
+                modalTableTitle = Translator.trans(
+                    /*@Desc("Content item(s) cannot be sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.nonusers',
+                    {
+                        itemsCount: notDeletedLocations.length,
+                    },
+                    'sub_items'
+                );
+                message = Translator.trans(
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.nonusers',
+                    {
+                        notDeletedCount: notDeletedLocations.length,
+                        totalCount: deletedLocations.length + notDeletedLocations.length,
+                    },
+                    'sub_items'
+                );
+            }
+
             this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message, rawPlaceholdersMap);
         } else {
-            const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been deleted")*/ 'bulk_delete.success.message',
-                {},
-                'sub_items'
-            );
+            const anyUserContentItemDeleted = deletedLocations.some(isUserLocation);
+            const anyNonUserContentItemDeleted = deletedLocations.some((location) => !isUserLocation(location));
+            let message = null;
+
+            if (anyUserContentItemDeleted && anyNonUserContentItemDeleted) {
+                message = Translator.trans(
+                    /*@Desc("The selected content item(s) have been sent to trash and the selected user(s) have been deleted.")*/ 'bulk_delete.success.message.users_with_nonusers',
+                    {},
+                    'sub_items'
+                );
+            } else if (anyUserContentItemDeleted) {
+                message = Translator.trans(
+                    /*@Desc("The selected user(s) have been deleted.")*/ 'bulk_delete.success.message.users',
+                    {},
+                    'sub_items'
+                );
+            } else {
+                message = Translator.trans(
+                    /*@Desc("The selected content item(s) have been sent to trash.")*/ 'bulk_delete.success.message.nonusers',
+                    {},
+                    'sub_items'
+                );
+            }
 
             window.eZ.helpers.notification.showSuccessNotification(message);
         }
@@ -636,24 +706,35 @@ export default class SubItemsModule extends Component {
             };
         });
 
-        window.eZ.helpers.notification.showWarningNotification(notificationMessage, (notificationNode) => {
-            const showModalBtn = notificationNode.querySelector('.ez-notification-btn--show-modal');
+        window.eZ.helpers.notification.showWarningNotification(
+            notificationMessage,
+            (notificationNode) => {
+                const showModalBtn = notificationNode.querySelector('.ez-notification-btn--show-modal');
 
-            if (!showModalBtn) {
-                return;
-            }
+                if (!showModalBtn) {
+                    return;
+                }
 
-            showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
-        }, rawPlaceholdersMap);
+                showModalBtn.addEventListener('click', this.props.showBulkActionFailedModal.bind(null, modalTableTitle, failedItemsData));
+            },
+            rawPlaceholdersMap
+        );
     }
 
     refreshContentTree() {
         document.body.dispatchEvent(new CustomEvent('ez-content-tree-refresh'));
     }
 
-    renderConfirmationPopupFooter() {
+    renderConfirmationPopupFooter(selectionInfo) {
         const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_delete.popup.cancel', {}, 'sub_items');
-        const confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
+        const { isUserContentItemSelected, isNonUserContentItemSelected } = selectionInfo;
+        let confirmLabel = '';
+
+        if (!isUserContentItemSelected && isNonUserContentItemSelected) {
+            confirmLabel = Translator.trans(/*@Desc("Send to trash")*/ 'bulk_delete.popup.confirm.nonusers', {}, 'sub_items');
+        } else {
+            confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm.users_and_users_with_nonusers', {}, 'sub_items');
+        }
 
         return (
             <Fragment>
@@ -671,6 +752,34 @@ export default class SubItemsModule extends Component {
         );
     }
 
+    getSelectionInfo() {
+        const { contentTypesMap } = this.props;
+        const { selectedItems } = this.state;
+        let isUserContentItemSelected = false;
+        let isNonUserContentItemSelected = false;
+
+        for (const [locationId, { content }] of selectedItems) {
+            if (isUserContentItemSelected && isNonUserContentItemSelected) {
+                break;
+            }
+
+            const contentType = contentTypesMap[content.ContentType._href];
+            const contentTypeIdentifier = contentType.identifier;
+            const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
+
+            if (isUserContentItem) {
+                isUserContentItemSelected = true;
+            } else {
+                isNonUserContentItemSelected = true;
+            }
+        }
+
+        return {
+            isUserContentItemSelected,
+            isNonUserContentItemSelected,
+        };
+    }
+
     renderConfirmationPopup() {
         const { isBulkDeletePopupVisible } = this.state;
 
@@ -678,11 +787,32 @@ export default class SubItemsModule extends Component {
             return null;
         }
 
-        const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to delete the selected content item(s)?")*/ 'bulk_delete.popup.message',
+        const confirmationMessageUsers = Translator.trans(
+            /*@Desc("Are you sure you want to delete the selected user(s)?")*/ 'bulk_delete.popup.message.users',
             {},
             'sub_items'
         );
+        const confirmationMessageNonUsers = Translator.trans(
+            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message.nonusers',
+            {},
+            'sub_items'
+        );
+        const confirmationMessageUsersAndNonUsers = Translator.trans(
+            /*@Desc("Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?")*/ 'bulk_delete.popup.message.users_with_nonusers',
+            {},
+            'sub_items'
+        );
+        const selectionInfo = this.getSelectionInfo();
+        const { isUserContentItemSelected, isNonUserContentItemSelected } = selectionInfo;
+        let confirmationMessage = '';
+
+        if (isUserContentItemSelected && isNonUserContentItemSelected) {
+            confirmationMessage = confirmationMessageUsersAndNonUsers;
+        } else if (isUserContentItemSelected) {
+            confirmationMessage = confirmationMessageUsers;
+        } else {
+            confirmationMessage = confirmationMessageNonUsers;
+        }
 
         return ReactDOM.createPortal(
             <Popup
@@ -690,7 +820,7 @@ export default class SubItemsModule extends Component {
                 isVisible={isBulkDeletePopupVisible}
                 isLoading={false}
                 size="medium"
-                footerChildren={this.renderConfirmationPopupFooter()}
+                footerChildren={this.renderConfirmationPopupFooter(selectionInfo)}
                 noHeader={true}>
                 <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
             </Popup>,
