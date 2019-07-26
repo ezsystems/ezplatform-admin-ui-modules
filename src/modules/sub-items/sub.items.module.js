@@ -588,14 +588,14 @@ export default class SubItemsModule extends Component {
 
             if (hadUserContentItemFailed && hadNonUserContentItemFailed) {
                 modalTableTitle = Translator.trans(
-                    /*@Desc("Content item(s) cannot be deleted or sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users_and_nonusers',
+                    /*@Desc("Content item(s) cannot be deleted or sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users_with_nonusers',
                     {
                         itemsCount: notDeletedLocations.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users_and_nonusers',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users_with_nonusers',
                     {
                         notDeletedCount: notDeletedLocations.length,
                         totalCount: deletedLocations.length + notDeletedLocations.length,
@@ -644,7 +644,7 @@ export default class SubItemsModule extends Component {
 
             if (anyUserContentItemDeleted && anyNonUserContentItemDeleted) {
                 message = Translator.trans(
-                    /*@Desc("The selected content item(s) have been sent to trash and the selected user(s) have been deleted.")*/ 'bulk_delete.success.message.users_and_nonusers',
+                    /*@Desc("The selected content item(s) have been sent to trash and the selected user(s) have been deleted.")*/ 'bulk_delete.success.message.users_with_nonusers',
                     {},
                     'sub_items'
                 );
@@ -725,9 +725,16 @@ export default class SubItemsModule extends Component {
         document.body.dispatchEvent(new CustomEvent('ez-content-tree-refresh'));
     }
 
-    renderConfirmationPopupFooter() {
+    renderConfirmationPopupFooter(selectionInfo) {
         const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_delete.popup.cancel', {}, 'sub_items');
-        const confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm', {}, 'sub_items');
+        const { isUserContentItemSelected, isNonUserContentItemSelected } = selectionInfo;
+        let confirmLabel = '';
+
+        if (!isUserContentItemSelected && isNonUserContentItemSelected) {
+            confirmLabel = Translator.trans(/*@Desc("Send to trash")*/ 'bulk_delete.popup.confirm.nonusers', {}, 'sub_items');
+        } else {
+            confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm.users_and_users_with_nonusers', {}, 'sub_items');
+        }
 
         return (
             <Fragment>
@@ -791,11 +798,12 @@ export default class SubItemsModule extends Component {
             'sub_items'
         );
         const confirmationMessageUsersAndNonUsers = Translator.trans(
-            /*@Desc("Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?")*/ 'bulk_delete.popup.message.users_and_nonusers',
+            /*@Desc("Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?")*/ 'bulk_delete.popup.message.users_with_nonusers',
             {},
             'sub_items'
         );
-        const { isUserContentItemSelected, isNonUserContentItemSelected } = this.getSelectionInfo();
+        const selectionInfo = this.getSelectionInfo();
+        const { isUserContentItemSelected, isNonUserContentItemSelected } = selectionInfo;
         let confirmationMessage = '';
 
         if (isUserContentItemSelected && isNonUserContentItemSelected) {
@@ -812,7 +820,7 @@ export default class SubItemsModule extends Component {
                 isVisible={isBulkDeletePopupVisible}
                 isLoading={false}
                 size="medium"
-                footerChildren={this.renderConfirmationPopupFooter()}
+                footerChildren={this.renderConfirmationPopupFooter(selectionInfo)}
                 noHeader={true}>
                 <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
             </Popup>,
