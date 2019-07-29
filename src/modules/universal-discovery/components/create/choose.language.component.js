@@ -14,14 +14,6 @@ export default class ChooseLanguageComponent extends Component {
             selectedLanguageCode = props.preselectedLanguage;
         }
 
-        if (props.forcedLanguage) {
-            console.warn('[DEPRECATED] cotfForcedLanguage parameter is deprecated');
-            console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
-            console.warn('[DEPRECATED] use cotfAllowedLanguages instead');
-
-            selectedLanguageCode = props.forcedLanguage;
-        }
-
         if (props.allowedLanguages.length === 1) {
             selectedLanguageCode = props.allowedLanguages[0];
         }
@@ -76,14 +68,7 @@ export default class ChooseLanguageComponent extends Component {
             'universal_discovery_widget'
         );
 
-        if (this.props.forcedLanguage) {
-            console.warn('[DEPRECATED] forcedLanguage parameter is deprecated');
-            console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
-            console.warn('[DEPRECATED] use allowedLanguages instead');
-        }
-
-        // @Deprecated - `forcedLanguage` will be removed in 2.0
-        if (this.props.allowedLanguages.length === 1 || this.props.forcedLanguage) {
+        if (this.props.allowedLanguages.length === 1) {
             selectAttrs.disabled = true;
         }
 
@@ -102,7 +87,6 @@ ChooseLanguageComponent.propTypes = {
     maxHeight: PropTypes.number.isRequired,
     languages: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
-    forcedLanguage: PropTypes.string.isRequired,
     allowedLanguages: PropTypes.array.isRequired,
     preselectedLanguage: PropTypes.string,
 };

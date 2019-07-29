@@ -19,7 +19,6 @@ CreateComponent.propTypes = {
     contentTypes: PropTypes.object.isRequired,
     onLanguageSelected: PropTypes.func.isRequired,
     onContentTypeSelected: PropTypes.func.isRequired,
-    forcedLanguage: PropTypes.string.isRequired,
     allowedLanguages: PropTypes.array.isRequired,
     preselectedContentType: PropTypes.string,
     allowedContentTypes: PropTypes.array.isRequired,

@@ -18,14 +18,6 @@ export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback
     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
 };
 
-export const bulkMoveLocationsToTrash = (restInfo, locations, callback) => {
-    console.warn('[DEPRECATED] bulkMoveLocationsToTrash function is deprecated');
-    console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
-    console.warn('[DEPRECATED] use bulkDeleteItems instead');
-
-    bulkMoveLocations(restInfo, locations, TRASH_FAKE_LOCATION, callback);
-};
-
 export const bulkDeleteItems = (restInfo, items, contentTypesMap, callback) => {
     const locations = items.map(({ location }) => location);
     const requestBodyOperations = {};
