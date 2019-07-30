@@ -207,6 +207,11 @@ export default class SubItemsModule extends Component {
             (content) =>
                 new Promise((resolve) => {
                     const contentTypeId = content.ContentType._href;
+                    
+                    console.error('Mapa');
+                    console.error(this.state.contentTypesMap);
+                    console.error('ID');
+                    console.error(contentTypeId);
 
                     if (!this.state.contentTypesMap[contentTypeId]) {
                         this.props.loadContentType(contentTypeId, this.props.restInfo, (response) => resolve(response));
@@ -218,6 +223,8 @@ export default class SubItemsModule extends Component {
 
         return Promise.all(promises).then((contentTypes) => {
             itemsData.contentTypes = contentTypes;
+            console.error('items');
+            console.error(itemsData);
 
             return itemsData;
         });
