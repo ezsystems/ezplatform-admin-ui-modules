@@ -11,6 +11,29 @@ env:
     - SYMFONY_ENV=behat
     - SYMFONY_DEBUG=1
 
+matrix:
+  include:
+    - name: "1"
+      env: CHECK_CS=1
+    - name: "2"
+      env: CHECK_CS=1
+    - name: "3"
+      env: CHECK_CS=1
+    - name: "4"
+      env: CHECK_CS=1
+    - name: "5"
+      env: CHECK_CS=1
+    - name: "6"
+      env: CHECK_CS=1
+    - name: "7"
+      env: CHECK_CS=1
+    - name: "8"
+      env: CHECK_CS=1
+    - name: "9"
+      env: CHECK_CS=1
+    - name: "10"
+      env: CHECK_CS=1
+
 cache:
   directories:
     - $HOME/.composer/cache
