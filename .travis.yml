@@ -7,7 +7,7 @@ env:
   global:
     - EZPLATFORM_REPO="https://github.com/ezsystems/ezplatform.git"
     - COMPOSE_FILE="doc/docker/base-dev.yml:doc/docker/selenium.yml"
-    - BEHAT_OPTS="--mode=behat --profile=adminui --suite=adminuimodules"
+    - BEHAT_OPTS="--mode=behat --profile=adminui --suite=adminui"
     - SYMFONY_ENV=behat
     - SYMFONY_DEBUG=1
 
