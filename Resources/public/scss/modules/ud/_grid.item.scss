@@ -7,7 +7,7 @@
     cursor: pointer;
 
     &:hover {
-        .c-grid-item__selection-button {
+        .c-toggle-selection-button {
             opacity: 1;
         }
     }
@@ -25,32 +25,27 @@
         border-top-right-radius: calculateRem(4px);
     }
 
-    &__selection-button {
+    &__icon-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calculateRem(30px);
+        height: calculateRem(30px);
+        background: $ez-white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top-left-radius: calculateRem(4px);
+    }
+
+    .c-toggle-selection-button {
         position: absolute;
         top: calculateRem(5px);
         right: calculateRem(5px);
-        border: none;
-        border-radius: 50%;
         background: $ez-white;
-        height: calculateRem(20px);
-        width: calculateRem(20px);
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-
-        .ez-icon {
-            fill: $ez-color-base-medium;
-        }
 
         &--selected {
             background-color: $ez-color-positive;
-            opacity: 1;
-
-            .ez-icon {
-                fill: $ez-white;
-            }
         }
     }
 
