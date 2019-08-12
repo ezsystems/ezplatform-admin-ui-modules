@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import PaginationButtonComponent from './pagination.button.component';
+import PaginationButton from './pagination.button';
 
 const DOTS = '...';
-
 /**
  * Computes array with pagination pages.
  *
@@ -16,12 +15,13 @@ const DOTS = '...';
  * @param {Number} params.proximity
  * @param {Number} params.activePageIndex
  * @param {Number} params.pagesCount
+ * @param {String} params.separator
  *
  * @returns {Array}
  */
-const computePages = ({ proximity, activePageIndex, pagesCount }) => {
+export const computePages = ({ proximity, activePageIndex, pagesCount, separator }) => {
     const pages = [];
-    let wereDots = false;
+    let wasSeparator = false;
 
     for (let i = 1; i <= pagesCount; i++) {
         const isFirstPage = i === 1;
@@ -30,17 +30,17 @@ const computePages = ({ proximity, activePageIndex, pagesCount }) => {
 
         if (isFirstPage || isLastPage || isInRange) {
             pages.push(i);
-            wereDots = false;
-        } else if (!wereDots) {
-            pages.push(DOTS);
-            wereDots = true;
+            wasSeparator = false;
+        } else if (!wasSeparator) {
+            pages.push(separator);
+            wasSeparator = true;
         }
     }
 
     return pages;
 };
 
-const PaginationComponent = ({ totalCount, itemsPerPage, proximity, activePageIndex, onPageChange, disabled: paginationDisabled }) => {
+const Pagination = ({ totalCount, itemsPerPage, proximity, activePageIndex, onPageChange, disabled: paginationDisabled }) => {
     const pagesCount = Math.ceil(totalCount / itemsPerPage);
     const backLabel = Translator.trans(/*@Desc("Back")*/ 'pagination.back', {}, 'sub_items');
     const nextLabel = Translator.trans(/*@Desc("Next")*/ 'pagination.next', {}, 'sub_items');
@@ -48,10 +48,10 @@ const PaginationComponent = ({ totalCount, itemsPerPage, proximity, activePageIn
     const nextPage = activePageIndex + 1;
     const isFirstPage = activePageIndex === 0;
     const isLastPage = activePageIndex + 1 === pagesCount;
-    const pages = computePages({ proximity, activePageIndex, pagesCount });
+    const pages = computePages({ proximity, activePageIndex, pagesCount, separator: DOTS });
     const paginationButtons = pages.map((page, index) => {
         if (page === DOTS) {
-            return <PaginationButtonComponent key={`dots-${index}`} label={DOTS} disabled={true} />;
+            return <PaginationButton key={`dots-${index}`} label={DOTS} disabled={true} />;
         }
 
         const isCurrentPage = page === activePageIndex + 1;
@@ -59,7 +59,7 @@ const PaginationComponent = ({ totalCount, itemsPerPage, proximity, activePageIn
         const label = '' + page;
 
         return (
-            <PaginationButtonComponent
+            <PaginationButton
                 key={page}
                 pageIndex={page - 1}
                 label={label}
@@ -72,7 +72,7 @@ const PaginationComponent = ({ totalCount, itemsPerPage, proximity, activePageIn
 
     return (
         <ul className="c-pagination pagination row justify-content-center">
-            <PaginationButtonComponent
+            <PaginationButton
                 pageIndex={previousPage}
                 label={backLabel}
                 additionalClasses="prev"
@@ -80,7 +80,7 @@ const PaginationComponent = ({ totalCount, itemsPerPage, proximity, activePageIn
                 onPageChange={onPageChange}
             />
             {paginationButtons}
-            <PaginationButtonComponent
+            <PaginationButton
                 pageIndex={nextPage}
                 label={nextLabel}
                 additionalClasses="next"
@@ -91,13 +91,13 @@ const PaginationComponent = ({ totalCount, itemsPerPage, proximity, activePageIn
     );
 };
 
-PaginationComponent.propTypes = {
+Pagination.propTypes = {
     proximity: PropTypes.number.isRequired,
     itemsPerPage: PropTypes.number.isRequired,
     activePageIndex: PropTypes.number.isRequired,
     totalCount: PropTypes.number.isRequired,
     onPageChange: PropTypes.func.isRequired,
-    disabled: PropTypes.bool,
+    disabled: PropTypes.bool.isRequired,
 };
 
-export default PaginationComponent;
+export default Pagination;
