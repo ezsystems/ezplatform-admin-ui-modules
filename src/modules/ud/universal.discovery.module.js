@@ -29,8 +29,16 @@ const restInfo = {
     token: document.querySelector('meta[name="CSRF-Token"]').content,
     siteaccess: document.querySelector('meta[name="SiteAccess"]').content,
 };
+const contentTypesMap = Object.values(eZ.adminUiConfig.contentTypes).reduce((contentTypesMap, contentTypesGroup) => {
+    contentTypesGroup.forEach((contentType) => {
+        contentTypesMap[contentType.href] = contentType;
+    });
+
+    return contentTypesMap;
+}, {});
 
 export const RestInfoContext = createContext();
+export const ContentTypesMapContext = createContext();
 export const ActiveTabContext = createContext();
 export const TabsConfigContext = createContext();
 export const TitleContext = createContext();
@@ -70,31 +78,33 @@ const UniversalDiscoveryModule = (props) => {
     return (
         <div className={className}>
             <RestInfoContext.Provider value={restInfo}>
-                <ActiveTabContext.Provider value={[activeTab, setActiveTab]}>
-                    <TabsConfigContext.Provider value={props.tabs}>
-                        <TitleContext.Provider value={props.title}>
-                            <CancelContext.Provider value={props.onCancel}>
-                                <ConfirmContext.Provider value={props.onConfirm}>
-                                    <SortingContext.Provider value={[sorting, setSorting]}>
-                                        <CurrentViewContext.Provider value={[currentView, setCurrentView]}>
-                                            <MarkedLocationContext.Provider value={[markedLocation, setMarkedLocation]}>
-                                                <LoadedLocationsMapContext.Provider
-                                                    value={[loadedLocationsMap, dispatchLoadedLocationsAction]}>
-                                                    <RootLocationIdContext.Provider value={props.rootLocationId}>
-                                                        <SelectedLocationsContext.Provider
-                                                            value={[selectedLocations, dispatchSelectedLocationsAction]}>
-                                                            <Tab />
-                                                        </SelectedLocationsContext.Provider>
-                                                    </RootLocationIdContext.Provider>
-                                                </LoadedLocationsMapContext.Provider>
-                                            </MarkedLocationContext.Provider>
-                                        </CurrentViewContext.Provider>
-                                    </SortingContext.Provider>
-                                </ConfirmContext.Provider>
-                            </CancelContext.Provider>
-                        </TitleContext.Provider>
-                    </TabsConfigContext.Provider>
-                </ActiveTabContext.Provider>
+                <ContentTypesMapContext.Provider value={contentTypesMap}>
+                    <ActiveTabContext.Provider value={[activeTab, setActiveTab]}>
+                        <TabsConfigContext.Provider value={props.tabs}>
+                            <TitleContext.Provider value={props.title}>
+                                <CancelContext.Provider value={props.onCancel}>
+                                    <ConfirmContext.Provider value={props.onConfirm}>
+                                        <SortingContext.Provider value={[sorting, setSorting]}>
+                                            <CurrentViewContext.Provider value={[currentView, setCurrentView]}>
+                                                <MarkedLocationContext.Provider value={[markedLocation, setMarkedLocation]}>
+                                                    <LoadedLocationsMapContext.Provider
+                                                        value={[loadedLocationsMap, dispatchLoadedLocationsAction]}>
+                                                        <RootLocationIdContext.Provider value={props.rootLocationId}>
+                                                            <SelectedLocationsContext.Provider
+                                                                value={[selectedLocations, dispatchSelectedLocationsAction]}>
+                                                                <Tab />
+                                                            </SelectedLocationsContext.Provider>
+                                                        </RootLocationIdContext.Provider>
+                                                    </LoadedLocationsMapContext.Provider>
+                                                </MarkedLocationContext.Provider>
+                                            </CurrentViewContext.Provider>
+                                        </SortingContext.Provider>
+                                    </ConfirmContext.Provider>
+                                </CancelContext.Provider>
+                            </TitleContext.Provider>
+                        </TabsConfigContext.Provider>
+                    </ActiveTabContext.Provider>
+                </ContentTypesMapContext.Provider>
             </RestInfoContext.Provider>
         </div>
     );
