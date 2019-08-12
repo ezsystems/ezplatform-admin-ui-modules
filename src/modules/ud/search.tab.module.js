@@ -1,11 +1,14 @@
 import React from 'react';
 
 import Tab from './components/tab/tab';
+import Search from './components/search/search';
 
 const SearchTabModule = () => {
     return (
-        <div className="m-bookmarks-tab">
-            <Tab>Search</Tab>
+        <div className="m-search-tab">
+            <Tab>
+                <Search />
+            </Tab>
         </div>
     );
 };

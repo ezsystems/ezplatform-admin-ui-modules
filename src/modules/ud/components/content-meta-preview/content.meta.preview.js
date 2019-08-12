@@ -1,10 +1,11 @@
 import React, { useContext, useMemo } from 'react';
 
-import { MarkedLocationContext, LoadedLocationsMapContext } from '../../universal.discovery.module';
+import { MarkedLocationContext, LoadedLocationsMapContext, ContentTypesMapContext } from '../../universal.discovery.module';
 
 const ContentMetaPreview = () => {
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
+    const contentTypesMap = useContext(ContentTypesMapContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const location = useMemo(() => {
         return loadedLocationsMap.reduce((item, loadedLocation) => {
@@ -21,7 +22,9 @@ const ContentMetaPreview = () => {
             <div className="c-content-meta-preview__preview"></div>
             <div className="c-content-meta-preview__header">{location.ContentInfo.Content.Name}</div>
             <div className="c-content-meta-preview__info">
-                <div className="c-content-meta-preview__content-type-name">Landing Page HC</div>
+                <div className="c-content-meta-preview__content-type-name">
+                    {contentTypesMap[location.ContentInfo.Content.ContentType._href].name}
+                </div>
                 <div className="c-content-meta-preview__details">
                     <div className="c-content-meta-preview__details-item">
                         <span>Last Modified</span>

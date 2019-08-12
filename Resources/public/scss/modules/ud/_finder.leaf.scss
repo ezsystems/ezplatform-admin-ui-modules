@@ -3,39 +3,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 calculateRem(20px) 0 calculateRem(5px);
+    position: relative;
 
     &:hover {
         background-color: $ez-secondary-ground-pale;
 
-        .c-finder-leaf__selection-button {
+        .c-toggle-selection-button {
             opacity: 1;
         }
     }
 
-    &__selection-button {
-        border: none;
-        border-radius: 50%;
-        background: $ez-color-base-pale;
-        height: calculateRem(20px);
-        width: calculateRem(20px);
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-
-        .ez-icon {
-            fill: $ez-color-base-medium;
-        }
-
-        &--selected {
-            background-color: $ez-color-positive;
-            opacity: 1;
-
-            .ez-icon {
-                fill: $ez-white;
-            }
-        }
+    &--has-children:after {
+        content: '';
+        width: 0;
+        height: 0;
+        border-top: calculateRem(5px) solid transparent;
+        border-left: calculateRem(8px) solid $ez-color-base-medium;
+        border-bottom: calculateRem(5px) solid transparent;
+        position: absolute;
+        right: calculateRem(5px);
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     &--marked {
@@ -46,7 +35,7 @@
             background-color: $ez-secondary-ground;
         }
 
-        .c-finder-leaf__selection-button {
+        .c-toggle-selection-button {
             &--selected {
                 background-color: $ez-white;
 
@@ -54,6 +43,30 @@
                     fill: $ez-color-secondary;
                 }
             }
+        }
+
+        &.c-finder-leaf--has-children:after {
+            border-left-color: $ez-white;
+        }
+
+        .c-finder-leaf__name {
+            .ez-icon {
+                fill: $ez-white;
+            }
+        }
+    }
+
+    &__name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: calculateRem(165px);
+        display: flex;
+        justify-items: center;
+        align-items: center;
+
+        .ez-icon {
+            margin-right: calculateRem(5px);
         }
     }
 }
