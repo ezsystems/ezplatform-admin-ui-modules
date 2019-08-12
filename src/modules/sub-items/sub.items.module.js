@@ -6,7 +6,7 @@ import ViewSwitcherComponent from './components/view-switcher/view.switcher.comp
 import SubItemsListComponent from './components/sub-items-list/sub.items.list.component.js';
 import Popup from '../common/popup/popup.component';
 import ActionButton from './components/action-btn/action.btn.js';
-import PaginationComponent from './components/pagination/pagination.component.js';
+import Pagination from '../common/pagination/pagination.js';
 import NoItemsComponent from './components/no-items/no.items.component.js';
 import Icon from '../common/icon/icon.js';
 
@@ -904,7 +904,7 @@ export default class SubItemsModule extends Component {
         const isPaginationDisabled = !isActivePageLoaded || isDuringBulkOperation;
 
         return (
-            <PaginationComponent
+            <Pagination
                 proximity={1}
                 itemsPerPage={itemsPerPage}
                 activePageIndex={activePageIndex}

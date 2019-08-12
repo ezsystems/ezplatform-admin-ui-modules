@@ -17,7 +17,7 @@ const Icon = (props) => {
 };
 
 Icon.propTypes = {
-    extraClasses: PropTypes.string.isRequired,
+    extraClasses: PropTypes.string,
     name: PropTypes.string,
     customPath: PropTypes.string,
 };
@@ -25,6 +25,7 @@ Icon.propTypes = {
 Icon.defaultProps = {
     customPath: null,
     name: null,
+    extraClasses: null,
 };
 
 export default Icon;

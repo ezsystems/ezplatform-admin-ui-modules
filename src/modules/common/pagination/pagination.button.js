@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const PaginationButtonComponent = ({ label, disabled, additionalClasses, onPageChange, pageIndex }) => {
+const PaginationButton = ({ label, disabled, additionalClasses, onPageChange, pageIndex }) => {
     const handleClick = () => {
         if (!disabled && Number.isInteger(pageIndex)) {
             onPageChange(pageIndex);
@@ -21,18 +21,18 @@ const PaginationButtonComponent = ({ label, disabled, additionalClasses, onPageC
     );
 };
 
-PaginationButtonComponent.propTypes = {
+PaginationButton.propTypes = {
     label: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
     onPageChange: PropTypes.func,
-    pageIndex: PropTypes.number,
+    pageIndex: PropTypes.number.isRequired,
     additionalClasses: PropTypes.string,
 };
 
-PaginationButtonComponent.defaultProps = {
+PaginationButton.defaultProps = {
     disabled: false,
     additionalClasses: '',
     onPageChange: () => {},
 };
 
-export default PaginationButtonComponent;
+export default PaginationButton;

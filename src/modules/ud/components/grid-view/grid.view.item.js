@@ -1,50 +1,51 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import ToggleSelectionButton from '../toggle-selection-button/toggle.selection.button';
 import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
-import { LoadedLocationsMapContext, SelectedLocationsContext, MarkedLocationContext } from '../../universal.discovery.module';
+import { LoadedLocationsMapContext, MarkedLocationContext, ContentTypesMapContext } from '../../universal.discovery.module';
+
+const isSelectionButtonClicked = (event) => {
+    return event.target.closest('.c-toggle-selection-button');
+};
 
 const GridViewItem = ({ location }) => {
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
-    const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
-    const isSelected = selectedLocations.some((selectedLocation) => selectedLocation.id === location.id);
-    const iconName = isSelected ? 'checkmark' : 'create';
-    const buttonClassName = createCssClassNames({
-        'c-grid-item__selection-button': true,
-        'c-grid-item__selection-button--selected': isSelected,
-    });
+    const contentTypesMap = useContext(ContentTypesMapContext);
     const className = createCssClassNames({
         'c-grid-item': true,
         'c-grid-item--marked': markedLocation === location.id,
     });
     const markLocation = ({ nativeEvent }) => {
-        const isSelectionButtonClicked = nativeEvent.target.closest('.c-grid-item__selection-button');
-
-        if (isSelectionButtonClicked) {
+        if (isSelectionButtonClicked(nativeEvent)) {
             return;
         }
 
         setMarkedLocation(location.id);
     };
-    const loadLocation = () => {
-        dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: location.id, offset: 0, items: [] } });
-    };
-    const toggleSelection = () => {
-        const action = isSelected ? { type: 'REMOVE_SELECTED_LOCATION', id: location.id } : { type: 'ADD_SELECTED_LOCATION', location };
+    const loadLocation = ({ nativeEvent }) => {
+        if (isSelectionButtonClicked(nativeEvent)) {
+            return;
+        }
 
-        dispatchSelectedLocationsAction(action);
+        dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: location.id, offset: 0, items: [] } });
     };
 
     return (
         <div className={className} onClick={markLocation} onDoubleClick={loadLocation}>
-            <div className="c-grid-item__preview"></div>
+            <div className="c-grid-item__preview">
+                <div className="c-grid-item__icon-wrapper">
+                    <Icon
+                        extraClasses="ez-icon--small"
+                        customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
+                    />
+                </div>
+            </div>
             <div className="c-grid-item__name">{location.ContentInfo.Content.Name}</div>
-            <button className={buttonClassName} onClick={toggleSelection}>
-                <Icon name={iconName} extraClasses="ez-icon--small" />
-            </button>
+            <ToggleSelectionButton location={location} />
         </div>
     );
 };

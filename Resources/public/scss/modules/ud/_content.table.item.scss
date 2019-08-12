@@ -1,0 +1,22 @@
+.c-content-table-item {
+    cursor: pointer;
+
+    &:hover {
+        .c-toggle-selection-button {
+            opacity: 1;
+        }
+    }
+
+    &--marked {
+        background-color: lighten($ez-ground-primary, 15%);
+    }
+
+    &__toggle-button-wrapper {
+        width: calculateRem(20px);
+    }
+
+    .table &__icon-wrapper {
+        width: calculateRem(20px);
+        padding-right: 0;
+    }
+}
