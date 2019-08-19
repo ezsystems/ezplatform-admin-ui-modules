@@ -1,4 +1,5 @@
 .c-finder-branch {
     flex-basis: calculateRem(215px);
     border-right: calculateRem(1px) solid $ez-color-base-pale;
+    overflow: auto;
 }

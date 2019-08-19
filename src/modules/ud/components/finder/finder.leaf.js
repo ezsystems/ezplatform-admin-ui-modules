@@ -27,6 +27,7 @@ const FinderLeaf = ({ location }) => {
         'c-finder-leaf--marked': !!loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === location.id),
         'c-finder-leaf--has-children': !!location.childCount,
     });
+
     return (
         <div className={className} onClick={markLocation}>
             <span className="c-finder-leaf__name">
