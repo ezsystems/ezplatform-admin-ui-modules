@@ -8,7 +8,7 @@
     box-shadow: 0 calculateRem(2px) calculateRem(4px) 0 rgba(0, 0, 0, 0.45);
     z-index: 1;
 
-    &--is-expanded {
+    &--expanded {
         width: calculateRem(300px);
         box-shadow: calculateRem(2px) calculateRem(2px) calculateRem(4px) 0 rgba(0, 0, 0, 0.45);
 

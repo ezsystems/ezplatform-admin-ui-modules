@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../../../common/icon/icon';
-import ContentCreate from '../content-create/content.create';
+import ContentCreateButton from '../content-create-button/content.create.button';
 import SortSwitcher from '../sort-switcher/sort.switcher';
 import ViewSwitcher from '../view-switcher/view.switcher';
 
@@ -21,7 +21,7 @@ const TopMenu = ({ isContentOnTheFlyDisabled, isSortSwitcherDisabled, isViewSwit
             </span>
             <span className="c-top-menu__title-wrapper">{title}</span>
             <div className="c-top-menu__actions-wrapper">
-                <ContentCreate isDisabled={isContentOnTheFlyDisabled} />
+                <ContentCreateButton isDisabled={isContentOnTheFlyDisabled} />
                 <SortSwitcher isDisabled={isSortSwitcherDisabled} />
                 <ViewSwitcher isDisabled={isViewSwitcherDisabled} />
             </div>

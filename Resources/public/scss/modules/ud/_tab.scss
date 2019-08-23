@@ -15,6 +15,7 @@
     &__left-sidebar {
         grid-area: left-sidebar;
         background-color: $ez-ground-base-medium;
+        position: relative;
     }
 
     &__main {
