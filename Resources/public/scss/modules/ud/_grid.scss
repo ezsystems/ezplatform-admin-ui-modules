@@ -2,12 +2,14 @@
     display: flex;
     flex-wrap: wrap;
     padding: calculateRem(16px);
+    align-items: flex-start;
+    overflow: auto;
 
     &__go-up {
         width: calculateRem(165px);
         height: calculateRem(165px);
         background-color: $ez-color-base-pale;
-        margin-right: calculateRem(30px);
+        margin-right: calculateRem(29px);
         display: flex;
         justify-content: center;
         align-items: center;
