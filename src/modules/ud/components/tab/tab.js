@@ -8,22 +8,26 @@ import SelectedLocations from '../selected-locations/selected.locations';
 
 import { SelectedLocationsContext } from '../../universal.discovery.module';
 
-const Tab = (props) => {
+const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isViewSwitcherDisabled }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const selectedLocationsComponent = !!selectedLocations.length ? <SelectedLocations /> : null;
 
     return (
         <div className="c-tab">
             <div className="c-tab__top-bar">
-                <TopMenu />
+                <TopMenu
+                    isContentOnTheFlyDisabled={isContentOnTheFlyDisabled}
+                    isSortSwitcherDisabled={isSortSwitcherDisabled}
+                    isViewSwitcherDisabled={isViewSwitcherDisabled}
+                />
             </div>
             <div className="c-tab__left-sidebar">
-                {selectedLocationsComponent}
                 <TabSelector />
             </div>
-            <div className="c-tab__main">{props.children}</div>
+            <div className="c-tab__main">{children}</div>
             <div className="c-tab__right-sidebar">
                 <ContentMetaPreview />
+                {selectedLocationsComponent}
             </div>
         </div>
     );
@@ -31,8 +35,15 @@ const Tab = (props) => {
 
 Tab.propTypes = {
     children: PropTypes.any.isRequired,
+    isContentOnTheFlyDisabled: PropTypes.bool,
+    isSortSwitcherDisabled: PropTypes.bool,
+    isViewSwitcherDisabled: PropTypes.bool,
 };
 
-Tab.defaultProps = {};
+Tab.defaultProps = {
+    isContentOnTheFlyDisabled: false,
+    isSortSwitcherDisabled: false,
+    isViewSwitcherDisabled: false,
+};
 
 export default Tab;

@@ -1,11 +1,12 @@
 import { showErrorNotification } from '../../common/services/notification.service';
-import { handleRequestResponse } from '../../common/helpers/request.helper.js';
+import { handleRequestResponse, handleRequestResponseStatus } from '../../common/helpers/request.helper.js';
 
 const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
+const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 
 export const QUERY_LIMIT = 50;
 
@@ -117,4 +118,52 @@ export const findLocationsById = ({ token, siteaccess, id, limit = QUERY_LIMIT, 
             callback(items);
         })
         .catch(showErrorNotification);
+};
+
+export const loadBookmarks = ({ token, siteaccess, limit, offset }, callback) => {
+    const request = new Request(`${ENDPOINT_BOOKMARK}?limit=${limit}&offset=${offset}`, {
+        method: 'GET',
+        headers: {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
+        },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((response) => {
+            const count = response.BookmarkList.count;
+            const items = response.BookmarkList.items.map((item) => item.Location);
+
+            callback({ count, items });
+        })
+        .catch(showErrorNotification);
+};
+
+const toggleBookmark = ({ siteaccess, token, locationId }, callback, method) => {
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
+        method,
+        headers: {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponseStatus)
+        .then(callback)
+        .catch(showErrorNotification);
+};
+
+export const addBookmark = (options, callback) => {
+    toggleBookmark(options, callback, 'POST');
+};
+
+export const removeBookmark = (options, callback) => {
+    toggleBookmark(options, callback, 'DELETE');
 };

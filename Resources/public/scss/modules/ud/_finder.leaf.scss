@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 calculateRem(20px) 0 calculateRem(5px);
+    padding: calculateRem(2px) calculateRem(20px) calculateRem(2px) calculateRem(5px);
     position: relative;
 
     &:hover {
