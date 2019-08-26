@@ -1,10 +1,26 @@
-.c-content-create {
-    margin-right: calculateRem(10px);
+.m-content-create {
+    height: 100%;
 
-    &__btn {
-        padding: calculateRem(4px);
-        width: calculateRem(34px);
-        height: calculateRem(34px);
+    &__iframe {
+        width: 100%;
+        height: calc(100% - 60px);
+        border: none;
+    }
+
+    &__actions {
         display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calculateRem(50px);
+    }
+
+    &__cancel-button {
+        background-color: $ez-color-base-medium;
+        color: $ez-white;
+        margin-right: calculateRem(16px);
+
+        &:hover {
+            color: $ez-white;
+        }
     }
 }
