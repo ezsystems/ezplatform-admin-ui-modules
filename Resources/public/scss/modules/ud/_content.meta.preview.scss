@@ -24,4 +24,14 @@
         font-size: calculateRem(13px);
         color: $ez-color-base-light;
     }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__toggle-bookmark-button {
+        border: none;
+    }
 }

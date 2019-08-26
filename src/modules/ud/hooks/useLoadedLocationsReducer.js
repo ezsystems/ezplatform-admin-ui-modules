@@ -32,6 +32,9 @@ const updateLocationsMap = (state, action) => {
 
     return updatedState;
 };
+const setLoactions = (state, action) => {
+    return action.data;
+};
 
 const loadedLocationsReducer = (state, action) => {
     switch (action.type) {
@@ -39,6 +42,8 @@ const loadedLocationsReducer = (state, action) => {
             return cutLocationsAfter(state, action);
         case 'UPDATE_LOCATIONS':
             return updateLocationsMap(state, action);
+        case 'SET_LOCATIONS':
+            return setLoactions(state, action);
         default:
             throw new Error();
     }

@@ -2,7 +2,7 @@
     background-color: $ez-white;
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     height: 100%;
     width: calculateRem(60px);
     box-shadow: 0 calculateRem(2px) calculateRem(4px) 0 rgba(0, 0, 0, 0.45);
@@ -61,7 +61,7 @@
     }
 
     &__clear-selection-button {
-        background-color: $ez-color-danger;
+        background-color: $ez-color-base-medium;
         margin-top: calculateRem(10px);
     }
 

@@ -8,4 +8,8 @@
     .c-menu-button {
         padding: calculateRem(3px);
     }
+
+    &--disabled {
+        opacity: 0.3;
+    }
 }

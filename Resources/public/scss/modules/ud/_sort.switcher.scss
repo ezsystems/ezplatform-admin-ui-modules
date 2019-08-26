@@ -4,4 +4,8 @@
     display: flex;
     padding: calculateRem(2px);
     margin-right: calculateRem(10px);
+
+    &--disabled {
+        opacity: 0.3;
+    }
 }
