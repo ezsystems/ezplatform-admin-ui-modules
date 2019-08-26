@@ -12,7 +12,7 @@ const SelectedLocations = () => {
     const onConfirm = useContext(ConfirmContext);
     const className = createCssClassNames({
         'c-selected-locations': true,
-        'c-selected-locations--is-expanded': isExpanded,
+        'c-selected-locations--expanded': isExpanded,
     });
     const clearSelection = () => {
         dispatchSelectedLocationsAction({ type: 'CLEAR_SELECTED_LOCATIONS' });

@@ -12,6 +12,10 @@ const TabSelector = () => {
     return (
         <div className="c-tab-selector">
             {tabs.map((tab) => {
+                if (tab.isHiddenOnList) {
+                    return null;
+                }
+
                 const onClick = () => setActiveTab(tab.id);
                 const className = createCssClassNames({
                     'c-tab-selector__item': true,
