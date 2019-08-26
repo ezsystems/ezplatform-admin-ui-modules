@@ -50,12 +50,16 @@ export const MarkedLocationContext = createContext();
 export const LoadedLocationsMapContext = createContext();
 export const RootLocationIdContext = createContext();
 export const SelectedLocationsContext = createContext();
+export const CreateContentWidgetContext = createContext();
+export const ContentOnTheFlyDataContext = createContext();
 
 const UniversalDiscoveryModule = (props) => {
     const [activeTab, setActiveTab] = useState(props.activeTab);
     const [sorting, setSorting] = useState(SORTING_OPTIONS[0].id);
     const [currentView, setCurrentView] = useState('finder');
     const [markedLocation, setMarkedLocation] = useState(props.rootLocationId);
+    const [createContentVisible, setCreateContentVisible] = useState(false);
+    const [contentOnTheFlyData, setContentOnTheFlyData] = useState({});
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useLoadedLocationsReducer([
         { parentLocationId: props.rootLocationId, offset: 0, items: [] },
     ]);
@@ -92,7 +96,13 @@ const UniversalDiscoveryModule = (props) => {
                                                         <RootLocationIdContext.Provider value={props.rootLocationId}>
                                                             <SelectedLocationsContext.Provider
                                                                 value={[selectedLocations, dispatchSelectedLocationsAction]}>
-                                                                <Tab />
+                                                                <CreateContentWidgetContext.Provider
+                                                                    value={[createContentVisible, setCreateContentVisible]}>
+                                                                    <ContentOnTheFlyDataContext.Provider
+                                                                        value={[contentOnTheFlyData, setContentOnTheFlyData]}>
+                                                                        <Tab />
+                                                                    </ContentOnTheFlyDataContext.Provider>
+                                                                </CreateContentWidgetContext.Provider>
                                                             </SelectedLocationsContext.Provider>
                                                         </RootLocationIdContext.Provider>
                                                     </LoadedLocationsMapContext.Provider>
