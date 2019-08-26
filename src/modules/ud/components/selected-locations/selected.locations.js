@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 
 import Icon from '../../../common/icon/icon';
 import SelectedLocationsItem from './selected.locations.item';
@@ -32,12 +32,24 @@ const SelectedLocations = () => {
         );
     };
     const renderToggleButton = () => {
-        const iconName = isExpanded ? 'caret-back' : 'caret-next';
+        const iconName = isExpanded ? 'caret-next' : 'caret-back';
 
         return (
             <button type="button" className="c-selected-locations__toggle-button" onClick={toggleExpanded}>
                 <Icon name={iconName} extraClasses="ez-icon--medium" />
             </button>
+        );
+    };
+    const renderActionButtons = () => {
+        return (
+            <Fragment>
+                <button type="button" className="c-selected-locations__confirm-button" onClick={confirmSelection}>
+                    <Icon name="checkmark" extraClasses="ez-icon--medium ez-icon--light" />
+                </button>
+                <button type="button" className="c-selected-locations__clear-selection-button" onClick={clearSelection}>
+                    <Icon name="circle-close" extraClasses="ez-icon--medium ez-icon--light" />
+                </button>
+            </Fragment>
         );
     };
     const renderLocationsList = () => {
@@ -58,15 +70,10 @@ const SelectedLocations = () => {
         <div className={className}>
             <div className="c-selected-locations__header">
                 <div className="c-selected-locations__actions-wrapper">
-                    {!isExpanded && renderToggleButton()}
-                    <button type="button" className="c-selected-locations__clear-selection-button" onClick={clearSelection}>
-                        <Icon name="circle-close" extraClasses="ez-icon--medium ez-icon--light" />
-                    </button>
-                    <button type="button" className="c-selected-locations__confirm-button" onClick={confirmSelection}>
-                        <Icon name="checkmark" extraClasses="ez-icon--medium ez-icon--light" />
-                    </button>
+                    {renderToggleButton()}
+                    {!isExpanded && renderActionButtons()}
                     {isExpanded && renderSelectionCounter()}
-                    {isExpanded && renderToggleButton()}
+                    {isExpanded && renderActionButtons()}
                 </div>
                 {!isExpanded && renderSelectionCounter()}
             </div>

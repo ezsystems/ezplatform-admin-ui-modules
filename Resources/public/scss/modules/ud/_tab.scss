@@ -31,8 +31,16 @@
 
 .m-ud--locations-selected {
     .c-tab {
-        &__left-sidebar {
+        grid-template-columns: calculateRem(260px) 1fr calculateRem(310px);
+        &__right-sidebar {
             position: relative;
+            padding-right: calculateRem(60px);
         }
+    }
+}
+
+.m-bookmarks-tab {
+    .c-tab__main {
+        display: flex;
     }
 }

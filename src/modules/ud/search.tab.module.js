@@ -6,7 +6,7 @@ import Search from './components/search/search';
 const SearchTabModule = () => {
     return (
         <div className="m-search-tab">
-            <Tab>
+            <Tab isContentOnTheFlyDisabled={true} isSortSwitcherDisabled={true} isViewSwitcherDisabled={true}>
                 <Search />
             </Tab>
         </div>
