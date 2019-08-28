@@ -38,7 +38,7 @@ export default class UniversalDiscoveryModule extends Component {
         super(props);
 
         let selectedContentType = {};
-        const isForcedLanguage = props.cotfAllowedLanguages.length === 1 || props.cotfForcedLanguage;
+        const isForcedLanguage = props.cotfAllowedLanguages.length === 1;
         const isForcedContentType = props.cotfAllowedContentTypes.length === 1;
         const isForcedLocation = props.cotfAllowedLocations.length === 1;
 
@@ -742,7 +742,7 @@ export default class UniversalDiscoveryModule extends Component {
      * @returns {Element}
      */
     renderTabs() {
-        const { extraTabs, visibleTabs, onlyContentOnTheFly } = this.props;
+        const { extraTabs, visibleTabs } = this.props;
 
         const browseTabConfig = this.getTabConfig(TAB_BROWSE);
         const searchTabConfig = this.getTabConfig(TAB_SEARCH);
@@ -751,8 +751,7 @@ export default class UniversalDiscoveryModule extends Component {
 
         let tabsToRender = [browseTabConfig, searchTabConfig, createTabConfig, bookmarksTabConfig, ...extraTabs];
 
-        // @Deprecated - `onlyContentOnTheFly` will be removed in 2.0
-        if (visibleTabs.length === 1 || onlyContentOnTheFly) {
+        if (visibleTabs.length === 1) {
             return null;
         }
 
@@ -797,13 +796,11 @@ export default class UniversalDiscoveryModule extends Component {
             languages,
             contentTypes,
             cotfPreselectedContentType,
-            cotfForcedLanguage,
             cotfAllowedLanguages,
             cotfPreselectedLanguage,
             cotfAllowedContentTypes,
             cotfPreselectedLocation,
             cotfAllowedLocations,
-            onlyContentOnTheFly,
         } = this.props;
         const { userBookmarksItems, userBookmarksCount, contentTypesMap } = this.state;
         const browsePanelConfig = { id: TAB_BROWSE, panel: FinderPanelComponent, attrs: { sortFieldMappings, sortOrderMappings } };
@@ -822,7 +819,6 @@ export default class UniversalDiscoveryModule extends Component {
                 onLanguageSelected: this.onLanguageSelected,
                 onContentTypeSelected: this.onContentTypeSelected,
                 contentTypesMap: this.state.contentTypesMap,
-                forcedLanguage: cotfForcedLanguage,
                 preselectedLanguage: cotfPreselectedLanguage,
                 allowedLanguages: cotfAllowedLanguages,
                 preselectedContentType: cotfPreselectedContentType,
@@ -837,14 +833,6 @@ export default class UniversalDiscoveryModule extends Component {
 
         if (!Object.keys(contentTypesMap).length) {
             return null;
-        }
-
-        if (onlyContentOnTheFly) {
-            console.warn('[DEPRECATED] onlyContentOnTheFly parameter is deprecated');
-            console.warn('[DEPRECATED] it will be removed from ezplatform-admin-ui-modules 2.0');
-            console.warn('[DEPRECATED] use visibleTabs instead');
-
-            return <div className="m-ud__panels">{this.renderSinglePanel(createPanelConfig)}</div>;
         }
 
         if (visibleTabs.length) {
@@ -1139,12 +1127,6 @@ UniversalDiscoveryModule.propTypes = {
     languages: PropTypes.object,
     contentTypes: PropTypes.object,
     allowContainersOnly: PropTypes.bool.isRequired,
-
-    // @Deprecated - to be removed in 2.0
-    onlyContentOnTheFly: PropTypes.bool,
-    // @Deprecated - to be removed in 2.0
-    cotfForcedLanguage: PropTypes.string,
-
     allowedContentTypes: PropTypes.array,
     cotfPreselectedLanguage: PropTypes.string,
     cotfAllowedLanguages: PropTypes.array,
@@ -1176,9 +1158,7 @@ UniversalDiscoveryModule.defaultProps = {
     languages: window.eZ.adminUiConfig.languages,
     contentTypes: window.eZ.adminUiConfig.contentTypes,
     allowContainersOnly: false,
-    onlyContentOnTheFly: false,
     allowedContentTypes: [],
-    cotfForcedLanguage: '',
     cotfPreselectedLanguage: '',
     cotfAllowedLanguages: [],
     cotfPreselectedContentType: '',
