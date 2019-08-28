@@ -172,7 +172,7 @@ export default class TableViewItemComponent extends PureComponent {
         const notAvailableLabel = Translator.trans(/*@Desc("N/A")*/ 'content_type.not_available.label', {}, 'sub_items');
         const contentType = contentTypesMap[content.ContentType._href];
         const contentTypeIdentifier = contentType ? contentType.identifier : null;
-        const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : notAvailableLabel;
+        const contentTypeName = contentTypeIdentifier ? eZ.helpers.contentType.getContentTypeName(contentTypeIdentifier) : notAvailableLabel;
 
         return (
             <td className="c-table-view-item__cell c-table-view-item__cell--content-type">
