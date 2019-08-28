@@ -100,12 +100,20 @@ export default class ChooseContentTypeComponent extends Component {
     }
 
     renderGroup(groupName, index) {
-        const items = this.props.contentTypes[groupName];
         const groupAttrs = {};
+
+        let items = this.props.contentTypes[groupName];
 
         if (this.state.filterQuery && items.every((item) => !item.name.toLowerCase().includes(this.state.filterQuery))) {
             groupAttrs.hidden = true;
         }
+
+        items = items.sort((contentType1, contentType2) => {
+            const contentTypeName1 = contentType1.name.toLowerCase();
+            const contentTypeName2 = contentType2.name.toLowerCase();
+
+            return contentTypeName1.localeCompare(contentTypeName2);
+        });
 
         return (
             <div className="c-choose-content-type__group" key={index}>
