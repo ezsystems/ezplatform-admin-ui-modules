@@ -697,7 +697,7 @@ export default class SubItemsModule extends Component {
         const failedItemsData = failedLocations.map(({ id: locationId }) => {
             const item = selectedItems.get(locationId);
             const contentType = contentTypesMap[item.content.ContentType._href];
-            const contentTypeName = eZ.helpers.contentType.getContentTypeName(contentType.identifier);
+            const contentTypeName = window.eZ.helpers.contentType.getContentTypeName(contentType.identifier);
 
             return {
                 contentTypeName,
