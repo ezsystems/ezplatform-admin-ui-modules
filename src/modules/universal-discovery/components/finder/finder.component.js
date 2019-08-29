@@ -29,6 +29,7 @@ export default class FinderComponent extends Component {
         this.locationsMap = {};
         this.activeLocations = [];
         this.preselectedItem = null;
+        this.startingLocation = null;
     }
 
     componentDidMount() {
@@ -42,9 +43,16 @@ export default class FinderComponent extends Component {
             this.loadPreselectedData(this.props.preselectedLocation);
         } else {
             this.setDefaultActiveLocations();
-            this.props.findLocationsByParentLocationId(
-                { ...this.props.restInfo, parentLocationId: this.props.startingLocationId },
-                this.updateLocationsData
+            this.props.loadLocation(
+                { ...this.props.restInfo, locationId: this.props.startingLocationId },
+                (response) => {
+                    this.startingLocation = response.View.Result.searchHits.searchHit[0].value.Location;
+                    const sortClauses = this.getLocationSortClauses(this.startingLocation);
+                    this.props.findLocationsByParentLocationId(
+                        { ...this.props.restInfo, parentLocationId: this.props.startingLocationId, sortClauses },
+                        this.updateLocationsData
+                    );
+                }
             );
         }
     }
@@ -186,10 +194,13 @@ export default class FinderComponent extends Component {
      * @memberof FinderComponent
      */
     onLoadMore(parentLocation) {
+        if (parentLocation === null) {
+            parentLocation = this.startingLocation;
+        }
         const limit = this.state.limit;
-        const parentLocationId = parentLocation ? parentLocation.id : this.props.startingLocationId;
-        const offset = this.state.locationsMap[parentLocationId].offset + limit;
-        const sortClauses = parentLocation ? this.getLocationSortClauses(parentLocation) : {};
+        const parentLocationId = parentLocation.id;
+        const offset = this.state.locationsMap[parentLocation.id].offset + limit;
+        const sortClauses = this.getLocationSortClauses(parentLocation);
 
         this.props.findLocationsByParentLocationId(
             { ...this.props.restInfo, parentLocationId, limit, offset, sortClauses },
@@ -405,6 +416,7 @@ FinderComponent.propTypes = {
     onItemSelect: PropTypes.func.isRequired,
     startingLocationId: PropTypes.number.isRequired,
     findLocationsByParentLocationId: PropTypes.func.isRequired,
+    loadLocation: PropTypes.func.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
