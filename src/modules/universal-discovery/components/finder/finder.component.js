@@ -29,7 +29,9 @@ export default class FinderComponent extends Component {
         this.locationsMap = {};
         this.activeLocations = [];
         this.preselectedItem = null;
-        this.startingLocation = null;
+        this.startingLocation = {
+            id: 1
+        };
     }
 
     componentDidMount() {
@@ -43,17 +45,7 @@ export default class FinderComponent extends Component {
             this.loadPreselectedData(this.props.preselectedLocation);
         } else {
             this.setDefaultActiveLocations();
-            this.props.loadLocation(
-                { ...this.props.restInfo, locationId: this.props.startingLocationId },
-                (response) => {
-                    this.startingLocation = response.View.Result.searchHits.searchHit[0].value.Location;
-                    const sortClauses = this.getLocationSortClauses(this.startingLocation);
-                    this.props.findLocationsByParentLocationId(
-                        { ...this.props.restInfo, parentLocationId: this.props.startingLocationId, sortClauses },
-                        this.updateLocationsData
-                    );
-                }
-            );
+            this.handleRootLocations();
         }
     }
 
@@ -72,6 +64,45 @@ export default class FinderComponent extends Component {
     getPreselectedState() {
         return { locationsMap: this.locationsMap, activeLocations: this.activeLocations };
     }
+
+    /**
+     * Loads starting location data (if there is a need) and loads root locations
+     *
+     * @method handleRootLocations
+     * @memberof FinderComponent
+     */
+    handleRootLocations() {
+        // Starting location is already loaded or its default
+        if (this.startingLocation.id === this.props.startingLocationId) {
+            this.loadRootLocations();
+            return;
+        }
+
+        this.props.loadLocation(
+            {...this.props.restInfo, locationId: this.props.startingLocationId},
+            (response) => {
+                if (response.View.Result.searchHits.searchHit[0].value.Location) {
+                    this.startingLocation = response.View.Result.searchHits.searchHit[0].value.Location;
+                }
+
+                this.loadRootLocations();
+            }
+        );
+    }
+
+    /**
+     * Loads root locations
+     *
+     * @method loadRootLocations
+     * @memberof FinderComponent
+     */
+    loadRootLocations() {
+        const sortClauses = this.getLocationSortClauses(this.startingLocation);
+        this.props.findLocationsByParentLocationId(
+            { ...this.props.restInfo, parentLocationId: this.props.startingLocationId, sortClauses },
+            this.updateLocationsData
+        );
+    };
 
     /**
      * Load data of preselected location.
