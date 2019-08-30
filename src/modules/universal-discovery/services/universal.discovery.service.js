@@ -5,7 +5,7 @@ const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
-export const QUERY_LIMIT = 2;
+export const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
 
 /**
