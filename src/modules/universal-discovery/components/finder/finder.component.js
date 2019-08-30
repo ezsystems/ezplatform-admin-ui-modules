@@ -6,6 +6,7 @@ import { loadPreselectedLocationData, QUERY_LIMIT } from '../../services/univers
 import deepClone from '../../../common/helpers/deep.clone.helper';
 
 const ROOT_LOCATION_OBJECT = null;
+const ROOT_LOCATION_ID = 1
 
 export default class FinderComponent extends Component {
     constructor(props) {
@@ -30,7 +31,7 @@ export default class FinderComponent extends Component {
         this.activeLocations = [];
         this.preselectedItem = null;
         this.startingLocation = {
-            id: 1
+            id: ROOT_LOCATION_ID
         };
     }
 
@@ -44,8 +45,7 @@ export default class FinderComponent extends Component {
         } else if (isPreselectedLocation) {
             this.loadPreselectedData(this.props.preselectedLocation);
         } else {
-            this.setDefaultActiveLocations();
-            this.handleRootLocations();
+            this.handleStartingLocation();
         }
     }
 
@@ -68,24 +68,26 @@ export default class FinderComponent extends Component {
     /**
      * Loads starting location data (if there is a need) and loads root locations
      *
-     * @method handleRootLocations
+     * @method handleStartingLocation
      * @memberof FinderComponent
      */
-    handleRootLocations() {
-        // Starting location is already loaded or its default
+    handleStartingLocation() {
+        this.setDefaultActiveLocations();
+
+        // Starting location is already loaded or it is a root location
         if (this.startingLocation.id === this.props.startingLocationId) {
-            this.loadRootLocations();
+            this.loadChildren();
             return;
         }
 
         this.props.loadLocation(
             {...this.props.restInfo, locationId: this.props.startingLocationId},
             (response) => {
-                if (response.View.Result.searchHits.searchHit[0].value.Location) {
+                if (response.View.Result.searchHits.searchHit.length) {
                     this.startingLocation = response.View.Result.searchHits.searchHit[0].value.Location;
                 }
 
-                this.loadRootLocations();
+                this.loadChildren();
             }
         );
     }
@@ -93,11 +95,12 @@ export default class FinderComponent extends Component {
     /**
      * Loads root locations
      *
-     * @method loadRootLocations
+     * @method loadChildren
      * @memberof FinderComponent
      */
-    loadRootLocations() {
+    loadChildren() {
         const sortClauses = this.getLocationSortClauses(this.startingLocation);
+
         this.props.findLocationsByParentLocationId(
             { ...this.props.restInfo, parentLocationId: this.props.startingLocationId, sortClauses },
             this.updateLocationsData
