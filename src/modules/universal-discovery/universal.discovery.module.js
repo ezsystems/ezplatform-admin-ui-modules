@@ -12,6 +12,7 @@ import ContentMetaPreviewComponent from './components/content-meta-preview/conte
 import {
     loadContentInfo,
     loadContentTypes,
+    loadLocation,
     findLocationsByParentLocationId,
     findContentBySearchQuery,
     checkCreatePermission,
@@ -866,6 +867,7 @@ export default class UniversalDiscoveryModule extends Component {
         const {
             startingLocationId,
             findLocationsByParentLocationId,
+            loadLocation,
             findContentBySearchQuery,
             multiple,
             searchResultsPerPage,
@@ -890,6 +892,7 @@ export default class UniversalDiscoveryModule extends Component {
             allowContainersOnly,
             startingLocationId,
             findLocationsByParentLocationId,
+            loadLocation,
             findContentBySearchQuery,
             contentTypesMap,
             multiple,
@@ -1166,6 +1169,7 @@ UniversalDiscoveryModule.defaultProps = {
     loadContentTypes,
     findContentBySearchQuery,
     findLocationsByParentLocationId,
+    loadLocation,
     canSelectContent: (item, callback) => callback(true),
     extraTabs: window.eZ.adminUiConfig.universalDiscoveryWidget.extraTabs || [],
     startingLocationId: 1,
