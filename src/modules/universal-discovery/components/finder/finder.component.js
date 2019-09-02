@@ -6,6 +6,7 @@ import { loadPreselectedLocationData, QUERY_LIMIT } from '../../services/univers
 import deepClone from '../../../common/helpers/deep.clone.helper';
 
 const ROOT_LOCATION_OBJECT = null;
+const ROOT_LOCATION_ID = 1;
 
 export default class FinderComponent extends Component {
     constructor(props) {
@@ -41,11 +42,7 @@ export default class FinderComponent extends Component {
         } else if (isPreselectedLocation) {
             this.loadPreselectedData(this.props.preselectedLocation);
         } else {
-            this.setDefaultActiveLocations();
-            this.props.findLocationsByParentLocationId(
-                { ...this.props.restInfo, parentLocationId: this.props.startingLocationId },
-                this.updateLocationsData
-            );
+            this.handleStartingLocation();
         }
     }
 
@@ -63,6 +60,49 @@ export default class FinderComponent extends Component {
 
     getPreselectedState() {
         return { locationsMap: this.locationsMap, activeLocations: this.activeLocations };
+    }
+
+    /**
+     * Loads starting location data (if there is a need) and loads root locations
+     *
+     * @method handleStartingLocation
+     * @memberof FinderComponent
+     */
+    handleStartingLocation() {
+        // Starting location is a root location
+        if (this.props.startingLocationId === ROOT_LOCATION_ID) {
+            this.setDefaultActiveLocations();
+            this.loadChildren();
+
+            return;
+        }
+
+        this.props.loadLocation({ ...this.props.restInfo, locationId: this.props.startingLocationId }, (response) => {
+            let loadedLocation = null;
+
+            if (response.View.Result.searchHits.searchHit.length) {
+                loadedLocation = response.View.Result.searchHits.searchHit[0].value.Location;
+
+                this.setState({ activeLocations: [loadedLocation] });
+            }
+
+            this.loadChildren(loadedLocation);
+        });
+    }
+
+    /**
+     * Loads root locations
+     *
+     * @method loadChildren
+     * @memberof FinderComponent
+     */
+    loadChildren(parentLocation) {
+        const sortClauses = parentLocation ? this.getLocationSortClauses(parentLocation) : {};
+
+        this.props.findLocationsByParentLocationId(
+            { ...this.props.restInfo, parentLocationId: this.props.startingLocationId, sortClauses },
+            (response) => this.updateLocationsData(response, parentLocation)
+        );
     }
 
     /**
@@ -405,6 +445,7 @@ FinderComponent.propTypes = {
     onItemSelect: PropTypes.func.isRequired,
     startingLocationId: PropTypes.number.isRequired,
     findLocationsByParentLocationId: PropTypes.func.isRequired,
+    loadLocation: PropTypes.func.isRequired,
     restInfo: PropTypes.shape({
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
