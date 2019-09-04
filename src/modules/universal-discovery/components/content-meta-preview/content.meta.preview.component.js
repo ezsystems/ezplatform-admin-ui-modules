@@ -146,7 +146,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const { data, maxHeight } = this.props;
         const content = data.ContentInfo.Content;
         const contentTypeIdentifier = content.ContentTypeInfo.identifier;
-        const contentTypeName = window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier];
+        const contentTypeName = window.eZ.helpers.contentType.getContentTypeName(contentTypeIdentifier);
         const { formatShortDateTime } = window.eZ.helpers.timezone;
         const translations = this.getTranslations(data);
         const title = Translator.trans(/*@Desc("Content Meta Preview")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');

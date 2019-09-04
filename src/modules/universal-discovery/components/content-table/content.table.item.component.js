@@ -10,7 +10,7 @@ const ContentTableItemComponent = (props) => {
     const item = data.ContentInfo.Content;
     const contentType = contentTypesMap ? contentTypesMap[item.ContentType._href] : null;
     const contentTypeIdentifier = contentType ? contentType.identifier : null;
-    const contentTypeName = contentTypeIdentifier ? window.eZ.adminUiConfig.contentTypeNames[contentTypeIdentifier] : notAvailableLabel;
+    const contentTypeName = contentTypeIdentifier ? window.eZ.helpers.contentType.getContentTypeName(contentTypeIdentifier) : notAvailableLabel;
     const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
 
     return (
