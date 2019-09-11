@@ -21,6 +21,7 @@ $list-item-height: calculateRem(20px);
     }
 
     &__link {
+        width: 100%;
         color: inherit;
         display: flex;
         align-items: center;
