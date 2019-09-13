@@ -11,10 +11,10 @@ import NoItemsComponent from './components/no-items/no.items.component.js';
 import Icon from '../common/icon/icon.js';
 
 import deepClone from '../common/helpers/deep.clone.helper.js';
-import { updateLocationPriority, loadLocation, loadContentInfo, loadContentType, loadContentTypes } from './services/sub.items.service';
+import { updateLocationPriority, loadLocation } from './services/sub.items.service';
 import { bulkMoveLocations, bulkDeleteItems } from './services/bulk.service.js';
 
-const ASCENDING_SORT_ORDER = 'ascending';
+export const ASCENDING_SORT_ORDER = 'ascending';
 const DESCENDING_SORT_ORDER = 'descending';
 const DEFAULT_SORT_ORDER = ASCENDING_SORT_ORDER;
 
@@ -23,9 +23,6 @@ export default class SubItemsModule extends Component {
         super(props);
 
         this.afterPriorityUpdated = this.afterPriorityUpdated.bind(this);
-        this.loadContentItems = this.loadContentItems.bind(this);
-        this.loadContentTypes = this.loadContentTypes.bind(this);
-        this.updateItemsState = this.updateItemsState.bind(this);
         this.switchView = this.switchView.bind(this);
         this.handleItemPriorityUpdate = this.handleItemPriorityUpdate.bind(this);
         this.toggleItemSelection = this.toggleItemSelection.bind(this);
@@ -48,9 +45,9 @@ export default class SubItemsModule extends Component {
 
         this.state = {
             activeView: props.activeView,
-            activePageItems: props.items,
+            activePageItems: null,
+            pages: [],
             selectedItems: new Map(),
-            contentTypesMap: props.contentTypesMap,
             totalCount: props.totalCount,
             offset: props.offset,
             isDuringBulkOperation: false,
@@ -68,6 +65,10 @@ export default class SubItemsModule extends Component {
         this.bulkDeleteModalContainer = document.createElement('div');
         this.bulkDeleteModalContainer.classList.add('m-sub-items__bulk-delete-modal-container');
         document.body.appendChild(this.bulkDeleteModalContainer);
+
+        if (!this.state.activePageItems) {
+            this.loadPage(0);
+        }
     }
 
     componentDidUpdate() {
@@ -121,154 +122,22 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadPage(pageIndex) {
-        this.loadLocation(pageIndex)
-            .then(this.loadContentItems)
-            .then(this.loadContentTypes)
-            .then(this.updateItemsState)
-            .catch(() => {
-                const errorMessage = Translator.trans(
-                    /*@Desc("An error occurred while loading items in the Sub Items module")*/ 'page.loading_error.message',
-                    {},
-                    'sub_items'
-                );
-
-                window.eZ.helpers.notification.showErrorNotification(errorMessage);
-            });
-    }
-
-    /**
-     * Loads location data
-     *
-     * @param {Number} pageIndex
-     * @method loadLocation
-     * @returns {Promise}
-     * @memberof SubItemsModule
-     */
-    loadLocation(pageIndex) {
-        const { limit: itemsPerPage, loadLocation, restInfo, parentLocationId: locationId } = this.props;
+        const { limit: itemsPerPage, parentLocationId: locationId, loadLocation, restInfo } = this.props;
         const { sortClause, sortOrder } = this.state;
-        const offset = pageIndex * itemsPerPage;
-        const sortClauses = {
-            [sortClause]: sortOrder,
-        };
-        const queryConfig = { locationId, limit: itemsPerPage, sortClauses, offset };
+        const page = this.state.pages.find((page) => page.number === pageIndex + 1);
+        const cursor = page ? page.cursor : null;
+        const queryConfig = { locationId, limit: itemsPerPage, sortClause, sortOrder, cursor };
 
-        return new Promise((resolve) => loadLocation(restInfo, queryConfig, resolve));
-    }
+        loadLocation(restInfo, queryConfig, (response) => {
+            const { totalCount, pages, edges } = response.data._repository.location.children;
+            const activePageItems = edges.map((edge) => edge.node);
 
-    /**
-     * Loads content items from location
-     *
-     * @method loadContentItems
-     * @param {Object} response query results
-     * @returns {Promise}
-     * @memberof SubItemsModule
-     */
-    loadContentItems(response) {
-        const { loadContentInfo, restInfo } = this.props;
-
-        if (!response || !response.View) {
-            const invalidResponseFormatMessage = Translator.trans(
-                /*@Desc("Invalid response format")*/ 'load_content_items.invalid_response_format.error.message',
-                {},
-                'sub_items'
-            );
-
-            throw new Error(invalidResponseFormatMessage);
-        }
-
-        const locations = response.View.Result.searchHits.searchHit;
-
-        return new Promise((resolve) => {
-            const contentIds = locations.map((item) => item.value.Location.ContentInfo.Content._id);
-
-            loadContentInfo(restInfo, contentIds, (contentInfo) => {
-                const totalCount = response.View.Result.count;
-
-                resolve({
-                    locations,
-                    totalCount,
-                    contentItems: contentInfo.View.Result.searchHits.searchHit.map((searchHit) => searchHit.value.Content),
-                });
-            });
+            this.setState(() => ({
+                activePageItems,
+                totalCount,
+                pages,
+            }));
         });
-    }
-
-    /**
-     * Loads content types info
-     *
-     * @method loadContentTypes
-     * @param {Object} itemsData
-     * @returns {Promise}
-     * @memberof SubItemsModule
-     */
-    loadContentTypes(itemsData) {
-        const promises = itemsData.contentItems.map(
-            (content) =>
-                new Promise((resolve) => {
-                    const contentTypeId = content.ContentType._href;
-
-                    if (!this.state.contentTypesMap[contentTypeId]) {
-                        this.props.loadContentType(contentTypeId, this.props.restInfo, (response) => resolve(response));
-                    } else {
-                        resolve({ ContentType: this.state.contentTypesMap[contentTypeId] });
-                    }
-                })
-        );
-
-        return Promise.all(promises).then((contentTypes) => {
-            itemsData.contentTypes = contentTypes;
-
-            return itemsData;
-        });
-    }
-
-    /**
-     * Updates module state by updating items list
-     *
-     * @method updateItemsState
-     * @param {Object} responses
-     * @memberof SubItemsModule
-     */
-    updateItemsState({ locations, contentItems, totalCount, contentTypes }) {
-        const pageItems = locations.map((location) => {
-            const itemLocation = location.value.Location;
-            const respectiveContent = contentItems.find((content) => content._id === itemLocation.ContentInfo.Content._id);
-
-            return {
-                location: itemLocation,
-                content: respectiveContent,
-            };
-        });
-
-        this.setState((state) => ({
-            activePageItems: pageItems,
-            totalCount,
-            contentTypesMap: {
-                ...state.contentTypesMap,
-                ...this.buildContentTypesMap(contentTypes),
-            },
-        }));
-    }
-
-    /**
-     * Builds content types map
-     *
-     * @method buildContentTypesMap
-     * @param {Array} contentTypes
-     * @returns {Object}
-     * @memberof SubItemsModule
-     */
-    buildContentTypesMap(contentTypes) {
-        if (!contentTypes) {
-            return {};
-        }
-
-        return contentTypes.reduce((total, item) => {
-            total[item.ContentType._href] = item.ContentType;
-
-            return total;
-        }, {});
     }
 
     updateTotalCountState(totalCount) {
@@ -330,7 +199,7 @@ export default class SubItemsModule extends Component {
 
     updateItemLocation(location) {
         this.setState(({ activePageItems }) => {
-            const itemIndex = activePageItems.findIndex((item) => item.location.id === location.id);
+            const itemIndex = activePageItems.findIndex((item) => item.id === location.id);
 
             if (itemIndex === -1) {
                 return null;
@@ -340,7 +209,7 @@ export default class SubItemsModule extends Component {
             const updatedItem = deepClone(item);
             const updatedPageItems = [...activePageItems];
 
-            updatedItem.location = location;
+            updatedItem.priority = location.priority;
             updatedPageItems[itemIndex] = updatedItem;
 
             return {
@@ -363,7 +232,7 @@ export default class SubItemsModule extends Component {
     toggleItemSelection(item, isSelected) {
         const { selectedItems } = this.state;
         const updatedSelectedItems = new Map(selectedItems);
-        const locationId = item.location.id;
+        const locationId = item.id;
 
         if (isSelected) {
             updatedSelectedItems.set(locationId, item);
@@ -380,7 +249,7 @@ export default class SubItemsModule extends Component {
         if (select) {
             this.selectItems(activePageItems);
         } else {
-            const locationsIds = activePageItems.map((item) => item.location.id);
+            const locationsIds = activePageItems.map((item) => item.id);
             const locationsIdsSet = new Set(locationsIds);
 
             this.deselectItems(locationsIdsSet);
@@ -393,7 +262,7 @@ export default class SubItemsModule extends Component {
      */
     selectItems(itemsToSelect) {
         const { selectedItems } = this.state;
-        const newSelectedItems = itemsToSelect.map((item) => [item.location.id, item]);
+        const newSelectedItems = itemsToSelect.map((item) => [item.id, item]);
         const newSelection = new Map([...selectedItems, ...newSelectedItems]);
 
         this.setState(() => ({ selectedItems: newSelection }));
@@ -430,34 +299,34 @@ export default class SubItemsModule extends Component {
 
         const { restInfo } = this.props;
         const { selectedItems } = this.state;
-        const locationsToMove = [...selectedItems.values()].map(({ location }) => location);
+        const itemsToMove = [...selectedItems.values()];
 
-        bulkMoveLocations(restInfo, locationsToMove, location._href, this.afterBulkMove.bind(this, selectedItems, location));
+        bulkMoveLocations(restInfo, itemsToMove, location._href, this.afterBulkMove.bind(this, location));
     }
 
-    afterBulkMove(selectedItems, location, movedLocations, notMovedLocations) {
+    afterBulkMove(location, movedItems, notMovedItems) {
         const { totalCount } = this.state;
 
         this.refreshContentTree();
-        this.updateTotalCountState(totalCount - movedLocations.length);
+        this.updateTotalCountState(totalCount - movedItems.length);
         this.deselectAllItems();
         this.discardActivePageItems();
 
         this.toggleBulkOperationStatusState(false);
 
-        if (notMovedLocations.length) {
+        if (notMovedItems.length) {
             const modalTableTitle = Translator.trans(
                 /*@Desc("Content items cannot be moved (%itemsCount%)")*/ 'bulk_move.error.modal.table_title',
                 {
-                    itemsCount: notMovedLocations.length,
+                    itemsCount: notMovedItems.length,
                 },
                 'sub_items'
             );
             const notificationMessage = Translator.trans(
                 /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
                 {
-                    notMovedCount: notMovedLocations.length,
-                    totalCount: movedLocations.length + notMovedLocations.length,
+                    notMovedCount: notMovedItems.length,
+                    totalCount: movedItems.length + notMovedItems.length,
                 },
                 'sub_items'
             );
@@ -469,16 +338,10 @@ export default class SubItemsModule extends Component {
                 ),
             };
 
-            this.handleBulkOperationFailedNotification(
-                selectedItems,
-                notMovedLocations,
-                modalTableTitle,
-                notificationMessage,
-                rawPlaceholdersMap
-            );
+            this.handleBulkOperationFailedNotification(notMovedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap);
         }
 
-        if (movedLocations.length) {
+        if (movedItems.length) {
             const message = Translator.trans(
                 /*@Desc("The selected content item(s) have been sent to {{ locationLink }}")*/ 'bulk_move.success.message',
                 {},
@@ -524,7 +387,7 @@ export default class SubItemsModule extends Component {
         const UniversalDiscovery = window.eZ.modules.UniversalDiscovery;
         const { restInfo, parentLocationId, udwConfigBulkMoveItems } = this.props;
         const { selectedItems } = this.state;
-        const selectedItemsLocationsIds = [...selectedItems.values()].map(({ location }) => location.id);
+        const selectedItemsLocationsIds = [...selectedItems.values()].map(({ id }) => id);
         const excludedMoveLocations = [parentLocationId, ...selectedItemsLocationsIds];
         const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
         const udwProps = {
@@ -549,33 +412,26 @@ export default class SubItemsModule extends Component {
         this.toggleBulkOperationStatusState(true);
 
         const { restInfo } = this.props;
-        const { selectedItems, contentTypesMap } = this.state;
+        const { selectedItems } = this.state;
         const itemsToDelete = [...selectedItems.values()];
 
-        bulkDeleteItems(restInfo, itemsToDelete, contentTypesMap, this.afterBulkDelete.bind(this, selectedItems));
+        bulkDeleteItems(restInfo, itemsToDelete, this.afterBulkDelete);
     }
 
-    afterBulkDelete(selectedItems, deletedLocations, notDeletedLocations) {
-        const { totalCount, contentTypesMap } = this.state;
-        const isUserLocation = ({ id: locationId }) => {
-            const item = selectedItems.get(locationId);
-            const contentType = contentTypesMap[item.content.ContentType._href];
-            const contentTypeIdentifier = contentType.identifier;
-            const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
-
-            return isUserContentItem;
-        };
+    afterBulkDelete(deletedItems, notDeletedItems) {
+        const { totalCount } = this.state;
+        const isUser = ({ content }) => window.eZ.adminUiConfig.userContentTypes.includes(content._info.contentType.identifier);
 
         this.refreshContentTree();
-        this.updateTotalCountState(totalCount - deletedLocations.length);
+        this.updateTotalCountState(totalCount - deletedItems.length);
         this.deselectAllItems();
         this.discardActivePageItems();
 
         this.toggleBulkOperationStatusState(false);
 
-        if (notDeletedLocations.length) {
-            const hadUserContentItemFailed = notDeletedLocations.some(isUserLocation);
-            const hadNonUserContentItemFailed = notDeletedLocations.some((location) => !isUserLocation(location));
+        if (notDeletedItems.length) {
+            const hadUserContentItemFailed = notDeletedItems.some(isUser);
+            const hadNonUserContentItemFailed = notDeletedItems.some((item) => !isUser(item));
             let modalTableTitle = null;
             let message = null;
             const rawPlaceholdersMap = {
@@ -590,15 +446,15 @@ export default class SubItemsModule extends Component {
                 modalTableTitle = Translator.trans(
                     /*@Desc("Content item(s) cannot be deleted or sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users_with_nonusers',
                     {
-                        itemsCount: notDeletedLocations.length,
+                        itemsCount: notDeletedItems.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
                     /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users_with_nonusers',
                     {
-                        notDeletedCount: notDeletedLocations.length,
-                        totalCount: deletedLocations.length + notDeletedLocations.length,
+                        notDeletedCount: notDeletedItems.length,
+                        totalCount: deletedItems.length + notDeletedItems.length,
                     },
                     'sub_items'
                 );
@@ -606,15 +462,15 @@ export default class SubItemsModule extends Component {
                 modalTableTitle = Translator.trans(
                     /*@Desc("User(s) cannot be deleted (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users',
                     {
-                        itemsCount: notDeletedLocations.length,
+                        itemsCount: notDeletedItems.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
                     /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users',
                     {
-                        notDeletedCount: notDeletedLocations.length,
-                        totalCount: deletedLocations.length + notDeletedLocations.length,
+                        notDeletedCount: notDeletedItems.length,
+                        totalCount: deletedItems.length + notDeletedItems.length,
                     },
                     'sub_items'
                 );
@@ -622,24 +478,24 @@ export default class SubItemsModule extends Component {
                 modalTableTitle = Translator.trans(
                     /*@Desc("Content item(s) cannot be sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.nonusers',
                     {
-                        itemsCount: notDeletedLocations.length,
+                        itemsCount: notDeletedItems.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
                     /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.nonusers',
                     {
-                        notDeletedCount: notDeletedLocations.length,
-                        totalCount: deletedLocations.length + notDeletedLocations.length,
+                        notDeletedCount: notDeletedItems.length,
+                        totalCount: deletedItems.length + notDeletedItems.length,
                     },
                     'sub_items'
                 );
             }
 
-            this.handleBulkOperationFailedNotification(selectedItems, notDeletedLocations, modalTableTitle, message, rawPlaceholdersMap);
+            this.handleBulkOperationFailedNotification(notDeletedItems, modalTableTitle, message, rawPlaceholdersMap);
         } else {
-            const anyUserContentItemDeleted = deletedLocations.some(isUserLocation);
-            const anyNonUserContentItemDeleted = deletedLocations.some((location) => !isUserLocation(location));
+            const anyUserContentItemDeleted = deletedItems.some(isUser);
+            const anyNonUserContentItemDeleted = deletedItems.some((location) => !isUser(location));
             let message = null;
 
             if (anyUserContentItemDeleted && anyNonUserContentItemDeleted) {
@@ -686,24 +542,16 @@ export default class SubItemsModule extends Component {
      * Clicking the button should cause appearance of the modal
      * with list of items, which failed to be deleted/moved.
      *
-     * @param {Map} selectedItems
-     * @param {Array} failedLocations
+     * @param {Array} failedItems
      * @param {String} modalTableTitle
      * @param {String} notificationMessage
      * @param {Object} rawPlaceholdersMap
      */
-    handleBulkOperationFailedNotification(selectedItems, failedLocations, modalTableTitle, notificationMessage, rawPlaceholdersMap) {
-        const { contentTypesMap } = this.state;
-        const failedItemsData = failedLocations.map(({ id: locationId }) => {
-            const item = selectedItems.get(locationId);
-            const contentType = contentTypesMap[item.content.ContentType._href];
-            const contentTypeName = window.eZ.helpers.contentType.getContentTypeName(contentType.identifier);
-
-            return {
-                contentTypeName,
-                contentName: item.content.Name,
-            };
-        });
+    handleBulkOperationFailedNotification(failedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap) {
+        const failedItemsData = failedItems.map((content) => ({
+            contentTypeName: content._info.contentType.name,
+            contentName: content._info.name,
+        }));
 
         window.eZ.helpers.notification.showWarningNotification(
             notificationMessage,
@@ -752,7 +600,6 @@ export default class SubItemsModule extends Component {
     }
 
     getSelectionInfo() {
-        const { contentTypesMap } = this.props;
         const { selectedItems } = this.state;
         let isUserContentItemSelected = false;
         let isNonUserContentItemSelected = false;
@@ -762,9 +609,7 @@ export default class SubItemsModule extends Component {
                 break;
             }
 
-            const contentType = contentTypesMap[content.ContentType._href];
-            const contentTypeIdentifier = contentType.identifier;
-            const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
+            const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(content._info.contentType.identifier);
 
             if (isUserContentItem) {
                 isUserContentItemSelected = true;
@@ -838,7 +683,7 @@ export default class SubItemsModule extends Component {
     getPageSelectedLocationsIds() {
         const { selectedItems, activePageItems } = this.state;
         const selectedLocationsIds = [...selectedItems.keys()];
-        const pageLocationsIds = [...activePageItems.map((item) => item.location.id)];
+        const pageLocationsIds = [...activePageItems.map(({ id }) => id)];
         const selectedPageLocationsIds = new Set(pageLocationsIds.filter((locationId) => selectedLocationsIds.includes(locationId)));
 
         return selectedPageLocationsIds;
@@ -970,7 +815,6 @@ export default class SubItemsModule extends Component {
         return (
             <SubItemsListComponent
                 activeView={this.state.activeView}
-                contentTypesMap={this.state.contentTypesMap}
                 handleItemPriorityUpdate={this.handleItemPriorityUpdate}
                 items={activePageItems}
                 languages={this.props.languages}
@@ -1034,9 +878,6 @@ SubItemsModule.propTypes = {
         token: PropTypes.string.isRequired,
         siteaccess: PropTypes.string.isRequired,
     }).isRequired,
-    loadContentInfo: PropTypes.func,
-    loadContentType: PropTypes.func,
-    loadContentTypes: PropTypes.func,
     loadLocation: PropTypes.func,
     sortClauses: PropTypes.object,
     updateLocationPriority: PropTypes.func,
@@ -1052,7 +893,6 @@ SubItemsModule.propTypes = {
     offset: PropTypes.number,
     handleEditItem: PropTypes.func.isRequired,
     generateLink: PropTypes.func.isRequired,
-    contentTypesMap: PropTypes.object,
     totalCount: PropTypes.number,
     languages: PropTypes.object,
     udwConfigBulkMoveItems: PropTypes.object.isRequired,
@@ -1060,9 +900,6 @@ SubItemsModule.propTypes = {
 };
 
 SubItemsModule.defaultProps = {
-    loadContentInfo,
-    loadContentType,
-    loadContentTypes,
     loadLocation,
     sortClauses: {},
     updateLocationPriority,
@@ -1072,6 +909,5 @@ SubItemsModule.defaultProps = {
     items: [],
     limit: parseInt(window.eZ.adminUiConfig.subItems.limit, 10),
     offset: 0,
-    contentTypesMap: {},
     totalCount: 0,
 };

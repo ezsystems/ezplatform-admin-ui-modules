@@ -3,20 +3,16 @@ import PropTypes from 'prop-types';
 
 import GridViewItemComponent from './grid.view.item.component';
 
-const GridViewComponent = (props) => {
-    const { items, contentTypesMap, generateLink } = props;
+const GridViewComponent = ({ items, generateLink }) => (
+    <div className="c-grid-view">
+        {items.map((item) => (
+            <GridViewItemComponent key={item.id} item={item} generateLink={generateLink} />
+        ))}
+    </div>
+);
 
-    return (
-        <div className="c-grid-view">
-            {items.map((data) => (
-                <GridViewItemComponent key={data.location.id} {...data} contentTypesMap={contentTypesMap} generateLink={generateLink} />
-            ))}
-        </div>
-    );
-};
 GridViewComponent.propTypes = {
     items: PropTypes.arrayOf(PropTypes.object),
-    contentTypesMap: PropTypes.object,
     generateLink: PropTypes.func.isRequired,
 };
 

@@ -1,74 +1,67 @@
 import { handleRequestResponse } from '../../common/helpers/request.helper.js';
+import { TRASH_FAKE_LOCATION, USER_ENDPOINT, LOCATION_ENDPOINT, ENDPOINT_BULK, HEADERS_BULK } from './endpoints.js';
 
-const HEADERS_BULK = {
-    Accept: 'application/vnd.ez.api.BulkOperationResponse+json',
-    'Content-Type': 'application/vnd.ez.api.BulkOperation+json',
-};
-const TRASH_FAKE_LOCATION = '/api/ezp/v2/content/trash';
-const USER_ENDPOINT = '/api/ezp/v2/user/users';
-const ENDPOINT_BULK = '/api/ezp/v2/bulk';
-
-export const bulkMoveLocations = (restInfo, locations, newLocationHref, callback) => {
+export const bulkMoveLocations = (restInfo, items, newLocationHref, callback) => {
     const requestBodyOperations = {};
 
-    locations.forEach((location) => {
-        requestBodyOperations[location.id] = getBulkMoveRequestOperation(location, newLocationHref);
+    items.forEach(({ id, pathString }) => {
+        requestBodyOperations[id] = getBulkMoveRequestOperation(pathString, newLocationHref);
     });
 
-    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, items, callback));
 };
 
-export const bulkDeleteItems = (restInfo, items, contentTypesMap, callback) => {
-    const locations = items.map(({ location }) => location);
+export const bulkDeleteItems = (restInfo, items, callback) => {
     const requestBodyOperations = {};
 
-    items.forEach(({ location, content }) => {
-        const contentType = contentTypesMap[content.ContentType._href];
-        const contentTypeIdentifier = contentType.identifier;
+    items.forEach((item) => {
+        const { id: locationId, pathString, content } = item;
+        const contentTypeIdentifier = content._info.contentType.identifier;
         const isUserContentItem = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeIdentifier);
+        const contentId = content._info.id;
 
         if (isUserContentItem) {
-            requestBodyOperations[location.id] = getBulkDeleteUserRequestOperation(content);
+            requestBodyOperations[locationId] = getBulkDeleteUserRequestOperation(contentId);
         } else {
-            requestBodyOperations[location.id] = getBulkMoveRequestOperation(location, TRASH_FAKE_LOCATION);
+            requestBodyOperations[locationId] = getBulkMoveRequestOperation(pathString, TRASH_FAKE_LOCATION);
         }
     });
 
-    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, locations, callback));
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, items, callback));
 };
 
-const getBulkDeleteUserRequestOperation = (content) => ({
-    uri: `${USER_ENDPOINT}/${content._id}`,
+const getBulkDeleteUserRequestOperation = (contentId) => ({
+    uri: `${USER_ENDPOINT}/${contentId}`,
     method: 'DELETE',
 });
 
-const getBulkMoveRequestOperation = (location, destination) => ({
-    uri: location._href,
+const getBulkMoveRequestOperation = (pathString, destination) => ({
+    uri: `${LOCATION_ENDPOINT}${pathString.slice(0, -1)}`,
     method: 'MOVE',
     headers: {
         Destination: destination,
     },
 });
 
-const processBulkResponse = (locations, callback, response) => {
+const processBulkResponse = (items, callback, response) => {
     const { operations } = response.BulkOperationResponse;
-    const locationsMatches = Object.entries(operations).reduce(
-        (locationsMatches, [locationId, response]) => {
-            const respectiveItem = locations.find((location) => location.id === parseInt(locationId, 10));
+    const itemsMatches = Object.entries(operations).reduce(
+        (itemsMatches, [locationId, response]) => {
+            const respectiveItem = items.find((item) => item.id === parseInt(locationId, 10));
             const isSuccess = 200 <= response.statusCode && response.statusCode <= 299;
 
             if (isSuccess) {
-                locationsMatches.success.push(respectiveItem);
+                itemsMatches.success.push(respectiveItem);
             } else {
-                locationsMatches.fail.push(respectiveItem);
+                itemsMatches.fail.push(respectiveItem);
             }
 
-            return locationsMatches;
+            return itemsMatches;
         },
         { success: [], fail: [] }
     );
 
-    callback(locationsMatches.success, locationsMatches.fail);
+    callback(itemsMatches.success, itemsMatches.fail);
 };
 
 const makeBulkRequest = ({ token, siteaccess }, requestBodyOperations, callback) => {

@@ -84,6 +84,22 @@
             padding-right: calculateRem(12px);
         }
 
+        &--sorted-asc {
+            .c-table-view__label:after {
+                border-left: calculateRem(3px) solid transparent;
+                border-right: calculateRem(3px) solid transparent;
+                border-bottom: calculateRem(5px) solid $ez-black;
+            }
+        }
+
+        &--sorted-desc {
+            .c-table-view__label:after {
+                border-left: calculateRem(3px) solid transparent;
+                border-right: calculateRem(3px) solid transparent;
+                border-top: calculateRem(5px) solid $ez-black;
+            }
+        }
+
         &--name {
             padding-left: 0;
         }
@@ -100,6 +116,7 @@
     &__label {
         position: relative;
         display: inline-block;
+        white-space: nowrap;
 
         &:after {
             content: '';
@@ -116,24 +133,6 @@
         .c-no-items {
             padding-top: calculateRem(7px);
             padding-left: calculateRem(39px);
-        }
-    }
-
-    &__head {
-        &--sort-by-name.c-table-view__head--sort-desc .c-table-view__cell--name .c-table-view__label:after,
-        &--sort-by-date.c-table-view__head--sort-desc .c-table-view__cell--date .c-table-view__label:after,
-        &--sort-by-priority.c-table-view__head--sort-desc .c-table-view__cell--priority .c-table-view__label:after {
-            border-left: calculateRem(3px) solid transparent;
-            border-right: calculateRem(3px) solid transparent;
-            border-top: calculateRem(5px) solid $ez-black;
-        }
-
-        &--sort-by-name.c-table-view__head--sort-asc .c-table-view__cell--name .c-table-view__label:after,
-        &--sort-by-date.c-table-view__head--sort-asc .c-table-view__cell--date .c-table-view__label:after,
-        &--sort-by-priority.c-table-view__head--sort-asc .c-table-view__cell--priority .c-table-view__label:after {
-            border-left: calculateRem(3px) solid transparent;
-            border-right: calculateRem(3px) solid transparent;
-            border-bottom: calculateRem(5px) solid $ez-black;
         }
     }
 }
