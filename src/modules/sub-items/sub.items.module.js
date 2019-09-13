@@ -660,7 +660,7 @@ export default class SubItemsModule extends Component {
                 <button
                     onClick={this.closeBulkDeletePopup}
                     type="button"
-                    className="btn btn-secondary btn--no m-sub-items__confirmation-modal-cancel-btn"
+                    className="btn btn-dark"
                     data-dismiss="modal">
                     {cancelLabel}
                 </button>
