@@ -322,6 +322,7 @@ export default class SubItemsModule extends Component {
     afterPriorityUpdated(response) {
         if (this.state.sortClause === 'LocationPriority') {
             this.discardActivePageItems();
+            this.refreshContentTree();
             return;
         }
 
