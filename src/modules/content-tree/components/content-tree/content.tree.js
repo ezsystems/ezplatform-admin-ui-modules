@@ -27,7 +27,7 @@ export default class ContentTree extends Component {
     }
 
     componentDidUpdate(prevState) {
-        if (this.state.containerWidth != prevState.containerWidth) {
+        if (this.state.containerWidth !== prevState.containerWidth) {
             document.body.dispatchEvent(new CustomEvent('ez-content-tree-resized'));
         }
     }
