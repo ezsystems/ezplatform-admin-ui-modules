@@ -68,11 +68,6 @@
         padding: 0 calculateRem(32px);
     }
 
-    &__confirmation-modal-cancel-btn {
-        background: $ez-color-base-medium;
-        border-color: $ez-color-base-medium;
-    }
-
     &__pagination-info {
         text-align: center;
         padding: calculateRem(16px) 0;
