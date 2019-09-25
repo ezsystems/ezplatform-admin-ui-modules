@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
 import TableViewColumnsTogglerComponent from './table.view.columns.toggler';
+import ThreeStateCheckboxComponent from '../three-state-checkbox/three.state.checkbox.component';
 
 const KEY_CONTENT_NAME = 'ContentName';
 const KEY_DATE_MODIFIED = 'DateModified';
@@ -231,12 +232,18 @@ export default class TableViewComponent extends Component {
         const { columnsVisibility } = this.state;
         const { selectedLocationsIds } = this.props;
         const anyLocationSelected = !!selectedLocationsIds.size;
+        const allLocationsSelected = selectedLocationsIds.size === items.length;
+        const isCheckboxIndeterminate = anyLocationSelected && !allLocationsSelected;
 
         return (
             <thead className={headClass}>
                 <tr className="c-table-view__row">
                     <th className={`${TABLE_HEAD_CLASS} ${cellClass}--checkbox`}>
-                        <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
+                        <ThreeStateCheckboxComponent
+                            indeterminate={isCheckboxIndeterminate}
+                            checked={anyLocationSelected}
+                            onChange={this.selectAll}
+                        />
                     </th>
                     <th className={TABLE_HEAD_CLASS} />
                     <th
