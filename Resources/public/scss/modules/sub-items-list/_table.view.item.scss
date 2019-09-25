@@ -36,7 +36,7 @@
             border-top: calculateRem(1px) solid $ez-ground-primary;
             line-height: 0;
             padding-top: calculateRem(16px);
-            margin-top: -0.5px;     // Fixes borders alignment on Safari and Edge
+            margin-top: -0.5px; // Fixes borders alignment on Safari and Edge
         }
 
         &--icon {
@@ -69,7 +69,7 @@
             height: calculateRem(47px);
             width: calculateRem(70px);
             padding: 0;
-            margin-top: -0.5px;     // Fixes borders alignment on Safari and Edge
+            margin-top: -0.5px; // Fixes borders alignment on Safari and Edge
         }
     }
 
@@ -109,13 +109,12 @@
     &__priority-value {
         max-width: 100%;
         height: calculateRem(40px);
-        border: calculateRem(1px) solid #b1d2e0;
+        border: calculateRem(1px) solid $ez-color-secondary;
         margin: calculateRem(2px) 0;
         padding: 0 calculateRem(10px);
 
         &[disabled] {
-            border: 0 none;
-            background: transparent;
+            border-color: $ez-ground-base-dark;
             cursor: pointer;
         }
     }
