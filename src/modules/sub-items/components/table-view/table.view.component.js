@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
 import TableViewColumnsTogglerComponent from './table.view.columns.toggler';
+import ThreeStateCheckboxComponent from '../three-state-checkbox/three.state.checkbox.component';
 
 const COLUMNS_VISIBILITY_LOCAL_STORAGE_DATA_KEY = 'sub-items_columns-visibility';
 const DEFAULT_COLUMNS_VISIBILITY = {
@@ -83,12 +84,11 @@ export default class TableViewComponent extends Component {
 
     /**
      * Selects all visible items
-     *
-     * @param {Event} event
      */
-    selectAll(event) {
-        const { toggleAllItemsSelect } = this.props;
-        const isSelectAction = event.target.checked;
+    selectAll() {
+        const { toggleAllItemsSelect, selectedLocationsIds } = this.props;
+        const anyLocationSelected = !!selectedLocationsIds.size;
+        const isSelectAction = !anyLocationSelected;
 
         toggleAllItemsSelect(isSelectAction);
     }
@@ -182,14 +182,20 @@ export default class TableViewComponent extends Component {
         }
 
         const { columnsVisibility } = this.state;
-        const { selectedLocationsIds } = this.props;
+        const { selectedLocationsIds, items } = this.props;
         const anyLocationSelected = !!selectedLocationsIds.size;
+        const allLocationsSelected = selectedLocationsIds.size === items.length;
+        const isCheckboxIndeterminate = anyLocationSelected && !allLocationsSelected;
 
         return (
             <thead className="c-table-view__head">
                 <tr className="c-table-view__row">
                     <th className={`${TABLE_HEAD_CLASS} ${TABLE_CELL_CLASS}--checkbox`}>
-                        <input type="checkbox" checked={anyLocationSelected} onChange={this.selectAll} />
+                        <ThreeStateCheckboxComponent
+                            indeterminate={isCheckboxIndeterminate}
+                            checked={anyLocationSelected}
+                            onClick={this.selectAll} // We need onClick, because MS Edge does not trigger onChange when checkbox has indeterminate state. (ref: https://stackoverflow.com/a/33529024/5766602)
+                        />
                     </th>
                     <th className={TABLE_HEAD_CLASS} />
                     {this.renderBasicColumnsHeader()}
