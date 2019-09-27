@@ -95,7 +95,6 @@ export default class TableViewComponent extends Component {
     selectAll() {
         const { toggleAllItemsSelect, selectedLocationsIds } = this.props;
         const anyLocationSelected = !!selectedLocationsIds.size;
-
         const isSelectAction = !anyLocationSelected;
 
         toggleAllItemsSelect(isSelectAction);
