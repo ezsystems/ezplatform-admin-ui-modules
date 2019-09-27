@@ -91,12 +91,12 @@ export default class TableViewComponent extends Component {
 
     /**
      * Selects all visible items
-     *
-     * @param {Event} event
      */
-    selectAll(event) {
-        const { toggleAllItemsSelect } = this.props;
-        const isSelectAction = event.target.checked;
+    selectAll() {
+        const { toggleAllItemsSelect, selectedLocationsIds } = this.props;
+        const anyLocationSelected = !!selectedLocationsIds.size;
+
+        const isSelectAction = !anyLocationSelected;
 
         toggleAllItemsSelect(isSelectAction);
     }
@@ -242,7 +242,7 @@ export default class TableViewComponent extends Component {
                         <ThreeStateCheckboxComponent
                             indeterminate={isCheckboxIndeterminate}
                             checked={anyLocationSelected}
-                            onChange={this.selectAll}
+                            onClick={this.selectAll}
                         />
                     </th>
                     <th className={TABLE_HEAD_CLASS} />
