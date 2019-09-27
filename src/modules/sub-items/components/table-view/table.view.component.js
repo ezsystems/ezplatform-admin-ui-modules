@@ -241,7 +241,7 @@ export default class TableViewComponent extends Component {
                         <ThreeStateCheckboxComponent
                             indeterminate={isCheckboxIndeterminate}
                             checked={anyLocationSelected}
-                            onClick={this.selectAll}
+                            onClick={this.selectAll} // We need onClick, because MS Edge does not trigger onChange when checkbox has indeterminate state. (ref: https://stackoverflow.com/a/33529024/5766602)
                         />
                     </th>
                     <th className={TABLE_HEAD_CLASS} />
