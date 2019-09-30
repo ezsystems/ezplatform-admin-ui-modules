@@ -36,7 +36,7 @@
             border-top: calculateRem(1px) solid $ez-ground-primary;
             line-height: 0;
             padding-top: calculateRem(16px);
-            margin-top: -0.5px;     // Fixes borders alignment on Safari and Edge
+            margin-top: -0.5px; // Fixes borders alignment on Safari and Edge
         }
 
         &--icon {
@@ -69,7 +69,7 @@
             height: calculateRem(47px);
             width: calculateRem(70px);
             padding: 0;
-            margin-top: -0.5px;     // Fixes borders alignment on Safari and Edge
+            margin-top: -0.5px; // Fixes borders alignment on Safari and Edge
         }
     }
 
@@ -78,20 +78,6 @@
 
         &--input {
             width: 7ch;
-        }
-
-        &--disabled {
-            position: relative;
-
-            &:before {
-                position: absolute;
-                z-index: 2;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                content: '';
-            }
         }
     }
 
@@ -109,14 +95,37 @@
     &__priority-value {
         max-width: 100%;
         height: calculateRem(40px);
-        border: calculateRem(1px) solid #b1d2e0;
+        border: calculateRem(1px) solid $ez-color-secondary;
         margin: calculateRem(2px) 0;
         padding: 0 calculateRem(10px);
 
-        &[disabled] {
-            border: 0 none;
-            background: transparent;
+        &[readonly] {
+            border-color: $ez-ground-base-dark;
+            background-color: $ez-white;
+            color: $ez-black;
             cursor: pointer;
+        }
+
+        &[readonly]::-webkit-outer-spin-button,
+        &[readonly]::-webkit-inner-spin-button {
+            opacity: 0;
+        }
+
+        &[readonly]:hover::-webkit-outer-spin-button,
+        &[readonly]:hover::-webkit-inner-spin-button {
+            opacity: 1;
+        }
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            opacity: 1;
+        }
+
+        &[readonly] {
+            -webkit-appearance: textfield;
+        }
+        &[readonly]:hover {
+            -webkit-appearance: number-input;
         }
     }
 
