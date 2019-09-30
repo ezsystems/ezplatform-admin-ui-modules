@@ -188,13 +188,13 @@ export default class TableViewItemComponent extends PureComponent {
     renderModifiedCell() {
         const { modificationDate } = this.props.item.content._info;
 
-        return <div className="c-table-view-item__text-wrapper">{formatShortDateTime(new Date(modificationDate.timestamp))}</div>;
+        return <div className="c-table-view-item__text-wrapper">{formatShortDateTime(new Date(modificationDate.timestamp * 1000))}</div>;
     }
 
     renderPublishedCell() {
         const { publishedDate } = this.props.item.content._info;
 
-        return <div className="c-table-view-item__text-wrapper">{formatShortDateTime(new Date(publishedDate.timestamp))}</div>;
+        return <div className="c-table-view-item__text-wrapper">{formatShortDateTime(new Date(publishedDate.timestamp * 1000))}</div>;
     }
 
     renderContentTypeCell() {
