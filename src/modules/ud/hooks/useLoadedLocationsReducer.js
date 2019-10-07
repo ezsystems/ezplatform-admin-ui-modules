@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
 
-const initialState = { parentLocationId: 1, offset: 0, items: [] };
+const initialState = [{ parentLocationId: 1, subitems: [] }];
 const cutLocationsAfter = (state, action) => {
     const itemIndex = state.findIndex((data) => data.parentLocationId === action.locationId);
 
@@ -21,7 +21,7 @@ const updateLocationsMap = (state, action) => {
     }
 
     const childrenIndex = state.findIndex((data) => {
-        return data.items.find((item) => item.id === action.data.parentLocationId);
+        return data.subitems.find((item) => item.location.id === action.data.parentLocationId);
     });
 
     if (childrenIndex !== -1) {
@@ -35,6 +35,9 @@ const updateLocationsMap = (state, action) => {
 const setLoactions = (state, action) => {
     return action.data;
 };
+const clearLoactions = () => {
+    return [];
+};
 
 const loadedLocationsReducer = (state, action) => {
     switch (action.type) {
@@ -44,6 +47,8 @@ const loadedLocationsReducer = (state, action) => {
             return updateLocationsMap(state, action);
         case 'SET_LOCATIONS':
             return setLoactions(state, action);
+        case 'CLEAR_LOCATIONS':
+            return clearLoactions();
         default:
             throw new Error();
     }

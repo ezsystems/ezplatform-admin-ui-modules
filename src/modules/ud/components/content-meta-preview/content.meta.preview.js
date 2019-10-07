@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, Fragment } from 'react';
 
 import Icon from '../../../common/icon/icon';
 
@@ -16,28 +16,40 @@ const ContentMetaPreview = () => {
     const contentTypesMap = useContext(ContentTypesMapContext);
     const restInfo = useContext(RestInfoContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
-    const location = useMemo(() => {
-        return loadedLocationsMap.reduce((item, loadedLocation) => {
-            return item || loadedLocation.items.find((childrenLocation) => childrenLocation.id === markedLocation);
-        }, null);
+    const locationData = useMemo(() => {
+        return loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
     }, [markedLocation, loadedLocationsMap]);
 
-    if (!location) {
+    if (!locationData || !locationData.location) {
         return null;
     }
 
-    const bookmarkIconName = true ? 'bookmark-active' : 'bookmark';
+    const { bookmarked, location, version } = locationData;
+    const bookmarkIconName = bookmarked ? 'bookmark-active' : 'bookmark';
     const toggleBookmarked = () => {
-        const toggleBookmark = false ? removeBookmark : addBookmark;
+        const toggleBookmark = bookmarked ? removeBookmark : addBookmark;
 
         toggleBookmark({ ...restInfo, locationId: location.id }, (response) => {
-            console.log(response);
+            dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { ...locationData, bookmarked: !bookmarked } });
         });
+    };
+
+    const renderPreview = () => {
+        if (!version.Thumbnail) {
+            return (
+                <Icon
+                    extraClasses="ez-icon--extra-large"
+                    customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
+                />
+            );
+        }
+
+        return <img src={version.Thumbnail} />;
     };
 
     return (
         <div className="c-content-meta-preview">
-            <div className="c-content-meta-preview__preview"></div>
+            <div className="c-content-meta-preview__preview">{renderPreview()}</div>
             <div className="c-content-meta-preview__header">
                 <span className="c-content-meta-preview__content-name">{location.ContentInfo.Content.Name}</span>
                 <button className="c-content-meta-preview__toggle-bookmark-button" onClick={toggleBookmarked}>
