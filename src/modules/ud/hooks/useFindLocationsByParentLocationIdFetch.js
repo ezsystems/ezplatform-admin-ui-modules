@@ -19,19 +19,34 @@ const fetchReducer = (state, action) => {
     }
 };
 
-export const useFindLocationsByParentLocationIdFetch = (locationData, sortClauses) => {
+export const useFindLocationsByParentLocationIdFetch = (locationData, { sortClause, sortOrder }, limit, offset, gridView = false) => {
     const restInfo = useContext(RestInfoContext);
     const [state, dispatch] = useReducer(fetchReducer, fetchInitialState);
 
     useEffect(() => {
         let effectCleaned = false;
 
+        if (
+            !locationData.parentLocationId ||
+            locationData.collapsed ||
+            ((locationData.location && locationData.subitems.length >= locationData.location.childCount) ||
+                locationData.subitems.length >= limit + offset)
+        ) {
+            dispatch({ type: 'FETCH_END', data: {} });
+
+            return;
+        }
+
         dispatch({ type: 'FETCH_START' });
         findLocationsByParentLocationId(
             {
                 ...restInfo,
                 parentLocationId: locationData.parentLocationId,
-                sortClauses,
+                sortClause,
+                sortOrder,
+                limit,
+                offset,
+                gridView,
             },
             (response) => {
                 if (effectCleaned) {
@@ -45,7 +60,17 @@ export const useFindLocationsByParentLocationIdFetch = (locationData, sortClause
         return () => {
             effectCleaned = true;
         };
-    }, [restInfo, sortClauses, locationData.parentLocationId, locationData.items.length]);
+    }, [
+        restInfo,
+        sortClause,
+        sortOrder,
+        locationData.parentLocationId,
+        locationData.subitems.length,
+        limit,
+        offset,
+        gridView,
+        locationData.collapsed,
+    ]);
 
     return [state.data, !state.dataFetched];
 };

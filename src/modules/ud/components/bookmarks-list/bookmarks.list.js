@@ -1,24 +1,26 @@
 import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import { useLoadBookmarksFetch } from '../../hooks/useLoadBookmarksFetch';
-import { ContentTypesMapContext, MarkedLocationContext } from '../../universal.discovery.module';
+import { ContentTypesMapContext, MarkedLocationContext, LoadedLocationsMapContext } from '../../universal.discovery.module';
 
 // @TODO
 const HARDCODED_LIMIT = 50;
 
 const SCROLL_OFFSET = 200;
 
-const BookmarksList = () => {
+const BookmarksList = ({ setBookmarkedLocationMarked }) => {
     const [offset, setOffset] = useState(0);
     const [bookmarks, setBookmarks] = useState([]);
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [data, isLoading] = useLoadBookmarksFetch(HARDCODED_LIMIT, offset);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const loadMore = ({ target }) => {
-        const areAllItemsLoaded = bookmarks.length === data.count;
+        const areAllItemsLoaded = bookmarks.length >= data.count;
         const isOffsetReached = target.scrollHeight - target.clientHeight - target.scrollTop < SCROLL_OFFSET;
 
         if (areAllItemsLoaded || !isOffsetReached || isLoading) {
@@ -54,12 +56,18 @@ const BookmarksList = () => {
     return (
         <div className="c-bookmarks-list" onScroll={loadMore}>
             {bookmarks.map((bookmark) => {
+                const isMarked = bookmark.id === markedLocation;
                 const className = createCssClassNames({
                     'c-bookmarks-list__item': true,
-                    'c-bookmarks-list__item--marked': bookmark.id === markedLocation,
+                    'c-bookmarks-list__item--marked': isMarked,
                 });
                 const markLocation = () => {
-                    setMarkedLocation(bookmark.id);
+                    if (isMarked) {
+                        return;
+                    }
+
+                    dispatchLoadedLocationsAction({ type: 'CLEAR_LOCATIONS' });
+                    setBookmarkedLocationMarked(bookmark.id);
                 };
 
                 return (
@@ -75,6 +83,10 @@ const BookmarksList = () => {
             {renderLoadingSpinner()}
         </div>
     );
+};
+
+BookmarksList.propTypes = {
+    setBookmarkedLocationMarked: PropTypes.func.isRequired,
 };
 
 export default BookmarksList;

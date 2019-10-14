@@ -11,27 +11,16 @@ const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 export const QUERY_LIMIT = 50;
 
 export const findLocationsByParentLocationId = (
-    { token, siteaccess, parentLocationId, limit = QUERY_LIMIT, offset = 0, sortClauses = { SectionIdentifier: 'ascending' } },
+    { token, parentLocationId, limit = QUERY_LIMIT, offset = 0, sortClause = 'DatePublished', sortOrder = 'ascending', gridView = false },
     callback
 ) => {
-    const body = JSON.stringify({
-        ViewInput: {
-            identifier: `udw-locations-by-parent-location-id-${parentLocationId}`,
-            public: false,
-            LocationQuery: {
-                Criteria: {},
-                FacetBuilders: {},
-                SortClauses: sortClauses,
-                Filter: { ParentLocationIdCriterion: parentLocationId },
-                limit,
-                offset,
-            },
-        },
+    const routeName = gridView ? 'ezplatform.udw.location_gridview.data' : 'ezplatform.udw.location.data';
+    const url = window.Routing.generate(routeName, {
+        locationId: parentLocationId,
     });
-    const request = new Request(ENDPOINT_CREATE_VIEW, {
-        method: 'POST',
-        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
-        body,
+    const request = new Request(`${url}?limit=${limit}&offset=${offset}&sortClause=${sortClause}&sortOrder=${sortOrder}`, {
+        method: 'GET',
+        headers: { 'X-CSRF-Token': token },
         mode: 'same-origin',
         credentials: 'same-origin',
     });
@@ -39,13 +28,89 @@ export const findLocationsByParentLocationId = (
     fetch(request)
         .then(handleRequestResponse)
         .then((response) => {
-            const items = response.View.Result.searchHits.searchHit.map((searchHit) => searchHit.value.Location);
+            const { bookmark, location, permissions, subitems, version } = response;
+            const subitemsData = subitems.locations.map((location) => {
+                const mappedSubitems = {
+                    location: location.Location,
+                };
+
+                if (subitems.versions) {
+                    const version = subitems.versions.find(
+                        (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
+                    );
+
+                    mappedSubitems.version = version.Version;
+                }
+
+                return mappedSubitems;
+            });
 
             callback({
+                location: location.Location,
+                version: version.Version,
+                subitems: subitemsData,
+                bookmarked: bookmark,
+                permissions,
                 parentLocationId,
-                offset,
-                items,
             });
+        })
+        .catch(showErrorNotification);
+};
+
+export const loadAccordionData = ({ token, parentLocationId, gridView = false }, callback) => {
+    const routeName = gridView ? 'ezplatform.udw.accordion_gridview.data' : 'ezplatform.udw.accordion.data';
+    const url = window.Routing.generate(routeName, {
+        locationId: parentLocationId,
+    });
+    const request = new Request(url, {
+        method: 'GET',
+        headers: { 'X-CSRF-Token': token },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((response) => {
+            const mappedItems = response.breadcrumb.map((item) => {
+                const location = item.Location;
+                const mappedItem = {
+                    location,
+                    subitems: [],
+                    parentLocationId: location.id,
+                    collapsed: !response.columns[location.id],
+                };
+
+                return mappedItem;
+            });
+
+            const lastLocationData = response.columns[parentLocationId];
+            const subitemsData = lastLocationData.subitems.locations.map((location) => {
+                const mappedSubitems = {
+                    location: location.Location,
+                };
+
+                if (lastLocationData.subitems.versions) {
+                    const version = lastLocationData.subitems.versions.find(
+                        (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
+                    );
+
+                    mappedSubitems.version = version.Version;
+                }
+
+                return mappedSubitems;
+            });
+
+            mappedItems.push({
+                location: lastLocationData.location.Location,
+                version: lastLocationData.version.Version,
+                subitems: subitemsData,
+                bookmarked: lastLocationData.bookmark,
+                permissions: lastLocationData.permissions,
+                parentLocationId,
+            });
+
+            callback(mappedItems);
         })
         .catch(showErrorNotification);
 };

@@ -4,6 +4,7 @@
     padding: calculateRem(16px);
     align-items: flex-start;
     overflow: auto;
+    height: 100%;
 
     &__go-up {
         width: calculateRem(165px);
