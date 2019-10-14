@@ -1,5 +1,47 @@
 .c-finder-branch {
-    flex-basis: calculateRem(215px);
+    display: flex;
+    position: relative;
     border-right: calculateRem(1px) solid $ez-color-base-pale;
-    overflow: auto;
+
+    &--collapsed {
+        flex: 0 0 calculateRem(30px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: $ez-secondary-ground;
+        color: $ez-white;
+        cursor: pointer;
+        display: block;
+    }
+
+    &__info-wrapper {
+        transform: translate(calculateRem(30px)) rotate(90deg);
+        width: calculateRem(500px);
+        transform-origin: left top;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        padding-left: 4px;
+
+        .ez-icon {
+            transform: rotate(-90deg);
+        }
+    }
+
+    &__name {
+        margin-left: calculateRem(6px);
+    }
+
+    &__items-wrapper {
+        overflow: auto;
+    }
+
+    &__resize-handler {
+        height: 100%;
+        width: calculateRem(3px);
+        background-color: transparent;
+        cursor: col-resize;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 }

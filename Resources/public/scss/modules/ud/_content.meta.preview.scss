@@ -6,6 +6,9 @@
         height: calculateRem(210px);
         background-color: $ez-color-base-pale;
         border-radius: calculateRem(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     &__details-item {

@@ -23,6 +23,9 @@
         background-color: $ez-color-base-pale;
         border-top-left-radius: calculateRem(4px);
         border-top-right-radius: calculateRem(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     &__icon-wrapper {

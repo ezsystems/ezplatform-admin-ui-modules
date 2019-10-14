@@ -11,19 +11,17 @@ export const SORTING_OPTIONS = [
     {
         id: 'date',
         label: 'Date',
-        sortClauses: {
-            DatePublished: 'ascending',
-        },
+        sortClause: 'DatePublished',
+        sortOrder: 'ascending',
     },
     {
         id: 'name',
         label: 'Name',
-        sortClauses: {
-            ContentName: 'ascending',
-        },
+        sortClause: 'ContentName',
+        sortOrder: 'ascending',
     },
 ];
-export const VIEWS = [{ id: 'grid', icon: 'view-grid' }, { id: 'finder', icon: 'panels' }, { id: 'content-tree', icon: 'content-tree' }];
+export const VIEWS = [{ id: 'grid', icon: 'view-grid' }, { id: 'finder', icon: 'panels' }];
 
 const restInfo = {
     token: document.querySelector('meta[name="CSRF-Token"]').content,
@@ -61,7 +59,7 @@ const UniversalDiscoveryModule = (props) => {
     const [createContentVisible, setCreateContentVisible] = useState(false);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useState({});
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useLoadedLocationsReducer([
-        { parentLocationId: props.rootLocationId, offset: 0, items: [] },
+        { parentLocationId: props.rootLocationId, subitems: [] },
     ]);
     const [selectedLocations, dispatchSelectedLocationsAction] = useSelectedLocationsReducer();
     const activeTabConfig = props.tabs.find((tab) => tab.id === activeTab);
@@ -78,6 +76,14 @@ const UniversalDiscoveryModule = (props) => {
             window.document.body.classList.remove(CLASS_SCROLL_DISABLED);
         };
     });
+
+    useEffect(() => {
+        if (currentView === 'grid') {
+            loadedLocationsMap[loadedLocationsMap.length - 1].subitems = [];
+
+            dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: loadedLocationsMap });
+        }
+    }, [currentView]);
 
     return (
         <div className={className}>
@@ -138,7 +144,7 @@ UniversalDiscoveryModule.propTypes = {
 
 UniversalDiscoveryModule.defaultProps = {
     activeTab: 'browse',
-    rootLocationId: 1,
+    rootLocationId: 2,
 };
 
 eZ.addConfig('modules.UDW', UniversalDiscoveryModule);
