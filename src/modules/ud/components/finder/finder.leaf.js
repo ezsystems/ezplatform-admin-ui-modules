@@ -20,7 +20,7 @@ const FinderLeaf = ({ location }) => {
 
         setMarkedLocation(location.id);
         dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId: markedLocation });
-        dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: location.id, offset: 0, items: [] } });
+        dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: location.id, subitems: [] } });
     };
     const className = createCssClassNames({
         'c-finder-leaf': true,
