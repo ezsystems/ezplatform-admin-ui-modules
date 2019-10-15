@@ -1,11 +1,48 @@
 import { handleRequestResponse } from '../../common/helpers/request.helper.js';
-import { TRASH_FAKE_LOCATION, USER_ENDPOINT, LOCATION_ENDPOINT, ENDPOINT_BULK, HEADERS_BULK } from './endpoints.js';
+import {
+    TRASH_FAKE_LOCATION,
+    USER_ENDPOINT,
+    LOCATION_ENDPOINT,
+    CONTENT_OBJECTS_ENDPOINT,
+    ENDPOINT_BULK,
+    HEADERS_BULK,
+} from './endpoints.js';
 
 export const bulkMoveLocations = (restInfo, items, newLocationHref, callback) => {
     const requestBodyOperations = {};
 
     items.forEach(({ id, pathString }) => {
         requestBodyOperations[id] = getBulkMoveRequestOperation(pathString, newLocationHref);
+    });
+
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, items, callback));
+};
+
+export const bulkAddLocations = (restInfo, items, newLocationHref, callback) => {
+    const requestBodyOperations = {};
+
+    items.forEach(({ id, content }) => {
+        requestBodyOperations[id] = getBulkAddLocationRequestOperation(content._info.id, newLocationHref);
+    });
+
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, items, callback));
+};
+
+export const bulkHideLocations = (restInfo, items, callback) => {
+    const requestBodyOperations = {};
+
+    items.forEach(({ id, pathString }) => {
+        requestBodyOperations[id] = getBulkVisibilityRequestOperation(pathString, true);
+    });
+
+    makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, items, callback));
+};
+
+export const bulkUnhideLocations = (restInfo, items, callback) => {
+    const requestBodyOperations = {};
+
+    items.forEach(({ id, pathString }) => {
+        requestBodyOperations[id] = getBulkVisibilityRequestOperation(pathString, false);
     });
 
     makeBulkRequest(restInfo, requestBodyOperations, processBulkResponse.bind(null, items, callback));
@@ -41,6 +78,38 @@ const getBulkMoveRequestOperation = (pathString, destination) => ({
     headers: {
         Destination: destination,
     },
+});
+
+const getBulkAddLocationRequestOperation = (contentId, destination) => ({
+    uri: `${CONTENT_OBJECTS_ENDPOINT}/${contentId}/locations`,
+    content: JSON.stringify({
+        LocationCreate: {
+            ParentLocation: {
+                '_href': destination,
+            },
+            sortField: 'PATH',
+            sortOrder: 'ASC',
+        },
+    }),
+    headers: {
+        'Content-Type': 'application/vnd.ez.api.LocationCreate+json',
+    },
+    method: 'POST',
+});
+
+const getBulkVisibilityRequestOperation = (pathString, isHidden) => ({
+    uri: `${LOCATION_ENDPOINT}${pathString.slice(0, -1)}`,
+    content: JSON.stringify({
+        LocationUpdate: {
+            hidden: isHidden,
+            sortField: 'PATH',
+            sortOrder: 'ASC',
+        },
+    }),
+    headers: {
+        'Content-Type': 'application/vnd.ez.api.LocationUpdate+json',
+    },
+    method: 'PATCH',
 });
 
 const processBulkResponse = (items, callback, response) => {
@@ -86,9 +155,8 @@ const makeBulkRequest = ({ token, siteaccess }, requestBodyOperations, callback)
         .then(callback)
         .catch(() => {
             const message = Translator.trans(
-                /*@Desc("An unexpected error occurred while deleting the content item(s). Please try again later.")*/ 'bulk_request.error.message',
-                {},
-                'sub_items'
+                /*@Desc("An unexpected error occurred while processing the content item(s). Please try again later.")*/
+                'bulk_request.error.message', {}, 'sub_items'
             );
 
             window.eZ.helpers.notification.showErrorNotification(message);

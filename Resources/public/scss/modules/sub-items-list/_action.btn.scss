@@ -18,7 +18,10 @@
         opacity: 0.3;
     }
 
-    &--move {
+    &--move,
+    &--hide,
+    &--reveal,
+    &--create {
         border: calculateRem(1px) solid $ez-color-secondary;
         background: $ez-color-secondary;
 

@@ -12,11 +12,19 @@ import Icon from '../common/icon/icon.js';
 
 import deepClone from '../common/helpers/deep.clone.helper.js';
 import { updateLocationPriority, loadLocation } from './services/sub.items.service';
-import { bulkMoveLocations, bulkDeleteItems } from './services/bulk.service.js';
+import {
+    bulkAddLocations,
+    bulkDeleteItems,
+    bulkHideLocations,
+    bulkUnhideLocations,
+    bulkMoveLocations
+} from './services/bulk.service.js';
 
 export const ASCENDING_SORT_ORDER = 'ascending';
 const DESCENDING_SORT_ORDER = 'descending';
 const DEFAULT_SORT_ORDER = ASCENDING_SORT_ORDER;
+const ACTION_FLOW_ADD_LOCATIONS = 'add';
+const ACTION_FLOW_MOVE = 'move';
 
 export default class SubItemsModule extends Component {
     constructor(props) {
@@ -31,14 +39,23 @@ export default class SubItemsModule extends Component {
         this.closeUdw = this.closeUdw.bind(this);
         this.onUdwConfirm = this.onUdwConfirm.bind(this);
         this.onDeleteBtnClick = this.onDeleteBtnClick.bind(this);
+        this.onAddLocationsBtnClick = this.onAddLocationsBtnClick.bind(this);
+        this.onHideBtnClick = this.onHideBtnClick.bind(this);
+        this.onUnhideBtnClick = this.onUnhideBtnClick.bind(this);
         this.closeBulkDeletePopup = this.closeBulkDeletePopup.bind(this);
+        this.closeBulkHidePopup = this.closeBulkHidePopup.bind(this);
+        this.closeBulkUnhidePopup = this.closeBulkUnhidePopup.bind(this);
         this.onBulkDeletePopupConfirm = this.onBulkDeletePopupConfirm.bind(this);
+        this.onBulkHidePopupConfirm = this.onBulkHidePopupConfirm.bind(this);
+        this.onBulkUnhidePopupConfirm = this.onBulkUnhidePopupConfirm.bind(this);
         this.afterBulkDelete = this.afterBulkDelete.bind(this);
+        this.afterBulkHide = this.afterBulkHide.bind(this);
+        this.afterBulkUnhide = this.afterBulkUnhide.bind(this);
         this.changePage = this.changePage.bind(this);
         this.changeSorting = this.changeSorting.bind(this);
 
         this._refListViewWrapper = React.createRef();
-        this.bulkDeleteModalContainer = null;
+        this.bulkActionModalContainer = null;
         this.udwContainer = null;
 
         const sortClauseData = this.getDefaultSortClause(props.sortClauses);
@@ -53,8 +70,11 @@ export default class SubItemsModule extends Component {
             isDuringBulkOperation: false,
             isUdwOpened: false,
             isBulkDeletePopupVisible: false,
+            isBulkHidePopupVisible: false,
+            isBulkUnhidePopupVisible: false,
             activePageIndex: 0,
             listViewHeight: null,
+            actionFlow: null,
             sortClause: sortClauseData.name,
             sortOrder: sortClauseData.order,
         };
@@ -62,9 +82,9 @@ export default class SubItemsModule extends Component {
 
     componentDidMount() {
         this.udwContainer = document.getElementById('react-udw');
-        this.bulkDeleteModalContainer = document.createElement('div');
-        this.bulkDeleteModalContainer.classList.add('m-sub-items__bulk-delete-modal-container');
-        document.body.appendChild(this.bulkDeleteModalContainer);
+        this.bulkActionModalContainer = document.createElement('div');
+        this.bulkActionModalContainer.classList.add('m-sub-items__bulk-action-modal-container');
+        document.body.appendChild(this.bulkActionModalContainer);
 
         if (!this.state.activePageItems) {
             this.loadPage(0);
@@ -93,7 +113,7 @@ export default class SubItemsModule extends Component {
     }
 
     componentWillUnmount() {
-        document.body.removeChild(this.bulkDeleteModalContainer);
+        document.body.removeChild(this.bulkActionModalContainer);
     }
 
     getDefaultSortClause(sortClauses) {
@@ -292,6 +312,16 @@ export default class SubItemsModule extends Component {
     }
 
     onMoveBtnClick() {
+        this.setState(() => ({
+            actionFlow: ACTION_FLOW_MOVE,
+        }));
+        this.toggleUdw(true);
+    }
+
+    onAddLocationsBtnClick() {
+        this.setState(() => ({
+            actionFlow: ACTION_FLOW_ADD_LOCATIONS,
+        }));
         this.toggleUdw(true);
     }
 
@@ -303,6 +333,16 @@ export default class SubItemsModule extends Component {
         const itemsToMove = [...selectedItems.values()];
 
         bulkMoveLocations(restInfo, itemsToMove, location._href, this.afterBulkMove.bind(this, location));
+    }
+
+    bulkAdd(location) {
+        this.toggleBulkOperationStatusState(true);
+
+        const { restInfo } = this.props;
+        const { selectedItems } = this.state;
+        const itemsToAddLocationFor = [...selectedItems.values()];
+
+        bulkAddLocations(restInfo, itemsToAddLocationFor, location._href, this.afterBulkAddLocation.bind(this, location));
     }
 
     afterBulkMove(location, movedItems, notMovedItems) {
@@ -317,11 +357,8 @@ export default class SubItemsModule extends Component {
 
         if (notMovedItems.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Content items cannot be moved (%itemsCount%)")*/ 'bulk_move.error.modal.table_title',
-                {
-                    itemsCount: notMovedItems.length,
-                },
-                'sub_items'
+                /*@Desc("Content items cannot be moved (%itemsCount%)")*/
+                'bulk_move.error.modal.table_title', {itemsCount: notMovedItems.length}, 'sub_items'
             );
             const notificationMessage = Translator.trans(
                 /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
@@ -333,9 +370,8 @@ export default class SubItemsModule extends Component {
             );
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
-                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_move.error.more_info',
-                    {},
-                    'sub_items'
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
+                    'bulk_action.error.more_info', {}, 'sub_items'
                 ),
             };
 
@@ -344,13 +380,142 @@ export default class SubItemsModule extends Component {
 
         if (movedItems.length) {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to {{ locationLink }}")*/ 'bulk_move.success.message',
-                {},
-                'sub_items'
+                /*@Desc("The selected content item(s) have been sent to {{ locationLink }}")*/
+                'bulk_move.success.message', {}, 'sub_items'
             );
             const rawPlaceholdersMap = {
                 locationLink: Translator.trans(
-                    /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.link_to_location',
+                    /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/
+                    'bulk_action.success.link_to_location',
+                    {
+                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
+                        locationHref: this.props.generateLink(location.id),
+                    },
+                    'sub_items'
+                ),
+            };
+
+            window.eZ.helpers.notification.showSuccessNotification(message, () => {}, rawPlaceholdersMap);
+        }
+    }
+
+    afterBulkHide(successItems, failedItems) {
+        this.deselectAllItems();
+        this.discardActivePageItems();
+
+        this.toggleBulkOperationStatusState(false);
+
+        if (failedItems.length) {
+            const modalTableTitle = Translator.trans(
+                /*@Desc("Content items cannot be hidden (%itemsCount%)")*/
+                'bulk_hide.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
+            );
+            const notificationMessage = Translator.trans(
+                /*@Desc("%failedCount% of the %totalCount% selected item(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/
+                'bulk_hide.error.message',
+                {
+                    failedCount: failedItems.length,
+                    totalCount: successItems.length + failedItems.length,
+                },
+                'sub_items'
+            );
+            const rawPlaceholdersMap = {
+                moreInformationLink: Translator.trans(
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
+                    'bulk_action.error.more_info', {}, 'sub_items'
+                ),
+            };
+
+            this.handleBulkOperationFailedNotification(failedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap);
+        }
+
+        if (successItems.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected location(s) have been hidden.")*/
+                'bulk_hide.success.message', {}, 'sub_items'
+            );
+            window.eZ.helpers.notification.showSuccessNotification(message);
+        }
+    }
+
+    afterBulkUnhide(successItems, failedItems) {
+        this.deselectAllItems();
+        this.discardActivePageItems();
+
+        this.toggleBulkOperationStatusState(false);
+
+        if (failedItems.length) {
+            const modalTableTitle = Translator.trans(
+                /*@Desc("Locations cannot be revealed (%itemsCount%)")*/
+                'bulk_unhide.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
+            );
+            const notificationMessage = Translator.trans(
+                /*@Desc("%failedCount% of the %totalCount% selected location(s) could not be revealed because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/
+                'bulk_unhide.error.message',
+                {
+                    failedCount: failedItems.length,
+                    totalCount: successItems.length + failedItems.length,
+                },
+                'sub_items'
+            );
+            const rawPlaceholdersMap = {
+                moreInformationLink: Translator.trans(
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
+                    'bulk_action.error.more_info', {}, 'sub_items'
+                ),
+            };
+
+            this.handleBulkOperationFailedNotification(failedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap);
+        }
+
+        if (successItems.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected location(s) have been revealed.")*/
+                'bulk_unhide.success.message', {}, 'sub_items'
+            );
+            window.eZ.helpers.notification.showSuccessNotification(message);
+        }
+    }
+
+    afterBulkAddLocation(location, successItems, failedItems) {
+        this.deselectAllItems();
+        this.discardActivePageItems();
+
+        this.toggleBulkOperationStatusState(false);
+
+        if (failedItems.length) {
+            const modalTableTitle = Translator.trans(
+                /*@Desc("Locations cannot be added (%itemsCount%)")*/
+                'bulk_add_location.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
+            );
+            const notificationMessage = Translator.trans(
+                /*@Desc("%failedCount% of the %totalCount% selected locations(s) could not be added because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/
+                'bulk_add_location.error.message',
+                {
+                    failedCount: failedItems.length,
+                    totalCount: successItems.length + failedItems.length,
+                },
+                'sub_items'
+            );
+            const rawPlaceholdersMap = {
+                moreInformationLink: Translator.trans(
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
+                    'bulk_action.error.more_info', {}, 'sub_items'
+                ),
+            };
+
+            this.handleBulkOperationFailedNotification(failedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap);
+        }
+
+        if (successItems.length) {
+            const message = Translator.trans(
+                /*@Desc("The selected location(s) have been added to {{ locationLink }}")*/
+                'bulk_add_location.success.message', {}, 'sub_items'
+            );
+            const rawPlaceholdersMap = {
+                locationLink: Translator.trans(
+                    /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/
+                    'bulk_action.success.link_to_location',
                     {
                         locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
                         locationHref: this.props.generateLink(location.id),
@@ -375,7 +540,12 @@ export default class SubItemsModule extends Component {
 
     onUdwConfirm([selectedLocation]) {
         this.closeUdw();
-        this.bulkMove(selectedLocation);
+        const { actionFlow } = this.state;
+        if (actionFlow === ACTION_FLOW_MOVE) {
+            this.bulkMove(selectedLocation);
+        } else {
+            this.bulkAdd(selectedLocation);
+        }
     }
 
     renderUdw() {
@@ -386,10 +556,10 @@ export default class SubItemsModule extends Component {
         }
 
         const UniversalDiscovery = window.eZ.modules.UniversalDiscovery;
-        const { restInfo, parentLocationId, udwConfigBulkMoveItems } = this.props;
+        const { restInfo, parentLocationId, udwConfigBulkItems } = this.props;
         const { selectedItems } = this.state;
         const selectedItemsLocationsIds = [...selectedItems.values()].map(({ id }) => id);
-        const excludedMoveLocations = [parentLocationId, ...selectedItemsLocationsIds];
+        const excludedLocations = [parentLocationId, ...selectedItemsLocationsIds];
         const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
         const udwProps = {
             title,
@@ -397,9 +567,10 @@ export default class SubItemsModule extends Component {
             onCancel: this.closeUdw,
             onConfirm: this.onUdwConfirm,
             canSelectContent: ({ item }, callback) => {
-                callback(!excludedMoveLocations.includes(item.id));
+                callback(!excludedLocations.includes(item.id));
             },
-            ...udwConfigBulkMoveItems,
+            ...udwConfigBulkItems,
+            multiple: false,
         };
 
         return ReactDOM.createPortal(<UniversalDiscovery {...udwProps} />, this.udwContainer);
@@ -407,6 +578,14 @@ export default class SubItemsModule extends Component {
 
     onDeleteBtnClick() {
         this.toggleBulkDeletePopup(true);
+    }
+
+    onHideBtnClick() {
+        this.toggleBulkHidePopup(true);
+    }
+
+    onUnhideBtnClick() {
+        this.toggleBulkUnhidePopup(true);
     }
 
     bulkDelete() {
@@ -417,6 +596,26 @@ export default class SubItemsModule extends Component {
         const itemsToDelete = [...selectedItems.values()];
 
         bulkDeleteItems(restInfo, itemsToDelete, this.afterBulkDelete);
+    }
+
+    bulkHide() {
+        this.toggleBulkOperationStatusState(true);
+
+        const { restInfo } = this.props;
+        const { selectedItems } = this.state;
+        const items = [...selectedItems.values()];
+
+        bulkHideLocations(restInfo, items, this.afterBulkHide);
+    }
+
+    bulkUnhide() {
+        this.toggleBulkOperationStatusState(true);
+
+        const { restInfo } = this.props;
+        const { selectedItems } = this.state;
+        const items = [...selectedItems.values()];
+
+        bulkUnhideLocations(restInfo, items, this.afterBulkUnhide);
     }
 
     afterBulkDelete(deletedItems, notDeletedItems) {
@@ -437,9 +636,8 @@ export default class SubItemsModule extends Component {
             let message = null;
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
-                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/ 'bulk_delete.error.more_info',
-                    {},
-                    'sub_items'
+                    /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
+                    'bulk_action.error.more_info', {}, 'sub_items'
                 ),
             };
 
@@ -529,13 +727,43 @@ export default class SubItemsModule extends Component {
         }));
     }
 
+    toggleBulkHidePopup(show) {
+        this.setState(() => ({
+            isBulkHidePopupVisible: show,
+        }));
+    }
+
+    toggleBulkUnhidePopup(show) {
+        this.setState(() => ({
+            isBulkUnhidePopupVisible: show,
+        }));
+    }
+
     closeBulkDeletePopup() {
         this.toggleBulkDeletePopup(false);
+    }
+
+    closeBulkHidePopup() {
+        this.toggleBulkHidePopup(false);
+    }
+
+    closeBulkUnhidePopup() {
+        this.toggleBulkUnhidePopup(false);
     }
 
     onBulkDeletePopupConfirm() {
         this.closeBulkDeletePopup();
         this.bulkDelete();
+    }
+
+    onBulkHidePopupConfirm() {
+        this.closeBulkHidePopup();
+        this.bulkHide();
+    }
+
+    onBulkUnhidePopupConfirm() {
+        this.closeBulkUnhidePopup();
+        this.bulkUnhide();
     }
 
     /**
@@ -573,8 +801,8 @@ export default class SubItemsModule extends Component {
         document.body.dispatchEvent(new CustomEvent('ez-content-tree-refresh'));
     }
 
-    renderConfirmationPopupFooter(selectionInfo) {
-        const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_delete.popup.cancel', {}, 'sub_items');
+    renderDeleteConfirmationPopupFooter(selectionInfo) {
+        const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_action.popup.cancel', {}, 'sub_items');
         const { isUserContentItemSelected, isNonUserContentItemSelected } = selectionInfo;
         let confirmLabel = '';
 
@@ -594,6 +822,46 @@ export default class SubItemsModule extends Component {
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkDeletePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
+                    {confirmLabel}
+                </button>
+            </Fragment>
+        );
+    }
+
+    renderHideConfirmationPopupFooter() {
+        const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_action.popup.cancel', {}, 'sub_items');
+        const confirmLabel = Translator.trans(/*@Desc("Hide")*/ 'bulk_hide.popup.confirm', {}, 'sub_items');
+
+        return (
+            <Fragment>
+                <button
+                    onClick={this.closeBulkHidePopup}
+                    type="button"
+                    className="btn btn-dark"
+                    data-dismiss="modal">
+                    {cancelLabel}
+                </button>
+                <button onClick={this.onBulkHidePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
+                    {confirmLabel}
+                </button>
+            </Fragment>
+        );
+    }
+
+    renderUnhideConfirmationPopupFooter() {
+        const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'bulk_action.popup.cancel', {}, 'sub_items');
+        const confirmLabel = Translator.trans(/*@Desc("Reveal")*/ 'bulk_unhide.popup.confirm', {}, 'sub_items');
+
+        return (
+            <Fragment>
+                <button
+                    onClick={this.closeBulkUnhidePopup}
+                    type="button"
+                    className="btn btn-dark"
+                    data-dismiss="modal">
+                    {cancelLabel}
+                </button>
+                <button onClick={this.onBulkUnhidePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
                     {confirmLabel}
                 </button>
             </Fragment>
@@ -625,7 +893,7 @@ export default class SubItemsModule extends Component {
         };
     }
 
-    renderConfirmationPopup() {
+    renderDeleteConfirmationPopup() {
         const { isBulkDeletePopupVisible } = this.state;
 
         if (!isBulkDeletePopupVisible) {
@@ -665,11 +933,61 @@ export default class SubItemsModule extends Component {
                 isVisible={isBulkDeletePopupVisible}
                 isLoading={false}
                 size="medium"
-                footerChildren={this.renderConfirmationPopupFooter(selectionInfo)}
+                footerChildren={this.renderDeleteConfirmationPopupFooter(selectionInfo)}
                 noHeader={true}>
                 <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
             </Popup>,
-            this.bulkDeleteModalContainer
+            this.bulkActionModalContainer
+        );
+    }
+
+    renderHideConfirmationPopup() {
+        const { isBulkHidePopupVisible } = this.state;
+        if (!isBulkHidePopupVisible) {
+            return null;
+        }
+
+        const confirmationMessage = Translator.trans(
+            /*@Desc("Are you sure you want to hide the selected location(s)?")*/
+            'bulk_hide.popup.message', {}, 'sub_items'
+        );
+
+        return ReactDOM.createPortal(
+            <Popup
+                onClose={this.closeBulkHidePopup}
+                isVisible={isBulkHidePopupVisible}
+                isLoading={false}
+                size="medium"
+                footerChildren={this.renderHideConfirmationPopupFooter()}
+                noHeader={true}>
+                <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
+            </Popup>,
+            this.bulkActionModalContainer
+        );
+    }
+
+    renderUnhideConfirmationPopup() {
+        const { isBulkUnhidePopupVisible } = this.state;
+        if (!isBulkUnhidePopupVisible) {
+            return null;
+        }
+
+        const confirmationMessage = Translator.trans(
+            /*@Desc("Are you sure you want to reveal the selected location(s)?")*/
+            'bulk_unhide.popup.message', {}, 'sub_items'
+        );
+
+        return ReactDOM.createPortal(
+            <Popup
+                onClose={this.closeBulkHidePopup}
+                isVisible={isBulkUnhidePopupVisible}
+                isLoading={false}
+                size="medium"
+                footerChildren={this.renderUnhideConfirmationPopupFooter()}
+                noHeader={true}>
+                <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
+            </Popup>,
+            this.bulkActionModalContainer
         );
     }
 
@@ -766,6 +1084,24 @@ export default class SubItemsModule extends Component {
         return <ActionButton disabled={disabled} onClick={this.onMoveBtnClick} label={label} type="move" />;
     }
 
+    renderBulkAddLocationBtn(disabled) {
+        const label = Translator.trans(/*@Desc("Add locations for selected items")*/ 'add_locations_btn.label', {}, 'sub_items');
+
+        return <ActionButton disabled={disabled} onClick={this.onAddLocationsBtnClick} label={label} type="create" />;
+    }
+
+    renderBulkHideBtn(disabled) {
+        const label = Translator.trans(/*@Desc("Hide selected locations")*/ 'hide_locations_btn.label', {}, 'sub_items');
+
+        return <ActionButton disabled={disabled} onClick={this.onHideBtnClick} label={label} type="hide" />;
+    }
+
+    renderBulkUnhideBtn(disabled) {
+        const label = Translator.trans(/*@Desc("Reveal selected locations")*/ 'unhide_locations_btn.label', {}, 'sub_items');
+
+        return <ActionButton disabled={disabled} onClick={this.onUnhideBtnClick} label={label} type="reveal" />;
+    }
+
     renderBulkDeleteBtn(disabled) {
         const label = Translator.trans(/*@Desc("Delete selected items")*/ 'trash_btn.label', {}, 'sub_items');
 
@@ -838,10 +1174,19 @@ export default class SubItemsModule extends Component {
         const isTableViewActive = activeView === 'table';
         const pageLoaded = !!activePageItems;
         const bulkBtnDisabled = nothingSelected || !isTableViewActive || !pageLoaded;
+        let bulkHideBtnDisabled = true;
+        let bulkUnhideBtnDisabled = true;
+
         let listClassName = 'm-sub-items__list';
 
         if (isDuringBulkOperation) {
             listClassName = `${listClassName} ${listClassName}--processing`;
+        }
+
+        if (!bulkBtnDisabled) {
+            const selectedItemsValues = [...selectedItems.values()];
+            bulkHideBtnDisabled = !selectedItemsValues.some(item => !item.hidden);
+            bulkUnhideBtnDisabled = !selectedItemsValues.some(item => !!item.hidden);
         }
 
         return (
@@ -853,6 +1198,9 @@ export default class SubItemsModule extends Component {
                     <div className="m-sub-items__actions">
                         {this.props.extraActions.map(this.renderExtraActions)}
                         {this.renderBulkMoveBtn(bulkBtnDisabled)}
+                        {this.renderBulkAddLocationBtn(bulkBtnDisabled)}
+                        {this.renderBulkHideBtn(bulkHideBtnDisabled)}
+                        {this.renderBulkUnhideBtn(bulkUnhideBtnDisabled)}
                         {this.renderBulkDeleteBtn(bulkBtnDisabled)}
                     </div>
                     <ViewSwitcherComponent onViewChange={this.switchView} activeView={activeView} isDisabled={!totalCount} />
@@ -865,7 +1213,9 @@ export default class SubItemsModule extends Component {
                 {this.renderPaginationInfo()}
                 {this.renderPagination()}
                 {this.renderUdw()}
-                {this.renderConfirmationPopup()}
+                {this.renderDeleteConfirmationPopup()}
+                {this.renderHideConfirmationPopup()}
+                {this.renderUnhideConfirmationPopup()}
             </div>
         );
     }
@@ -896,7 +1246,7 @@ SubItemsModule.propTypes = {
     generateLink: PropTypes.func.isRequired,
     totalCount: PropTypes.number,
     languages: PropTypes.object,
-    udwConfigBulkMoveItems: PropTypes.object.isRequired,
+    udwConfigBulkItems: PropTypes.object.isRequired,
     showBulkActionFailedModal: PropTypes.func.isRequired,
 };
 
