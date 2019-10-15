@@ -549,18 +549,19 @@ export default class SubItemsModule extends Component {
     }
 
     renderUdw() {
-        const { isUdwOpened } = this.state;
+        const { isUdwOpened, actionFlow } = this.state;
 
         if (!isUdwOpened) {
             return null;
         }
 
         const UniversalDiscovery = window.eZ.modules.UniversalDiscovery;
-        const { restInfo, parentLocationId, udwConfigBulkItems } = this.props;
+        const { restInfo, parentLocationId, udwConfigBulkMoveItems, udwConfigBulkAddLocation } = this.props;
         const { selectedItems } = this.state;
         const selectedItemsLocationsIds = [...selectedItems.values()].map(({ id }) => id);
         const excludedLocations = [parentLocationId, ...selectedItemsLocationsIds];
         const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
+        const udwConfig = actionFlow === ACTION_FLOW_MOVE ? udwConfigBulkMoveItems : udwConfigBulkAddLocation;
         const udwProps = {
             title,
             restInfo,
@@ -569,8 +570,7 @@ export default class SubItemsModule extends Component {
             canSelectContent: ({ item }, callback) => {
                 callback(!excludedLocations.includes(item.id));
             },
-            ...udwConfigBulkItems,
-            multiple: false,
+            ...udwConfig,
         };
 
         return ReactDOM.createPortal(<UniversalDiscovery {...udwProps} />, this.udwContainer);
@@ -1248,7 +1248,8 @@ SubItemsModule.propTypes = {
     generateLink: PropTypes.func.isRequired,
     totalCount: PropTypes.number,
     languages: PropTypes.object,
-    udwConfigBulkItems: PropTypes.object.isRequired,
+    udwConfigBulkMoveItems: PropTypes.object.isRequired,
+    udwConfigBulkAddLocation: PropTypes.object.isRequired,
     showBulkActionFailedModal: PropTypes.func.isRequired,
 };
 
