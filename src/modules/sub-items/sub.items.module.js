@@ -441,7 +441,6 @@ export default class SubItemsModule extends Component {
     afterBulkUnhide(successItems, failedItems) {
         this.deselectAllItems();
         this.discardActivePageItems();
-
         this.toggleBulkOperationStatusState(false);
 
         if (failedItems.length) {
@@ -473,6 +472,7 @@ export default class SubItemsModule extends Component {
                 /*@Desc("The selected location(s) have been revealed.")*/
                 'bulk_unhide.success.message', {}, 'sub_items'
             );
+
             window.eZ.helpers.notification.showSuccessNotification(message);
         }
     }
@@ -480,7 +480,6 @@ export default class SubItemsModule extends Component {
     afterBulkAddLocation(location, successItems, failedItems) {
         this.deselectAllItems();
         this.discardActivePageItems();
-
         this.toggleBulkOperationStatusState(false);
 
         if (failedItems.length) {
@@ -541,6 +540,7 @@ export default class SubItemsModule extends Component {
     onUdwConfirm([selectedLocation]) {
         this.closeUdw();
         const { actionFlow } = this.state;
+
         if (actionFlow === ACTION_FLOW_MOVE) {
             this.bulkMove(selectedLocation);
         } else {
@@ -943,6 +943,7 @@ export default class SubItemsModule extends Component {
 
     renderHideConfirmationPopup() {
         const { isBulkHidePopupVisible } = this.state;
+
         if (!isBulkHidePopupVisible) {
             return null;
         }
@@ -968,6 +969,7 @@ export default class SubItemsModule extends Component {
 
     renderUnhideConfirmationPopup() {
         const { isBulkUnhidePopupVisible } = this.state;
+
         if (!isBulkUnhidePopupVisible) {
             return null;
         }
@@ -1176,7 +1178,6 @@ export default class SubItemsModule extends Component {
         const bulkBtnDisabled = nothingSelected || !isTableViewActive || !pageLoaded;
         let bulkHideBtnDisabled = true;
         let bulkUnhideBtnDisabled = true;
-
         let listClassName = 'm-sub-items__list';
 
         if (isDuringBulkOperation) {
@@ -1185,6 +1186,7 @@ export default class SubItemsModule extends Component {
 
         if (!bulkBtnDisabled) {
             const selectedItemsValues = [...selectedItems.values()];
+
             bulkHideBtnDisabled = !selectedItemsValues.some(item => !item.hidden);
             bulkUnhideBtnDisabled = !selectedItemsValues.some(item => !!item.hidden);
         }
