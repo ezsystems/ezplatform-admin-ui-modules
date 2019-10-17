@@ -1,10 +1,14 @@
 .c-grid {
-    display: flex;
-    flex-wrap: wrap;
-    padding: calculateRem(16px);
-    align-items: flex-start;
-    overflow: auto;
     height: 100%;
+
+    &__items-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        padding: calculateRem(16px);
+        align-items: flex-start;
+        overflow: auto;
+        height: calc(100% - #{calculateRem(30px)});
+    }
 
     &__go-up {
         width: calculateRem(165px);
