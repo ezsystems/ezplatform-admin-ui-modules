@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import GridViewItem from './grid.view.item';
+import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
 import { useFindLocationsByParentLocationIdFetch } from '../../hooks/useFindLocationsByParentLocationIdFetch';
 import { SORTING_OPTIONS, LoadedLocationsMapContext, SortingContext } from '../../universal.discovery.module';
@@ -33,22 +34,6 @@ const GridView = () => {
 
         setOffset(offset + HARDCODED_LIMIT);
     };
-    const goUp = () => {
-        const locationId = loadedLocationsMap[loadedLocationsMap.length - 2].parentLocationId;
-
-        dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId });
-    };
-    const renderGoUp = () => {
-        if (loadedLocationsMap.length <= 1) {
-            return null;
-        }
-
-        return (
-            <div className="c-grid__go-up" onDoubleClick={goUp}>
-                GO UP
-            </div>
-        );
-    };
     const renderItem = (itemData) => {
         if (!itemData.version) {
             return null;
@@ -64,13 +49,16 @@ const GridView = () => {
 
         const data = { ...locationData, ...loadedLocations, subitems: [...locationData.subitems, ...loadedLocations.subitems] };
 
+        setOffset(0);
         dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data });
     }, [loadedLocations, dispatchLoadedLocationsAction, isLoading]);
 
     return (
-        <div className="c-grid" onScroll={loadMore}>
-            {renderGoUp()}
-            {locationData.subitems.map(renderItem)}
+        <div className="c-grid">
+            <Breadcrumbs />
+            <div className="c-grid__items-wrapper" onScroll={loadMore}>
+                {locationData.subitems.map(renderItem)}
+            </div>
         </div>
     );
 };
