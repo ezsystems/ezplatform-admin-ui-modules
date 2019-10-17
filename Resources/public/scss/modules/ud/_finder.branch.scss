@@ -17,10 +17,10 @@
         transform: translate(calculateRem(30px)) rotate(90deg);
         width: calculateRem(500px);
         transform-origin: left top;
-        height: 30px;
+        height: calculateRem(30px);
         display: flex;
         align-items: center;
-        padding-left: 4px;
+        padding-left: calculateRem(4px);
 
         .ez-icon {
             transform: rotate(-90deg);
