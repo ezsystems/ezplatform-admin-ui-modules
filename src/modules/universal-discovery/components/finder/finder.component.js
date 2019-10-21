@@ -81,9 +81,18 @@ export default class FinderComponent extends Component {
             let loadedLocation = null;
 
             if (response.View.Result.searchHits.searchHit.length) {
-                loadedLocation = response.View.Result.searchHits.searchHit[0].value.Location;
+                const activeLocations = [];
 
-                this.setState({ activeLocations: [loadedLocation] });
+                loadedLocation = response.View.Result.searchHits.searchHit[0].value.Location;
+                activeLocations[loadedLocation.depth] = loadedLocation;
+
+                this.setState({ activeLocations }, () => {
+                    const { onItemSelect, renderStartingLocation } = this.props;
+
+                    if (renderStartingLocation) {
+                        onItemSelect(loadedLocation);
+                    }
+                });
             }
 
             this.loadChildren(loadedLocation);
@@ -408,6 +417,39 @@ export default class FinderComponent extends Component {
         );
     }
 
+    renderStartingLocationBranch() {
+        const { renderStartingLocation } = this.props;
+
+        if (!renderStartingLocation || this.props.startingLocationId === ROOT_LOCATION_ID) {
+            return null;
+        }
+
+        const { activeLocations } = this.state;
+        const location = activeLocations.find((activeLocation) => activeLocation && activeLocation.id);
+        const childrenData = [{ value: { Location: location } }];
+
+        return (
+            <FinderTreeBranchComponent
+                items={childrenData}
+                total={1}
+                activeLocationId={location.id}
+                isActiveLocationLoading={false}
+                onItemClick={this.findLocationChildren}
+                onBranchClick={this.loadBranchLeaves}
+                onLoadMore={this.onLoadMore}
+                maxHeight={this.props.maxHeight}
+                allowContainersOnly={this.props.allowContainersOnly}
+                contentTypesMap={this.props.contentTypesMap}
+                allowedLocations={this.props.allowedLocations}
+                multiple={this.props.multiple}
+                selectedContent={this.props.selectedContent}
+                onSelectContent={this.props.onSelectContent}
+                canSelectContent={this.props.canSelectContent}
+                onItemRemove={this.props.onItemRemove}
+            />
+        );
+    }
+
     setBranchContainerRef(ref) {
         this._refBranchesContainer = ref;
     }
@@ -424,6 +466,7 @@ export default class FinderComponent extends Component {
         return (
             <div className="c-finder">
                 <div className="c-finder__branches" style={{ height: `${this.props.maxHeight}px` }} ref={this.setBranchContainerRef}>
+                    {this.renderStartingLocationBranch()}
                     {activeLocations.map((location, index) => {
                         const locationId = location ? location.id : this.props.startingLocationId;
                         const branchActiveLocation = activeLocations[index + 1];
@@ -461,8 +504,10 @@ FinderComponent.propTypes = {
     onSelectContent: PropTypes.func.isRequired,
     canSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
+    renderStartingLocation: PropTypes.bool,
 };
 
 FinderComponent.defaultProps = {
     allowedLocations: [],
+    renderStartingLocation: false,
 };
