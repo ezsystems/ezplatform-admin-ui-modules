@@ -417,7 +417,7 @@ export default class UploadItemComponent extends Component {
             'multi_file_upload'
         );
         const disallowedContentTypeMessage = Translator.trans(
-            /*@Desc("You do not have permission to create this content item")*/ 'disallowed_content_type.message',
+            /*@Desc("You do not have permission to create this Content item")*/ 'disallowed_content_type.message',
             {},
             'multi_file_upload'
         );

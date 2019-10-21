@@ -1005,7 +1005,7 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         const noPermissionMessage = Translator.trans(
-            /*@Desc("Sorry, but you don't have permission for this action. Please contact your site Admin.")*/ 'content_on_the_fly.no_permission.message',
+            /*@Desc("You don't have permission for this action. Contact your Administrator.")*/ 'content_on_the_fly.no_permission.message',
             {},
             'universal_discovery_widget'
         );
@@ -1027,7 +1027,7 @@ export default class UniversalDiscoveryModule extends Component {
         }
 
         const locationNotAllowedMessage = Translator.trans(
-            /*@Desc("Sorry, but this location is not selectable.")*/ 'content_on_the_fly.location_not_allowed.message',
+            /*@Desc("This Location is not selectable.")*/ 'content_on_the_fly.location_not_allowed.message',
             {},
             'universal_discovery_widget'
         );

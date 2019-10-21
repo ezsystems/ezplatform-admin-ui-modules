@@ -124,7 +124,7 @@ export default class ContentCreatorComponent extends Component {
     render() {
         const { selectedContentType, selectedLanguage, maxHeight, onCancel } = this.props;
         const title = Translator.trans(
-            /*@Desc("Creating - %contentType% in %language%")*/ 'content_on_the_fly.creating_content.title',
+            /*@Desc("Creating a(n) %contentTypeName% in %languageName%")*/ 'content_on_the_fly.creating_content.title',
             {
                 contentType: selectedContentType.name,
                 language: selectedLanguage.name,
