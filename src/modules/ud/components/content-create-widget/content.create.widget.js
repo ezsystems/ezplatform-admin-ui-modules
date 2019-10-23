@@ -8,17 +8,25 @@ import {
     ActiveTabContext,
     ContentOnTheFlyDataContext,
     MarkedLocationContext,
+    LoadedLocationsMapContext,
 } from '../../universal.discovery.module';
 
-// @TODO
 const languages = Object.values(window.eZ.adminUiConfig.languages.mappings);
+const contentTypes = Object.entries(window.eZ.adminUiConfig.contentTypes);
 
 const ContentCreateWidget = () => {
+    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
+    const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
+    const filteredLanguages = languages.filter(
+        (language) =>
+            !selectedLocation.permissions ||
+            (selectedLocation.permissions && selectedLocation.permissions.restrictedLanguageCodes.includes(language.languageCode))
+    );
     const [filterQuery, setFilterQuery] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0].languageCode);
     const [selectedContentType, setSelectedContentType] = useState('');
     const [activeTab, setActiveTab] = useContext(ActiveTabContext);
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useContext(ContentOnTheFlyDataContext);
     const close = () => {
@@ -37,6 +45,7 @@ const ContentCreateWidget = () => {
             languageCode: selectedLanguage,
             contentTypeIdentifier: selectedContentType,
         });
+
         setActiveTab('content-create');
     };
 
@@ -51,7 +60,7 @@ const ContentCreateWidget = () => {
             <div className="c-content-create__language-selector-wrapper">
                 <div className="c-content-create__language-selector-label">Select a language</div>
                 <select className="form-control" onChange={updateSelectedLanguage}>
-                    {languages.map((language) => {
+                    {filteredLanguages.map((language) => {
                         return (
                             <option key={language.id} value={language.languageCode} onChange={updateSelectedLanguage}>
                                 {language.name}
@@ -64,17 +73,26 @@ const ContentCreateWidget = () => {
                 <div className="c-content-create__select-content-type-label">Select a Content Type</div>
                 <input className="form-control" type="text" placeholder="Type to refine" onChange={updateFilterQuery} />
                 <div className="c-content-create__content-type-list">
-                    {Object.entries(window.eZ.adminUiConfig.contentTypes).map(([groupName, groupItems]) => {
-                        const isHidden =
-                            filterQuery && groupItems.every((groupItem) => !groupItem.name.toLowerCase().includes(filterQuery));
+                    {contentTypes.map(([groupName, groupItems]) => {
+                        const isHidden = groupItems.every(
+                            (groupItem) =>
+                                (filterQuery && !groupItem.name.toLowerCase().includes(filterQuery)) ||
+                                (selectedLocation.permissions &&
+                                    selectedLocation.permissions.restrictedContentTypeIds.length &&
+                                    !selectedLocation.permissions.restrictedContentTypeIds.includes(groupItem.id.toString()))
+                        );
 
                         return (
                             <div className="c-content-create__group" key={groupName}>
                                 <div className="c-content-create__group-name" hidden={isHidden}>
                                     {groupName}
                                 </div>
-                                {groupItems.map(({ name, thumbnail, identifier }) => {
-                                    const isHidden = filterQuery && !name.toLowerCase().includes(filterQuery);
+                                {groupItems.map(({ name, thumbnail, identifier, id }) => {
+                                    const isHidden =
+                                        (filterQuery && !name.toLowerCase().includes(filterQuery)) ||
+                                        (selectedLocation.permissions &&
+                                            selectedLocation.permissions.restrictedContentTypeIds.length &&
+                                            !selectedLocation.permissions.restrictedContentTypeIds.includes(id.toString()));
                                     const className = createCssClassNames({
                                         'c-content-create__group-item': true,
                                         'c-content-create__group-item--selected': identifier === selectedContentType,
