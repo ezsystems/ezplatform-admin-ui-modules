@@ -324,7 +324,7 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_move.error.message',
+                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_move.error.message',
                 {
                     notMovedCount: notMovedItems.length,
                     totalCount: movedItems.length + notMovedItems.length,
