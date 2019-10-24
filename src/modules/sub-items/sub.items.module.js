@@ -324,7 +324,7 @@ export default class SubItemsModule extends Component {
                 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_move.error.message',
+                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_move.error.message',
                 {
                     notMovedCount: notMovedItems.length,
                     totalCount: movedItems.length + notMovedItems.length,
@@ -452,7 +452,7 @@ export default class SubItemsModule extends Component {
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to Trash because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.users_with_nonusers',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to Trash because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.users_with_nonusers',
                     {
                         notDeletedCount: notDeletedItems.length,
                         totalCount: deletedItems.length + notDeletedItems.length,
@@ -468,7 +468,7 @@ export default class SubItemsModule extends Component {
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.users',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.users',
                     {
                         notDeletedCount: notDeletedItems.length,
                         totalCount: deletedItems.length + notDeletedItems.length,
@@ -484,7 +484,7 @@ export default class SubItemsModule extends Component {
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be sent to Trash because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.nonusers',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be sent to Trash because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.nonusers',
                     {
                         notDeletedCount: notDeletedItems.length,
                         totalCount: deletedItems.length + notDeletedItems.length,
