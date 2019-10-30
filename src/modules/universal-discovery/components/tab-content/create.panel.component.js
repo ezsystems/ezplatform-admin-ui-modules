@@ -9,7 +9,7 @@ const CreatePanelComponent = (props) => {
     const wrapperAttrs = { className: 'c-create-panel' };
     const maxHeight = props.maxHeight - 24;
     const componentProps = { ...props, maxHeight, allowContainersOnly: true };
-    const finderProps = { ...componentProps, multiple: false };
+    const finderProps = { ...componentProps, multiple: false, renderStartingLocation: true };
     const chooseLanguageAndContentTypeTitle = Translator.trans(
         /*@Desc("Choose Language and Content Type")*/ 'content_on_the_fly.choose_language_and_content_type.title',
         {},
