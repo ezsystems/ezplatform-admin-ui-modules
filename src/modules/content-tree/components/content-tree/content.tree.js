@@ -26,6 +26,12 @@ export default class ContentTree extends Component {
         this.clearDocumentResizingListeners();
     }
 
+    componentDidUpdate(prevState) {
+        if (this.state.containerWidth !== prevState.containerWidth) {
+            document.body.dispatchEvent(new CustomEvent('ez-content-tree-resized'));
+        }
+    }
+
     changeContainerWidth({ clientX }) {
         const currentPositionX = clientX;
 
