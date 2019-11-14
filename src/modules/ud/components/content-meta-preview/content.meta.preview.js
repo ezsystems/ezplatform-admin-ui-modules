@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, Fragment } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import Icon from '../../../common/icon/icon';
 

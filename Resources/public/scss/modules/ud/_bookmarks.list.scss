@@ -10,6 +10,11 @@
         align-items: center;
         padding: calculateRem(2px) calculateRem(5px);
 
+        &--not-selectable {
+            background-color: $ez-ground-base-dark;
+            cursor: not-allowed;
+        }
+
         &--marked {
             background-color: $ez-color-base-medium;
             color: $ez-white;

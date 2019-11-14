@@ -11,6 +11,11 @@
         background-color: lighten($ez-ground-primary, 15%);
     }
 
+    &--not-selectable {
+        background-color: $ez-ground-base-dark;
+        cursor: not-allowed;
+    }
+
     &__toggle-button-wrapper {
         width: calculateRem(20px);
     }

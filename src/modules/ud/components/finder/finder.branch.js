@@ -6,7 +6,13 @@ import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import { useFindLocationsByParentLocationIdFetch } from '../../hooks/useFindLocationsByParentLocationIdFetch';
-import { LoadedLocationsMapContext, SortingContext, ContentTypesMapContext, SORTING_OPTIONS } from '../../universal.discovery.module';
+import {
+    LoadedLocationsMapContext,
+    SortingContext,
+    SortOrderContext,
+    ContentTypesMapContext,
+    SORTING_OPTIONS,
+} from '../../universal.discovery.module';
 
 const CLASS_IS_BRANCH_RESIZING = 'ez-is-branch-resizing';
 const SCROLL_OFFSET = 200;
@@ -19,10 +25,16 @@ const FinderBranch = ({ locationData }) => {
     const [branchWidth, setBranchWidth] = useState(0);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [sorting, setSorting] = useContext(SortingContext);
+    const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const branchRef = useRef(null);
     const sortingOptions = SORTING_OPTIONS.find((option) => option.id === sorting);
-    const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(locationData, sortingOptions, HARDCODED_LIMIT, offset);
+    const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
+        locationData,
+        { sortClause: sortingOptions.sortClause, sortOrder },
+        HARDCODED_LIMIT,
+        offset
+    );
     const { subitems, collapsed } = locationData;
     let resizeStartPositionX = 0;
     let branchCurrentWidth = 0;
