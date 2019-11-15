@@ -2,7 +2,7 @@ import React, { useContext, createRef } from 'react';
 
 import {
     ContentOnTheFlyDataContext,
-    TabsConfigContext,
+    TabsContext,
     ActiveTabContext,
     CreateContentWidgetContext,
     RestInfoContext,
@@ -20,7 +20,7 @@ const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) 
 
 const ContentCreataTabModule = () => {
     const [contentOnTheFlyData, setContentOnTheFlyData] = useContext(ContentOnTheFlyDataContext);
-    const tabs = useContext(TabsConfigContext);
+    const tabs = useContext(TabsContext);
     const restInfo = useContext(RestInfoContext);
     const [activeTab, setActiveTab] = useContext(ActiveTabContext);
     const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
@@ -71,7 +71,7 @@ eZ.addConfig(
         {
             id: 'content-create',
             component: ContentCreataTabModule,
-            label: 'Search',
+            label: 'Content create',
             icon: '/bundles/ezplatformadminui/img/ez-icons.svg#search',
             isHiddenOnList: true,
         },

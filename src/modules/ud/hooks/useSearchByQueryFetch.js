@@ -28,7 +28,7 @@ export const useSearchByQueryFetch = () => {
             const handleFetch = (response) => {
                 dispatch({ type: SEARCH_END, response });
             };
-            const query = { FullTextCriterion: searchText };
+            const query = { FullTextCriterion: `${searchText}*` };
 
             if (contentTypesIdentifiers.length) {
                 query.ContentTypeIdentifierCriterion = contentTypesIdentifiers;

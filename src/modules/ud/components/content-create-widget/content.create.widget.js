@@ -9,6 +9,8 @@ import {
     ContentOnTheFlyDataContext,
     MarkedLocationContext,
     LoadedLocationsMapContext,
+    ContentOnTheFlyConfigContext,
+    AllowedContentTypesContext,
 } from '../../universal.discovery.module';
 
 const languages = Object.values(window.eZ.adminUiConfig.languages.mappings);
@@ -17,15 +19,23 @@ const contentTypes = Object.entries(window.eZ.adminUiConfig.contentTypes);
 const ContentCreateWidget = () => {
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
+    const { allowedLanguages, preselectedLanguage, preselectedContentType } = useContext(ContentOnTheFlyConfigContext);
+    const allowedContentTypes = useContext(AllowedContentTypesContext);
     const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
-    const filteredLanguages = languages.filter(
-        (language) =>
+    const filteredLanguages = languages.filter((language) => {
+        const userHasPermission =
+            !selectedLocation ||
             !selectedLocation.permissions ||
-            (selectedLocation.permissions && selectedLocation.permissions.restrictedLanguageCodes.includes(language.languageCode))
-    );
+            !selectedLocation.permissions.restrictedLanguageCodes.length ||
+            selectedLocation.permissions.restrictedLanguageCodes.includes(language.languageCode);
+        const isAllowedLanguage = !allowedLanguages || allowedLanguages.includes(language.languageCode);
+
+        return userHasPermission && isAllowedLanguage;
+    });
     const [filterQuery, setFilterQuery] = useState('');
-    const [selectedLanguage, setSelectedLanguage] = useState(languages[0].languageCode);
-    const [selectedContentType, setSelectedContentType] = useState('');
+    const firstLanguageCode = filteredLanguages.length ? filteredLanguages[0].languageCode : '';
+    const [selectedLanguage, setSelectedLanguage] = useState(preselectedLanguage || firstLanguageCode);
+    const [selectedContentType, setSelectedContentType] = useState(preselectedContentType);
     const [activeTab, setActiveTab] = useContext(ActiveTabContext);
     const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useContext(ContentOnTheFlyDataContext);
@@ -59,7 +69,7 @@ const ContentCreateWidget = () => {
             </div>
             <div className="c-content-create__language-selector-wrapper">
                 <div className="c-content-create__language-selector-label">Select a language</div>
-                <select className="form-control" onChange={updateSelectedLanguage}>
+                <select className="form-control" onChange={updateSelectedLanguage} value={selectedLanguage}>
                     {filteredLanguages.map((language) => {
                         return (
                             <option key={language.id} value={language.languageCode} onChange={updateSelectedLanguage}>
@@ -74,13 +84,16 @@ const ContentCreateWidget = () => {
                 <input className="form-control" type="text" placeholder="Type to refine" onChange={updateFilterQuery} />
                 <div className="c-content-create__content-type-list">
                     {contentTypes.map(([groupName, groupItems]) => {
-                        const isHidden = groupItems.every(
-                            (groupItem) =>
+                        const isHidden = groupItems.every((groupItem) => {
+                            return (
                                 (filterQuery && !groupItem.name.toLowerCase().includes(filterQuery)) ||
-                                (selectedLocation.permissions &&
+                                (selectedLocation &&
+                                    selectedLocation.permissions &&
                                     selectedLocation.permissions.restrictedContentTypeIds.length &&
-                                    !selectedLocation.permissions.restrictedContentTypeIds.includes(groupItem.id.toString()))
-                        );
+                                    !selectedLocation.permissions.restrictedContentTypeIds.includes(groupItem.id.toString())) ||
+                                (allowedContentTypes && !allowedContentTypes.includes(groupItem.identifier))
+                            );
+                        });
 
                         return (
                             <div className="c-content-create__group" key={groupName}>
@@ -90,9 +103,11 @@ const ContentCreateWidget = () => {
                                 {groupItems.map(({ name, thumbnail, identifier, id }) => {
                                     const isHidden =
                                         (filterQuery && !name.toLowerCase().includes(filterQuery)) ||
-                                        (selectedLocation.permissions &&
+                                        (selectedLocation &&
+                                            selectedLocation.permissions &&
                                             selectedLocation.permissions.restrictedContentTypeIds.length &&
-                                            !selectedLocation.permissions.restrictedContentTypeIds.includes(id.toString()));
+                                            !selectedLocation.permissions.restrictedContentTypeIds.includes(id.toString())) ||
+                                        (allowedContentTypes && !allowedContentTypes.includes(identifier));
                                     const className = createCssClassNames({
                                         'c-content-create__group-item': true,
                                         'c-content-create__group-item--selected': identifier === selectedContentType,
@@ -115,7 +130,7 @@ const ContentCreateWidget = () => {
             </div>
             <div className="c-content-create__confirm-wrapper">
                 <button className="c-content-create__confirm-button btn btn-primary" onClick={createContent} disabled={isConfirmDisabled}>
-                    Confirm
+                    Create
                 </button>
             </div>
         </div>
