@@ -35,6 +35,14 @@
             background-color: $ez-secondary-ground;
         }
 
+        &.c-finder-leaf--not-selectable {
+            background-color: $ez-secondary-ground;
+
+            &:hover {
+                background-color: $ez-secondary-ground;
+            }
+        }
+
         .c-toggle-selection-button {
             &--selected {
                 background-color: $ez-white;
@@ -53,6 +61,15 @@
             .ez-icon {
                 fill: $ez-white;
             }
+        }
+    }
+
+    &--not-selectable {
+        background-color: $ez-ground-base-dark;
+        cursor: not-allowed;
+
+        &:hover {
+            background-color: $ez-ground-base-dark;
         }
     }
 

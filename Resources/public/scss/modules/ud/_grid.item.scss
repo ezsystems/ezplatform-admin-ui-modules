@@ -62,4 +62,9 @@
             }
         }
     }
+
+    &--not-selectable {
+        background-color: $ez-ground-base-dark;
+        cursor: not-allowed;
+    }
 }
