@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
-import { SelectedLocationsContext } from '../../universal.discovery.module';
+import { SelectedLocationsContext, MultipleConfigContext } from '../../universal.discovery.module';
 
 const ToggleSelectionButton = ({ location }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
+    const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const isSelected = selectedLocations.some((selectedLocation) => selectedLocation.id === location.id);
     const iconName = isSelected ? 'checkmark' : 'create';
     const className = createCssClassNames({
@@ -19,6 +20,10 @@ const ToggleSelectionButton = ({ location }) => {
 
         dispatchSelectedLocationsAction(action);
     };
+
+    if (multiple && !isSelected && selectedLocations.length >= multipleItemsLimit) {
+        return null;
+    }
 
     return (
         <button className={className} onClick={toggleSelection}>

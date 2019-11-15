@@ -4,7 +4,7 @@ import GridViewItem from './grid.view.item';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 
 import { useFindLocationsByParentLocationIdFetch } from '../../hooks/useFindLocationsByParentLocationIdFetch';
-import { SORTING_OPTIONS, LoadedLocationsMapContext, SortingContext } from '../../universal.discovery.module';
+import { SORTING_OPTIONS, LoadedLocationsMapContext, SortingContext, SortOrderContext } from '../../universal.discovery.module';
 
 // @TODO
 const HARDCODED_LIMIT = 50;
@@ -15,11 +15,12 @@ const GridView = () => {
     const [offset, setOffset] = useState(0);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [sorting, setSorting] = useContext(SortingContext);
+    const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const sortingOptions = SORTING_OPTIONS.find((option) => option.id === sorting);
     const locationData = loadedLocationsMap.length ? loadedLocationsMap[loadedLocationsMap.length - 1] : { subitems: [] };
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
         locationData,
-        sortingOptions,
+        { sortClause: sortingOptions.sortClause, sortOrder },
         HARDCODED_LIMIT,
         offset,
         true

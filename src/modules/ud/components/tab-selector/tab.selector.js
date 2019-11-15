@@ -1,17 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
-import { TabsConfigContext, ActiveTabContext } from '../../universal.discovery.module';
+import { TabsContext, TabsConfigContext, ActiveTabContext } from '../../universal.discovery.module';
 
 const TabSelector = () => {
-    const tabs = useContext(TabsConfigContext);
+    const tabs = useContext(TabsContext);
+    const tabsConfig = useContext(TabsConfigContext);
     const [activeTab, setActiveTab] = useContext(ActiveTabContext);
+    const sortedTabs = useMemo(
+        () =>
+            tabs.sort((tabA, tabB) => {
+                if (!tabsConfig[tabB.id] || !tabsConfig[tabA.id]) {
+                    return 0;
+                }
+
+                return tabsConfig[tabB.id].priority - tabsConfig[tabA.id].priority;
+            }),
+        [tabs, tabsConfig]
+    );
 
     return (
         <div className="c-tab-selector">
-            {tabs.map((tab) => {
+            {sortedTabs.map((tab) => {
                 if (tab.isHiddenOnList) {
                     return null;
                 }
