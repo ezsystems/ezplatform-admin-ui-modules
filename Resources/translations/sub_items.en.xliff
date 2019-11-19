@@ -98,7 +98,7 @@
       </trans-unit>
       <trans-unit id="5e5f346e9dca66d113585207c4e7a98e87421d34" resname="bulk_hide.error.message">
         <source>%failedCount% of the %totalCount% selected Location(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</source>
-        <target state="new">%failedCount% of the %totalCount% selected location(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
+        <target state="new">%failedCount% of the %totalCount% selected Location(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</target>
         <note>key: bulk_hide.error.message</note>
       </trans-unit>
       <trans-unit id="9157594a9c2f44581165ee5e73c89bc5985a7fc9" resname="bulk_hide.success.message">
