@@ -155,7 +155,7 @@ const makeBulkRequest = ({ token, siteaccess }, requestBodyOperations, callback)
         .then(callback)
         .catch(() => {
             const message = Translator.trans(
-                /*@Desc("An unexpected error occurred while processing the content item(s). Please try again later.")*/
+                /*@Desc("An unexpected error occurred while processing the Content item(s). Please try again later.")*/
                 'bulk_request.error.message', {}, 'sub_items'
             );
 

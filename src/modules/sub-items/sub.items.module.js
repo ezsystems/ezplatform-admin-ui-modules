@@ -357,7 +357,7 @@ export default class SubItemsModule extends Component {
 
         if (notMovedItems.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Content items cannot be moved (%itemsCount%)")*/
+                /*@Desc("%itemsCount% Content item(s) cannot be moved")*/
                 'bulk_move.error.modal.table_title', {itemsCount: notMovedItems.length}, 'sub_items'
             );
             const notificationMessage = Translator.trans(
@@ -380,7 +380,7 @@ export default class SubItemsModule extends Component {
 
         if (movedItems.length) {
             const message = Translator.trans(
-                /*@Desc("The selected content item(s) have been sent to {{ locationLink }}")*/
+                /*@Desc("Content item(s) sent to {{ locationLink }}")*/
                 'bulk_move.success.message', {}, 'sub_items'
             );
             const rawPlaceholdersMap = {
@@ -407,11 +407,11 @@ export default class SubItemsModule extends Component {
 
         if (failedItems.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Content items cannot be hidden (%itemsCount%)")*/
+                /*@Desc("%itemsCount% Content item(s) cannot be hidden")*/
                 'bulk_hide.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%failedCount% of the %totalCount% selected item(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/
+                /*@Desc("%failedCount% of the %totalCount% selected item(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.")*/
                 'bulk_hide.error.message',
                 {
                     failedCount: failedItems.length,
@@ -431,7 +431,7 @@ export default class SubItemsModule extends Component {
 
         if (successItems.length) {
             const message = Translator.trans(
-                /*@Desc("The selected location(s) have been hidden.")*/
+                /*@Desc("Location(s) hidden.")*/
                 'bulk_hide.success.message', {}, 'sub_items'
             );
             window.eZ.helpers.notification.showSuccessNotification(message);
@@ -445,11 +445,11 @@ export default class SubItemsModule extends Component {
 
         if (failedItems.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Locations cannot be revealed (%itemsCount%)")*/
+                /*@Desc("%itemsCount% Location(s) cannot be revealed")*/
                 'bulk_unhide.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%failedCount% of the %totalCount% selected location(s) could not be revealed because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/
+                /*@Desc("%failedCount% of the %totalCount% selected Location(s) could not be revealed because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.")*/
                 'bulk_unhide.error.message',
                 {
                     failedCount: failedItems.length,
@@ -484,11 +484,11 @@ export default class SubItemsModule extends Component {
 
         if (failedItems.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("Locations cannot be added (%itemsCount%)")*/
+                /*@Desc("%itemsCount% Location(s) cannot be added")*/
                 'bulk_add_location.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%failedCount% of the %totalCount% selected locations(s) could not be added because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/
+                /*@Desc("%failedCount% of the %totalCount% selected Locations(s) could not be added because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.")*/
                 'bulk_add_location.error.message',
                 {
                     failedCount: failedItems.length,
@@ -508,7 +508,7 @@ export default class SubItemsModule extends Component {
 
         if (successItems.length) {
             const message = Translator.trans(
-                /*@Desc("The selected location(s) have been added to {{ locationLink }}")*/
+                /*@Desc("Location(s) added to {{ locationLink }}.")*/
                 'bulk_add_location.success.message', {}, 'sub_items'
             );
             const rawPlaceholdersMap = {
@@ -949,7 +949,7 @@ export default class SubItemsModule extends Component {
         }
 
         const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to hide the selected location(s)?")*/
+            /*@Desc("Are you sure you want to hide the selected Location(s)?")*/
             'bulk_hide.popup.message', {}, 'sub_items'
         );
 
@@ -975,7 +975,7 @@ export default class SubItemsModule extends Component {
         }
 
         const confirmationMessage = Translator.trans(
-            /*@Desc("Are you sure you want to reveal the selected location(s)?")*/
+            /*@Desc("Are you sure you want to reveal the selected Location(s)?")*/
             'bulk_unhide.popup.message', {}, 'sub_items'
         );
 
@@ -1087,19 +1087,19 @@ export default class SubItemsModule extends Component {
     }
 
     renderBulkAddLocationBtn(disabled) {
-        const label = Translator.trans(/*@Desc("Add locations for selected items")*/ 'add_locations_btn.label', {}, 'sub_items');
+        const label = Translator.trans(/*@Desc("Add Locations to selected Content item(s)")*/ 'add_locations_btn.label', {}, 'sub_items');
 
         return <ActionButton disabled={disabled} onClick={this.onAddLocationsBtnClick} label={label} type="create" />;
     }
 
     renderBulkHideBtn(disabled) {
-        const label = Translator.trans(/*@Desc("Hide selected locations")*/ 'hide_locations_btn.label', {}, 'sub_items');
+        const label = Translator.trans(/*@Desc("Hide selected Locations")*/ 'hide_locations_btn.label', {}, 'sub_items');
 
         return <ActionButton disabled={disabled} onClick={this.onHideBtnClick} label={label} type="hide" />;
     }
 
     renderBulkUnhideBtn(disabled) {
-        const label = Translator.trans(/*@Desc("Reveal selected locations")*/ 'unhide_locations_btn.label', {}, 'sub_items');
+        const label = Translator.trans(/*@Desc("Reveal selected Locations")*/ 'unhide_locations_btn.label', {}, 'sub_items');
 
         return <ActionButton disabled={disabled} onClick={this.onUnhideBtnClick} label={label} type="reveal" />;
     }
