@@ -402,7 +402,6 @@ export default class SubItemsModule extends Component {
     afterBulkHide(successItems, failedItems) {
         this.deselectAllItems();
         this.discardActivePageItems();
-
         this.toggleBulkOperationStatusState(false);
 
         if (failedItems.length) {
@@ -434,6 +433,7 @@ export default class SubItemsModule extends Component {
                 /*@Desc("Location(s) hidden.")*/
                 'bulk_hide.success.message', {}, 'sub_items'
             );
+
             window.eZ.helpers.notification.showSuccessNotification(message);
         }
     }
