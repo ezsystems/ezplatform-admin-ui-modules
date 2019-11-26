@@ -21,9 +21,16 @@
         display: flex;
         align-items: center;
         padding-left: calculateRem(4px);
+    }
+
+    &__icon-wrapper {
+        position: relative;
+        margin-right: calculateRem(16px);
 
         .ez-icon {
-            transform: rotate(-90deg);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
         }
     }
 

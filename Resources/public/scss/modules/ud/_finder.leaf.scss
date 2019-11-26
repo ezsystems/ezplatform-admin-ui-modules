@@ -82,4 +82,16 @@
             margin-right: calculateRem(5px);
         }
     }
+
+    &__icon-wrapper {
+        position: relative;
+        margin-right: calculateRem(20px);
+        text-align: center;
+
+        .ez-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
 }
