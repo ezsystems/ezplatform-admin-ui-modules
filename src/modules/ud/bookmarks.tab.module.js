@@ -5,7 +5,14 @@ import BookmarksList from './components/bookmarks-list/bookmarks.list';
 import GridView from './components/grid-view/grid.view';
 import Finder from './components/finder/finder';
 
-import { CurrentViewContext, MarkedLocationContext, RestInfoContext, LoadedLocationsMapContext } from './universal.discovery.module';
+import {
+    CurrentViewContext,
+    MarkedLocationContext,
+    RestInfoContext,
+    LoadedLocationsMapContext,
+    SortingContext,
+    SortOrderContext,
+} from './universal.discovery.module';
 import { loadAccordionData } from './services/universal.discovery.service';
 
 const views = {
@@ -17,6 +24,8 @@ const BookmarksTabModule = () => {
     const restInfo = useContext(RestInfoContext);
     const [currentView, setCurrentView] = useContext(CurrentViewContext);
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [sorting, setSorting] = useContext(SortingContext);
+    const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [bookmarkedLocationMarked, setBookmarkedLocationMarked] = useState(null);
     const isFirstRun = useRef(true);
@@ -42,9 +51,18 @@ const BookmarksTabModule = () => {
         }
 
         setMarkedLocation(bookmarkedLocationMarked);
-        loadAccordionData({ ...restInfo, parentLocationId: bookmarkedLocationMarked, gridView: currentView === 'grid' }, (locationsMap) => {
-            dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
-        });
+        loadAccordionData(
+            {
+                ...restInfo,
+                parentLocationId: bookmarkedLocationMarked,
+                sortClause: sorting,
+                sortOrder: sortOrder,
+                gridView: currentView === 'grid',
+            },
+            (locationsMap) => {
+                dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
+            }
+        );
     }, [bookmarkedLocationMarked, currentView, restInfo, dispatchLoadedLocationsAction, setMarkedLocation]);
 
     useEffect(() => {

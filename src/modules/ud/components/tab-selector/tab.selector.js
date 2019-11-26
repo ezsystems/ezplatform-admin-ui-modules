@@ -24,7 +24,7 @@ const TabSelector = () => {
     return (
         <div className="c-tab-selector">
             {sortedTabs.map((tab) => {
-                if (tab.isHiddenOnList) {
+                if (tab.isHiddenOnList || (tabsConfig[tab.id] && tabsConfig[tab.id].hidden)) {
                     return null;
                 }
 

@@ -28,7 +28,7 @@ const FinderBranch = ({ locationData }) => {
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const branchRef = useRef(null);
-    const sortingOptions = SORTING_OPTIONS.find((option) => option.id === sorting);
+    const sortingOptions = SORTING_OPTIONS.find((option) => option.sortClause === sorting);
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
         locationData,
         { sortClause: sortingOptions.sortClause, sortOrder },

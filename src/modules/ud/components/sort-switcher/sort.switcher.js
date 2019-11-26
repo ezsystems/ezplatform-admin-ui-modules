@@ -16,13 +16,13 @@ const SortSwitcher = ({ isDisabled }) => {
     return (
         <div className={className}>
             {SORTING_OPTIONS.map((option) => {
-                const extraClasses = option.id === sorting ? 'c-menu-button--selected' : '';
+                const extraClasses = option.sortClause === sorting ? 'c-menu-button--selected' : '';
                 const onClick = () => {
-                    setSorting(option.id);
+                    setSorting(option.sortClause);
                 };
 
                 return (
-                    <MenuButton key={option.id} extraClasses={extraClasses} onClick={onClick} isDisabled={isDisabled}>
+                    <MenuButton key={option.sortClause} extraClasses={extraClasses} onClick={onClick} isDisabled={isDisabled}>
                         {option.label}
                     </MenuButton>
                 );

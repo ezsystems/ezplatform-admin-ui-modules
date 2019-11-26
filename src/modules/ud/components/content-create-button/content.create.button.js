@@ -19,7 +19,7 @@ const ContentCreateButton = ({ isDisabled }) => {
         setCreateContentVisible((prevState) => !prevState);
     };
     const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
-    const isAllowedLocation = !allowedLocations || allowedLocations.includes(selectedLocation.parentLocationId);
+    const isAllowedLocation = !allowedLocations || !selectedLocation || allowedLocations.includes(selectedLocation.parentLocationId);
     const hasAccess =
         !selectedLocation || !selectedLocation.permissions || (selectedLocation.permissions && selectedLocation.permissions.hasAccess);
 
