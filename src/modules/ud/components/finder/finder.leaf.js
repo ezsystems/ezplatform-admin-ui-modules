@@ -60,11 +60,13 @@ const FinderLeaf = ({ location }) => {
     return (
         <div className={className} onClick={markLocation}>
             <span className="c-finder-leaf__name">
-                <Icon
-                    extraClasses="ez-icon--small"
-                    customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
-                />
-                {location.ContentInfo.Content.Name}
+                <span className="c-finder-leaf__icon-wrapper">
+                    <Icon
+                        extraClasses="ez-icon--small"
+                        customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
+                    />
+                </span>
+                <span>{location.ContentInfo.Content.Name}</span>
             </span>
             {renderToggleSelectionButton()}
         </div>
