@@ -3,11 +3,6 @@
     align-items: center;
     height: calculateRem(50px);
 
-    &__cancel-btn-wrapper {
-        flex-basis: calculateRem(200px);
-        padding-left: calculateRem(20px);
-    }
-
     &__cancel-btn {
         border: none;
 
