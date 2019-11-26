@@ -489,7 +489,7 @@ export default class SubItemsModule extends Component {
                 locationLink: Translator.trans(
                     /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.link_to_location',
                     {
-                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
+                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.TranslatedName),
                         locationHref: this.props.generateLink(location.id),
                     },
                     'sub_items'
@@ -703,7 +703,7 @@ export default class SubItemsModule extends Component {
 
             return {
                 contentTypeName,
-                contentName: item.content.Name,
+                contentName: item.content.TranslatedName,
             };
         });
 

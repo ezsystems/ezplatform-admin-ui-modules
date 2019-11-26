@@ -1,7 +1,7 @@
 import { handleRequestResponse } from '../../common/helpers/request.helper.js';
 
 const HEADERS_CREATE_VIEW = {
-    Accept: 'application/vnd.ez.adminui.api.View+json; version=1.1',
+    Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';

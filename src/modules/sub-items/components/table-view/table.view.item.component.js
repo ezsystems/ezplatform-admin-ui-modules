@@ -229,7 +229,7 @@ export default class TableViewItemComponent extends PureComponent {
         const contentTypeIdentifier = contentType ? contentType.identifier : null;
         const linkAttrs = {
             className: 'c-table-view-item__link c-table-view-item__text-wrapper',
-            title: content.Name,
+            title: content.TranslatedName,
             href: generateLink(location.id),
         };
         const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier);
@@ -243,7 +243,7 @@ export default class TableViewItemComponent extends PureComponent {
                     <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--small" />
                 </td>
                 <td className="c-table-view-item__cell c-table-view-item__cell--name">
-                    <a {...linkAttrs}>{content.Name}</a>
+                    <a {...linkAttrs}>{content.TranslatedName}</a>
                 </td>
                 {this.renderModifiedCell()}
                 {this.renderContentTypeCell()}

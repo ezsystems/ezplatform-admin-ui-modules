@@ -131,7 +131,7 @@ export default class FinderTreeLeafComponent extends Component {
         return (
             <div {...attrs}>
                 {this.renderIcon()}
-                <span className="c-finder-tree-leaf__content-name">{location.ContentInfo.Content.Name}</span>
+                <span className="c-finder-tree-leaf__content-name">{location.ContentInfo.Content.TranslatedName}</span>
                 {this.renderLoadingIcon()}
                 {this.renderSelectContentBtn()}
             </div>

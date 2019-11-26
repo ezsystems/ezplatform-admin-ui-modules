@@ -18,8 +18,8 @@ const SearchResultsItemComponent = (props) => {
 
     return (
         <div className="c-search-results-item">
-            <div className="c-search-results-item__name" title={item.Name}>
-                {item.Name}
+            <div className="c-search-results-item__name" title={item.TranslatedName}>
+                {item.TranslatedName}
             </div>
             <div className="c-search-results-item__type" title={contentTypeName}>
                 {contentTypeName}
