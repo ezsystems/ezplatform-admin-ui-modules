@@ -11,6 +11,7 @@ import {
     SortingContext,
     SortOrderContext,
     ContentTypesMapContext,
+    MarkedLocationContext,
     SORTING_OPTIONS,
 } from '../../universal.discovery.module';
 
@@ -27,6 +28,7 @@ const FinderBranch = ({ locationData }) => {
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
+    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const branchRef = useRef(null);
     const sortingOptions = SORTING_OPTIONS.find((option) => option.sortClause === sorting);
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
@@ -80,6 +82,13 @@ const FinderBranch = ({ locationData }) => {
             return null;
         }
 
+        const selectedLocation = subitems.find(
+            (subitem) =>
+                loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === subitem.location.id) ||
+                subitem.location.id === markedLocation
+        );
+        const contentName = selectedLocation ? selectedLocation.location.ContentInfo.Content.Name : '';
+
         return (
             <div className="c-finder-branch__info-wrapper">
                 <span className="c-finder-branch__icon-wrapper">
@@ -88,7 +97,7 @@ const FinderBranch = ({ locationData }) => {
                         customPath={contentTypesMap[locationData.location.ContentInfo.Content.ContentType._href].thumbnail}
                     />
                 </span>
-                <span className="c-finder-branch__name">{locationData.location.ContentInfo.Content.Name}</span>
+                <span className="c-finder-branch__name">{contentName}</span>
             </div>
         );
     };
