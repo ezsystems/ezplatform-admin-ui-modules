@@ -16,7 +16,7 @@ const GridView = () => {
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
-    const sortingOptions = SORTING_OPTIONS.find((option) => option.id === sorting);
+    const sortingOptions = SORTING_OPTIONS.find((option) => option.sortClause === sorting);
     const locationData = loadedLocationsMap.length ? loadedLocationsMap[loadedLocationsMap.length - 1] : { subitems: [] };
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
         locationData,

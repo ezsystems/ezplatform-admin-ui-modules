@@ -1096,7 +1096,7 @@ export default class UniversalDiscoveryModule extends Component {
     }
 }
 
-eZ.addConfig('modules.UniversalDiscovery', UniversalDiscoveryModule);
+//eZ.addConfig('modules.UniversalDiscovery', UniversalDiscoveryModule);
 
 UniversalDiscoveryModule.propTypes = {
     onConfirm: PropTypes.func.isRequired,

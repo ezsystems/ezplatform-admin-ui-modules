@@ -10,12 +10,10 @@ const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
 export const SORTING_OPTIONS = [
     {
-        id: 'date',
         label: 'Date',
         sortClause: 'DatePublished',
     },
     {
-        id: 'name',
         label: 'Name',
         sortClause: 'ContentName',
     },
@@ -57,6 +55,7 @@ export const ContentOnTheFlyDataContext = createContext();
 export const ContentOnTheFlyConfigContext = createContext();
 
 const UniversalDiscoveryModule = (props) => {
+    const tabs = window.eZ.adminUiConfig.universalDiscoveryWidget.tabs;
     const [activeTab, setActiveTab] = useState(props.activeTab);
     const [sorting, setSorting] = useState(props.activeSortClause);
     const [sortOrder, setSortOrder] = useState(props.activeSortOrder);
@@ -68,7 +67,7 @@ const UniversalDiscoveryModule = (props) => {
         { parentLocationId: props.rootLocationId, subitems: [] },
     ]);
     const [selectedLocations, dispatchSelectedLocationsAction] = useSelectedLocationsReducer();
-    const activeTabConfig = props.tabs.find((tab) => tab.id === activeTab);
+    const activeTabConfig = tabs.find((tab) => tab.id === activeTab);
     const Tab = activeTabConfig.component;
     const className = createCssClassNames({
         'm-ud': true,
@@ -96,10 +95,19 @@ const UniversalDiscoveryModule = (props) => {
             return;
         }
 
-        loadAccordionData({ ...restInfo, parentLocationId: props.startingLocationId, gridView: currentView === 'grid' }, (locationsMap) => {
-            dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
-            setMarkedLocation(props.startingLocationId);
-        });
+        loadAccordionData(
+            {
+                ...restInfo,
+                parentLocationId: props.startingLocationId,
+                sortClause: sorting,
+                sortOrder: sortOrder,
+                gridView: currentView === 'grid',
+            },
+            (locationsMap) => {
+                dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
+                setMarkedLocation(props.startingLocationId);
+            }
+        );
     }, [props.startingLocationId]);
 
     return (
@@ -110,7 +118,7 @@ const UniversalDiscoveryModule = (props) => {
                         <ContainersOnlyContext.Provider value={props.containersOnly}>
                             <AllowedContentTypesContext.Provider value={props.allowedContentTypes}>
                                 <ActiveTabContext.Provider value={[activeTab, setActiveTab]}>
-                                    <TabsContext.Provider value={props.tabs}>
+                                    <TabsContext.Provider value={tabs}>
                                         <TabsConfigContext.Provider value={props.tabsConfig}>
                                             <TitleContext.Provider value={props.title}>
                                                 <CancelContext.Provider value={props.onCancel}>
@@ -187,14 +195,6 @@ UniversalDiscoveryModule.propTypes = {
         preselectedContentType: PropTypes.string.isRequired,
         hidden: PropTypes.bool.isRequired,
     }).isRequired,
-    tabs: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            component: PropTypes.func.isRequired,
-            label: PropTypes.string.isRequired,
-            icon: PropTypes.string.isRequired,
-        })
-    ).isRequired,
     tabsConfig: PropTypes.objectOf(
         PropTypes.shape({
             itemsPerPage: PropTypes.number.isRequired,
@@ -214,8 +214,9 @@ UniversalDiscoveryModule.defaultProps = {
     activeSortClause: 'date',
     activeSortOrder: 'ascending',
     activeView: 'finder',
+    tabs: window.eZ.adminUiConfig.universalDiscoveryWidget.tabs,
 };
 
-eZ.addConfig('modules.UDW', UniversalDiscoveryModule);
+eZ.addConfig('modules.UniversalDiscovery', UniversalDiscoveryModule);
 
 export default UniversalDiscoveryModule;

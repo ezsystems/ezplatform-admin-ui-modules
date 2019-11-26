@@ -7,7 +7,7 @@
         padding: calculateRem(16px);
         align-items: flex-start;
         overflow: auto;
-        height: calc(100% - #{calculateRem(30px)});
+        max-height: calc(100% - #{calculateRem(30px)});
     }
 
     &__go-up {
