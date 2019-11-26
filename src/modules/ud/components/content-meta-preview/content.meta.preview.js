@@ -33,7 +33,6 @@ const ContentMetaPreview = () => {
             dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { ...locationData, bookmarked: !bookmarked } });
         });
     };
-
     const renderPreview = () => {
         if (!version.Thumbnail) {
             return (
@@ -71,7 +70,15 @@ const ContentMetaPreview = () => {
                     </div>
                     <div className="c-content-meta-preview__details-item">
                         <span>Translations</span>
-                        <span>{location.ContentInfo.Content.mainLanguageCode}</span>
+                        <div className="c-content-meta-preview__translations-wrapper">
+                            {version.VersionInfo.languageCodes.split(',').map((languageCode) => {
+                                return (
+                                    <span key={languageCode} className="c-content-meta-preview__translation">
+                                        {window.eZ.adminUiConfig.languages.mappings[languageCode].name}
+                                    </span>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
