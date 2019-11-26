@@ -37,4 +37,15 @@
     &__toggle-bookmark-button {
         border: none;
     }
+
+    &__translations-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-left: calculateRem(8px);
+    }
+
+    &__translation {
+        text-align: right;
+    }
 }
