@@ -33,6 +33,7 @@
 
     &__items-wrapper {
         overflow: auto;
+        width: calculateRem(190px);
     }
 
     &__resize-handler {
