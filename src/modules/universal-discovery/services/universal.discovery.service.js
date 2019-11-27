@@ -193,7 +193,7 @@ export const findLocationsByParentLocationId = (
  *
  * @function findContentBySearchQuery
  * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} query
+ * @param {Object} query Object containing query criterions
  * @param {Function} callback
  * @param {Number} limit
  */
@@ -206,7 +206,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback,
                 Criteria: {},
                 FacetBuilders: {},
                 SortClauses: {},
-                Query: { FullTextCriterion: query },
+                Query: query,
                 limit,
                 offset: 0,
             },
