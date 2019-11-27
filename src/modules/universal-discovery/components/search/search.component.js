@@ -38,7 +38,7 @@ export default class SearchComponent extends Component {
 
         const searchText = this._refSearchInput.value;
         const query = {
-            FullTextCriterion: searchText
+            FullTextCriterion: searchText,
         };
 
         if (this.props.allowedContentTypes.length > 0) {
