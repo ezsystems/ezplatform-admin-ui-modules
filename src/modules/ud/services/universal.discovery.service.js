@@ -235,3 +235,21 @@ export const addBookmark = (options, callback) => {
 export const removeBookmark = (options, callback) => {
     toggleBookmark(options, callback, 'DELETE');
 };
+
+export const loadContentTypes = ({ token, siteaccess }, callback) => {
+    const request = new Request('/api/ezp/v2/content/types', {
+        method: 'GET',
+        headers: {
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
+        .catch(showErrorNotification);
+};

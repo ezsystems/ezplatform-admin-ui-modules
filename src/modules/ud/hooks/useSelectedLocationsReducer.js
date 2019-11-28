@@ -10,6 +10,8 @@ const selectedLocationsReducer = (state, action) => {
             return state.filter((location) => location.id !== action.id);
         case 'CLEAR_SELECTED_LOCATIONS':
             return [];
+        case 'REPLACE_SELECTED_LOCATIONS':
+            return action.locations;
         default:
             throw new Error();
     }

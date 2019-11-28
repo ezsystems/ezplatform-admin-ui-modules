@@ -1,15 +1,17 @@
 import React, { useContext, useState, Fragment } from 'react';
 
 import Icon from '../../../common/icon/icon';
+import deepClone from '../../../common/helpers/deep.clone.helper';
 import SelectedLocationsItem from './selected.locations.item';
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 
-import { SelectedLocationsContext, ConfirmContext } from '../../universal.discovery.module';
+import { SelectedLocationsContext, ConfirmContext, ContentTypesInfoMapContext } from '../../universal.discovery.module';
 
 const SelectedLocations = () => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const contentTypesInfoMap = useContext(ContentTypesInfoMapContext);
     const onConfirm = useContext(ConfirmContext);
+    const [isExpanded, setIsExpanded] = useState(false);
     const className = createCssClassNames({
         'c-selected-locations': true,
         'c-selected-locations--expanded': isExpanded,
@@ -18,7 +20,16 @@ const SelectedLocations = () => {
         dispatchSelectedLocationsAction({ type: 'CLEAR_SELECTED_LOCATIONS' });
     };
     const confirmSelection = () => {
-        onConfirm(selectedLocations);
+        const locations = selectedLocations.map((location) => {
+            const clonedLocation = deepClone(location);
+            const contentType = clonedLocation.ContentInfo.Content.ContentType;
+
+            clonedLocation.ContentInfo.Content.ContentTypeInfo = contentTypesInfoMap[contentType._href];
+
+            return clonedLocation;
+        });
+
+        onConfirm(locations);
     };
     const toggleExpanded = () => {
         setIsExpanded(!isExpanded);
