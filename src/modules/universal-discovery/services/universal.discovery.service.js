@@ -200,7 +200,7 @@ export const findLocationsByParentLocationId = (
 export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit = QUERY_LIMIT) => {
     const body = JSON.stringify({
         ViewInput: {
-            identifier: `udw-locations-by-search-query-${query}`,
+            identifier: `udw-locations-by-search-query-${query.FullTextCriterion}`,
             public: false,
             LocationQuery: {
                 Criteria: {},
