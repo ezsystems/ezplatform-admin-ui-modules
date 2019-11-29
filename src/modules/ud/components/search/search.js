@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, createContext } from 'react';
+import React, { useState, useEffect, useReducer, useContext, createContext } from 'react';
 
 export const SelectedContentTypesContext = createContext();
 export const SelectedSectionContext = createContext();
@@ -8,6 +8,7 @@ import Icon from '../../../common/icon/icon';
 import ContentTable from '../content-table/content.table';
 import Filters from '../filters/filters';
 import { useSearchByQueryFetch } from '../../hooks/useSearchByQueryFetch';
+import { AllowedContentTypesContext } from '../../universal.discovery.module';
 
 const ENTER_CHAR_CODE = 13;
 
@@ -25,6 +26,7 @@ const selectedContentTypesReducer = (state, action) => {
 };
 
 const Search = () => {
+    const allowedContentTypes = useContext(AllowedContentTypesContext);
     const [searchText, setSearchText] = useState('');
     const [limit, setLimit] = useState(10);
     const [offset, setOffset] = useState(0);
@@ -45,7 +47,9 @@ const Search = () => {
             return;
         }
 
-        searchByQuery(searchText, [...selectedContentTypes], selectedSection, selectedSubtree, limit, offset);
+        const contentTypes = !!selectedContentTypes.length ? [...selectedContentTypes] : allowedContentTypes;
+
+        searchByQuery(searchText, contentTypes, selectedSection, selectedSubtree, limit, offset);
     };
     const handleKeyPressed = ({ charCode }) => {
         if (charCode === ENTER_CHAR_CODE) {

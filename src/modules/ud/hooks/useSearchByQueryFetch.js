@@ -1,7 +1,7 @@
 import { useContext, useCallback, useReducer } from 'react';
 
 import { findLocationsBySearchQuery } from '../services/universal.discovery.service';
-import { RestInfoContext } from '../universal.discovery.module';
+import { RestInfoContext, AllowedContentTypesContext } from '../universal.discovery.module';
 
 const SEARCH_START = 'SEARCH_START';
 const SEARCH_END = 'SEARCH_END';
@@ -22,6 +22,7 @@ const searchByQueryReducer = (state, action) => {
 
 export const useSearchByQueryFetch = () => {
     const restInfo = useContext(RestInfoContext);
+    const allowedContentTypes = useContext(AllowedContentTypesContext);
     const [{ isLoading, data }, dispatch] = useReducer(searchByQueryReducer, { isLoading: false, data: {} });
     const searchByQuery = useCallback(
         (searchText, contentTypesIdentifiers, sectionIdentifier, subtreePathString, limit, offset) => {

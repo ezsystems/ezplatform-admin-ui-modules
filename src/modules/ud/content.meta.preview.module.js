@@ -1,14 +1,9 @@
 import React, { useContext, useMemo } from 'react';
 
-import Icon from '../../../common/icon/icon';
+import Icon from '../common/icon/icon';
 
-import { addBookmark, removeBookmark } from '../../services/universal.discovery.service';
-import {
-    MarkedLocationContext,
-    LoadedLocationsMapContext,
-    ContentTypesMapContext,
-    RestInfoContext,
-} from '../../universal.discovery.module';
+import { addBookmark, removeBookmark } from './services/universal.discovery.service';
+import { MarkedLocationContext, LoadedLocationsMapContext, ContentTypesMapContext, RestInfoContext } from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
@@ -85,5 +80,7 @@ const ContentMetaPreview = () => {
         </div>
     );
 };
+
+eZ.addConfig('adminUiConfig.universalDiscoveryWidget.contentMetaPreview', ContentMetaPreview);
 
 export default ContentMetaPreview;
