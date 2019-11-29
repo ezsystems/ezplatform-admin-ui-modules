@@ -7,6 +7,7 @@ module.exports = (Encore) => {
             path.resolve(__dirname, '../../src/modules/ud/bookmarks.tab.module.js'),
             path.resolve(__dirname, '../../src/modules/ud/search.tab.module.js'),
             path.resolve(__dirname, '../../src/modules/ud/content.create.tab.module.js'),
+            path.resolve(__dirname, '../../src/modules/ud/content.meta.preview.module.js'),
         ])
         .addEntry('ezplatform-admin-ui-modules-mfu-js', [
             path.resolve(__dirname, '../../src/modules/multi-file-upload/multi.file.upload.module.js'),

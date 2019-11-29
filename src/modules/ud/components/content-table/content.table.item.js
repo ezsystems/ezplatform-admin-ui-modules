@@ -5,7 +5,13 @@ import ToggleSelectionButton from '../toggle-selection-button/toggle.selection.b
 import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
+import { loadAccordionData } from '../../services/universal.discovery.service';
 import {
+    RestInfoContext,
+    CurrentViewContext,
+    SortingContext,
+    SortOrderContext,
+    LoadedLocationsMapContext,
     MarkedLocationContext,
     ContentTypesMapContext,
     SelectedLocationsContext,
@@ -15,6 +21,11 @@ import {
 } from '../../universal.discovery.module';
 
 const ContentTableItem = ({ location }) => {
+    const restInfo = useContext(RestInfoContext);
+    const [currentView, setCurrentView] = useContext(CurrentViewContext);
+    const [sorting, setSorting] = useContext(SortingContext);
+    const [sortOrder, setSortOrder] = useContext(SortOrderContext);
+    const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
@@ -39,6 +50,18 @@ const ContentTableItem = ({ location }) => {
         }
 
         setMarkedLocation(location.id);
+        loadAccordionData(
+            {
+                ...restInfo,
+                parentLocationId: location.id,
+                sortClause: sorting,
+                sortOrder: sortOrder,
+                gridView: currentView === 'grid',
+            },
+            (locationsMap) => {
+                dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
+            }
+        );
 
         if (!multiple && !isNotSelectable) {
             dispatchSelectedLocationsAction({ type: 'CLEAR_SELECTED_LOCATIONS' });
