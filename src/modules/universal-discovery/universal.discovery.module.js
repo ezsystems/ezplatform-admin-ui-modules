@@ -797,11 +797,11 @@ export default class UniversalDiscoveryModule extends Component {
             sortOrderMappings,
             languages,
             contentTypes,
-            allowedContentTypes,
             cotfPreselectedContentType,
             cotfForcedLanguage,
             cotfAllowedLanguages,
             cotfPreselectedLanguage,
+            cotfAllowedContentTypes,
             cotfPreselectedLocation,
             cotfAllowedLocations,
             onlyContentOnTheFly,
@@ -820,7 +820,6 @@ export default class UniversalDiscoveryModule extends Component {
             attrs: {
                 languages,
                 contentTypes,
-                allowedContentTypes,
                 onLanguageSelected: this.onLanguageSelected,
                 onContentTypeSelected: this.onContentTypeSelected,
                 contentTypesMap: this.state.contentTypesMap,
@@ -828,6 +827,7 @@ export default class UniversalDiscoveryModule extends Component {
                 preselectedLanguage: cotfPreselectedLanguage,
                 allowedLanguages: cotfAllowedLanguages,
                 preselectedContentType: cotfPreselectedContentType,
+                allowedContentTypes: cotfAllowedContentTypes,
                 preselectedLocation: cotfPreselectedLocation,
                 allowedLocations: cotfAllowedLocations,
                 sortFieldMappings,
@@ -875,7 +875,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             restInfo,
             allowContainersOnly,
-            cotfAllowedContentTypes,
+            allowedContentTypes,
         } = this.props;
 
         const { activeTab, maxHeight, contentTypesMap, selectedContent } = this.state;
@@ -902,7 +902,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             restInfo,
             selectedContent,
-            allowedContentTypes: cotfAllowedContentTypes,
+            allowedContentTypes,
             onSelectContent: this.updateSelectedContent,
             canSelectContent: this.canSelectContent,
             onItemRemove: this.onItemRemove,
