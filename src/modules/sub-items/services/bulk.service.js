@@ -86,7 +86,7 @@ const makeBulkRequest = ({ token, siteaccess }, requestBodyOperations, callback)
         .then(callback)
         .catch(() => {
             const message = Translator.trans(
-                /*@Desc("An unexpected error occurred while deleting the content item(s). Please try again later.")*/ 'bulk_request.error.message',
+                /*@Desc("An unexpected error occurred while deleting the Content item(s). Please try again.")*/ 'bulk_request.error.message',
                 {},
                 'sub_items'
             );

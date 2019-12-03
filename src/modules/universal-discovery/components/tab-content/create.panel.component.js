@@ -11,7 +11,7 @@ const CreatePanelComponent = (props) => {
     const componentProps = { ...props, maxHeight, allowContainersOnly: true };
     const finderProps = { ...componentProps, multiple: false, renderStartingLocation: true };
     const chooseLanguageAndContentTypeTitle = Translator.trans(
-        /*@Desc("Choose Language and Content Type")*/ 'content_on_the_fly.choose_language_and_content_type.title',
+        /*@Desc("Choose language and Content Type")*/ 'content_on_the_fly.choose_language_and_content_type.title',
         {},
         'universal_discovery_widget'
     );

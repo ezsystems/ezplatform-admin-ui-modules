@@ -27,7 +27,7 @@ class ListItem extends Component {
 
         if (currentDepth >= treeMaxDepth) {
             const notificationMessage = Translator.trans(
-                /*@Desc("Cannot load subitems for given location due to performance limits. You reached max tree depth.")*/ 'expand_item.limit.message',
+                /*@Desc("Cannot load sub-items for this Location because you reached max tree depth.")*/ 'expand_item.limit.message',
                 {},
                 'content_tree'
             );

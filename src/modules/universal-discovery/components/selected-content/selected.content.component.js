@@ -108,7 +108,7 @@ export default class SelectedContentComponent extends PureComponent {
      * @memberof SelectedContentComponent
      */
     getTitle() {
-        let title = Translator.trans(/*@Desc("Confirmed items")*/ 'select_content.confirmed_items.title', {}, 'universal_discovery_widget');
+        let title = Translator.trans(/*@Desc("Selected items")*/ 'select_content.confirmed_items.title', {}, 'universal_discovery_widget');
         const total = this.props.items.length;
 
         if (total) {
@@ -125,7 +125,7 @@ export default class SelectedContentComponent extends PureComponent {
         const cssClassOnAnyItemSelected = anyItemSelected ? 'c-selected-content__info--any-item-selected' : '';
         const infoCssClasses = `c-selected-content__info ${cssClassOnAnyItemSelected}`;
         const noConfirmedContentTitle = Translator.trans(
-            /*@Desc("No confirmed content yet")*/ 'select_content.no_confirmed_content.title',
+            /*@Desc("No content selected")*/ 'select_content.no_confirmed_content.title',
             {},
             'universal_discovery_widget'
         );

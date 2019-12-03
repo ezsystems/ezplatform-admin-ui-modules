@@ -12,8 +12,8 @@
         <note>key: bookmarks.tab.label</note>
       </trans-unit>
       <trans-unit id="d60a9f5151198e2d342a7706a87cc94c6b99df0b" resname="bookmarks_table.no_bookmarks.message">
-        <source>No content items. Content items you bookmark will appear here.</source>
-        <target state="new">No content items. Content items you bookmark will appear here.</target>
+        <source>You have no bookmarks yet. Your bookmarks will show up here.</source>
+        <target state="new">You have no bookmarks yet. Your bookmarks will show up here.</target>
         <note>key: bookmarks_table.no_bookmarks.message</note>
       </trans-unit>
       <trans-unit id="ff5d293e5499e24b93cc23c8c41eb68c3762479c" resname="bookmarks_table.title">
@@ -52,8 +52,8 @@
         <note>key: content_meta_preview.last_modified.label</note>
       </trans-unit>
       <trans-unit id="2faa37c3b3ca4cb7dff16ef157fd9a4ca4858f5b" resname="content_meta_preview.title">
-        <source>Content Meta Preview</source>
-        <target state="new">Content Meta Preview</target>
+        <source>Content metadata</source>
+        <target state="new">Content metadata</target>
         <note>key: content_meta_preview.title</note>
       </trans-unit>
       <trans-unit id="9d3c056b12ea03758e481bff87db4abd3f631938" resname="content_meta_preview.translations.label">
@@ -62,8 +62,8 @@
         <note>key: content_meta_preview.translations.label</note>
       </trans-unit>
       <trans-unit id="c6b0a2b3a3cefe1deff4a144c540b0189f7b536a" resname="content_on_the_fly.choose_language_and_content_type.title">
-        <source>Choose Language and Content Type</source>
-        <target state="new">Choose Language and Content Type</target>
+        <source>Choose language and Content Type</source>
+        <target state="new">Choose language and Content Type</target>
         <note>key: content_on_the_fly.choose_language_and_content_type.title</note>
       </trans-unit>
       <trans-unit id="b8f784350c5bed6122168889767a2fb6595b76f3" resname="content_on_the_fly.create_content.label">
@@ -72,18 +72,18 @@
         <note>key: content_on_the_fly.create_content.label</note>
       </trans-unit>
       <trans-unit id="3175cbfd789bf52f1924443c64ed542f2965f410" resname="content_on_the_fly.creating_content.title">
-        <source>Creating - %contentType% in %language%</source>
-        <target state="new">Creating - %contentType% in %language%</target>
+        <source>Creating a(n) %contentTypeName% in %languageName%</source>
+        <target state="new">Creating a(n) %contentTypeName% in %languageName%</target>
         <note>key: content_on_the_fly.creating_content.title</note>
       </trans-unit>
       <trans-unit id="b540f7e368b0536dff94f8ae6a003fbccc16ebc0" resname="content_on_the_fly.location_not_allowed.message">
-        <source>Sorry, but this location is not selectable.</source>
-        <target state="new">Sorry, but this location is not selectable.</target>
+        <source>This Location is not selectable.</source>
+        <target state="new">This Location is not selectable.</target>
         <note>key: content_on_the_fly.location_not_allowed.message</note>
       </trans-unit>
       <trans-unit id="326dd4779000122d000366eff63ad02a71d11e6e" resname="content_on_the_fly.no_permission.message">
-        <source>Sorry, but you don't have permission for this action. Please contact your site Admin.</source>
-        <target state="new">Sorry, but you don't have permission for this action. Please contact your site Admin.</target>
+        <source>You don't have permission for this action. Contact your Administrator.</source>
+        <target state="new">You don't have permission for this action. Contact your Administrator.</target>
         <note>key: content_on_the_fly.no_permission.message</note>
       </trans-unit>
       <trans-unit id="e697d887ff644fe0e7dab46d7af3e319fd452988" resname="content_on_the_fly.publish.label">
@@ -166,26 +166,6 @@
         <target state="new">Search results</target>
         <note>key: search.content_table.title</note>
       </trans-unit>
-      <trans-unit id="194b6ee7c346c7b95d506e9a8391855e14d67711" resname="search.results_table.header.name">
-        <source>Name</source>
-        <target state="new">Name</target>
-        <note>key: search.results_table.header.name</note>
-      </trans-unit>
-      <trans-unit id="880e62f62269d6895b0dbe6dd86107d19e8ec43e" resname="search.results_table.header.type">
-        <source>Content Type</source>
-        <target state="new">Content Type</target>
-        <note>key: search.results_table.header.type</note>
-      </trans-unit>
-      <trans-unit id="245e73fb98e828b4dfc5a5bdcac80c54c4a2e35e" resname="search.results_table.not_available.label">
-        <source>N/A</source>
-        <target state="new">N/A</target>
-        <note>key: search.results_table.not_available.label</note>
-      </trans-unit>
-      <trans-unit id="ea7ef9ac99f5da0f28a3bfdefba263c2d835c3b8" resname="search.results_table.title">
-        <source>Search results</source>
-        <target state="new">Search results</target>
-        <note>key: search.results_table.title</note>
-      </trans-unit>
       <trans-unit id="01a91a8c8a743958bf64a1c53868927062725a76" resname="search.submit.label">
         <source>Search</source>
         <target state="new">Search</target>
@@ -202,8 +182,8 @@
         <note>key: search.title</note>
       </trans-unit>
       <trans-unit id="0d754c552d7d2ac3880692ff18a1ba58ae28cb3f" resname="select_content.confirmed_items.title">
-        <source>Confirmed items</source>
-        <target state="new">Confirmed items</target>
+        <source>Selected items</source>
+        <target state="new">Selected items</target>
         <note>key: select_content.confirmed_items.title</note>
       </trans-unit>
       <trans-unit id="86535815d7e1e8cfb646988cd6049bbf3f2ab4e9" resname="select_content.limit.label">
@@ -212,8 +192,8 @@
         <note>key: select_content.limit.label</note>
       </trans-unit>
       <trans-unit id="7f49fb26a42bf2c8f67a41c45c1871edf5f75ec7" resname="select_content.no_confirmed_content.title">
-        <source>No confirmed content yet</source>
-        <target state="new">No confirmed content yet</target>
+        <source>No content selected</source>
+        <target state="new">No content selected</target>
         <note>key: select_content.no_confirmed_content.title</note>
       </trans-unit>
       <trans-unit id="1ca7c6075ce2a6c2a9f9657526bde3d21e4e51a3" resname="select_content.not_available.label">
