@@ -252,6 +252,7 @@ UniversalDiscoveryModule.propTypes = {
         })
     ).isRequired,
     selectedLocations: PropTypes.array,
+    allowContentEdit: PropTypes.bool,
 };
 
 UniversalDiscoveryModule.defaultProps = {
