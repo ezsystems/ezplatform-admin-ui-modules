@@ -33,6 +33,7 @@ const contentTypesMap = Object.values(eZ.adminUiConfig.contentTypes).reduce((con
 }, {});
 
 export const RestInfoContext = createContext();
+export const AllowContentEditContext = createContext();
 export const ContentTypesMapContext = createContext();
 export const ContentTypesInfoMapContext = createContext();
 export const MultipleConfigContext = createContext();
@@ -121,7 +122,7 @@ const UniversalDiscoveryModule = (props) => {
     }, [currentView]);
 
     useEffect(() => {
-        if (!props.startingLocationId) {
+        if (!props.startingLocationId || props.startingLocationId === 1) {
             return;
         }
 
@@ -140,68 +141,83 @@ const UniversalDiscoveryModule = (props) => {
         );
     }, [props.startingLocationId]);
 
+    useEffect(() => {
+        const locationsMap = loadedLocationsMap.map((loadedLocation) => {
+            loadedLocation.subitems = [];
+
+            return loadedLocation;
+        });
+
+        dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
+    }, [sorting]);
+
     return (
         <div className={className}>
             <RestInfoContext.Provider value={restInfo}>
-                <ContentTypesInfoMapContext.Provider value={contentTypesInfoMap}>
-                    <ContentTypesMapContext.Provider value={contentTypesMap}>
-                        <MultipleConfigContext.Provider value={[props.multiple, props.multipleItemsLimit]}>
-                            <ContainersOnlyContext.Provider value={props.containersOnly}>
-                                <AllowedContentTypesContext.Provider value={props.allowedContentTypes}>
-                                    <ActiveTabContext.Provider value={[activeTab, setActiveTab]}>
-                                        <TabsContext.Provider value={tabs}>
-                                            <TabsConfigContext.Provider value={props.tabsConfig}>
-                                                <TitleContext.Provider value={props.title}>
-                                                    <CancelContext.Provider value={props.onCancel}>
-                                                        <ConfirmContext.Provider value={props.onConfirm}>
-                                                            <SortingContext.Provider value={[sorting, setSorting]}>
-                                                                <SortOrderContext.Provider value={[sortOrder, setSortOrder]}>
-                                                                    <CurrentViewContext.Provider value={[currentView, setCurrentView]}>
-                                                                        <MarkedLocationContext.Provider
-                                                                            value={[markedLocation, setMarkedLocation]}>
-                                                                            <LoadedLocationsMapContext.Provider
-                                                                                value={[loadedLocationsMap, dispatchLoadedLocationsAction]}>
-                                                                                <RootLocationIdContext.Provider
-                                                                                    value={props.rootLocationId}>
-                                                                                    <SelectedLocationsContext.Provider
-                                                                                        value={[
-                                                                                            selectedLocations,
-                                                                                            dispatchSelectedLocationsAction,
-                                                                                        ]}>
-                                                                                        <CreateContentWidgetContext.Provider
+                <AllowContentEditContext.Provider value={props.allowContentEdit}>
+                    <ContentTypesInfoMapContext.Provider value={contentTypesInfoMap}>
+                        <ContentTypesMapContext.Provider value={contentTypesMap}>
+                            <MultipleConfigContext.Provider value={[props.multiple, props.multipleItemsLimit]}>
+                                <ContainersOnlyContext.Provider value={props.containersOnly}>
+                                    <AllowedContentTypesContext.Provider value={props.allowedContentTypes}>
+                                        <ActiveTabContext.Provider value={[activeTab, setActiveTab]}>
+                                            <TabsContext.Provider value={tabs}>
+                                                <TabsConfigContext.Provider value={props.tabsConfig}>
+                                                    <TitleContext.Provider value={props.title}>
+                                                        <CancelContext.Provider value={props.onCancel}>
+                                                            <ConfirmContext.Provider value={props.onConfirm}>
+                                                                <SortingContext.Provider value={[sorting, setSorting]}>
+                                                                    <SortOrderContext.Provider value={[sortOrder, setSortOrder]}>
+                                                                        <CurrentViewContext.Provider value={[currentView, setCurrentView]}>
+                                                                            <MarkedLocationContext.Provider
+                                                                                value={[markedLocation, setMarkedLocation]}>
+                                                                                <LoadedLocationsMapContext.Provider
+                                                                                    value={[
+                                                                                        loadedLocationsMap,
+                                                                                        dispatchLoadedLocationsAction,
+                                                                                    ]}>
+                                                                                    <RootLocationIdContext.Provider
+                                                                                        value={props.rootLocationId}>
+                                                                                        <SelectedLocationsContext.Provider
                                                                                             value={[
-                                                                                                createContentVisible,
-                                                                                                setCreateContentVisible,
+                                                                                                selectedLocations,
+                                                                                                dispatchSelectedLocationsAction,
                                                                                             ]}>
-                                                                                            <ContentOnTheFlyDataContext.Provider
+                                                                                            <CreateContentWidgetContext.Provider
                                                                                                 value={[
-                                                                                                    contentOnTheFlyData,
-                                                                                                    setContentOnTheFlyData,
+                                                                                                    createContentVisible,
+                                                                                                    setCreateContentVisible,
                                                                                                 ]}>
-                                                                                                <ContentOnTheFlyConfigContext.Provider
-                                                                                                    value={props.contentOnTheFly}>
-                                                                                                    <Tab />
-                                                                                                </ContentOnTheFlyConfigContext.Provider>
-                                                                                            </ContentOnTheFlyDataContext.Provider>
-                                                                                        </CreateContentWidgetContext.Provider>
-                                                                                    </SelectedLocationsContext.Provider>
-                                                                                </RootLocationIdContext.Provider>
-                                                                            </LoadedLocationsMapContext.Provider>
-                                                                        </MarkedLocationContext.Provider>
-                                                                    </CurrentViewContext.Provider>
-                                                                </SortOrderContext.Provider>
-                                                            </SortingContext.Provider>
-                                                        </ConfirmContext.Provider>
-                                                    </CancelContext.Provider>
-                                                </TitleContext.Provider>
-                                            </TabsConfigContext.Provider>
-                                        </TabsContext.Provider>
-                                    </ActiveTabContext.Provider>
-                                </AllowedContentTypesContext.Provider>
-                            </ContainersOnlyContext.Provider>
-                        </MultipleConfigContext.Provider>
-                    </ContentTypesMapContext.Provider>
-                </ContentTypesInfoMapContext.Provider>
+                                                                                                <ContentOnTheFlyDataContext.Provider
+                                                                                                    value={[
+                                                                                                        contentOnTheFlyData,
+                                                                                                        setContentOnTheFlyData,
+                                                                                                    ]}>
+                                                                                                    <ContentOnTheFlyConfigContext.Provider
+                                                                                                        value={props.contentOnTheFly}>
+                                                                                                        <Tab />
+                                                                                                    </ContentOnTheFlyConfigContext.Provider>
+                                                                                                </ContentOnTheFlyDataContext.Provider>
+                                                                                            </CreateContentWidgetContext.Provider>
+                                                                                        </SelectedLocationsContext.Provider>
+                                                                                    </RootLocationIdContext.Provider>
+                                                                                </LoadedLocationsMapContext.Provider>
+                                                                            </MarkedLocationContext.Provider>
+                                                                        </CurrentViewContext.Provider>
+                                                                    </SortOrderContext.Provider>
+                                                                </SortingContext.Provider>
+                                                            </ConfirmContext.Provider>
+                                                        </CancelContext.Provider>
+                                                    </TitleContext.Provider>
+                                                </TabsConfigContext.Provider>
+                                            </TabsContext.Provider>
+                                        </ActiveTabContext.Provider>
+                                    </AllowedContentTypesContext.Provider>
+                                </ContainersOnlyContext.Provider>
+                            </MultipleConfigContext.Provider>
+                        </ContentTypesMapContext.Provider>
+                    </ContentTypesInfoMapContext.Provider>
+                </AllowContentEditContext.Provider>
             </RestInfoContext.Provider>
         </div>
     );
@@ -240,7 +256,7 @@ UniversalDiscoveryModule.propTypes = {
 
 UniversalDiscoveryModule.defaultProps = {
     activeTab: 'browse',
-    rootLocationId: 2,
+    rootLocationId: 1,
     startingLocationId: null,
     multiple: false,
     multipleItemsLimit: 1,

@@ -1,21 +1,33 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 
 import Icon from '../common/icon/icon';
 
-import { addBookmark, removeBookmark } from './services/universal.discovery.service';
-import { MarkedLocationContext, LoadedLocationsMapContext, ContentTypesMapContext, RestInfoContext } from './universal.discovery.module';
+import { addBookmark, removeBookmark, createDraft } from './services/universal.discovery.service';
+import {
+    MarkedLocationContext,
+    LoadedLocationsMapContext,
+    ContentTypesMapContext,
+    RestInfoContext,
+    AllowContentEditContext,
+} from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const restInfo = useContext(RestInfoContext);
+    const allowContentEdit = useContext(AllowContentEditContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
+    const [isLanguageSelectorOpen, setIsLanguageSelectorOpen] = useState(false);
     const locationData = useMemo(() => {
         return loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
     }, [markedLocation, loadedLocationsMap]);
 
-    if (!locationData || !locationData.location) {
+    useEffect(() => {
+        setIsLanguageSelectorOpen(false);
+    }, [markedLocation]);
+
+    if (!locationData || !locationData.location || markedLocation === 1) {
         return null;
     }
 
@@ -24,9 +36,47 @@ const ContentMetaPreview = () => {
     const toggleBookmarked = () => {
         const toggleBookmark = bookmarked ? removeBookmark : addBookmark;
 
-        toggleBookmark({ ...restInfo, locationId: location.id }, (response) => {
+        toggleBookmark({ ...restInfo, locationId: location.id }, () => {
             dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { ...locationData, bookmarked: !bookmarked } });
         });
+    };
+    const redirectToContentEdit = (contentId, versionNo, language, locationId) => {
+        window.location.href = window.Routing.generate(
+            'ezplatform.content.draft.edit',
+            {
+                contentId,
+                versionNo,
+                language,
+                locationId,
+            },
+            true
+        );
+    };
+    const editContent = (languageCode) => {
+        const contentId = location.ContentInfo.Content._id;
+
+        createDraft(
+            {
+                ...restInfo,
+                contentId,
+            },
+            (response) => redirectToContentEdit(contentId, response.Version.VersionInfo.versionNo, languageCode, location.id)
+        );
+    };
+    const previewContent = () => {
+        window.location.href = window.Routing.generate('_ezpublishLocation', { locationId: location.id }, true);
+    };
+    const selectLanguage = () => {
+        const languageCodes = version.VersionInfo.languageCodes.split(',');
+
+        if (languageCodes.length === 1) {
+            editContent(languageCodes[0]);
+        } else {
+            setIsLanguageSelectorOpen(true);
+        }
+    };
+    const hideLanguageSelector = () => {
+        setIsLanguageSelectorOpen(false);
     };
     const renderPreview = () => {
         if (!version.Thumbnail) {
@@ -40,9 +90,51 @@ const ContentMetaPreview = () => {
 
         return <img src={version.Thumbnail} />;
     };
+    const renderLanguageSelector = () => {
+        if (!isLanguageSelectorOpen) {
+            return null;
+        }
+
+        const languageCodes = version.VersionInfo.languageCodes.split(',');
+
+        return (
+            <div className="c-content-meta-preview__language-selector">
+                <div className="c-content-meta-preview__language-selector-header">
+                    <button className="c-content-meta-preview__close-button btn" onClick={hideLanguageSelector}>
+                        <Icon name="discard" extraClasses="ez-icon--small" />
+                    </button>
+                    <span className="c-content-meta-preview__title">Edit translation ({languageCodes.length})</span>
+                </div>
+                <div className="c-content-meta-preview__languages-wrapper">
+                    {languageCodes.map((languageCode) => (
+                        <div key={languageCode} className="c-content-meta-preview__language" onClick={editContent.bind(this, languageCode)}>
+                            {window.eZ.adminUiConfig.languages.mappings[languageCode].name}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+    const renderActions = () => {
+        if (!allowContentEdit) {
+            return null;
+        }
+
+        return (
+            <div className="c-content-meta-preview__actions">
+                <button className="c-content-meta-preview__edit-button btn btn-primary" onClick={selectLanguage}>
+                    <Icon name="edit" extraClasses="ez-icon--light ez-icon--small-medium" />
+                </button>
+                <button className="c-content-meta-preview__preview-button btn" onClick={previewContent}>
+                    <Icon name="view" extraClasses="ez-icon--secondary" />
+                </button>
+            </div>
+        );
+    };
 
     return (
         <div className="c-content-meta-preview">
+            {renderLanguageSelector()}
             <div className="c-content-meta-preview__preview">{renderPreview()}</div>
             <div className="c-content-meta-preview__header">
                 <span className="c-content-meta-preview__content-name">{location.ContentInfo.Content.Name}</span>
@@ -50,6 +142,7 @@ const ContentMetaPreview = () => {
                     <Icon name={bookmarkIconName} extraClasses="ez-icon--small ez-icon--secondary" />
                 </button>
             </div>
+            {renderActions()}
             <div className="c-content-meta-preview__info">
                 <div className="c-content-meta-preview__content-type-name">
                     {contentTypesMap[location.ContentInfo.Content.ContentType._href].name}

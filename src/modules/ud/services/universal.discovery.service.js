@@ -253,3 +253,21 @@ export const loadContentTypes = ({ token, siteaccess }, callback) => {
         .then(callback)
         .catch(showErrorNotification);
 };
+
+export const createDraft = ({ token, siteaccess, contentId }, callback) => {
+    const request = new Request(`/api/ezp/v2/content/objects/${contentId}/currentversion`, {
+        method: 'COPY',
+        headers: {
+            Accept: 'application/vnd.ez.api.VersionUpdate+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
+        .catch(showErrorNotification);
+};
