@@ -40,7 +40,7 @@ export default class UniversalDiscoveryModule extends Component {
 
         let selectedContentType = {};
         const isForcedLanguage = props.cotfAllowedLanguages.length === 1 || props.cotfForcedLanguage;
-        const isForcedContentType = props.cotfAllowedContentTypes.length === 1;
+        const isForcedContentType = props.cotfAllowedContentTypes[0] !== null && props.cotfAllowedContentTypes.length === 1;
         const isForcedLocation = props.cotfAllowedLocations.length === 1;
 
         this.onLanguageSelected = this.onLanguageSelected.bind(this);
@@ -607,7 +607,8 @@ export default class UniversalDiscoveryModule extends Component {
         const isAlreadySelected = selectedContent.find((item) => item.ContentInfo.Content._id === data.ContentInfo.Content._id);
         const isOverLimit = !!this.props.selectedItemsLimit && selectedContent.length >= this.props.selectedItemsLimit;
         const contentTypeInfo = contentTypesMap[data.ContentInfo.Content.ContentType._href];
-        const isAllowedContentType = !allowedContentTypes.length || allowedContentTypes.includes(contentTypeInfo.identifier);
+        const isAllowedContentType =
+            allowedContentTypes[0] !== null && (!allowedContentTypes.length || allowedContentTypes.includes(contentTypeInfo.identifier));
 
         if (isAlreadySelected || isOverLimit || !isAllowedContentType) {
             return callback(false);
