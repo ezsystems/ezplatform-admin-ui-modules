@@ -37,12 +37,19 @@ export default class SearchComponent extends Component {
         }
 
         const searchText = this._refSearchInput.value;
+        const query = {
+            FullTextCriterion: searchText,
+        };
+
+        if (this.props.allowedContentTypes.length > 0) {
+            query.ContentTypeIdentifierCriterion = this.props.allowedContentTypes;
+        }
 
         this.setState(
             () => ({ isSearching: true, lastSearchText: searchText }),
             () => {
                 const promise = new Promise((resolve) =>
-                    this.props.findContentBySearchQuery(this.props.restInfo, searchText, resolve, this.props.searchResultsLimit)
+                    this.props.findContentBySearchQuery(this.props.restInfo, query, resolve, this.props.searchResultsLimit)
                 );
 
                 promise
@@ -253,4 +260,5 @@ SearchComponent.propTypes = {
     canSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     multiple: PropTypes.bool.isRequired,
+    allowedContentTypes: PropTypes.array.isRequired,
 };

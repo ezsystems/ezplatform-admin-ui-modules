@@ -864,6 +864,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             restInfo,
             allowContainersOnly,
+            allowedContentTypes,
         } = this.props;
 
         const { activeTab, maxHeight, contentTypesMap, selectedContent } = this.state;
@@ -890,6 +891,7 @@ export default class UniversalDiscoveryModule extends Component {
             bookmarksPerPage,
             restInfo,
             selectedContent,
+            allowedContentTypes,
             onSelectContent: this.updateSelectedContent,
             canSelectContent: this.canSelectContent,
             onItemRemove: this.onItemRemove,
