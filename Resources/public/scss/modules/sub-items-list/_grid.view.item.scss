@@ -1,16 +1,22 @@
 .c-grid-view-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: calculateRem(4px);
+    margin-bottom: calculateRem(20px);
     cursor: pointer;
+    color: $ez-black;
     text-decoration: none;
     transition: background 0.3s $ez-admin-transition;
-    position: relative;
-    background: $ez-ground-base;
-    border-radius: calculateRem(4px);
-    margin-bottom: calculateRem(8px);
+    background: $ez-white;
+    box-shadow: 0px calculateRem(2px) calculateRem(10px) calculateRem(-4px) rgba(0,0,0,0.15);
+    border: 1px solid transparent;
 
     &:hover,
     &:focus {
+        color: $ez-white;
         text-decoration: none;
-        background: #e5e3e3;
+        background: $ez-secondary-ground;
+        border: 1px solid $ez-secondary-ground;
     }
 
     &__content-type {
@@ -20,8 +26,7 @@
         left: 0;
         width: calculateRem(30px);
         height: calculateRem(30px);
-        background: #fafafa;
-        border-radius: calculateRem(4px) 0 0 0;
+        background: $ez-white;
     }
 
     &__content-type .ez-icon {
@@ -35,13 +40,13 @@
         display: block;
         width: auto;
         height: auto;
-        max-width: calculateRem(166px);
-        max-height: calculateRem(166px);
+        max-width: calculateRem(165px);
+        max-height: calculateRem(165px);
     }
 
     &__image-wrapper {
-        height: calculateRem(166px);
-        width: calculateRem(166px);
+        height: calculateRem(165px);
+        width: calculateRem(165px);
         border-radius: calculateRem(4px) calculateRem(4px) 0 0;
         background: $ez-ground-base-dark;
         display: flex;
@@ -50,12 +55,10 @@
     }
 
     &__title {
+        min-height: calculateRem(43px);
         word-break: break-all;
-        line-height: calculateRem(20px);
-        padding: calculateRem(10px) 0;
-        font-size: calculateRem(14px);
-        padding: calculateRem(4px) calculateRem(8px);
-        color: $ez-black;
-        font-weight: bold;
+        line-height: calculateRem(14px);
+        font-size: calculateRem(12px);
+        padding: calculateRem(8px) calculateRem(5px);
     }
 }
