@@ -1,78 +1,45 @@
 .c-search {
-    height: 100%;
-    overflow: auto;
+    padding: calculateRem(16px);
 
-    &__title {
-        font-size: calculateRem(18px);
-        font-weight: bold;
+    &__tools-wrapper {
+        display: flex;
     }
 
-    &__form {
-        margin: calculateRem(16px) 0;
+    &__input-wrapper {
         display: flex;
+        flex-grow: 1;
+        margin-right: calculateRem(16px);
     }
 
     &__input {
-        border: calculateRem(1px) solid rgba($ez-black, 0.3);
-        border-right: 0 none;
-        border-radius: calculateRem(4px) 0 0 calculateRem(4px);
-        background-color: $ez-white;
-        line-height: calculateRem(30px);
-        padding: 0 calculateRem(8px);
-        min-width: calculateRem(300px);
-        transition: border 0.3s $ez-admin-transition;
-
-        &:focus {
-            border-color: $ez-color-secondary;
-            outline: none;
-        }
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
-    &__submit {
-        background: $ez-color-primary;
-        line-height: calculateRem(30px);
-        color: $ez-white;
-        border-radius: 0 calculateRem(4px) calculateRem(4px) 0;
-        border: calculateRem(1px) solid $ez-color-primary;
-        padding: 0 calculateRem(8px);
+    &__search-btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    &__search-btn,
+    &__toggle-filters-btn {
         display: flex;
+        justify-content: center;
         align-items: center;
-        min-width: calculateRem(100px);
-        text-align: center;
-        transition: opacity 0.3s $ez-admin-transition, background 0.3s $ez-admin-transition;
-        cursor: pointer;
-
-        &:not([disabled]):hover,
-        &:not([disabled]):focus {
-            background: $ez-color-primary-hover;
-            outline: none;
-        }
-
-        &[disabled] {
-            cursor: not-allowed;
-            opacity: 0.3;
-        }
 
         .ez-icon {
-            margin-right: calculateRem(8px);
-        }
-
-        &--loading {
-            justify-content: center;
-            opacity: 0.7;
-
-            &:hover,
-            &:focus {
-                background: $ez-color-primary;
-            }
-
-            .ez-icon {
-                margin-right: 0;
-            }
+            margin-right: calculateRem(6px);
         }
     }
 
-    &__search-tips {
-        padding-top: calculateRem(48px);
+    &__no-results-title {
+        display: flex;
+        justify-content: space-between;
+        background-color: $ez-ground-primary;
+        align-items: center;
+        padding: 0 calculateRem(20px);
+        min-height: calculateRem(50px);
+        border-radius: calculateRem(4px) calculateRem(4px) 0 0;
+        font-weight: bold;
     }
 }

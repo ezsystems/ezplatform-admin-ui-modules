@@ -1,133 +1,24 @@
 import { showErrorNotification } from '../../common/services/notification.service';
-import { handleRequestResponse } from '../../common/helpers/request.helper.js';
+import { handleRequestResponse, handleRequestResponseStatus } from '../../common/helpers/request.helper.js';
 
 const HEADERS_CREATE_VIEW = {
     Accept: 'application/vnd.ez.api.View+json; version=1.1',
     'Content-Type': 'application/vnd.ez.api.ViewInput+json; version=1.1',
 };
-export const QUERY_LIMIT = 50;
 const ENDPOINT_CREATE_VIEW = '/api/ezp/v2/views';
+const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 
-/**
- * Loads preselected location data
- *
- * @function loadPreselectedLocationData
- * @param {Object} params
- * @param {String} params.startingLocationId
- * @param {String} params.locationId
- * @param {Number} [params.limit]
- * @param {Function} callback
- */
-export const loadPreselectedLocationData = ({ startingLocationId, locationId, limit = QUERY_LIMIT }, callback) => {
-    const endpoint = window.Routing.generate('ezplatform.udw.preselected_location.data', {
-        startingLocationId,
-        locationId,
-        limit,
-    });
-    const request = new Request(endpoint, {
-        mode: 'same-origin',
-        credentials: 'same-origin',
-    });
+export const QUERY_LIMIT = 50;
 
-    fetch(request)
-        .then(handleRequestResponse)
-        .then(callback)
-        .catch(showErrorNotification);
-};
-
-/**
- * Loads content info
- *
- * @function loadContentInfo
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} contentId
- * @param {Function} callback
- */
-export const loadContentInfo = ({ token, siteaccess }, contentId, callback) => {
-    const body = JSON.stringify({
-        ViewInput: {
-            identifier: `udw-load-content-info-${contentId}`,
-            public: false,
-            ContentQuery: {
-                Criteria: {},
-                FacetBuilders: {},
-                SortClauses: {},
-                Filter: { ContentIdCriterion: `${contentId}` },
-                limit: 1,
-                offset: 0,
-            },
-        },
+export const findLocationsByParentLocationId = (
+    { token, parentLocationId, limit = QUERY_LIMIT, offset = 0, sortClause = 'DatePublished', sortOrder = 'ascending', gridView = false },
+    callback
+) => {
+    const routeName = gridView ? 'ezplatform.udw.location_gridview.data' : 'ezplatform.udw.location.data';
+    const url = window.Routing.generate(routeName, {
+        locationId: parentLocationId,
     });
-    const request = new Request(ENDPOINT_CREATE_VIEW, {
-        method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
-        body,
-        mode: 'same-origin',
-        credentials: 'same-origin',
-    });
-
-    fetch(request)
-        .then(handleRequestResponse)
-        .then(callback)
-        .catch(showErrorNotification);
-};
-
-/**
- * Loads location
- *
- * @function loadLocation
- * @param {Object} params params hash containing REST config: token and siteaccess properties; locationId and offset
- * @param {Function} callback
- */
-export const loadLocation = ({ token, siteaccess, locationId, limit = QUERY_LIMIT, offset = 0 }, callback) => {
-    const body = JSON.stringify({
-        ViewInput: {
-            identifier: `udw-location-by-id-${locationId}`,
-            public: false,
-            LocationQuery: {
-                Criteria: {},
-                FacetBuilders: {},
-                SortClauses: {},
-                Filter: { LocationIdCriterion: locationId },
-                limit,
-                offset,
-            },
-        },
-    });
-    const request = new Request(ENDPOINT_CREATE_VIEW, {
-        method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
-        body,
-        mode: 'same-origin',
-        credentials: 'same-origin',
-    });
-
-    fetch(request)
-        .then(handleRequestResponse)
-        .then(callback)
-        .catch(showErrorNotification);
-};
-
-/**
- * Checks if user has permission to create content
- *
- * @function checkCreatePermission
- * @param {Object} params params hash containing REST config: token, siteaccess, contentTypeIdentifier, languageCode, locationId
- * @param {Function} callback
- */
-export const checkCreatePermission = ({ token, contentTypeIdentifier, languageCode, locationId }, callback) => {
-    const endpoint = window.Routing.generate('ezplatform.content_on_the_fly.has_access', {
-        languageCode: languageCode,
-        contentTypeIdentifier: contentTypeIdentifier,
-        locationId: locationId,
-    });
-    const request = new Request(endpoint, {
+    const request = new Request(`${url}?limit=${limit}&offset=${offset}&sortClause=${sortClause}&sortOrder=${sortOrder}`, {
         method: 'GET',
         headers: { 'X-CSRF-Token': token },
         mode: 'same-origin',
@@ -136,68 +27,98 @@ export const checkCreatePermission = ({ token, contentTypeIdentifier, languageCo
 
     fetch(request)
         .then(handleRequestResponse)
-        .then(callback)
+        .then((response) => {
+            const { bookmark, location, permissions, subitems, version } = response;
+            const subitemsData = subitems.locations.map((location) => {
+                const mappedSubitems = {
+                    location: location.Location,
+                };
+
+                if (subitems.versions) {
+                    const version = subitems.versions.find(
+                        (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
+                    );
+
+                    mappedSubitems.version = version.Version;
+                }
+
+                return mappedSubitems;
+            });
+
+            callback({
+                location: location.Location,
+                version: version.Version,
+                subitems: subitemsData,
+                bookmarked: bookmark,
+                permissions,
+                parentLocationId,
+            });
+        })
         .catch(showErrorNotification);
 };
 
-/**
- * Finds locations related to the parent location
- *
- * @function findLocationsByParentLocationId
- * @param {Object} params params hash containing REST config: token and siteaccess properties; parentLocationId and offset; sortClauses
- * @param {Function} callback
- */
-export const findLocationsByParentLocationId = (
-    { token, siteaccess, parentLocationId, limit = QUERY_LIMIT, offset = 0, sortClauses = { SectionIdentifier: 'ascending' } },
+export const loadAccordionData = (
+    { token, parentLocationId, limit = QUERY_LIMIT, sortClause = 'DatePublished', sortOrder = 'ascending', gridView = false },
     callback
 ) => {
-    const body = JSON.stringify({
-        ViewInput: {
-            identifier: `udw-locations-by-parent-location-id-${parentLocationId}`,
-            public: false,
-            LocationQuery: {
-                Criteria: {},
-                FacetBuilders: {},
-                SortClauses: sortClauses,
-                Filter: { ParentLocationIdCriterion: parentLocationId },
-                limit,
-                offset,
-            },
-        },
+    const routeName = gridView ? 'ezplatform.udw.accordion_gridview.data' : 'ezplatform.udw.accordion.data';
+    const url = window.Routing.generate(routeName, {
+        locationId: parentLocationId,
     });
-    const request = new Request(ENDPOINT_CREATE_VIEW, {
-        method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
-            'X-Siteaccess': siteaccess,
-            'X-CSRF-Token': token,
-        }),
-        body,
+    const request = new Request(`${url}?limit=${limit}&sortClause=${sortClause}&sortOrder=${sortOrder}`, {
+        method: 'GET',
+        headers: { 'X-CSRF-Token': token },
         mode: 'same-origin',
         credentials: 'same-origin',
     });
 
     fetch(request)
         .then(handleRequestResponse)
-        .then((json) =>
-            callback({
+        .then((response) => {
+            const mappedItems = response.breadcrumb.map((item) => {
+                const location = item.Location;
+                const mappedItem = {
+                    location,
+                    subitems: [],
+                    parentLocationId: location.id,
+                    collapsed: !response.columns[location.id],
+                };
+
+                return mappedItem;
+            });
+
+            const lastLocationData = response.columns[parentLocationId];
+            const subitemsData = lastLocationData.subitems.locations.map((location) => {
+                const mappedSubitems = {
+                    location: location.Location,
+                };
+
+                if (lastLocationData.subitems.versions) {
+                    const version = lastLocationData.subitems.versions.find(
+                        (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
+                    );
+
+                    mappedSubitems.version = version.Version;
+                }
+
+                return mappedSubitems;
+            });
+
+            mappedItems.push({
+                location: lastLocationData.location.Location,
+                version: lastLocationData.version.Version,
+                subitems: subitemsData,
+                bookmarked: lastLocationData.bookmark,
+                permissions: lastLocationData.permissions,
                 parentLocationId,
-                offset,
-                data: json,
-            })
-        )
+            });
+
+            callback(mappedItems);
+        })
         .catch(showErrorNotification);
 };
 
-/**
- * Finds content matching a given text query
- *
- * @function findContentBySearchQuery
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {String} query
- * @param {Function} callback
- * @param {Number} limit
- */
-export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit = QUERY_LIMIT) => {
+export const findLocationsBySearchQuery = ({ token, siteaccess, query, limit = QUERY_LIMIT, offset = 0 }, callback) => {
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-search-query-${query}`,
@@ -206,19 +127,123 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback,
                 Criteria: {},
                 FacetBuilders: {},
                 SortClauses: {},
-                Query: { FullTextCriterion: query },
+                Query: query,
                 limit,
-                offset: 0,
+                offset,
             },
         },
     });
     const request = new Request(ENDPOINT_CREATE_VIEW, {
         method: 'POST',
-        headers: Object.assign({}, HEADERS_CREATE_VIEW, {
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
+        body,
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((response) => {
+            const { count, searchHits } = response.View.Result;
+            const items = searchHits.searchHit.map((searchHit) => searchHit.value.Location);
+
+            callback({
+                items,
+                count,
+            });
+        })
+        .catch(showErrorNotification);
+};
+
+export const findLocationsById = ({ token, siteaccess, id, limit = QUERY_LIMIT, offset = 0 }, callback) => {
+    const body = JSON.stringify({
+        ViewInput: {
+            identifier: `udw-locations-by-id-${id}`,
+            public: false,
+            LocationQuery: {
+                Criteria: {},
+                FacetBuilders: {},
+                SortClauses: { SectionIdentifier: 'ascending' },
+                Filter: { LocationIdCriterion: id },
+                limit,
+                offset,
+            },
+        },
+    });
+    const request = new Request(ENDPOINT_CREATE_VIEW, {
+        method: 'POST',
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
+        body,
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((response) => {
+            const items = response.View.Result.searchHits.searchHit.map((searchHit) => searchHit.value.Location);
+
+            callback(items);
+        })
+        .catch(showErrorNotification);
+};
+
+export const loadBookmarks = ({ token, siteaccess, limit, offset }, callback) => {
+    const request = new Request(`${ENDPOINT_BOOKMARK}?limit=${limit}&offset=${offset}`, {
+        method: 'GET',
+        headers: {
             'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
-        }),
-        body,
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
+        },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((response) => {
+            const count = response.BookmarkList.count;
+            const items = response.BookmarkList.items.map((item) => item.Location);
+
+            callback({ count, items });
+        })
+        .catch(showErrorNotification);
+};
+
+const toggleBookmark = ({ siteaccess, token, locationId }, callback, method) => {
+    const request = new Request(`${ENDPOINT_BOOKMARK}/${locationId}`, {
+        method,
+        headers: {
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponseStatus)
+        .then(callback)
+        .catch(showErrorNotification);
+};
+
+export const addBookmark = (options, callback) => {
+    toggleBookmark(options, callback, 'POST');
+};
+
+export const removeBookmark = (options, callback) => {
+    toggleBookmark(options, callback, 'DELETE');
+};
+
+export const loadContentTypes = ({ token, siteaccess }, callback) => {
+    const request = new Request('/api/ezp/v2/content/types', {
+        method: 'GET',
+        headers: {
+            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
+            'X-Siteaccess': siteaccess,
+            'X-CSRF-Token': token,
+        },
         mode: 'same-origin',
         credentials: 'same-origin',
     });
@@ -229,18 +254,11 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback,
         .catch(showErrorNotification);
 };
 
-/**
- * Loads content types
- *
- * @function loadContentTypes
- * @param {Object} restInfo REST config hash containing: token and siteaccess properties
- * @param {Function} callback
- */
-export const loadContentTypes = ({ token, siteaccess }, callback) => {
-    const request = new Request('/api/ezp/v2/content/types', {
-        method: 'GET',
+export const createDraft = ({ token, siteaccess, contentId }, callback) => {
+    const request = new Request(`/api/ezp/v2/content/objects/${contentId}/currentversion`, {
+        method: 'COPY',
         headers: {
-            Accept: 'application/vnd.ez.api.ContentTypeInfoList+json',
+            Accept: 'application/vnd.ez.api.VersionUpdate+json',
             'X-Siteaccess': siteaccess,
             'X-CSRF-Token': token,
         },

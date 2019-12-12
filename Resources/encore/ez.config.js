@@ -1,13 +1,15 @@
 const path = require('path');
 
 module.exports = (Encore) => {
-    Encore.addEntry('ezplatform-admin-ui-modules-udw-js', [path.resolve(__dirname, '../../src/modules/ud/universal.discovery.module.js')])
+    Encore.addEntry('ezplatform-admin-ui-modules-udw-js', [
+        path.resolve(__dirname, '../../src/modules/universal-discovery/universal.discovery.module.js'),
+    ])
         .addEntry('ezplatform-admin-ui-modules-udw-tabs-js', [
-            path.resolve(__dirname, '../../src/modules/ud/browse.tab.module.js'),
-            path.resolve(__dirname, '../../src/modules/ud/bookmarks.tab.module.js'),
-            path.resolve(__dirname, '../../src/modules/ud/search.tab.module.js'),
-            path.resolve(__dirname, '../../src/modules/ud/content.create.tab.module.js'),
-            path.resolve(__dirname, '../../src/modules/ud/content.meta.preview.module.js'),
+            path.resolve(__dirname, '../../src/modules/universal-discovery/browse.tab.module.js'),
+            path.resolve(__dirname, '../../src/modules/universal-discovery/bookmarks.tab.module.js'),
+            path.resolve(__dirname, '../../src/modules/universal-discovery/search.tab.module.js'),
+            path.resolve(__dirname, '../../src/modules/universal-discovery/content.create.tab.module.js'),
+            path.resolve(__dirname, '../../src/modules/universal-discovery/content.meta.preview.module.js'),
         ])
         .addEntry('ezplatform-admin-ui-modules-mfu-js', [
             path.resolve(__dirname, '../../src/modules/multi-file-upload/multi.file.upload.module.js'),

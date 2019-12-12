@@ -1,11 +1,7 @@
 .c-finder {
-    &__branches {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow: auto;
-
-        .c-finder-tree-branch + .c-finder-tree-branch {
-            margin-left: calculateRem(16px);
-        }
-    }
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
 }
