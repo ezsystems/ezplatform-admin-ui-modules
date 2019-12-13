@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 
 import Icon from '../common/icon/icon';
+import Thumbnail from '../common/thumbnail/thumbnail';
 
 import { addBookmark, removeBookmark, createDraft } from './services/universal.discovery.service';
 import {
@@ -78,18 +79,6 @@ const ContentMetaPreview = () => {
     const hideLanguageSelector = () => {
         setIsLanguageSelectorOpen(false);
     };
-    const renderPreview = () => {
-        if (!version.Thumbnail) {
-            return (
-                <Icon
-                    extraClasses="ez-icon--extra-large"
-                    customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
-                />
-            );
-        }
-
-        return <img src={version.Thumbnail} />;
-    };
     const renderLanguageSelector = () => {
         if (!isLanguageSelectorOpen) {
             return null;
@@ -135,7 +124,9 @@ const ContentMetaPreview = () => {
     return (
         <div className="c-content-meta-preview">
             {renderLanguageSelector()}
-            <div className="c-content-meta-preview__preview">{renderPreview()}</div>
+            <div className="c-content-meta-preview__preview">
+                <Thumbnail thumbnailData={version.Thumbnail} iconExtraClasses="ez-icon--extra-large" />
+            </div>
             <div className="c-content-meta-preview__header">
                 <span className="c-content-meta-preview__content-name">{location.ContentInfo.Content.Name}</span>
                 <button className="c-content-meta-preview__toggle-bookmark-button" onClick={toggleBookmarked}>
