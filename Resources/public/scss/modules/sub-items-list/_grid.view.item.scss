@@ -8,8 +8,7 @@
     text-decoration: none;
     transition: background 0.3s $ez-admin-transition;
     background: $ez-white;
-    box-shadow: 0 calculateRem(2px) calculateRem(10px) calculateRem(-4px) rgba(0,0,0,0.15);
-    border: calculateRem(1px) solid transparent;
+    box-shadow: 0 calculateRem(2px) calculateRem(10px) calculateRem(0px) rgba(0,0,0,0.15);
 
     &:hover,
     &:focus {
