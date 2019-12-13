@@ -8,7 +8,7 @@
     text-decoration: none;
     transition: background 0.3s $ez-admin-transition;
     background: $ez-white;
-    box-shadow: 0 calculateRem(2px) calculateRem(10px) calculateRem(0px) rgba(0,0,0,0.15);
+    box-shadow: 0 calculateRem(2px) calculateRem(10px) calculateRem(0px) rgba(0, 0, 0, 0.15);
 
     &:hover,
     &:focus {
@@ -57,7 +57,7 @@
         height: calculateRem(33px);
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;  
+        -webkit-box-orient: vertical;
         overflow: hidden;
         line-height: calculateRem(15px);
         font-size: calculateRem(12px);
