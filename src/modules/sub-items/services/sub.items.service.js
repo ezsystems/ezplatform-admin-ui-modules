@@ -59,6 +59,7 @@ export const loadLocation = ({ token, siteaccess }, { locationId = 2, limit = 10
                                     uri
                                     alternativeText
                                 }
+                                _name
                                 _info {
                                     id
                                     name

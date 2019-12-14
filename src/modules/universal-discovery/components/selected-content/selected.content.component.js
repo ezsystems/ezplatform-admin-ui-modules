@@ -120,7 +120,7 @@ export default class SelectedContentComponent extends PureComponent {
 
     render() {
         const { items } = this.props;
-        const titles = items.map((item) => item.ContentInfo.Content.Name).join(', ');
+        const titles = items.map((item) => item.ContentInfo.Content.TranslatedName).join(', ');
         const anyItemSelected = !!items.length;
         const cssClassOnAnyItemSelected = anyItemSelected ? 'c-selected-content__info--any-item-selected' : '';
         const infoCssClasses = `c-selected-content__info ${cssClassOnAnyItemSelected}`;

@@ -18,8 +18,8 @@ const ContentTableItemComponent = (props) => {
             <div className="c-content-table-item__icon">
                 <Icon customPath={contentTypeIconUrl} extraClasses="ez-icon--medium" />
             </div>
-            <div className="c-content-table-item__name" title={item.Name}>
-                {item.Name}
+            <div className="c-content-table-item__name" title={item.TranslatedName}>
+                {item.TranslatedName}
             </div>
             <div className="c-content-table-item__type" title={contentTypeName}>
                 {contentTypeName}

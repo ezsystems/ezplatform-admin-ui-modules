@@ -133,7 +133,7 @@ export default class TableViewItemComponent extends PureComponent {
 
     renderNameCell() {
         const { item, generateLink } = this.props;
-        const contentName = item.content._info.name;
+        const contentName = item.content._name;
         const linkAttrs = {
             className: 'c-table-view-item__link c-table-view-item__text-wrapper',
             title: contentName,

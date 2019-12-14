@@ -15,7 +15,7 @@ const SelectedContentItemComponent = ({ data, onRemove }) => {
     return (
         <div className="c-selected-content-item">
             <div className="c-selected-content-item__wrapper">
-                <div className="c-selected-content-item__name">{data.ContentInfo.Content.Name}</div>
+                <div className="c-selected-content-item__name">{data.ContentInfo.Content.TranslatedName}</div>
                 <div className="c-selected-content-item__type">
                     {icon} {contentTypeName}
                 </div>

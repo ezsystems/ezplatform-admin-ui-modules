@@ -178,7 +178,7 @@ export default class ContentMetaPreviewComponent extends Component {
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
                         <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
-                        <div className="c-meta-preview__name">{content.Name}</div>
+                        <div className="c-meta-preview__name">{content.TranslatedName}</div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{lastModifiedLabel}:</h3>
                             {formatShortDateTime(new Date(content.lastModificationDate))}

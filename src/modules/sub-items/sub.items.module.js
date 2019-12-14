@@ -352,7 +352,7 @@ export default class SubItemsModule extends Component {
                 locationLink: Translator.trans(
                     /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/ 'bulk_move.success.link_to_location',
                     {
-                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
+                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.TranslatedName),
                         locationHref: this.props.generateLink(location.id),
                     },
                     'sub_items'
@@ -551,7 +551,7 @@ export default class SubItemsModule extends Component {
     handleBulkOperationFailedNotification(failedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap) {
         const failedItemsData = failedItems.map((content) => ({
             contentTypeName: content._info.contentType.name,
-            contentName: content._info.name,
+            contentName: content._name,
         }));
 
         window.eZ.helpers.notification.showWarningNotification(
