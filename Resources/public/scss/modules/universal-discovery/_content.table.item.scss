@@ -1,75 +1,27 @@
 .c-content-table-item {
-    flex: 1 1 auto;
-    display: flex;
-    flex-wrap: nowrap;
-    background: $ez-white;
     cursor: pointer;
 
-    &:hover,
-    &:focus {
-        background: darken($ez-white, 15%);
+    &:hover {
+        .c-toggle-selection-button {
+            opacity: 1;
+        }
     }
 
-    &__icon,
-    &__name,
-    &__type,
-    &__actions {
-        padding: calculateRem(8px) calculateRem(16px);
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        font-size: calculateRem(15px);
-        line-height: calculateRem(20px);
-        border-top: calculateRem(1px) solid $ez-ground-primary-inverted-light;
+    &--marked {
+        background-color: lighten($ez-ground-primary, 15%);
     }
 
-    &__icon {
+    &--not-selectable {
+        background-color: $ez-ground-base-dark;
+        cursor: not-allowed;
+    }
+
+    &__toggle-button-wrapper {
+        width: calculateRem(20px);
+    }
+
+    .table &__icon-wrapper {
+        width: calculateRem(20px);
         padding-right: 0;
-        padding-left: calculateRem(32px);
-    }
-
-    &__name {
-        flex: 1 1 calculateRem(280px);
-        padding-left: calculateRem(10px);
-    }
-
-    &__type {
-        flex: 1 1 calculateRem(180px);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    &__actions {
-        flex: 0 0 calculateRem(90px);
-        position: relative;
-    }
-
-    &__btn--preview {
-        background: none;
-        border: 0 none;
-        display: flex;
-        cursor: pointer;
-        align-items: center;
-        padding: 0;
-
-        .ez-icon {
-            fill: $ez-color-secondary;
-            width: calculateRem(30px);
-            height: calculateRem(30px);
-        }
-
-        &:hover .ez-icon,
-        &:focus .ez-icon {
-            fill: $ez-color-secondary-hover;
-            outline: none;
-        }
-    }
-
-    .c-select-content-button {
-        position: absolute;
-        right: calculateRem(21px);
-        top: 50%;
-        transform: translateY(-50%);
     }
 }

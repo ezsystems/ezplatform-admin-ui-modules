@@ -21,7 +21,7 @@ const ToggleSelectionButton = ({ location }) => {
         dispatchSelectedLocationsAction(action);
     };
 
-    if (multiple && !isSelected && selectedLocations.length >= multipleItemsLimit) {
+    if (multiple && !isSelected && selectedLocations.length >= multipleItemsLimit && multipleItemsLimit !== 0) {
         return null;
     }
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import ToggleSelectionButton from '../toggle-selection-button/toggle.selection.button';
 import Icon from '../../../common/icon/icon';
+import Thumbnail from '../../../common/thumbnail/thumbnail';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import {
@@ -55,28 +56,6 @@ const GridViewItem = ({ location, version }) => {
 
         dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: location.id, subitems: [] } });
     };
-    const renderPreview = () => {
-        if (!version.Thumbnail) {
-            return (
-                <Icon
-                    extraClasses="ez-icon--extra-large"
-                    customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
-                />
-            );
-        }
-
-        return (
-            <Fragment>
-                <div className="c-grid-item__icon-wrapper">
-                    <Icon
-                        extraClasses="ez-icon--small"
-                        customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
-                    />
-                </div>
-                <img src={version.Thumbnail} />
-            </Fragment>
-        );
-    };
     const renderToggleSelectionButton = () => {
         if (!multiple || isNotSelectable) {
             return null;
@@ -87,7 +66,13 @@ const GridViewItem = ({ location, version }) => {
 
     return (
         <div className={className} onClick={markLocation} onDoubleClick={loadLocation}>
-            <div className="c-grid-item__preview">{renderPreview()}</div>
+            <div className="c-grid-item__preview">
+                <Thumbnail
+                    thumbnailData={version.Thumbnail}
+                    iconExtraClasses="ez-icon--extra-large"
+                    contentTypeIconPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
+                />
+            </div>
             <div className="c-grid-item__name">{location.ContentInfo.Content.Name}</div>
             {renderToggleSelectionButton()}
         </div>
