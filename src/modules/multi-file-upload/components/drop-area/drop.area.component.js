@@ -52,7 +52,7 @@ export default class DropAreaComponent extends Component {
     render() {
         const maxFileSizeMessage = Translator.trans(/*@Desc("Max file size:")*/ 'max_file_size.message', {}, 'multi_file_upload');
         const dropActionMessage = Translator.trans(
-            /*@Desc("Drag and drop your files on browser window or upload them")*/ 'drop_action.message',
+            /*@Desc("Drag your files to the browser window or select them")*/ 'drop_action.message',
             {},
             'multi_file_upload'
         );

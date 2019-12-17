@@ -5,8 +5,8 @@
     padding-top: calculateRem(8px);
 
     .c-grid-view-item {
-        flex: 1 1 calc(100% / 6);
+        flex: 1 1 calc(100% / 5);
         max-width: calculateRem(166px);
-        margin-right: calculateRem(8px);
+        margin-right: calculateRem(20px);
     }
 }

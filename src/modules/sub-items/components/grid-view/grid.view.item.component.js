@@ -31,7 +31,7 @@ const GridViewItemComponent = ({ item, generateLink }) => {
         <a className="c-grid-view-item" href={generateLink(locationId)}>
             {contentTypeIcon}
             <div className="c-grid-view-item__image-wrapper">{image}</div>
-            <div className="c-grid-view-item__title">{content._info.name}</div>
+            <div className="c-grid-view-item__title">{content._name}</div>
         </a>
     );
 };

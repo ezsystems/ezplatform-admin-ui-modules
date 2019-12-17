@@ -7,33 +7,33 @@
     </header>
     <body>
       <trans-unit id="99402f0925918d4d739c4c61a90182a733824fa5" resname="bulk_delete.error.message.nonusers">
-        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</source>
-        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
+        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be sent to Trash because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</source>
+        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be sent to Trash because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</target>
         <note>key: bulk_delete.error.message.nonusers</note>
       </trans-unit>
       <trans-unit id="c74a6c9cb4bb7cbcf4a652e03e4fe9344514f38f" resname="bulk_delete.error.message.users">
-        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</source>
-        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
+        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</source>
+        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</target>
         <note>key: bulk_delete.error.message.users</note>
       </trans-unit>
       <trans-unit id="a873d91c27d787399ce6dfe9a96c4541e718bacf" resname="bulk_delete.error.message.users_with_nonusers">
-        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</source>
-        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
+        <source>%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to Trash because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</source>
+        <target state="new">%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to Trash because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</target>
         <note>key: bulk_delete.error.message.users_with_nonusers</note>
       </trans-unit>
       <trans-unit id="237dbc61da0079a4ad224512ef0678262f224ad9" resname="bulk_delete.error.modal.table_title.nonusers">
-        <source>Content item(s) cannot be sent to trash (%itemsCount%)</source>
-        <target state="new">Content item(s) cannot be sent to trash (%itemsCount%)</target>
+        <source>%itemsCount% Content item(s) cannot be sent to Trash</source>
+        <target state="new">%itemsCount% Content item(s) cannot be sent to Trash</target>
         <note>key: bulk_delete.error.modal.table_title.nonusers</note>
       </trans-unit>
       <trans-unit id="d61a87779a34732e3d0cc00482224d99dd95676a" resname="bulk_delete.error.modal.table_title.users">
-        <source>User(s) cannot be deleted (%itemsCount%)</source>
-        <target state="new">User(s) cannot be deleted (%itemsCount%)</target>
+        <source>%itemsCount% User(s) cannot be deleted</source>
+        <target state="new">%itemsCount% User(s) cannot be deleted</target>
         <note>key: bulk_delete.error.modal.table_title.users</note>
       </trans-unit>
       <trans-unit id="eb45209c9bfb54c01fe8e827d04058c301fc8173" resname="bulk_delete.error.modal.table_title.users_with_nonusers">
-        <source>Content item(s) cannot be deleted or sent to trash (%itemsCount%)</source>
-        <target state="new">Content item(s) cannot be deleted or sent to trash (%itemsCount%)</target>
+        <source>%itemsCount% Content item(s) cannot be deleted or sent to Trash</source>
+        <target state="new">%itemsCount% Content item(s) cannot be deleted or sent to Trash</target>
         <note>key: bulk_delete.error.modal.table_title.users_with_nonusers</note>
       </trans-unit>
       <trans-unit id="aa8f660d8cae16394e7cd4421e6b604e031ad04b" resname="bulk_action.popup.cancel">
@@ -42,8 +42,8 @@
         <note>key: bulk_action.popup.cancel</note>
       </trans-unit>
       <trans-unit id="530f5b1097af7206fdabc3a51ac334c933ab4909" resname="bulk_delete.popup.confirm.nonusers">
-        <source>Send to trash</source>
-        <target state="new">Send to trash</target>
+        <source>Send to Trash</source>
+        <target state="new">Send to Trash</target>
         <note>key: bulk_delete.popup.confirm.nonusers</note>
       </trans-unit>
       <trans-unit id="4953b415cbb1e81833664d96e7051d0a7e3d90c8" resname="bulk_delete.popup.confirm.users_and_users_with_nonusers">
@@ -52,8 +52,8 @@
         <note>key: bulk_delete.popup.confirm.users_and_users_with_nonusers</note>
       </trans-unit>
       <trans-unit id="e98d09770399a6f52a15068a0573a18fc2b0b60d" resname="bulk_delete.popup.message.nonusers">
-        <source>Are you sure you want to send the selected content item(s) to trash?</source>
-        <target state="new">Are you sure you want to send the selected content item(s) to trash?</target>
+        <source>Are you sure you want to send the selected Content item(s) to Trash?</source>
+        <target state="new">Are you sure you want to send the selected Content item(s) to Trash?</target>
         <note>key: bulk_delete.popup.message.nonusers</note>
       </trans-unit>
       <trans-unit id="7717885c80083a259220eb0617f818b9cd8f315e" resname="bulk_delete.popup.message.users">
@@ -62,23 +62,23 @@
         <note>key: bulk_delete.popup.message.users</note>
       </trans-unit>
       <trans-unit id="a12f451cc6ee1e65a14e4accacba2fff815a67f9" resname="bulk_delete.popup.message.users_with_nonusers">
-        <source>Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?</source>
-        <target state="new">Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?</target>
+        <source>Are you sure you want to delete the selected user(s) and send the other selected Content item(s) to Trash?</source>
+        <target state="new">Are you sure you want to delete the selected user(s) and send the other selected Content item(s) to Trash?</target>
         <note>key: bulk_delete.popup.message.users_with_nonusers</note>
       </trans-unit>
       <trans-unit id="5464e305b394648af0e9dbd86bfd0ea5df8ed93c" resname="bulk_delete.success.message.nonusers">
-        <source>The selected content item(s) have been sent to trash.</source>
-        <target state="new">The selected content item(s) have been sent to trash.</target>
+        <source>Content item(s) sent to Trash.</source>
+        <target state="new">Content item(s) sent to Trash.</target>
         <note>key: bulk_delete.success.message.nonusers</note>
       </trans-unit>
       <trans-unit id="d6c81bfffab0f8d928eb10911ca60a107c407989" resname="bulk_delete.success.message.users">
-        <source>The selected user(s) have been deleted.</source>
-        <target state="new">The selected user(s) have been deleted.</target>
+        <source>User(s) deleted.</source>
+        <target state="new">User(s) deleted.</target>
         <note>key: bulk_delete.success.message.users</note>
       </trans-unit>
       <trans-unit id="93704c823e9663af7f4a89ec041673ce9d095a17" resname="bulk_delete.success.message.users_with_nonusers">
-        <source>The selected content item(s) have been sent to trash and the selected user(s) have been deleted.</source>
-        <target state="new">The selected content item(s) have been sent to trash and the selected user(s) have been deleted.</target>
+        <source>Content item(s) sent to Trash. User(s) deleted.</source>
+        <target state="new">Content item(s) sent to Trash. User(s) deleted.</target>
         <note>key: bulk_delete.success.message.users_with_nonusers</note>
       </trans-unit>
       <trans-unit id="540d45bd030bab3e5bec8b9c1433ff4d9998c73e" resname="bulk_hide.popup.confirm">
@@ -147,13 +147,13 @@
         <note>key: bulk_add_location.success.message</note>
       </trans-unit>
       <trans-unit id="364a3498e021163497d9110380736b876beb326f" resname="bulk_move.error.message">
-        <source>%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</source>
-        <target state="new">%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.</target>
+        <source>%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</source>
+        <target state="new">%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</target>
         <note>key: bulk_move.error.message</note>
       </trans-unit>
       <trans-unit id="44a971e3ea91b95b9fbbd596f54ca632ef0865d4" resname="bulk_move.error.modal.table_title">
-        <source>Content items cannot be moved (%itemsCount%)</source>
-        <target state="new">Content items cannot be moved (%itemsCount%)</target>
+        <source>%itemsCount% Content items cannot be moved</source>
+        <target state="new">%itemsCount% Content items cannot be moved</target>
         <note>key: bulk_move.error.modal.table_title</note>
       </trans-unit>
       <trans-unit id="ca61c6a680354ca0ca27b53f63d9d30ba35eee2a" resname="bulk_action.error.more_info">
@@ -167,8 +167,8 @@
         <note>key: bulk_action.success.link_to_location</note>
       </trans-unit>
       <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
-        <source>The selected content item(s) have been sent to {{ locationLink }}</source>
-        <target state="new">The selected content item(s) have been sent to {{ locationLink }}</target>
+        <source>Content item(s) sent to {{ locationLink }}</source>
+        <target state="new">Content item(s) sent to {{ locationLink }}</target>
         <note>key: bulk_move.success.message</note>
       </trans-unit>
       <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">
@@ -178,17 +178,17 @@
       </trans-unit>
       <trans-unit id="5e1792d4a193550fe8afd9a4be6d0a8c3f6596e9" resname="edit_item_btn.label">
         <source>Edit</source>
-        <target>Edit</target>
+        <target state="new">Edit</target>
         <note>key: edit_item_btn.label</note>
       </trans-unit>
       <trans-unit id="2a9e4002be191374ee14674d2e67eb9fe2d631d2" resname="items_list.title">
         <source>Sub-items</source>
-        <target>Sub-items</target>
+        <target state="new">Sub-items</target>
         <note>key: items_list.title</note>
       </trans-unit>
       <trans-unit id="a72b23e13c6c44cfd6fc6661f83bc0b5e7c8a90c" resname="items_table.header.content_type">
         <source>Content type</source>
-        <target>Content type</target>
+        <target state="new">Content type</target>
         <note>key: items_table.header.content_type</note>
       </trans-unit>
       <trans-unit id="d8bac590d6c8bf7c4e58ad1d7dbe4aad57e54e43" resname="items_table.header.contributor">
@@ -213,12 +213,12 @@
       </trans-unit>
       <trans-unit id="8f1583d031a1cc60061659b8a55291496f0a40c6" resname="items_table.header.modified">
         <source>Modified</source>
-        <target>Modified</target>
+        <target state="new">Modified</target>
         <note>key: items_table.header.modified</note>
       </trans-unit>
       <trans-unit id="2527737a2f92308589f03f3b73fed29ef744eb50" resname="items_table.header.name">
         <source>Name</source>
-        <target>Name</target>
+        <target state="new">Name</target>
         <note>key: items_table.header.name</note>
       </trans-unit>
       <trans-unit id="725a35139d6927f9c5ac199aa42a0baf362986fb" resname="items_table.header.object_id">
@@ -233,7 +233,7 @@
       </trans-unit>
       <trans-unit id="ee6e79244a03c8adceb13aa6a7aff2cb496cb9d0" resname="items_table.header.priority">
         <source>Priority</source>
-        <target>Priority</target>
+        <target state="new">Priority</target>
         <note>key: items_table.header.priority</note>
       </trans-unit>
       <trans-unit id="9194a0b943ca204c20acd7695c577b976ce4c964" resname="items_table.header.pubished">
@@ -248,7 +248,7 @@
       </trans-unit>
       <trans-unit id="2efb1da52dd6f25dd90474e85b5c73761adb4183" resname="items_table.header.translations">
         <source>Translations</source>
-        <target>Translations</target>
+        <target state="new">Translations</target>
         <note>key: items_table.header.translations</note>
       </trans-unit>
       <trans-unit id="9f055743ae2bf600810c4935ab10873ca4dac6d9" resname="items_table.header.visibility">
@@ -288,7 +288,7 @@
       </trans-unit>
       <trans-unit id="276a7024903672cd0476c82ba8845453e13db95e" resname="no_items.message">
         <source>This location has no sub-items</source>
-        <target>This location has no sub-items</target>
+        <target state="new">This location has no sub-items</target>
         <note>key: no_items.message</note>
       </trans-unit>
       <trans-unit id="af3bcdfcdcd33a16838a6f2b88c845c92fcb0938" resname="pagination.back">
@@ -303,12 +303,12 @@
       </trans-unit>
       <trans-unit id="af207d1e719904a39524b34212a1ea6116cb3d46" resname="switch_to_grid_view.btn.label">
         <source>View as grid</source>
-        <target>View as grid</target>
+        <target state="new">View as grid</target>
         <note>key: switch_to_grid_view.btn.label</note>
       </trans-unit>
       <trans-unit id="b5bfcc24141601264b6c03972d8e45bbb7c49a09" resname="switch_to_list_view.btn.label">
         <source>View as list</source>
-        <target>View as list</target>
+        <target state="new">View as list</target>
         <note>key: switch_to_list_view.btn.label</note>
       </trans-unit>
       <trans-unit id="11b5de206f496e357ede3c3798b8e113c2946a60" resname="trash_btn.label">
@@ -317,8 +317,8 @@
         <note>key: trash_btn.label</note>
       </trans-unit>
       <trans-unit id="cd8466f8e727278543a7e1ded7f3a0c67243c276" resname="udw.choose_location.title">
-        <source>Choose location</source>
-        <target state="new">Choose location</target>
+        <source>Choose Location</source>
+        <target state="new">Choose Location</target>
         <note>key: udw.choose_location.title</note>
       </trans-unit>
       <trans-unit id="5ae5a511a5c344781ad0caa53efe7b33429c6132" resname="viewing_message">

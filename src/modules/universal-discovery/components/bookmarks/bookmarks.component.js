@@ -55,7 +55,7 @@ export default class BookmarksComponent extends Component {
     renderNoBookmarksInfo() {
         const { userBookmarksCount } = this.props;
         const noBookmarksMessage = Translator.trans(
-            /*@Desc("No content items. Content items you bookmark will appear here.")*/ 'bookmarks_table.no_bookmarks.message',
+            /*@Desc("You have no bookmarks yet. Your bookmarks will show up here.")*/ 'bookmarks_table.no_bookmarks.message',
             {},
             'universal_discovery_widget'
         );

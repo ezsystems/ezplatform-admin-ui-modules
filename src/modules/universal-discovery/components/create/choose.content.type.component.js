@@ -8,8 +8,9 @@ export default class ChooseContentTypeComponent extends Component {
 
         let selectedContentType = {};
         const { allowedContentTypes, preselectedContentType } = props;
-        const isForcedContentType = allowedContentTypes.length === 1;
-        const hasPreselectedAllowedContentType = !allowedContentTypes.length || allowedContentTypes.includes(props.preselectedContentType);
+        const isForcedContentType = allowedContentTypes[0] !== null && allowedContentTypes.length === 1;
+        const hasPreselectedAllowedContentType =
+            allowedContentTypes[0] !== null && (!allowedContentTypes.length || allowedContentTypes.includes(props.preselectedContentType));
         const isPreselectedContentType = preselectedContentType && hasPreselectedAllowedContentType;
 
         this._filterTimeout = null;
@@ -67,7 +68,9 @@ export default class ChooseContentTypeComponent extends Component {
     renderItem(item, index) {
         const { name, identifier } = item;
         const contentTypeIconUrl = eZ.helpers.contentType.getContentTypeIconUrl(identifier);
-        const isNotSelectable = this.props.allowedContentTypes.length && !this.props.allowedContentTypes.includes(identifier);
+        const isNotSelectable =
+            this.props.allowedContentTypes[0] === null ||
+            (this.props.allowedContentTypes.length && !this.props.allowedContentTypes.includes(identifier));
         const attrs = {
             className: 'c-choose-content-type__group-item',
             key: index,

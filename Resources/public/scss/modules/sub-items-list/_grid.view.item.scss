@@ -1,16 +1,22 @@
 .c-grid-view-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: calculateRem(4px);
+    margin-bottom: calculateRem(20px);
     cursor: pointer;
+    color: $ez-black;
     text-decoration: none;
     transition: background 0.3s $ez-admin-transition;
-    position: relative;
-    background: $ez-ground-base;
-    border-radius: calculateRem(4px);
-    margin-bottom: calculateRem(8px);
+    background: $ez-white;
+    border: calculateRem(1px) solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 calculateRem(2px) calculateRem(10px) calculateRem(0px) rgba(0, 0, 0, 0.15);
 
     &:hover,
     &:focus {
+        color: $ez-white;
         text-decoration: none;
-        background: #e5e3e3;
+        background: $ez-secondary-ground;
+        border: calculateRem(1px) solid $ez-secondary-ground;
     }
 
     &__content-type {
@@ -20,8 +26,7 @@
         left: 0;
         width: calculateRem(30px);
         height: calculateRem(30px);
-        background: #fafafa;
-        border-radius: calculateRem(4px) 0 0 0;
+        background: $ez-white;
     }
 
     &__content-type .ez-icon {
@@ -35,13 +40,13 @@
         display: block;
         width: auto;
         height: auto;
-        max-width: calculateRem(166px);
-        max-height: calculateRem(166px);
+        max-width: calculateRem(165px);
+        max-height: calculateRem(165px);
     }
 
     &__image-wrapper {
-        height: calculateRem(166px);
-        width: calculateRem(166px);
+        height: calculateRem(165px);
+        width: calculateRem(165px);
         border-radius: calculateRem(4px) calculateRem(4px) 0 0;
         background: $ez-ground-base-dark;
         display: flex;
@@ -50,12 +55,13 @@
     }
 
     &__title {
-        word-break: break-all;
-        line-height: calculateRem(20px);
-        padding: calculateRem(10px) 0;
-        font-size: calculateRem(14px);
-        padding: calculateRem(4px) calculateRem(8px);
-        color: $ez-black;
-        font-weight: bold;
+        height: calculateRem(33px);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: calculateRem(15px);
+        font-size: calculateRem(12px);
+        margin: calculateRem(8px) calculateRem(5px);
     }
 }

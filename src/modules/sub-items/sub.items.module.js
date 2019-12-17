@@ -357,11 +357,11 @@ export default class SubItemsModule extends Component {
 
         if (notMovedItems.length) {
             const modalTableTitle = Translator.trans(
-                /*@Desc("%itemsCount% Content item(s) cannot be moved")*/
+                /*@Desc("%itemsCount% Content items cannot be moved")*/
                 'bulk_move.error.modal.table_title', {itemsCount: notMovedItems.length}, 'sub_items'
             );
             const notificationMessage = Translator.trans(
-                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_move.error.message',
+                /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_move.error.message',
                 {
                     notMovedCount: notMovedItems.length,
                     totalCount: movedItems.length + notMovedItems.length,
@@ -516,7 +516,7 @@ export default class SubItemsModule extends Component {
                     /*@Desc("<u><a href='%locationHref%'>%locationName%</a></u>")*/
                     'bulk_action.success.link_to_location',
                     {
-                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.Name),
+                        locationName: eZ.helpers.text.escapeHTML(location.ContentInfo.Content.TranslatedName),
                         locationHref: this.props.generateLink(location.id),
                     },
                     'sub_items'
@@ -560,7 +560,7 @@ export default class SubItemsModule extends Component {
         const { selectedItems } = this.state;
         const selectedItemsLocationsIds = [...selectedItems.values()].map(({ id }) => id);
         const excludedLocations = [parentLocationId, ...selectedItemsLocationsIds];
-        const title = Translator.trans(/*@Desc("Choose location")*/ 'udw.choose_location.title', {}, 'sub_items');
+        const title = Translator.trans(/*@Desc("Choose Location")*/ 'udw.choose_location.title', {}, 'sub_items');
         const udwConfig = actionFlow === ACTION_FLOW_MOVE ? udwConfigBulkMoveItems : udwConfigBulkAddLocation;
         const udwProps = {
             title,
@@ -643,14 +643,14 @@ export default class SubItemsModule extends Component {
 
             if (hadUserContentItemFailed && hadNonUserContentItemFailed) {
                 modalTableTitle = Translator.trans(
-                    /*@Desc("Content item(s) cannot be deleted or sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users_with_nonusers',
+                    /*@Desc("%itemsCount% Content item(s) cannot be deleted or sent to Trash")*/ 'bulk_delete.error.modal.table_title.users_with_nonusers',
                     {
                         itemsCount: notDeletedItems.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users_with_nonusers',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted or sent to Trash because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.users_with_nonusers',
                     {
                         notDeletedCount: notDeletedItems.length,
                         totalCount: deletedItems.length + notDeletedItems.length,
@@ -659,14 +659,14 @@ export default class SubItemsModule extends Component {
                 );
             } else if (hadUserContentItemFailed) {
                 modalTableTitle = Translator.trans(
-                    /*@Desc("User(s) cannot be deleted (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.users',
+                    /*@Desc("%itemsCount% User(s) cannot be deleted")*/ 'bulk_delete.error.modal.table_title.users',
                     {
                         itemsCount: notDeletedItems.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.users',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be deleted because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.users',
                     {
                         notDeletedCount: notDeletedItems.length,
                         totalCount: deletedItems.length + notDeletedItems.length,
@@ -675,14 +675,14 @@ export default class SubItemsModule extends Component {
                 );
             } else {
                 modalTableTitle = Translator.trans(
-                    /*@Desc("Content item(s) cannot be sent to trash (%itemsCount%)")*/ 'bulk_delete.error.modal.table_title.nonusers',
+                    /*@Desc("%itemsCount% Content item(s) cannot be sent to Trash")*/ 'bulk_delete.error.modal.table_title.nonusers',
                     {
                         itemsCount: notDeletedItems.length,
                     },
                     'sub_items'
                 );
                 message = Translator.trans(
-                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be sent to trash because you do not have proper user permissions. {{ moreInformationLink }} Please contact your Administrator to obtain permissions.")*/ 'bulk_delete.error.message.nonusers',
+                    /*@Desc("%notDeletedCount% of the %totalCount% selected item(s) could not be sent to Trash because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_delete.error.message.nonusers',
                     {
                         notDeletedCount: notDeletedItems.length,
                         totalCount: deletedItems.length + notDeletedItems.length,
@@ -699,19 +699,19 @@ export default class SubItemsModule extends Component {
 
             if (anyUserContentItemDeleted && anyNonUserContentItemDeleted) {
                 message = Translator.trans(
-                    /*@Desc("The selected content item(s) have been sent to trash and the selected user(s) have been deleted.")*/ 'bulk_delete.success.message.users_with_nonusers',
+                    /*@Desc("Content item(s) sent to Trash. User(s) deleted.")*/ 'bulk_delete.success.message.users_with_nonusers',
                     {},
                     'sub_items'
                 );
             } else if (anyUserContentItemDeleted) {
                 message = Translator.trans(
-                    /*@Desc("The selected user(s) have been deleted.")*/ 'bulk_delete.success.message.users',
+                    /*@Desc("User(s) deleted.")*/ 'bulk_delete.success.message.users',
                     {},
                     'sub_items'
                 );
             } else {
                 message = Translator.trans(
-                    /*@Desc("The selected content item(s) have been sent to trash.")*/ 'bulk_delete.success.message.nonusers',
+                    /*@Desc("Content item(s) sent to Trash.")*/ 'bulk_delete.success.message.nonusers',
                     {},
                     'sub_items'
                 );
@@ -779,7 +779,7 @@ export default class SubItemsModule extends Component {
     handleBulkOperationFailedNotification(failedItems, modalTableTitle, notificationMessage, rawPlaceholdersMap) {
         const failedItemsData = failedItems.map((content) => ({
             contentTypeName: content._info.contentType.name,
-            contentName: content._info.name,
+            contentName: content._name,
         }));
 
         window.eZ.helpers.notification.showWarningNotification(
@@ -807,7 +807,7 @@ export default class SubItemsModule extends Component {
         let confirmLabel = '';
 
         if (!isUserContentItemSelected && isNonUserContentItemSelected) {
-            confirmLabel = Translator.trans(/*@Desc("Send to trash")*/ 'bulk_delete.popup.confirm.nonusers', {}, 'sub_items');
+            confirmLabel = Translator.trans(/*@Desc("Send to Trash")*/ 'bulk_delete.popup.confirm.nonusers', {}, 'sub_items');
         } else {
             confirmLabel = Translator.trans(/*@Desc("Delete")*/ 'bulk_delete.popup.confirm.users_and_users_with_nonusers', {}, 'sub_items');
         }
@@ -906,12 +906,12 @@ export default class SubItemsModule extends Component {
             'sub_items'
         );
         const confirmationMessageNonUsers = Translator.trans(
-            /*@Desc("Are you sure you want to send the selected content item(s) to trash?")*/ 'bulk_delete.popup.message.nonusers',
+            /*@Desc("Are you sure you want to send the selected Content item(s) to Trash?")*/ 'bulk_delete.popup.message.nonusers',
             {},
             'sub_items'
         );
         const confirmationMessageUsersAndNonUsers = Translator.trans(
-            /*@Desc("Are you sure you want to delete the selected user(s) and send the other selected content item(s) to trash?")*/ 'bulk_delete.popup.message.users_with_nonusers',
+            /*@Desc("Are you sure you want to delete the selected user(s) and send the other selected Content item(s) to Trash?")*/ 'bulk_delete.popup.message.users_with_nonusers',
             {},
             'sub_items'
         );

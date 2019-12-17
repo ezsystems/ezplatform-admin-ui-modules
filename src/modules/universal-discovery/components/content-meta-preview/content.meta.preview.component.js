@@ -149,7 +149,7 @@ export default class ContentMetaPreviewComponent extends Component {
         const contentTypeName = window.eZ.helpers.contentType.getContentTypeName(contentTypeIdentifier);
         const { formatShortDateTime } = window.eZ.helpers.timezone;
         const translations = this.getTranslations(data);
-        const title = Translator.trans(/*@Desc("Content Meta Preview")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');
+        const title = Translator.trans(/*@Desc("Content metadata")*/ 'content_meta_preview.title', {}, 'universal_discovery_widget');
         const lastModifiedLabel = Translator.trans(
             /*@Desc("Last modified")*/ 'content_meta_preview.last_modified.label',
             {},
@@ -178,7 +178,7 @@ export default class ContentMetaPreviewComponent extends Component {
                     </div>
                     <div className="c-meta-preview__meta-wrapper">
                         <div className="c-meta-preview__image-wrapper">{this.renderImagePreview()}</div>
-                        <div className="c-meta-preview__name">{content.Name}</div>
+                        <div className="c-meta-preview__name">{content.TranslatedName}</div>
                         <div className="c-meta-preview__content-info">
                             <h3 className="c-meta-preview__subtitle">{lastModifiedLabel}:</h3>
                             {formatShortDateTime(new Date(content.lastModificationDate))}
