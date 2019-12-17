@@ -981,7 +981,7 @@ export default class SubItemsModule extends Component {
 
         return ReactDOM.createPortal(
             <Popup
-                onClose={this.closeBulkHidePopup}
+                onClose={this.closeBulkUnhidePopup}
                 isVisible={isBulkUnhidePopupVisible}
                 isLoading={false}
                 size="medium"
