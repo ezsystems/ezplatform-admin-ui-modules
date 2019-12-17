@@ -1089,7 +1089,7 @@ export default class SubItemsModule extends Component {
     renderBulkAddLocationBtn(disabled) {
         const label = Translator.trans(/*@Desc("Add Locations to selected Content item(s)")*/ 'add_locations_btn.label', {}, 'sub_items');
 
-        return <ActionButton disabled={disabled} onClick={this.onAddLocationsBtnClick} label={label} type="create" />;
+        return <ActionButton disabled={disabled} onClick={this.onAddLocationsBtnClick} label={label} type="create-location" />;
     }
 
     renderBulkHideBtn(disabled) {
