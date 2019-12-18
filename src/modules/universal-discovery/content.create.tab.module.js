@@ -71,7 +71,7 @@ eZ.addConfig(
         {
             id: 'content-create',
             component: ContentCreataTabModule,
-            label: 'Content create',
+            label: Translator.trans(/*@Desc("Content create")*/ 'content_create.label', {}, 'universal_discovery_widget'),
             icon: '/bundles/ezplatformadminui/img/ez-icons.svg#search',
             isHiddenOnList: true,
         },

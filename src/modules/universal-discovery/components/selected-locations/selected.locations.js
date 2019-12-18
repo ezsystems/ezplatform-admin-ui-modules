@@ -35,10 +35,12 @@ const SelectedLocations = () => {
         setIsExpanded(!isExpanded);
     };
     const renderSelectionCounter = () => {
+        const selectedLabel = Translator.trans(/*@Desc("selected")*/ 'selected_locations.selected', {}, 'universal_discovery_widget');
+
         return (
             <div className="c-selected-locations__selection-counter">
                 <span className="c-selected-locations__selection-count">{selectedLocations.length}</span>
-                <span className="c-selected-locations__selection-count-label">selected</span>
+                <span className="c-selected-locations__selection-count-label">{selectedLabel}</span>
             </div>
         );
     };

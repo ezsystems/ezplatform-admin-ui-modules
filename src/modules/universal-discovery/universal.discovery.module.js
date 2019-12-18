@@ -10,11 +10,11 @@ const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
 export const SORTING_OPTIONS = [
     {
-        label: 'Date',
+        label: Translator.trans(/*@Desc("Date")*/ 'sorting.date.label', {}, 'universal_discovery_widget'),
         sortClause: 'DatePublished',
     },
     {
-        label: 'Name',
+        label: Translator.trans(/*@Desc("Name")*/ 'sorting.name.label', {}, 'universal_discovery_widget'),
         sortClause: 'ContentName',
     },
 ];

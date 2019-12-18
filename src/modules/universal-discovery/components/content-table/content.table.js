@@ -6,6 +6,10 @@ import ContentTableItem from './content.table.item';
 import Pagination from '../../../common/pagination/pagination';
 
 const ContentTable = ({ count, itemsPerPage, items, activePageIndex, title, onPageChange }) => {
+    const nameLabel = Translator.trans(/*@Desc("Name")*/ 'content_table.name', {}, 'universal_discovery_widget');
+    const modifiedLabel = Translator.trans(/*@Desc("Modified")*/ 'content_table.modified', {}, 'universal_discovery_widget');
+    const contentTypeLabel = Translator.trans(/*@Desc("Content Type")*/ 'content_table.content_type', {}, 'universal_discovery_widget');
+
     return (
         <div className="c-content-table">
             <div className="c-content-table__title">{title}</div>
@@ -14,9 +18,9 @@ const ContentTable = ({ count, itemsPerPage, items, activePageIndex, title, onPa
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Name</th>
-                            <th>Modified</th>
-                            <th>Content Type</th>
+                            <th>{nameLabel}</th>
+                            <th>{modifiedLabel}</th>
+                            <th>{contentTypeLabel}</th>
                             <th></th>
                         </tr>
                     </thead>
