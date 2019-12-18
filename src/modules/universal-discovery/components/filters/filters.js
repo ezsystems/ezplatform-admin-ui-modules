@@ -99,6 +99,12 @@ const Filters = ({ isCollapsed, search }) => {
             </div>
         );
     };
+    const contentTypeLabel = Translator.trans(/*@Desc("Content Type")*/ 'filters.content_type', {}, 'universal_discovery_widget');
+    const sectionLabel = Translator.trans(/*@Desc("Section")*/ 'filters.section', {}, 'universal_discovery_widget');
+    const anySectionLabel = Translator.trans(/*@Desc("Any section")*/ 'filters.any_section', {}, 'universal_discovery_widget');
+    const subtreeLabel = Translator.trans(/*@Desc("Subtree")*/ 'filters.subtree', {}, 'universal_discovery_widget');
+    const clearLabel = Translator.trans(/*@Desc("Clear")*/ 'filters.clear', {}, 'universal_discovery_widget');
+    const applyLabel = Translator.trans(/*@Desc("Apply")*/ 'filters.apply', {}, 'universal_discovery_widget');
 
     useEffect(() => {
         if (filtersCleared) {
@@ -111,15 +117,15 @@ const Filters = ({ isCollapsed, search }) => {
         <div className={wrapperClassName}>
             <div className="ez-filters__row">
                 <div className="ez-filters__item ez-filters__item--content-type">
-                    <label className="ez-filters__item-label">Content Type</label>
+                    <label className="ez-filters__item-label">{contentTypeLabel}</label>
                     <ContentTypeSelector />
                 </div>
             </div>
             <div className="ez-filters__row">
                 <div className="ez-filters__item ez-filters__item--section">
-                    <label className="ez-filters__item-label">Section</label>
+                    <label className="ez-filters__item-label">{sectionLabel}</label>
                     <select className="ez-filters__select form-control" onChange={updateSection} value={selectedSection}>
-                        <option value={''}>Any section</option>
+                        <option value={''}>{anySectionLabel}</option>
                         {Object.entries(window.eZ.adminUiConfig.sections).map(([sectionIdentifier, sectionName]) => {
                             return (
                                 <option key={sectionIdentifier} value={sectionIdentifier}>
@@ -130,7 +136,7 @@ const Filters = ({ isCollapsed, search }) => {
                     </select>
                 </div>
                 <div className="ez-filters__item ez-filters__item--subtree">
-                    <label className="ez-filters__item-label">Subtree:</label>
+                    <label className="ez-filters__item-label">{subtreeLabel}:</label>
                     <div>
                         {renderSelectContentButton()}
                         {renderSubtreeBreadcrumbs()}
@@ -139,14 +145,14 @@ const Filters = ({ isCollapsed, search }) => {
             </div>
             <div className="ez-filters__btns">
                 <button className="btn btn-dark ez-btn-clear" onClick={clearFilters}>
-                    Clear
+                    {clearLabel}
                 </button>
                 <button
                     type="submit"
                     className="btn btn-secondary ez-btn-apply font-weight-bold"
                     onClick={makeSearch}
                     disabled={!isApplyButtonEnabled}>
-                    Apply
+                    {applyLabel}
                 </button>
             </div>
         </div>

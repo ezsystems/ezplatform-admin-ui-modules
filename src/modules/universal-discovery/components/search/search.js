@@ -59,7 +59,34 @@ const Search = () => {
     const changePage = (pageIndex) => setOffset(pageIndex * limit);
     const toggleFiltersCollapsed = () => setFiltersCollapsed((prevState) => !prevState);
     const renderSearchResults = () => {
-        const title = `Search results (${data.count})`;
+        const searchResultsLabel = Translator.trans(/*@Desc("Search results")*/ 'search.search_results', {}, 'universal_discovery_widget');
+        const noResultsLabel = Translator.trans(
+            /*@Desc("Sorry, no results were found for")*/ 'search.no_results',
+            {},
+            'universal_discovery_widget'
+        );
+        const tipsLabel = Translator.trans(/*@Desc("Some helpful search tips")*/ 'search.tips', {}, 'universal_discovery_widget');
+        const checkSpellingLabel = Translator.trans(
+            /*@Desc("Check spelling of keywords.")*/ 'search.check_spelling',
+            {},
+            'universal_discovery_widget'
+        );
+        const differentKeywordsLabel = Translator.trans(
+            /*@Desc("Try different keywords.")*/ 'search.different_keywords',
+            {},
+            'universal_discovery_widget'
+        );
+        const moreGeneralLabel = Translator.trans(
+            /*@Desc("Try more general keywords.")*/ 'search.more_general',
+            {},
+            'universal_discovery_widget'
+        );
+        const fewerKeywordsLabel = Translator.trans(
+            /*@Desc("Try fewer keywords. Reducing keywords result in more matches.")*/ 'search.fewer_keywords',
+            {},
+            'universal_discovery_widget'
+        );
+        const title = `${searchResultsLabel} (${data.count})`;
 
         if (data.count) {
             return (
@@ -80,17 +107,17 @@ const Search = () => {
                         <tbody>
                             <tr>
                                 <td>
-                                    <span>{`Sorry, no results were found for "${searchText}".`}</span>
+                                    <span>{`${noResultsLabel} "${searchText}".`}</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <h6>Some helpful search tips:</h6>
+                    <h6>{tipsLabel}:</h6>
                     <ul>
-                        <li>Check spelling of keywords.</li>
-                        <li>Try different keywords.</li>
-                        <li>Try more general keywords.</li>
-                        <li>Try fewer keywords. Reducing keywords result in more matches.</li>
+                        <li>{checkSpellingLabel}</li>
+                        <li>{differentKeywordsLabel}</li>
+                        <li>{moreGeneralLabel}</li>
+                        <li>{fewerKeywordsLabel}</li>
                     </ul>
                 </div>
             );

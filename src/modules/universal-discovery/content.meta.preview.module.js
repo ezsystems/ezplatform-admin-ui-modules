@@ -85,6 +85,11 @@ const ContentMetaPreview = () => {
         }
 
         const languageCodes = version.VersionInfo.languageCodes.split(',');
+        const editTranslationLabel = Translator.trans(
+            /*@Desc("Edit translation")*/ 'meta_preview.edit_translation',
+            {},
+            'universal_discovery_widget'
+        );
 
         return (
             <div className="c-content-meta-preview__language-selector">
@@ -92,7 +97,7 @@ const ContentMetaPreview = () => {
                     <button className="c-content-meta-preview__close-button btn" onClick={hideLanguageSelector}>
                         <Icon name="discard" extraClasses="ez-icon--small" />
                     </button>
-                    <span className="c-content-meta-preview__title">Edit translation ({languageCodes.length})</span>
+                    <span className="c-content-meta-preview__title">{`${editTranslationLabel} ({languageCodes.length})`}</span>
                 </div>
                 <div className="c-content-meta-preview__languages-wrapper">
                     {languageCodes.map((languageCode) => (
@@ -120,6 +125,9 @@ const ContentMetaPreview = () => {
             </div>
         );
     };
+    const lastModifiedLabel = Translator.trans(/*@Desc("Last Modified")*/ 'meta_preview.last_modified', {}, 'universal_discovery_widget');
+    const creationDateLabel = Translator.trans(/*@Desc("Creation Date")*/ 'meta_preview.creation_date', {}, 'universal_discovery_widget');
+    const translationsLabel = Translator.trans(/*@Desc("Translations")*/ 'meta_preview.translations', {}, 'universal_discovery_widget');
 
     return (
         <div className="c-content-meta-preview">
@@ -140,15 +148,15 @@ const ContentMetaPreview = () => {
                 </div>
                 <div className="c-content-meta-preview__details">
                     <div className="c-content-meta-preview__details-item">
-                        <span>Last Modified</span>
+                        <span>{lastModifiedLabel}</span>
                         <span>{formatShortDateTime(new Date(location.ContentInfo.Content.lastModificationDate))}</span>
                     </div>
                     <div className="c-content-meta-preview__details-item">
-                        <span>Creation Date</span>
+                        <span>{creationDateLabel}</span>
                         <span>{formatShortDateTime(new Date(location.ContentInfo.Content.publishedDate))}</span>
                     </div>
                     <div className="c-content-meta-preview__details-item">
-                        <span>Translations</span>
+                        <span>{translationsLabel}</span>
                         <div className="c-content-meta-preview__translations-wrapper">
                             {version.VersionInfo.languageCodes.split(',').map((languageCode) => {
                                 return (

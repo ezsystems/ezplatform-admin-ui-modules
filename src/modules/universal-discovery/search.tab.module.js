@@ -19,7 +19,7 @@ eZ.addConfig(
         {
             id: 'search',
             component: SearchTabModule,
-            label: 'Search',
+            label: Translator.trans(/*@Desc("Search")*/ 'search.label', {}, 'universal_discovery_widget'),
             icon: '/bundles/ezplatformadminui/img/ez-icons.svg#search',
         },
     ],

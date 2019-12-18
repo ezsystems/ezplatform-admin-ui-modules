@@ -58,17 +58,29 @@ const ContentCreateWidget = () => {
 
         setActiveTab('content-create');
     };
+    const createContentLabel = Translator.trans(/*@Desc("Create new content")*/ 'create_content.label', {}, 'universal_discovery_widget');
+    const selectLanguageLabel = Translator.trans(
+        /*@Desc("Select a language")*/ 'create_content.select_language',
+        {},
+        'universal_discovery_widget'
+    );
+    const selectContentType = Translator.trans(
+        /*@Desc("Select a Content Type")*/ 'create_content.select_content_type',
+        {},
+        'universal_discovery_widget'
+    );
+    const createLabel = Translator.trans(/*@Desc("Create")*/ 'create_content.create', {}, 'universal_discovery_widget');
 
     return (
         <div className="c-content-create">
             <div className="c-content-create__header">
-                <div className="c-content-create__header-title">Create new content</div>
+                <div className="c-content-create__header-title">{createContentLabel}</div>
                 <button type="button" className="c-content-create__close-button" onClick={close}>
                     <Icon name="discard" extraClasses="ez-icon--small-medium" />
                 </button>
             </div>
             <div className="c-content-create__language-selector-wrapper">
-                <div className="c-content-create__language-selector-label">Select a language</div>
+                <div className="c-content-create__language-selector-label">{selectLanguageLabel}</div>
                 <select className="form-control" onChange={updateSelectedLanguage} value={selectedLanguage}>
                     {filteredLanguages.map((language) => {
                         return (
@@ -80,7 +92,7 @@ const ContentCreateWidget = () => {
                 </select>
             </div>
             <div className="c-content-create__select-content-type-wrapper">
-                <div className="c-content-create__select-content-type-label">Select a Content Type</div>
+                <div className="c-content-create__select-content-type-label">{selectContentType}</div>
                 <input className="form-control" type="text" placeholder="Type to refine" onChange={updateFilterQuery} />
                 <div className="c-content-create__content-type-list">
                     {contentTypes.map(([groupName, groupItems]) => {
@@ -130,7 +142,7 @@ const ContentCreateWidget = () => {
             </div>
             <div className="c-content-create__confirm-wrapper">
                 <button className="c-content-create__confirm-button btn btn-primary" onClick={createContent} disabled={isConfirmDisabled}>
-                    Create
+                    {createLabel}
                 </button>
             </div>
         </div>
