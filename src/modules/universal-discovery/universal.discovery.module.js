@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext } from 'react';
 import PropTypes from 'prop-types';
 
+import deepClone from '../common/helpers/deep.clone.helper';
 import { createCssClassNames } from '../common/helpers/css.class.names';
 import { useLoadedLocationsReducer } from './hooks/useLoadedLocationsReducer';
 import { useSelectedLocationsReducer } from './hooks/useSelectedLocationsReducer';
@@ -76,6 +77,18 @@ const UniversalDiscoveryModule = (props) => {
         'm-ud': true,
         'm-ud--locations-selected': !!selectedLocations.length,
     });
+    const onConfirm = (locations = selectedLocations) => {
+        const updatedLocations = locations.map((location) => {
+            const clonedLocation = deepClone(location);
+            const contentType = clonedLocation.ContentInfo.Content.ContentType;
+
+            clonedLocation.ContentInfo.Content.ContentTypeInfo = contentTypesInfoMap[contentType._href];
+
+            return clonedLocation;
+        });
+
+        props.onConfirm(updatedLocations);
+    };
 
     useEffect(() => {
         const handleLoadContentTypes = (response) => {
@@ -165,7 +178,7 @@ const UniversalDiscoveryModule = (props) => {
                                                 <TabsConfigContext.Provider value={props.tabsConfig}>
                                                     <TitleContext.Provider value={props.title}>
                                                         <CancelContext.Provider value={props.onCancel}>
-                                                            <ConfirmContext.Provider value={props.onConfirm}>
+                                                            <ConfirmContext.Provider value={onConfirm}>
                                                                 <SortingContext.Provider value={[sorting, setSorting]}>
                                                                     <SortOrderContext.Provider value={[sortOrder, setSortOrder]}>
                                                                         <CurrentViewContext.Provider value={[currentView, setCurrentView]}>
@@ -243,6 +256,7 @@ UniversalDiscoveryModule.propTypes = {
         preselectedLocation: PropTypes.string.isRequired,
         preselectedContentType: PropTypes.string.isRequired,
         hidden: PropTypes.bool.isRequired,
+        autoConfirmAfterPublish: PropTypes.bool.isRequired,
     }).isRequired,
     tabsConfig: PropTypes.objectOf(
         PropTypes.shape({

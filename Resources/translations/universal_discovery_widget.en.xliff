@@ -16,6 +16,16 @@
         <target state="new">Browse</target>
         <note>key: browse.label</note>
       </trans-unit>
+      <trans-unit id="1713d0deb6344882cf915babb2df574556a3f82c" resname="content_create.cancel.label">
+        <source>Cancel</source>
+        <target state="new">Cancel</target>
+        <note>key: content_create.cancel.label</note>
+      </trans-unit>
+      <trans-unit id="43ff5dfcebc0d3daabe0eb72f8b0c7564e6d4218" resname="content_create.confirm.label">
+        <source>Confirm</source>
+        <target state="new">Confirm</target>
+        <note>key: content_create.confirm.label</note>
+      </trans-unit>
       <trans-unit id="6597ed9c77295271a62deaf86cddcab2a332af8d" resname="content_create.label">
         <source>Content create</source>
         <target state="new">Content create</target>

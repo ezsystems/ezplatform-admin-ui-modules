@@ -1,7 +1,6 @@
 import React, { useContext, useState, Fragment } from 'react';
 
 import Icon from '../../../common/icon/icon';
-import deepClone from '../../../common/helpers/deep.clone.helper';
 import SelectedLocationsItem from './selected.locations.item';
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 
@@ -18,18 +17,6 @@ const SelectedLocations = () => {
     });
     const clearSelection = () => {
         dispatchSelectedLocationsAction({ type: 'CLEAR_SELECTED_LOCATIONS' });
-    };
-    const confirmSelection = () => {
-        const locations = selectedLocations.map((location) => {
-            const clonedLocation = deepClone(location);
-            const contentType = clonedLocation.ContentInfo.Content.ContentType;
-
-            clonedLocation.ContentInfo.Content.ContentTypeInfo = contentTypesInfoMap[contentType._href];
-
-            return clonedLocation;
-        });
-
-        onConfirm(locations);
     };
     const toggleExpanded = () => {
         setIsExpanded(!isExpanded);
@@ -56,7 +43,7 @@ const SelectedLocations = () => {
     const renderActionButtons = () => {
         return (
             <Fragment>
-                <button type="button" className="c-selected-locations__confirm-button" onClick={confirmSelection}>
+                <button type="button" className="c-selected-locations__confirm-button" onClick={onConfirm}>
                     <Icon name="checkmark" extraClasses="ez-icon--medium ez-icon--light" />
                 </button>
                 <button type="button" className="c-selected-locations__clear-selection-button" onClick={clearSelection}>
