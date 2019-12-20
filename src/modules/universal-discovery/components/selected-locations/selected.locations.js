@@ -43,7 +43,7 @@ const SelectedLocations = () => {
     const renderActionButtons = () => {
         return (
             <Fragment>
-                <button type="button" className="c-selected-locations__confirm-button" onClick={onConfirm}>
+                <button type="button" className="c-selected-locations__confirm-button" onClick={() => onConfirm()}>
                     <Icon name="checkmark" extraClasses="ez-icon--medium ez-icon--light" />
                 </button>
                 <button type="button" className="c-selected-locations__clear-selection-button" onClick={clearSelection}>
