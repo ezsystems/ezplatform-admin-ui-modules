@@ -55,7 +55,6 @@ const ContentCreateWidget = () => {
             languageCode: selectedLanguage,
             contentTypeIdentifier: selectedContentType,
         });
-
         setActiveTab('content-create');
     };
     const createContentLabel = Translator.trans(/*@Desc("Create new content")*/ 'create_content.label', {}, 'universal_discovery_widget');
@@ -93,7 +92,7 @@ const ContentCreateWidget = () => {
             </div>
             <div className="c-content-create__select-content-type-wrapper">
                 <div className="c-content-create__select-content-type-label">{selectContentType}</div>
-                <input className="form-control" type="text" placeholder="Type to refine" onChange={updateFilterQuery} />
+                <input autoFocus className="form-control" type="text" placeholder="Type to refine" onChange={updateFilterQuery} />
                 <div className="c-content-create__content-type-list">
                     {contentTypes.map(([groupName, groupItems]) => {
                         const isHidden = groupItems.every((groupItem) => {
