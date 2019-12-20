@@ -36,15 +36,10 @@
         <target state="new">%itemsCount% Content item(s) cannot be deleted or sent to Trash</target>
         <note>key: bulk_delete.error.modal.table_title.users_with_nonusers</note>
       </trans-unit>
-      <trans-unit id="c1ffafa700d4b0ba80a626363f9dfe853571e080" resname="bulk_delete.error.more_info">
-        <source><![CDATA[<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>]]></source>
-        <target state="new"><![CDATA[<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>]]></target>
-        <note>key: bulk_delete.error.more_info</note>
-      </trans-unit>
-      <trans-unit id="410f2ebb276d839b6606da042d0327a32e949093" resname="bulk_delete.popup.cancel">
+      <trans-unit id="aa8f660d8cae16394e7cd4421e6b604e031ad04b" resname="bulk_action.popup.cancel">
         <source>Cancel</source>
         <target state="new">Cancel</target>
-        <note>key: bulk_delete.popup.cancel</note>
+        <note>key: bulk_action.popup.cancel</note>
       </trans-unit>
       <trans-unit id="530f5b1097af7206fdabc3a51ac334c933ab4909" resname="bulk_delete.popup.confirm.nonusers">
         <source>Send to Trash</source>
@@ -86,6 +81,71 @@
         <target state="new">Content item(s) sent to Trash. User(s) deleted.</target>
         <note>key: bulk_delete.success.message.users_with_nonusers</note>
       </trans-unit>
+      <trans-unit id="540d45bd030bab3e5bec8b9c1433ff4d9998c73e" resname="bulk_hide.popup.confirm">
+        <source>Hide</source>
+        <target state="new">Hide</target>
+        <note>key: bulk_hide.popup.confirm</note>
+      </trans-unit>
+      <trans-unit id="d2ab57f08d00c6f0d714b26aa81a44c8a1867903" resname="bulk_hide.popup.message">
+        <source>Are you sure you want to hide the selected Location(s)?</source>
+        <target state="new">Are you sure you want to hide the selected Location(s)?</target>
+        <note>key: bulk_hide.popup.message</note>
+      </trans-unit>
+      <trans-unit id="3a8fe14b551e382f3f1f20f7aed2e5de9804f619" resname="bulk_hide.error.modal.table_title">
+        <source>%itemsCount% Location(s) cannot be hidden</source>
+        <target state="new">%itemsCount% Location(s) cannot be hidden</target>
+        <note>key: bulk_hide.error.modal.table_title</note>
+      </trans-unit>
+      <trans-unit id="5e5f346e9dca66d113585207c4e7a98e87421d34" resname="bulk_hide.error.message">
+        <source>%failedCount% of the %totalCount% selected Location(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</source>
+        <target state="new">%failedCount% of the %totalCount% selected Location(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</target>
+        <note>key: bulk_hide.error.message</note>
+      </trans-unit>
+      <trans-unit id="9157594a9c2f44581165ee5e73c89bc5985a7fc9" resname="bulk_hide.success.message">
+        <source>Location(s) hidden.</source>
+        <target state="new">Location(s) hidden.</target>
+        <note>key: bulk_hide.success.message</note>
+      </trans-unit>
+      <trans-unit id="16c240de3cfc07b8e56d008357706abefad3e3ae" resname="bulk_unhide.popup.confirm">
+        <source>Reveal</source>
+        <target state="new">Reveal</target>
+        <note>key: bulk_unhide.popup.confirm</note>
+      </trans-unit>
+      <trans-unit id="99b9c21ff0ed8b33521c0b8c07410f1f10e5f879" resname="bulk_unhide.popup.message">
+        <source>Are you sure you want to reveal the selected Location(s)?</source>
+        <target state="new">Are you sure you want to reveal the selected Location(s)?</target>
+        <note>key: bulk_unhide.popup.message</note>
+      </trans-unit>
+      <trans-unit id="02b906429a29023075754b4dd3bf437b80a25ce6" resname="bulk_unhide.error.modal.table_title">
+        <source>%itemsCount% Location(s) cannot be revealed</source>
+        <target state="new">%itemsCount% Location(s) cannot be revealed</target>
+        <note>key: bulk_unhide.error.modal.table_title</note>
+      </trans-unit>
+      <trans-unit id="1208ce7816f3fa2b489c6946068c415949cf4c64" resname="bulk_unhide.error.message">
+        <source>%failedCount% of the %totalCount% selected Location(s) could not be revealed because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</source>
+        <target state="new">%failedCount% of the %totalCount% selected Location(s) could not be revealed because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</target>
+        <note>key: bulk_unhide.error.message</note>
+      </trans-unit>
+      <trans-unit id="edb883dfd8dc46cc6d99b10e9e6fd7bc708f72db" resname="bulk_unhide.success.message">
+        <source>Location(s) revealed.</source>
+        <target state="new">Location(s) revealed.</target>
+        <note>key: bulk_unhide.success.message</note>
+      </trans-unit>
+      <trans-unit id="d90e512d5cfd6d471246fad1cea365751b1cace5" resname="bulk_add_location.error.modal.table_title">
+        <source>%itemsCount% Location(s) cannot be added</source>
+        <target state="new">%itemsCount% Location(s) cannot be added</target>
+        <note>key: bulk_add_location.error.modal.table_title</note>
+      </trans-unit>
+      <trans-unit id="ba6155333e2bbe9f762d1e1462a9c3075ce38a75" resname="bulk_add_location.error.message">
+        <source>%failedCount% of the %totalCount% selected Locations(s) could not be added because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</source>
+        <target state="new">%failedCount% of the %totalCount% selected Locations(s) could not be added because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.</target>
+        <note>key: bulk_add_location.error.message</note>
+      </trans-unit>
+      <trans-unit id="674c6872a8bb0ee30b38cc338bf6482dd78dde56" resname="bulk_add_location.success.message">
+        <source>Location(s) added to {{ locationLink }}.</source>
+        <target state="new">Location(s) added to {{ locationLink }}.</target>
+        <note>key: bulk_add_location.success.message</note>
+      </trans-unit>
       <trans-unit id="364a3498e021163497d9110380736b876beb326f" resname="bulk_move.error.message">
         <source>%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</source>
         <target state="new">%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have sufficient permissions. {{ moreInformationLink }} Contact your Administrator.</target>
@@ -96,15 +156,15 @@
         <target state="new">%itemsCount% Content items cannot be moved</target>
         <note>key: bulk_move.error.modal.table_title</note>
       </trans-unit>
-      <trans-unit id="704ee7a643332c4112613751caaf764496b8c5ac" resname="bulk_move.error.more_info">
+      <trans-unit id="ca61c6a680354ca0ca27b53f63d9d30ba35eee2a" resname="bulk_action.error.more_info">
         <source><![CDATA[<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>]]></source>
         <target state="new"><![CDATA[<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>]]></target>
-        <note>key: bulk_move.error.more_info</note>
+        <note>key: bulk_action.error.more_info</note>
       </trans-unit>
-      <trans-unit id="a1944f6944ef07fd9c744119c970b32ad6085954" resname="bulk_move.success.link_to_location">
+      <trans-unit id="98f3fdd964db64fa9cf168abd74cac45094cab72" resname="bulk_action.success.link_to_location">
         <source><![CDATA[<u><a href='%locationHref%'>%locationName%</a></u>]]></source>
         <target state="new"><![CDATA[<u><a href='%locationHref%'>%locationName%</a></u>]]></target>
-        <note>key: bulk_move.success.link_to_location</note>
+        <note>key: bulk_action.success.link_to_location</note>
       </trans-unit>
       <trans-unit id="ac326404ff958f8e3fa903df5750024602b812de" resname="bulk_move.success.message">
         <source>Content item(s) sent to {{ locationLink }}</source>
@@ -112,8 +172,8 @@
         <note>key: bulk_move.success.message</note>
       </trans-unit>
       <trans-unit id="93850319ec8e493cc4d0b8bb1ae2a87cdf26d3d6" resname="bulk_request.error.message">
-        <source>An unexpected error occurred while deleting the Content item(s). Please try again.</source>
-        <target state="new">An unexpected error occurred while deleting the Content item(s). Please try again.</target>
+        <source>An unexpected error occurred while processing the Content item(s). Please try again later.</source>
+        <target state="new">An unexpected error occurred while processing the Content item(s). Please try again later.</target>
         <note>key: bulk_request.error.message</note>
       </trans-unit>
       <trans-unit id="5e1792d4a193550fe8afd9a4be6d0a8c3f6596e9" resname="edit_item_btn.label">
@@ -210,6 +270,21 @@
         <source>Move selected items</source>
         <target state="new">Move selected items</target>
         <note>key: move_btn.label</note>
+      </trans-unit>
+      <trans-unit id="8d9e2f3fb15679717338a9f8ba95640c4b6b2e66" resname="add_locations_btn.label">
+        <source>Add Locations to selected Content item(s)</source>
+        <target state="new">Add Locations to selected Content item(s)</target>
+        <note>key: add_locations_btn.label</note>
+      </trans-unit>
+      <trans-unit id="0f2106150fc552b94658eee2125a4c4680f3564c" resname="hide_locations_btn.label">
+        <source>Hide selected Location(s)</source>
+        <target state="new">Hide selected Location(s)</target>
+        <note>key: hide_locations_btn.label</note>
+      </trans-unit>
+      <trans-unit id="8518fc267b3ab3f637351ddbd8ad08e1312d822c" resname="unhide_locations_btn.label">
+        <source>Reveal selected Location(s)</source>
+        <target state="new">Reveal selected Location(s)</target>
+        <note>key: unhide_locations_btn.label</note>
       </trans-unit>
       <trans-unit id="276a7024903672cd0476c82ba8845453e13db95e" resname="no_items.message">
         <source>This location has no sub-items</source>
