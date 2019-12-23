@@ -17,16 +17,16 @@ export default class ContentTreeModule extends Component {
         this.refreshContentTree = this.refreshContentTree.bind(this);
 
         try {
-        const savedSubtree = this.readSubtree();
+            const savedSubtree = this.readSubtree();
 
-        this.items = props.preloadedLocations;
-        this.subtree = savedSubtree ? savedSubtree : this.generateInitialSubtree();
+            this.items = props.preloadedLocations;
+            this.subtree = savedSubtree ? savedSubtree : this.generateInitialSubtree();
 
-        this.expandCurrentLocationInSubtree();
-        this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
-        this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
-        this.saveSubtree();
-        } catch(error) {
+            this.expandCurrentLocationInSubtree();
+            this.clipTooDeepSubtreeBranches(this.subtree[0], props.treeMaxDepth - 1);
+            this.subtree[0].children.forEach(this.limitSubitemsInSubtree);
+            this.saveSubtree();
+        } catch (error) {
             this.items = [];
             this.subtree = this.generateInitialSubtree();
             this.saveSubtree();
@@ -51,7 +51,7 @@ export default class ContentTreeModule extends Component {
     setInitialItemsState(location) {
         this.items = [location];
         this.subtree = this.generateSubtree(this.items, true);
-            
+
         this.saveSubtree();
         this.forceUpdate();
     }
