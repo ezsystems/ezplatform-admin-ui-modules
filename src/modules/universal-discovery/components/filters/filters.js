@@ -70,7 +70,7 @@ const Filters = ({ isCollapsed, search }) => {
             ...config,
         };
 
-        ReactDOM.render(React.createElement(eZ.modules.UDW, mergedConfig), udwContainer);
+        ReactDOM.render(React.createElement(eZ.modules.UniversalDiscovery, mergedConfig), udwContainer);
     };
     const makeSearch = useCallback(() => search(0), [search]);
     const isApplyButtonEnabled = !!selectedContentTypes.length || !!selectedSection || !!selectedSubtree;
