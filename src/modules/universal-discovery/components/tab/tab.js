@@ -22,20 +22,20 @@ const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isVi
     };
 
     return (
-        <div className="c-tab">
-            <div className="c-tab__top-bar">
+        <div className="c-udw-tab">
+            <div className="c-udw-tab__top-bar">
                 <TopMenu
                     isContentOnTheFlyDisabled={isContentOnTheFlyDisabled}
                     isSortSwitcherDisabled={isSortSwitcherDisabled}
                     isViewSwitcherDisabled={isViewSwitcherDisabled}
                 />
             </div>
-            <div className="c-tab__left-sidebar">
+            <div className="c-udw-tab__left-sidebar">
                 {renderCreateWidget()}
                 <TabSelector />
             </div>
-            <div className="c-tab__main">{children}</div>
-            <div className="c-tab__right-sidebar">
+            <div className="c-udw-tab__main">{children}</div>
+            <div className="c-udw-tab__right-sidebar">
                 {ContentMetaPreview && <ContentMetaPreview />}
                 {selectedLocationsComponent}
             </div>
