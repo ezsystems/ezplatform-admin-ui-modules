@@ -31,7 +31,7 @@
 }
 
 .m-ud--locations-selected {
-    .c-tab {
+    .c-udw-tab {
         grid-template-columns: calculateRem(260px) 1fr calculateRem(310px);
         &__right-sidebar {
             position: relative;
@@ -41,7 +41,7 @@
 }
 
 .m-bookmarks-tab {
-    .c-tab__main {
+    .c-udw-tab__main {
         display: flex;
     }
 }
