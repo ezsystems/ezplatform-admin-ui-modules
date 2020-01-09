@@ -29,8 +29,9 @@ const FinderLeaf = ({ location }) => {
         (containersOnly && !isContainer) || (allowedContentTypes && !allowedContentTypes.includes(contentTypeInfo.identifier));
     const markLocation = ({ nativeEvent }) => {
         const isSelectionButtonClicked = nativeEvent.target.closest('.c-toggle-selection-button');
+        const isMarkedLocationClicked = location.id === markedLocation;
 
-        if (isSelectionButtonClicked) {
+        if (isSelectionButtonClicked || isMarkedLocationClicked) {
             return;
         }
 
