@@ -97,7 +97,7 @@ const ContentMetaPreview = () => {
                     <button className="c-content-meta-preview__close-button btn" onClick={hideLanguageSelector}>
                         <Icon name="discard" extraClasses="ez-icon--small" />
                     </button>
-                    <span className="c-content-meta-preview__title">{`${editTranslationLabel} ({languageCodes.length})`}</span>
+                    <span className="c-content-meta-preview__title">{`${editTranslationLabel} (${languageCodes.length})`}</span>
                 </div>
                 <div className="c-content-meta-preview__languages-wrapper">
                     {languageCodes.map((languageCode) => (
