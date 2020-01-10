@@ -104,6 +104,8 @@ export default class SubItemsModule extends Component {
         if (shouldLoadPage) {
             this.loadPage(activePageIndex);
         }
+
+        eZ.helpers.tooltips.parse();
     }
 
     componentWillUnmount() {
