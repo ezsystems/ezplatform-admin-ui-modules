@@ -17,14 +17,12 @@ const TooltipPopupComponent = (props) => {
         } else if (top > HEADER_HEIGHT) {
             setMaxHeight(INITIAL_HEIGHT);
         }
-
     });
 
     const attrs = {
         className: 'c-tooltip-popup',
         hidden: !props.visible,
     };
-
     const contentStyle = maxHeight === INITIAL_HEIGHT
         ? {}
         : {
