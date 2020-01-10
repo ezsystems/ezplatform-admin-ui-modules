@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../icon/icon';
 
+const INITIAL_HEIGHT = 'initial';
+const HEADER_HEIGHT = 35;
+
 const TooltipPopupComponent = (props) => {
+    const contentRef = useRef();
+    const [maxHeight, setMaxHeight] = useState(INITIAL_HEIGHT);
+
+    useLayoutEffect(() => {
+        const { top, height } = contentRef.current.getBoundingClientRect();
+
+        if (top < HEADER_HEIGHT) {
+            setMaxHeight(height + top - HEADER_HEIGHT);
+        } else if (top > HEADER_HEIGHT) {
+            setMaxHeight(INITIAL_HEIGHT);
+        }
+
+    });
+
     const attrs = {
         className: 'c-tooltip-popup',
         hidden: !props.visible,
     };
+
+    const contentStyle = maxHeight === INITIAL_HEIGHT
+        ? {}
+        : {
+            maxHeight,
+            overflowY: 'scroll',
+        };
 
     return (
         <div {...attrs}>
@@ -16,7 +40,7 @@ const TooltipPopupComponent = (props) => {
                     <Icon name="discard" extraClasses="ez-icon--medium" />
                 </div>
             </div>
-            <div className="c-tooltip-popup__content">{props.children}</div>
+            <div className="c-tooltip-popup__content" ref={contentRef} style={contentStyle}>{props.children}</div>
         </div>
     );
 };
