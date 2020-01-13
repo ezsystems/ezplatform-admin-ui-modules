@@ -9,8 +9,10 @@ import {
     RestInfoContext,
     SelectedLocationsContext,
     ConfirmContext,
+    LoadedLocationsMapContext,
 } from './universal.discovery.module';
 import { findLocationsById } from './services/universal.discovery.service';
+import deepClone from '../common/helpers/deep.clone.helper';
 
 const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) => {
     return window.Routing.generate('ezplatform.content_on_the_fly.create', {
@@ -29,6 +31,7 @@ const ContentCreataTabModule = () => {
     const [activeTab, setActiveTab] = useContext(ActiveTabContext);
     const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
+    const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const iframeUrl = generateIframeUrl(contentOnTheFlyData);
     const iframeRef = createRef();
     const cancelContentCreate = () => {
@@ -54,6 +57,11 @@ const ContentCreataTabModule = () => {
                     return;
                 }
 
+                const clonedLoadedLocations = deepClone(loadedLocationsMap);
+
+                clonedLoadedLocations[clonedLoadedLocations.length - 1].subitems = [];
+
+                dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: clonedLoadedLocations });
                 dispatchSelectedLocationsAction({ type: 'ADD_SELECTED_LOCATION', location: items[0] });
                 cancelContentCreate();
             });
