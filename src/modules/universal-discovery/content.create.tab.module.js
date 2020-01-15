@@ -58,8 +58,10 @@ const ContentCreataTabModule = () => {
                 }
 
                 const clonedLoadedLocations = deepClone(loadedLocationsMap);
+                const parentLocationData = clonedLoadedLocations[clonedLoadedLocations.length - 1];
 
-                clonedLoadedLocations[clonedLoadedLocations.length - 1].subitems = [];
+                parentLocationData.subitems = [];
+                parentLocationData.location.childCount = parentLocationData.location.childCount + 1;
 
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: clonedLoadedLocations });
                 dispatchSelectedLocationsAction({ type: 'ADD_SELECTED_LOCATION', location: items[0] });
