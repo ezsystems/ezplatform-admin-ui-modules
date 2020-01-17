@@ -23,7 +23,12 @@ const Breadcrumbs = () => {
         );
     }, [loadedLocationsMap]);
     const goToLocation = (locationId) => {
-        dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId });
+        const itemIndex = loadedLocationsMap.findIndex((data) => data.parentLocationId === locationId);
+        const updatedLoadedLocations = loadedLocationsMap.slice(0, itemIndex + 1);
+
+        updatedLoadedLocations[updatedLoadedLocations.length - 1].subitems = [];
+
+        dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: updatedLoadedLocations });
     };
     const toggleHiddenListVisible = useCallback(() => {
         setHiddenListVisible(!hiddenListVisible);
