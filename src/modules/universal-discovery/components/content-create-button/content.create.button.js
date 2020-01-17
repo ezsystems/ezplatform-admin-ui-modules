@@ -18,8 +18,15 @@ const ContentCreateButton = ({ isDisabled }) => {
     const toggleContentCreateVisibility = () => {
         setCreateContentVisible((prevState) => !prevState);
     };
-    const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
-    const isAllowedLocation = !allowedLocations || !selectedLocation || allowedLocations.includes(selectedLocation.parentLocationId);
+    let selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
+
+    if (!selectedLocation && loadedLocationsMap.length) {
+        selectedLocation = loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find(
+            (subitem) => subitem.location.id === markedLocation
+        );
+    }
+
+    const isAllowedLocation = selectedLocation && (!allowedLocations || allowedLocations.includes(selectedLocation.parentLocationId));
     const hasAccess =
         !selectedLocation || !selectedLocation.permissions || (selectedLocation.permissions && selectedLocation.permissions.hasAccess);
 

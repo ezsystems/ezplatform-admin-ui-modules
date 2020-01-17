@@ -59,11 +59,12 @@ export const ContentOnTheFlyConfigContext = createContext();
 
 const UniversalDiscoveryModule = (props) => {
     const tabs = window.eZ.adminUiConfig.universalDiscoveryWidget.tabs;
+    const defaultMarkedLocation = props.startingLocationId || props.rootLocationId;
     const [activeTab, setActiveTab] = useState(props.activeTab);
     const [sorting, setSorting] = useState(props.activeSortClause);
     const [sortOrder, setSortOrder] = useState(props.activeSortOrder);
     const [currentView, setCurrentView] = useState(props.activeView);
-    const [markedLocation, setMarkedLocation] = useState(props.startingLocationId || props.rootLocationId);
+    const [markedLocation, setMarkedLocation] = useState(defaultMarkedLocation !== 1 ? defaultMarkedLocation : null);
     const [createContentVisible, setCreateContentVisible] = useState(false);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useState({});
     const [contentTypesInfoMap, setContentTypesInfoMap] = useState({});
@@ -131,6 +132,13 @@ const UniversalDiscoveryModule = (props) => {
             loadedLocationsMap[loadedLocationsMap.length - 1].subitems = [];
 
             dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: loadedLocationsMap });
+        } else if (
+            currentView === 'finder' &&
+            !!markedLocation &&
+            markedLocation !== loadedLocationsMap[loadedLocationsMap.length - 1].parentLocationId &&
+            loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocation)
+        ) {
+            dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: markedLocation, subitems: [] } });
         }
     }, [currentView]);
 

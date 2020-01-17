@@ -21,14 +21,18 @@ const ContentMetaPreview = () => {
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const [isLanguageSelectorOpen, setIsLanguageSelectorOpen] = useState(false);
     const locationData = useMemo(() => {
-        return loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
+        return (
+            loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation) ||
+            (loadedLocationsMap.length &&
+                loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocation))
+        );
     }, [markedLocation, loadedLocationsMap]);
 
     useEffect(() => {
         setIsLanguageSelectorOpen(false);
     }, [markedLocation]);
 
-    if (!locationData || !locationData.location || markedLocation === 1) {
+    if (!locationData || !locationData.location || !locationData.version || markedLocation === 1) {
         return null;
     }
 

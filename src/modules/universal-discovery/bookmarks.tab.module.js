@@ -28,7 +28,6 @@ const BookmarksTabModule = () => {
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [bookmarkedLocationMarked, setBookmarkedLocationMarked] = useState(null);
-    const isFirstRun = useRef(true);
     const renderBrowseLocations = () => {
         if (!markedLocation) {
             return null;
@@ -36,14 +35,6 @@ const BookmarksTabModule = () => {
 
         return views[currentView];
     };
-
-    useEffect(() => {
-        if (isFirstRun.current) {
-            isFirstRun.current = false;
-
-            setMarkedLocation(null);
-        }
-    });
 
     useEffect(() => {
         if (!bookmarkedLocationMarked) {
