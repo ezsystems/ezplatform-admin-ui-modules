@@ -10,6 +10,7 @@ import {
     SelectedLocationsContext,
     ConfirmContext,
     LoadedLocationsMapContext,
+    MultipleConfigContext,
 } from './universal.discovery.module';
 import { findLocationsById } from './services/universal.discovery.service';
 import deepClone from '../common/helpers/deep.clone.helper';
@@ -32,6 +33,7 @@ const ContentCreataTabModule = () => {
     const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
+    const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const iframeUrl = generateIframeUrl(contentOnTheFlyData);
     const iframeRef = createRef();
     const cancelContentCreate = () => {
@@ -50,8 +52,10 @@ const ContentCreataTabModule = () => {
         const locationId = iframeRef.current.contentWindow.document.querySelector('meta[name="LocationID"]');
 
         if (locationId) {
-            findLocationsById({ ...restInfo, id: parseInt(locationId.content, 10) }, (items) => {
+            findLocationsById({ ...restInfo, id: parseInt(locationId.content, 10) }, (createdItems) => {
                 if (contentOnTheFlyConfig.autoConfirmAfterPublish) {
+                    const items = multiple ? [...selectedLocations, ...createdItems] : createdItems;
+
                     onConfirm(items);
 
                     return;
@@ -59,12 +63,15 @@ const ContentCreataTabModule = () => {
 
                 const clonedLoadedLocations = deepClone(loadedLocationsMap);
                 const parentLocationData = clonedLoadedLocations[clonedLoadedLocations.length - 1];
+                const action = multiple
+                    ? { type: 'ADD_SELECTED_LOCATION', location: createdItems[0] }
+                    : { type: 'REPLACE_SELECTED_LOCATIONS', locations: createdItems };
 
                 parentLocationData.subitems = [];
                 parentLocationData.location.childCount = parentLocationData.location.childCount + 1;
 
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: clonedLoadedLocations });
-                dispatchSelectedLocationsAction({ type: 'ADD_SELECTED_LOCATION', location: items[0] });
+                dispatchSelectedLocationsAction(action);
                 cancelContentCreate();
             });
         }
