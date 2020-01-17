@@ -135,7 +135,8 @@ const UniversalDiscoveryModule = (props) => {
         } else if (
             currentView === 'finder' &&
             !!markedLocation &&
-            markedLocation !== loadedLocationsMap[loadedLocationsMap.length - 1].parentLocationId
+            markedLocation !== loadedLocationsMap[loadedLocationsMap.length - 1].parentLocationId &&
+            loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocation)
         ) {
             dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: markedLocation, subitems: [] } });
         }
