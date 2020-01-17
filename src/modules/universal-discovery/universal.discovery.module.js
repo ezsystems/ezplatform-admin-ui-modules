@@ -132,6 +132,12 @@ const UniversalDiscoveryModule = (props) => {
             loadedLocationsMap[loadedLocationsMap.length - 1].subitems = [];
 
             dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: loadedLocationsMap });
+        } else if (
+            currentView === 'finder' &&
+            !!markedLocation &&
+            markedLocation !== loadedLocationsMap[loadedLocationsMap.length - 1].parentLocationId
+        ) {
+            dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: markedLocation, subitems: [] } });
         }
     }, [currentView]);
 
