@@ -11,10 +11,11 @@ const TooltipPopupComponent = (props) => {
 
     useLayoutEffect(() => {
         const { top, height } = contentRef.current.getBoundingClientRect();
+        const topRounded = Math.round(top);
 
-        if (top < HEADER_HEIGHT) {
-            setMaxHeight(height + top - HEADER_HEIGHT);
-        } else if (top > HEADER_HEIGHT) {
+        if (topRounded < HEADER_HEIGHT) {
+            setMaxHeight(height + topRounded - HEADER_HEIGHT);
+        } else if (topRounded > HEADER_HEIGHT) {
             setMaxHeight(INITIAL_HEIGHT);
         }
     });
