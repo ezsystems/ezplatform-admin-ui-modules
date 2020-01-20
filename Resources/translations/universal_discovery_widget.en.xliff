@@ -11,6 +11,11 @@
         <target state="new">Bookmarks</target>
         <note>key: bookmarks.label</note>
       </trans-unit>
+      <trans-unit id="2467591f8170f453c7e896466beb7bb255078cb7" resname="breadcrumbs.root_location">
+        <source>Root Location</source>
+        <target state="new">Root Location</target>
+        <note>key: breadcrumbs.root_location</note>
+      </trans-unit>
       <trans-unit id="d88e188b21fc4c65a6d8bdf170e0e23dfe0712a3" resname="browse.label">
         <source>Browse</source>
         <target state="new">Browse</target>

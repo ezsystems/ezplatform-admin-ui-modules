@@ -28,7 +28,7 @@ export const findLocationsByParentLocationId = (
     fetch(request)
         .then(handleRequestResponse)
         .then((response) => {
-            const { bookmark, location, permissions, subitems, version } = response;
+            const { bookmarked, location, permissions, subitems, version } = response;
             const subitemsData = subitems.locations.map((location) => {
                 const mappedSubitems = {
                     location: location.Location,
@@ -44,15 +44,17 @@ export const findLocationsByParentLocationId = (
 
                 return mappedSubitems;
             });
-
-            callback({
-                location: location.Location,
-                version: version.Version,
+            const locationData = {
+                location: location ? location.Location : null,
+                version: version ? version.Version : null,
+                totalCount: subitems.totalCount,
                 subitems: subitemsData,
-                bookmarked: bookmark,
+                bookmarked,
                 permissions,
                 parentLocationId,
-            });
+            };
+
+            callback(locationData);
         })
         .catch(showErrorNotification);
 };
@@ -88,27 +90,20 @@ export const loadAccordionData = (
             });
 
             const lastLocationData = response.columns[parentLocationId];
-            const subitemsData = lastLocationData.subitems.locations.map((location) => {
-                const mappedSubitems = {
-                    location: location.Location,
-                };
 
-                if (lastLocationData.subitems.versions) {
-                    const version = lastLocationData.subitems.versions.find(
-                        (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
-                    );
-
-                    mappedSubitems.version = version.Version;
-                }
-
-                return mappedSubitems;
-            });
+            if (response.columns[1]) {
+                mappedItems.unshift({
+                    subitems: [],
+                    parentLocationId: 1,
+                    collapsed: false,
+                });
+            }
 
             mappedItems.push({
                 location: lastLocationData.location.Location,
                 version: lastLocationData.version.Version,
-                subitems: subitemsData,
-                bookmarked: lastLocationData.bookmark,
+                subitems: [],
+                bookmarked: lastLocationData.bookmarked,
                 permissions: lastLocationData.permissions,
                 parentLocationId,
             });

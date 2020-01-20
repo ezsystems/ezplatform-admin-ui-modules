@@ -61,7 +61,7 @@ const ContentCreataTabModule = () => {
                 const parentLocationData = clonedLoadedLocations[clonedLoadedLocations.length - 1];
 
                 parentLocationData.subitems = [];
-                parentLocationData.location.childCount = parentLocationData.location.childCount + 1;
+                parentLocationData.totalCount = parentLocationData.totalCount + 1;
 
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: clonedLoadedLocations });
                 dispatchSelectedLocationsAction({ type: 'ADD_SELECTED_LOCATION', location: items[0] });
