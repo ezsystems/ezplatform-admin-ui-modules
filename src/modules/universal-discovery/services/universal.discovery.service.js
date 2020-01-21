@@ -60,14 +60,22 @@ export const findLocationsByParentLocationId = (
 };
 
 export const loadAccordionData = (
-    { token, parentLocationId, limit = QUERY_LIMIT, sortClause = 'DatePublished', sortOrder = 'ascending', gridView = false },
+    {
+        token,
+        parentLocationId,
+        limit = QUERY_LIMIT,
+        sortClause = 'DatePublished',
+        sortOrder = 'ascending',
+        gridView = false,
+        rootLocationId = 1,
+    },
     callback
 ) => {
     const routeName = gridView ? 'ezplatform.udw.accordion_gridview.data' : 'ezplatform.udw.accordion.data';
     const url = window.Routing.generate(routeName, {
         locationId: parentLocationId,
     });
-    const request = new Request(`${url}?limit=${limit}&sortClause=${sortClause}&sortOrder=${sortOrder}`, {
+    const request = new Request(`${url}?limit=${limit}&sortClause=${sortClause}&sortOrder=${sortOrder}&rootLocationId=${rootLocationId}`, {
         method: 'GET',
         headers: { 'X-CSRF-Token': token },
         mode: 'same-origin',

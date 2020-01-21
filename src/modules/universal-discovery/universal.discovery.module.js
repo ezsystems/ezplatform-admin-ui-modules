@@ -154,6 +154,7 @@ const UniversalDiscoveryModule = (props) => {
                 sortClause: sorting,
                 sortOrder: sortOrder,
                 gridView: currentView === 'grid',
+                rootLocationId: props.rootLocationId,
             },
             (locationsMap) => {
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
