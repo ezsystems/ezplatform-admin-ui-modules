@@ -55,7 +55,7 @@ export default class ChooseLanguageComponent extends Component {
             attrs.selected = true;
         }
 
-        return <option {...attrs}>{language.name}</option>;
+        return language.enabled ? <option {...attrs}>{language.name}</option> : null;
     }
 
     renderOptions() {
