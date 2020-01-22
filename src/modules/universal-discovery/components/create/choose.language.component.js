@@ -51,11 +51,15 @@ export default class ChooseLanguageComponent extends Component {
             value: language.languageCode,
         };
 
+        if (!language.enabled) {
+            return null;
+        }
+
         if (this.state.selectedLanguage.languageCode === languageCode) {
             attrs.selected = true;
         }
 
-        return language.enabled ? <option {...attrs}>{language.name}</option> : null;
+        return <option {...attrs}>{language.name}</option>;
     }
 
     renderOptions() {
