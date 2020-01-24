@@ -82,6 +82,10 @@ const ContentCreateWidget = () => {
                 <div className="c-content-create__language-selector-label">{selectLanguageLabel}</div>
                 <select className="form-control" onChange={updateSelectedLanguage} value={selectedLanguage}>
                     {filteredLanguages.map((language) => {
+                        if (!language.enabled) {
+                            return null;
+                        }
+
                         return (
                             <option key={language.id} value={language.languageCode} onChange={updateSelectedLanguage}>
                                 {language.name}
