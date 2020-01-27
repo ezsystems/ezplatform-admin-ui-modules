@@ -5,7 +5,13 @@ import deepClone from '../common/helpers/deep.clone.helper';
 import { createCssClassNames } from '../common/helpers/css.class.names';
 import { useLoadedLocationsReducer } from './hooks/useLoadedLocationsReducer';
 import { useSelectedLocationsReducer } from './hooks/useSelectedLocationsReducer';
-import { loadAccordionData, loadContentTypes, findLocationsById, loadContentInfo } from './services/universal.discovery.service';
+import {
+    loadAccordionData,
+    loadContentTypes,
+    findLocationsById,
+    loadContentInfo,
+    findContentInfo,
+} from './services/universal.discovery.service';
 
 const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
@@ -50,7 +56,7 @@ export const ConfirmContext = createContext();
 export const SortingContext = createContext();
 export const SortOrderContext = createContext();
 export const CurrentViewContext = createContext();
-export const MarkedLocationContext = createContext();
+export const MarkedLocationIdContext = createContext();
 export const LoadedLocationsMapContext = createContext();
 export const RootLocationIdContext = createContext();
 export const SelectedLocationsContext = createContext();
@@ -60,12 +66,12 @@ export const ContentOnTheFlyConfigContext = createContext();
 
 const UniversalDiscoveryModule = (props) => {
     const tabs = window.eZ.adminUiConfig.universalDiscoveryWidget.tabs;
-    const defaultMarkedLocation = props.startingLocationId || props.rootLocationId;
+    const defaultMarkedLocationId = props.startingLocationId || props.rootLocationId;
     const [activeTab, setActiveTab] = useState(props.activeTab);
     const [sorting, setSorting] = useState(props.activeSortClause);
     const [sortOrder, setSortOrder] = useState(props.activeSortOrder);
     const [currentView, setCurrentView] = useState(props.activeView);
-    const [markedLocation, setMarkedLocation] = useState(defaultMarkedLocation !== 1 ? defaultMarkedLocation : null);
+    const [markedLocationId, setMarkedLocationId] = useState(defaultMarkedLocationId !== 1 ? defaultMarkedLocationId : null);
     const [createContentVisible, setCreateContentVisible] = useState(false);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useState({});
     const [contentTypesInfoMap, setContentTypesInfoMap] = useState({});
@@ -170,11 +176,11 @@ const UniversalDiscoveryModule = (props) => {
             dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: loadedLocationsMap });
         } else if (
             currentView === 'finder' &&
-            !!markedLocation &&
-            markedLocation !== loadedLocationsMap[loadedLocationsMap.length - 1].parentLocationId &&
-            loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocation)
+            !!markedLocationId &&
+            markedLocationId !== loadedLocationsMap[loadedLocationsMap.length - 1].parentLocationId &&
+            loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocationId)
         ) {
-            dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: markedLocation, subitems: [] } });
+            dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: markedLocationId, subitems: [] } });
         }
     }, [currentView]);
 
@@ -194,7 +200,7 @@ const UniversalDiscoveryModule = (props) => {
             },
             (locationsMap) => {
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
-                setMarkedLocation(props.startingLocationId);
+                setMarkedLocationId(props.startingLocationId);
             }
         );
     }, [props.startingLocationId]);
@@ -229,8 +235,8 @@ const UniversalDiscoveryModule = (props) => {
                                                                         <SortOrderContext.Provider value={[sortOrder, setSortOrder]}>
                                                                             <CurrentViewContext.Provider
                                                                                 value={[currentView, setCurrentView]}>
-                                                                                <MarkedLocationContext.Provider
-                                                                                    value={[markedLocation, setMarkedLocation]}>
+                                                                                <MarkedLocationIdContext.Provider
+                                                                                    value={[markedLocationId, setMarkedLocationId]}>
                                                                                     <LoadedLocationsMapContext.Provider
                                                                                         value={[
                                                                                             loadedLocationsMap,
@@ -262,7 +268,7 @@ const UniversalDiscoveryModule = (props) => {
                                                                                             </SelectedLocationsContext.Provider>
                                                                                         </RootLocationIdContext.Provider>
                                                                                     </LoadedLocationsMapContext.Provider>
-                                                                                </MarkedLocationContext.Provider>
+                                                                                </MarkedLocationIdContext.Provider>
                                                                             </CurrentViewContext.Provider>
                                                                         </SortOrderContext.Provider>
                                                                     </SortingContext.Provider>

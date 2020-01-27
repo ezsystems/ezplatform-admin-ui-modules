@@ -1,16 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../../../common/icon/icon';
-import ContentCreateButton from '../content-create-button/content.create.button';
-import SortSwitcher from '../sort-switcher/sort.switcher';
-import ViewSwitcher from '../view-switcher/view.switcher';
 
 import { TitleContext, CancelContext } from '../../universal.discovery.module';
 
-const TopMenu = ({ isContentOnTheFlyDisabled, isSortSwitcherDisabled, isViewSwitcherDisabled }) => {
+const TopMenu = ({ actionsDisabledMap }) => {
     const title = useContext(TitleContext);
     const cancelUDW = useContext(CancelContext);
+    const sortedActions = useMemo(() => {
+        const actions = [...window.eZ.adminUiConfig.universalDiscoveryWidget.topMenuActions];
+
+        return actions.sort((actionA, actionB) => {
+            return actionB.priority - actionA.priority;
+        });
+    }, []);
 
     return (
         <div className="c-top-menu">
@@ -21,24 +25,26 @@ const TopMenu = ({ isContentOnTheFlyDisabled, isSortSwitcherDisabled, isViewSwit
             </span>
             <span className="c-top-menu__title-wrapper">{title}</span>
             <div className="c-top-menu__actions-wrapper">
-                <ContentCreateButton isDisabled={isContentOnTheFlyDisabled} />
-                <SortSwitcher isDisabled={isSortSwitcherDisabled} />
-                <ViewSwitcher isDisabled={isViewSwitcherDisabled} />
+                {sortedActions.map((action) => {
+                    const Component = action.component;
+
+                    return <Component key={action.id} isDisabled={actionsDisabledMap[action.id]} />;
+                })}
             </div>
         </div>
     );
 };
 
 TopMenu.propTypes = {
-    isContentOnTheFlyDisabled: PropTypes.bool,
-    isSortSwitcherDisabled: PropTypes.bool,
-    isViewSwitcherDisabled: PropTypes.bool,
+    actionsDisabledMap: PropTypes.object,
 };
 
 TopMenu.defaultProps = {
-    isContentOnTheFlyDisabled: false,
-    isSortSwitcherDisabled: false,
-    isViewSwitcherDisabled: false,
+    actionsDisabledMap: {
+        'content-create-button': false,
+        'sort-switcher': false,
+        'view-switcher': false,
+    },
 };
 
 export default TopMenu;

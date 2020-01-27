@@ -11,7 +11,7 @@ import {
     SortingContext,
     SortOrderContext,
     ContentTypesMapContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     SORTING_OPTIONS,
 } from '../../universal.discovery.module';
 
@@ -25,7 +25,7 @@ const FinderBranch = ({ locationData, itemsPerPage }) => {
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const branchRef = useRef(null);
     const sortingOptions = SORTING_OPTIONS.find((option) => option.sortClause === sorting);
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
@@ -82,7 +82,7 @@ const FinderBranch = ({ locationData, itemsPerPage }) => {
         const selectedLocation = subitems.find(
             (subitem) =>
                 loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === subitem.location.id) ||
-                subitem.location.id === markedLocation
+                subitem.location.id === markedLocationId
         );
         const contentName = selectedLocation ? selectedLocation.location.ContentInfo.Content.TranslatedName : '';
 

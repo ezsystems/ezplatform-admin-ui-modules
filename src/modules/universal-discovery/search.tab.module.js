@@ -7,10 +7,15 @@ import { TabsConfigContext } from './universal.discovery.module';
 
 const SearchTabModule = () => {
     const tabsConfig = useContext(TabsConfigContext);
+    const actionsDisabledMap = {
+        'content-create-button': true,
+        'sort-switcher': true,
+        'view-switcher': true,
+    };
 
     return (
         <div className="m-search-tab">
-            <Tab isContentOnTheFlyDisabled={true} isSortSwitcherDisabled={true} isViewSwitcherDisabled={true}>
+            <Tab actionsDisabledMap={actionsDisabledMap}>
                 <Search itemsPerPage={tabsConfig.search.itemsPerPage} />
             </Tab>
         </div>

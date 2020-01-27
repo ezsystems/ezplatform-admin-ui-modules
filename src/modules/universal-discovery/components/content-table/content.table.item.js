@@ -12,7 +12,7 @@ import {
     SortingContext,
     SortOrderContext,
     LoadedLocationsMapContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     ContentTypesMapContext,
     SelectedLocationsContext,
     MultipleConfigContext,
@@ -27,7 +27,7 @@ const ContentTableItem = ({ location }) => {
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
@@ -41,7 +41,7 @@ const ContentTableItem = ({ location }) => {
         (containersOnly && !isContainer) || (allowedContentTypes && !allowedContentTypes.includes(contentTypeInfo.identifier));
     const className = createCssClassNames({
         'c-content-table-item': true,
-        'c-content-table-item--marked': markedLocation === location.id,
+        'c-content-table-item--marked': markedLocationId === location.id,
         'c-content-table-item--not-selectable': isNotSelectable,
     });
     const markLocation = ({ nativeEvent }) => {
@@ -51,7 +51,7 @@ const ContentTableItem = ({ location }) => {
             return;
         }
 
-        setMarkedLocation(location.id);
+        setMarkedLocationId(location.id);
         loadAccordionData(
             {
                 ...restInfo,

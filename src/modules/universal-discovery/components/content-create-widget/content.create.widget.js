@@ -7,7 +7,7 @@ import {
     CreateContentWidgetContext,
     ActiveTabContext,
     ContentOnTheFlyDataContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     LoadedLocationsMapContext,
     ContentOnTheFlyConfigContext,
     AllowedContentTypesContext,
@@ -17,11 +17,11 @@ const languages = Object.values(window.eZ.adminUiConfig.languages.mappings);
 const contentTypes = Object.entries(window.eZ.adminUiConfig.contentTypes);
 
 const ContentCreateWidget = () => {
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const { allowedLanguages, preselectedLanguage, preselectedContentType } = useContext(ContentOnTheFlyConfigContext);
     const allowedContentTypes = useContext(AllowedContentTypesContext);
-    const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
+    const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocationId);
     const filteredLanguages = languages.filter((language) => {
         const userHasPermission =
             !selectedLocation ||
@@ -48,10 +48,10 @@ const ContentCreateWidget = () => {
         setFilterQuery(query);
     };
     const updateSelectedLanguage = (event) => setSelectedLanguage(event.target.value);
-    const isConfirmDisabled = !selectedContentType || !selectedLanguage || markedLocation === 1;
+    const isConfirmDisabled = !selectedContentType || !selectedLanguage || markedLocationId === 1;
     const createContent = () => {
         setContentOnTheFlyData({
-            locationId: markedLocation,
+            locationId: markedLocationId,
             languageCode: selectedLanguage,
             contentTypeIdentifier: selectedContentType,
         });

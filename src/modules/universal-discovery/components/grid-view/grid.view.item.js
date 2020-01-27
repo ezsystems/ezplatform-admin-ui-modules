@@ -8,7 +8,7 @@ import Thumbnail from '../../../common/thumbnail/thumbnail';
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import {
     LoadedLocationsMapContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     ContentTypesMapContext,
     SelectedLocationsContext,
     MultipleConfigContext,
@@ -21,7 +21,7 @@ const isSelectionButtonClicked = (event) => {
 };
 
 const GridViewItem = ({ location, version }) => {
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
@@ -34,7 +34,7 @@ const GridViewItem = ({ location, version }) => {
         (containersOnly && !isContainer) || (allowedContentTypes && !allowedContentTypes.includes(contentTypeInfo.identifier));
     const className = createCssClassNames({
         'c-grid-item': true,
-        'c-grid-item--marked': markedLocation === location.id,
+        'c-grid-item--marked': markedLocationId === location.id,
         'c-grid-item--not-selectable': isNotSelectable,
     });
     const markLocation = ({ nativeEvent }) => {
@@ -42,7 +42,7 @@ const GridViewItem = ({ location, version }) => {
             return;
         }
 
-        setMarkedLocation(location.id);
+        setMarkedLocationId(location.id);
 
         if (!multiple && !isNotSelectable) {
             dispatchSelectedLocationsAction({ type: 'CLEAR_SELECTED_LOCATIONS' });

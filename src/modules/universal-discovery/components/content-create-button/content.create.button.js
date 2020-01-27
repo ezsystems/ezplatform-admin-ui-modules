@@ -5,7 +5,7 @@ import Icon from '../../../common/icon/icon';
 
 import {
     CreateContentWidgetContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     LoadedLocationsMapContext,
     ContentOnTheFlyConfigContext,
     SelectedLocationsContext,
@@ -13,7 +13,7 @@ import {
 } from '../../universal.discovery.module';
 
 const ContentCreateButton = ({ isDisabled }) => {
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
@@ -22,11 +22,11 @@ const ContentCreateButton = ({ isDisabled }) => {
     const toggleContentCreateVisibility = () => {
         setCreateContentVisible((prevState) => !prevState);
     };
-    let selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
+    let selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocationId);
 
     if (!selectedLocation && loadedLocationsMap.length) {
         selectedLocation = loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find(
-            (subitem) => subitem.location.id === markedLocation
+            (subitem) => subitem.location.id === markedLocationId
         );
     }
 
@@ -58,5 +58,17 @@ ContentCreateButton.propTypes = {
 ContentCreateButton.defaultProps = {
     isDisabled: false,
 };
+
+eZ.addConfig(
+    'adminUiConfig.universalDiscoveryWidget.topMenuActions',
+    [
+        {
+            id: 'content-create-button',
+            priority: 30,
+            component: ContentCreateButton,
+        },
+    ],
+    true
+);
 
 export default ContentCreateButton;

@@ -6,7 +6,7 @@ import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import {
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     LoadedLocationsMapContext,
     ContentTypesMapContext,
     SelectedLocationsContext,
@@ -16,7 +16,7 @@ import {
 } from '../../universal.discovery.module';
 
 const FinderLeaf = ({ location }) => {
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
@@ -29,14 +29,14 @@ const FinderLeaf = ({ location }) => {
         (containersOnly && !isContainer) || (allowedContentTypes && !allowedContentTypes.includes(contentTypeInfo.identifier));
     const markLocation = ({ nativeEvent }) => {
         const isSelectionButtonClicked = nativeEvent.target.closest('.c-toggle-selection-button');
-        const isMarkedLocationClicked = location.id === markedLocation;
+        const isMarkedLocationClicked = location.id === markedLocationId;
 
         if (isSelectionButtonClicked || isMarkedLocationClicked) {
             return;
         }
 
-        setMarkedLocation(location.id);
-        dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId: markedLocation });
+        setMarkedLocationId(location.id);
+        dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId: markedLocationId });
         dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { parentLocationId: location.id, subitems: [] } });
 
         if (!multiple && !isNotSelectable) {

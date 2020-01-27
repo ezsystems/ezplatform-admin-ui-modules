@@ -2,11 +2,11 @@ import React, { useContext, useMemo, useState, useEffect } from 'react';
 
 import Icon from '../common/icon/icon';
 import Thumbnail from '../common/thumbnail/thumbnail';
-import { createCssClassNames } from '../common/helpers/css.class.names';
+import TranslationSelector from './components/translation-selector/translation.selector';
 
 import { addBookmark, removeBookmark, createDraft } from './services/universal.discovery.service';
 import {
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     LoadedLocationsMapContext,
     ContentTypesMapContext,
     RestInfoContext,
@@ -14,26 +14,26 @@ import {
 } from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const restInfo = useContext(RestInfoContext);
     const allowRedirects = useContext(AllowRedirectsContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
-    const [isLanguageSelectorOpen, setIsLanguageSelectorOpen] = useState(false);
+    const [isTranslationSelectorOpen, setIsTranslationSelectorOpen] = useState(false);
     const locationData = useMemo(() => {
         return (
-            loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation) ||
+            loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocationId) ||
             (loadedLocationsMap.length &&
-                loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocation))
+                loadedLocationsMap[loadedLocationsMap.length - 1].subitems.find((subitem) => subitem.location.id === markedLocationId))
         );
-    }, [markedLocation, loadedLocationsMap]);
+    }, [markedLocationId, loadedLocationsMap]);
 
     useEffect(() => {
-        setIsLanguageSelectorOpen(false);
-    }, [markedLocation]);
+        setIsTranslationSelectorOpen(false);
+    }, [markedLocationId]);
 
-    if (!locationData || !locationData.location || !locationData.version || markedLocation === 1) {
+    if (!locationData || !locationData.location || !locationData.version || markedLocationId === 1) {
         return null;
     }
 
@@ -82,40 +82,20 @@ const ContentMetaPreview = () => {
         if (languageCodes.length === 1) {
             editContent(languageCodes[0]);
         } else {
-            setIsLanguageSelectorOpen(true);
+            setIsTranslationSelectorOpen(true);
         }
     };
-    const hideLanguageSelector = () => {
-        setIsLanguageSelectorOpen(false);
+    const hideTranslationSelector = () => {
+        setIsTranslationSelectorOpen(false);
     };
-    const renderLanguageSelector = () => {
-        const languageCodes = version.VersionInfo.languageCodes.split(',');
-        const editTranslationLabel = Translator.trans(
-            /*@Desc("Edit translation")*/ 'meta_preview.edit_translation',
-            {},
-            'universal_discovery_widget'
-        );
-        const className = createCssClassNames({
-            'c-content-meta-preview__language-selector': true,
-            'c-content-meta-preview__language-selector--hidden': !isLanguageSelectorOpen,
-        });
-
+    const renderTranslationSelector = () => {
         return (
-            <div className={className}>
-                <div className="c-content-meta-preview__language-selector-header">
-                    <button className="c-content-meta-preview__close-button btn" onClick={hideLanguageSelector}>
-                        <Icon name="discard" extraClasses="ez-icon--small" />
-                    </button>
-                    <span className="c-content-meta-preview__title">{`${editTranslationLabel} (${languageCodes.length})`}</span>
-                </div>
-                <div className="c-content-meta-preview__languages-wrapper">
-                    {languageCodes.map((languageCode) => (
-                        <div key={languageCode} className="c-content-meta-preview__language" onClick={editContent.bind(this, languageCode)}>
-                            {window.eZ.adminUiConfig.languages.mappings[languageCode].name}
-                        </div>
-                    ))}
-                </div>
-            </div>
+            <TranslationSelector
+                hideTranslationSelector={hideTranslationSelector}
+                selectTranslation={editContent}
+                version={version}
+                isOpen={isTranslationSelectorOpen}
+            />
         );
     };
     const renderActions = () => {
@@ -140,7 +120,7 @@ const ContentMetaPreview = () => {
 
     return (
         <div className="c-content-meta-preview">
-            {renderLanguageSelector()}
+            {renderTranslationSelector()}
             <div className="c-content-meta-preview__preview">
                 <Thumbnail thumbnailData={version.Thumbnail} iconExtraClasses="ez-icon--extra-large" />
             </div>
