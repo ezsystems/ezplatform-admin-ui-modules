@@ -7,7 +7,7 @@ import Finder from './components/finder/finder';
 
 import {
     CurrentViewContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     RestInfoContext,
     LoadedLocationsMapContext,
     SortingContext,
@@ -21,7 +21,7 @@ const BookmarksTabModule = () => {
     const restInfo = useContext(RestInfoContext);
     const tabsConfig = useContext(TabsConfigContext);
     const [currentView, setCurrentView] = useContext(CurrentViewContext);
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
     const rootLocationId = useContext(RootLocationIdContext);
@@ -32,7 +32,7 @@ const BookmarksTabModule = () => {
         finder: <Finder itemsPerPage={tabsConfig.bookmarks.itemsPerPage} />,
     };
     const renderBrowseLocations = () => {
-        if (!markedLocation) {
+        if (!markedLocationId) {
             return null;
         }
 
@@ -44,7 +44,7 @@ const BookmarksTabModule = () => {
             return;
         }
 
-        setMarkedLocation(bookmarkedLocationMarked);
+        setMarkedLocationId(bookmarkedLocationMarked);
         loadAccordionData(
             {
                 ...restInfo,
@@ -58,14 +58,14 @@ const BookmarksTabModule = () => {
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
             }
         );
-    }, [bookmarkedLocationMarked, currentView, restInfo, dispatchLoadedLocationsAction, setMarkedLocation]);
+    }, [bookmarkedLocationMarked, currentView, restInfo, dispatchLoadedLocationsAction, setMarkedLocationId]);
 
     useEffect(() => {
-        if (markedLocation !== bookmarkedLocationMarked) {
-            dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId: markedLocation });
+        if (markedLocationId !== bookmarkedLocationMarked) {
+            dispatchLoadedLocationsAction({ type: 'CUT_LOCATIONS', locationId: markedLocationId });
             setBookmarkedLocationMarked(null);
         }
-    }, [markedLocation, setBookmarkedLocationMarked, bookmarkedLocationMarked, dispatchLoadedLocationsAction]);
+    }, [markedLocationId, setBookmarkedLocationMarked, bookmarkedLocationMarked, dispatchLoadedLocationsAction]);
 
     return (
         <div className="m-bookmarks-tab">

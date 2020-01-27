@@ -7,7 +7,7 @@ import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import { useLoadBookmarksFetch } from '../../hooks/useLoadBookmarksFetch';
 import {
     ContentTypesMapContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     LoadedLocationsMapContext,
     SelectedLocationsContext,
     MultipleConfigContext,
@@ -20,7 +20,7 @@ const SCROLL_OFFSET = 200;
 const BookmarksList = ({ setBookmarkedLocationMarked, itemsPerPage }) => {
     const [offset, setOffset] = useState(0);
     const [bookmarks, setBookmarks] = useState([]);
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
@@ -65,7 +65,7 @@ const BookmarksList = ({ setBookmarkedLocationMarked, itemsPerPage }) => {
     return (
         <div className="c-bookmarks-list" onScroll={loadMore}>
             {bookmarks.map((bookmark) => {
-                const isMarked = bookmark.id === markedLocation;
+                const isMarked = bookmark.id === markedLocationId;
                 const contentTypeInfo = contentTypesMap[bookmark.ContentInfo.Content.ContentType._href];
                 const isContainer = contentTypeInfo.isContainer;
                 const isNotSelectable =

@@ -36,6 +36,21 @@
         <target state="new">Content create</target>
         <note>key: content_create.label</note>
       </trans-unit>
+      <trans-unit id="9e0bf845dd4ce60013f7ee92eaac76a2d0a5253a" resname="content_edit.cancel.label">
+        <source>Cancel</source>
+        <target state="new">Cancel</target>
+        <note>key: content_edit.cancel.label</note>
+      </trans-unit>
+      <trans-unit id="76a56a144f633df99b3a2d7eb1da3ef0c555fe74" resname="content_edit.confirm.label">
+        <source>Confirm</source>
+        <target state="new">Confirm</target>
+        <note>key: content_edit.confirm.label</note>
+      </trans-unit>
+      <trans-unit id="cb13371418234a9257a76bcc2a55768d5e5e58d8" resname="content_edit.label">
+        <source>Content edit</source>
+        <target state="new">Content edit</target>
+        <note>key: content_edit.label</note>
+      </trans-unit>
       <trans-unit id="e1846286e48b0f692a8f01be6ae81a95ebb68595" resname="content_table.content_type">
         <source>Content Type</source>
         <target state="new">Content Type</target>

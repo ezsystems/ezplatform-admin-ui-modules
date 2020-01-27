@@ -4,6 +4,8 @@
 @import 'universal-discovery/content.create';
 @import 'universal-discovery/content.create.widget';
 @import 'universal-discovery/content.create.button';
+@import 'universal-discovery/content.edit';
+@import 'universal-discovery/content.edit.button';
 @import 'universal-discovery/sort.switcher';
 @import 'universal-discovery/view.switcher';
 @import 'universal-discovery/menu.button';
@@ -23,3 +25,4 @@
 @import 'universal-discovery/toggle.selection.button';
 @import 'universal-discovery/filters';
 @import 'universal-discovery/bookmarks.list';
+@import 'universal-discovery/translation.selector';

@@ -7,7 +7,7 @@ import {
     CreateContentWidgetContext,
     ActiveTabContext,
     ContentOnTheFlyDataContext,
-    MarkedLocationContext,
+    MarkedLocationIdContext,
     LoadedLocationsMapContext,
     ContentOnTheFlyConfigContext,
     AllowedContentTypesContext,
@@ -17,17 +17,17 @@ const languages = Object.values(window.eZ.adminUiConfig.languages.mappings);
 const contentTypes = Object.entries(window.eZ.adminUiConfig.contentTypes);
 
 const ContentCreateWidget = () => {
-    const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
+    const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const { allowedLanguages, preselectedLanguage, preselectedContentType } = useContext(ContentOnTheFlyConfigContext);
     const allowedContentTypes = useContext(AllowedContentTypesContext);
-    const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocation);
+    const selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocationId);
     const filteredLanguages = languages.filter((language) => {
         const userHasPermission =
             !selectedLocation ||
             !selectedLocation.permissions ||
-            !selectedLocation.permissions.restrictedLanguageCodes.length ||
-            selectedLocation.permissions.restrictedLanguageCodes.includes(language.languageCode);
+            !selectedLocation.permissions.create.restrictedLanguageCodes.length ||
+            selectedLocation.permissions.create.restrictedLanguageCodes.includes(language.languageCode);
         const isAllowedLanguage = !allowedLanguages || allowedLanguages.includes(language.languageCode);
 
         return userHasPermission && isAllowedLanguage;
@@ -48,10 +48,10 @@ const ContentCreateWidget = () => {
         setFilterQuery(query);
     };
     const updateSelectedLanguage = (event) => setSelectedLanguage(event.target.value);
-    const isConfirmDisabled = !selectedContentType || !selectedLanguage || markedLocation === 1;
+    const isConfirmDisabled = !selectedContentType || !selectedLanguage || markedLocationId === 1;
     const createContent = () => {
         setContentOnTheFlyData({
-            locationId: markedLocation,
+            locationId: markedLocationId,
             languageCode: selectedLanguage,
             contentTypeIdentifier: selectedContentType,
         });
@@ -108,8 +108,8 @@ const ContentCreateWidget = () => {
                                 (filterQuery && !groupItem.name.toLowerCase().includes(filterQuery)) ||
                                 (selectedLocation &&
                                     selectedLocation.permissions &&
-                                    selectedLocation.permissions.restrictedContentTypeIds.length &&
-                                    !selectedLocation.permissions.restrictedContentTypeIds.includes(groupItem.id.toString())) ||
+                                    selectedLocation.permissions.create.restrictedContentTypeIds.length &&
+                                    !selectedLocation.permissions.create.restrictedContentTypeIds.includes(groupItem.id.toString())) ||
                                 (allowedContentTypes && !allowedContentTypes.includes(groupItem.identifier))
                             );
                         });
@@ -124,8 +124,8 @@ const ContentCreateWidget = () => {
                                         (filterQuery && !name.toLowerCase().includes(filterQuery)) ||
                                         (selectedLocation &&
                                             selectedLocation.permissions &&
-                                            selectedLocation.permissions.restrictedContentTypeIds.length &&
-                                            !selectedLocation.permissions.restrictedContentTypeIds.includes(id.toString())) ||
+                                            selectedLocation.permissions.create.restrictedContentTypeIds.length &&
+                                            !selectedLocation.permissions.create.restrictedContentTypeIds.includes(id.toString())) ||
                                         (allowedContentTypes && !allowedContentTypes.includes(identifier));
                                     const className = createCssClassNames({
                                         'c-content-create__group-item': true,
