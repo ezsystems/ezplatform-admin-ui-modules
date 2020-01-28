@@ -109,6 +109,8 @@ $list-item-height: calculateRem(20px);
 
     .c-list {
         transition: all 0.2s ease-in;
+        transform-origin: top;
+        transform: scaleY(0);
         list-style: none;
         max-height: 0;
         overflow: hidden;
@@ -137,7 +139,9 @@ $list-item-height: calculateRem(20px);
 
         > .c-list {
             transition: all 0.4s ease-out;
-            max-height: calculateRem(20000px);
+            transform-origin: top;
+            transform: scaleY(1);
+            max-height: calculateRem(100000px);
             max-width: initial;
             overflow: hidden;
         }
