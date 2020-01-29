@@ -12,6 +12,7 @@ import {
     LoadedLocationsMapContext,
     SortingContext,
     SortOrderContext,
+    RootLocationIdContext,
 } from './universal.discovery.module';
 import { loadAccordionData } from './services/universal.discovery.service';
 
@@ -26,6 +27,7 @@ const BookmarksTabModule = () => {
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
+    const rootLocationId = useContext(RootLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [bookmarkedLocationMarked, setBookmarkedLocationMarked] = useState(null);
     const renderBrowseLocations = () => {
@@ -49,6 +51,7 @@ const BookmarksTabModule = () => {
                 sortClause: sorting,
                 sortOrder: sortOrder,
                 gridView: currentView === 'grid',
+                rootLocationId,
             },
             (locationsMap) => {
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });

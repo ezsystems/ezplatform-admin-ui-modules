@@ -41,7 +41,7 @@ const FinderBranch = ({ locationData }) => {
     let resizeStartPositionX = 0;
     let branchCurrentWidth = 0;
     const loadMore = ({ target }) => {
-        const areAllItemsLoaded = loadedLocations.location && locationData.subitems.length >= loadedLocations.location.childCount;
+        const areAllItemsLoaded = locationData.subitems.length >= loadedLocations.totalCount;
         const isOffsetReached = target.scrollHeight - target.clientHeight - target.scrollTop < SCROLL_OFFSET;
 
         if (areAllItemsLoaded || !isOffsetReached || isLoading) {

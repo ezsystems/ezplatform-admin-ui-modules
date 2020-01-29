@@ -42,23 +42,28 @@ const Breadcrumbs = () => {
             'c-breadcrumbs__hidden-list': true,
             'c-breadcrumbs__hidden-list--visible': hiddenListVisible,
         });
-        const toggletClassNames = createCssClassNames({
+        const toggleClassNames = createCssClassNames({
             'c-breadcrumbs__hidden-list-toggler': true,
             'c-breadcrumbs__hidden-list-toggler--active': hiddenListVisible,
         });
 
         return (
             <div className="c-breadcrumbs__hidden-list-wrapper">
-                <button className={toggletClassNames} onClick={toggleHiddenListVisible}>
+                <button className={toggleClassNames} onClick={toggleHiddenListVisible}>
                     <Icon name="options" extraClasses="ez-icon--small-medium" />
                 </button>
                 <ul className={hiddenListClassNames}>
                     {hiddenItems.map((item) => {
-                        const onClickHandler = goToLocation.bind(this, item.location.id);
+                        const locationId = item.parentLocationId;
+                        const locationName =
+                            locationId === 1
+                                ? Translator.trans(/*@Desc("Root Location")*/ 'breadcrumbs.root_location', {}, 'universal_discovery_widget')
+                                : item.location.ContentInfo.Content.Name;
+                        const onClickHandler = goToLocation.bind(this, locationId);
 
                         return (
-                            <li key={item.location.id} onClick={onClickHandler} className="c-breadcrumbs__hidden-list-item">
-                                {item.location.ContentInfo.Content.Name}
+                            <li key={locationId} onClick={onClickHandler} className="c-breadcrumbs__hidden-list-item">
+                                {locationName}
                             </li>
                         );
                     })}
@@ -86,20 +91,21 @@ const Breadcrumbs = () => {
             <div className="c-breadcrumbs__list-wrapper">
                 <ul className="c-breadcrumbs__list">
                     {visibleItems.map((item, index) => {
-                        if (!item.location) {
-                            return null;
-                        }
-
+                        const locationId = item.parentLocationId;
+                        const locationName =
+                            locationId === 1
+                                ? Translator.trans(/*@Desc("Root Location")*/ 'breadcrumbs.root_location', {}, 'universal_discovery_widget')
+                                : item.location.ContentInfo.Content.Name;
                         const isLast = index === visibleItems.length - 1;
-                        const onClickHandler = goToLocation.bind(this, item.location.id);
+                        const onClickHandler = goToLocation.bind(this, locationId);
                         const className = createCssClassNames({
                             'c-breadcrumbs__list-item': true,
                             'c-breadcrumbs__list-item--last': isLast,
                         });
 
                         return (
-                            <li key={item.location.id} onClick={onClickHandler} className={className}>
-                                <span className="c-breadcrumbs__list-item-text">{item.location.ContentInfo.Content.Name}</span>
+                            <li key={locationId} onClick={onClickHandler} className={className}>
+                                <span className="c-breadcrumbs__list-item-text">{locationName}</span>
                                 {!isLast && renderSeparator()}
                             </li>
                         );

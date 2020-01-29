@@ -18,6 +18,7 @@ import {
     MultipleConfigContext,
     ContainersOnlyContext,
     AllowedContentTypesContext,
+    RootLocationIdContext,
 } from '../../universal.discovery.module';
 
 const ContentTableItem = ({ location }) => {
@@ -30,6 +31,7 @@ const ContentTableItem = ({ location }) => {
     const contentTypesMap = useContext(ContentTypesMapContext);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
+    const rootLocationId = useContext(RootLocationIdContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const allowedContentTypes = useContext(AllowedContentTypesContext);
     const contentTypeInfo = contentTypesMap[location.ContentInfo.Content.ContentType._href];
@@ -57,6 +59,7 @@ const ContentTableItem = ({ location }) => {
                 sortClause: sorting,
                 sortOrder: sortOrder,
                 gridView: currentView === 'grid',
+                rootLocationId,
             },
             (locationsMap) => {
                 dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
