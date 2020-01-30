@@ -22,6 +22,8 @@ export default class MultiFileUploadModule extends Component {
         this.showUploadPopup = this.showUploadPopup.bind(this);
         this.hidePopup = this.hidePopup.bind(this);
         this.processUploadedFiles = this.processUploadedFiles.bind(this);
+        this.setUdwStateOpened = this.setUdwStateOpened.bind(this);
+        this.setUdwStateClosed = this.setUdwStateClosed.bind(this);
 
         this.state = {
             udwOpened: false,
@@ -35,12 +37,37 @@ export default class MultiFileUploadModule extends Component {
     componentDidMount() {
         this.manageDropEvent();
 
-        window.document.body.addEventListener('ez-udw-opened', () => this.setState({ udwOpened: true }), false);
-        window.document.body.addEventListener('ez-udw-closed', () => this.setState({ udwOpened: false }), false);
+        window.document.body.addEventListener('ez-udw-opened', this.setUdwStateOpened, false);
+        window.document.body.addEventListener('ez-udw-closed', this.setUdwStateClosed, false);
     }
 
     componentDidUpdate() {
         this.manageDropEvent();
+    }
+
+    componentWillUnmount() {
+        window.document.body.removeEventListener('ez-udw-opened', this.setUdwStateOpened, false);
+        window.document.body.removeEventListener('ez-udw-closed', this.setUdwStateClosed, false);
+    }
+
+    /**
+     * Set udw state as open
+     *
+     * @method setUdwStateOpened
+     * @memberof MultiFileUploadModule
+     */
+    setUdwStateOpened() {
+        this.setState({ udwOpened: true });
+    }
+
+    /**
+     * Set udw state as closed
+     *
+     * @method setUdwStateClosed
+     * @memberof MultiFileUploadModule
+     */
+    setUdwStateClosed() {
+        this.setState({ udwOpened: false });
     }
 
     /**
