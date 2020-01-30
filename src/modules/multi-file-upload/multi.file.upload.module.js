@@ -24,6 +24,7 @@ export default class MultiFileUploadModule extends Component {
         this.processUploadedFiles = this.processUploadedFiles.bind(this);
 
         this.state = {
+            udwOpened: false,
             popupVisible,
             itemsToUpload: props.itemsToUpload,
             allowDropOnWindow: true,
@@ -33,6 +34,9 @@ export default class MultiFileUploadModule extends Component {
 
     componentDidMount() {
         this.manageDropEvent();
+
+        window.document.body.addEventListener('ez-udw-opened', () => this.setState({ udwOpened: true }), false);
+        window.document.body.addEventListener('ez-udw-closed', () => this.setState({ udwOpened: false }), false);
     }
 
     componentDidUpdate() {
@@ -108,7 +112,7 @@ export default class MultiFileUploadModule extends Component {
 
         // Covers the case when dragging and dropping page elements inside the browser,
         // like links, images, etc.
-        if (!this.state.allowDropOnWindow || !itemsToUpload.length) {
+        if (!this.state.allowDropOnWindow || !itemsToUpload.length || this.state.udwOpened) {
             return;
         }
 
