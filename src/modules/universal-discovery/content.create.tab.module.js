@@ -1,4 +1,4 @@
-import React, { useContext, createRef } from 'react';
+import React, { useEffect, useState, useContext, createRef } from 'react';
 
 import {
     ContentOnTheFlyDataContext,
@@ -24,6 +24,7 @@ const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) 
 };
 
 const ContentCreataTabModule = () => {
+    const [footerVisible, setFooterVisible] = useState(true);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useContext(ContentOnTheFlyDataContext);
     const tabs = useContext(TabsContext);
     const contentOnTheFlyConfig = useContext(ContentOnTheFlyConfigContext);
@@ -36,6 +37,20 @@ const ContentCreataTabModule = () => {
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const iframeUrl = generateIframeUrl(contentOnTheFlyData);
     const iframeRef = createRef();
+
+    const hideFooter = () => setFooterVisible(false);
+    const showFooter = () => setFooterVisible(true);
+
+    useEffect(() => {
+        window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
+        window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
+
+        return () => {
+            window.document.body.removeEventListener('ez-udw-hide-footer', hideFooter, false);
+            window.document.body.removeEventListener('ez-udw-show-footer', showFooter, false);
+        }
+    })
+
     const cancelContentCreate = () => {
         setCreateContentVisible(false);
         setContentOnTheFlyData({});
@@ -80,7 +95,7 @@ const ContentCreataTabModule = () => {
     const confirmLabel = Translator.trans(/*@Desc("Confirm")*/ 'content_create.confirm.label', {}, 'universal_discovery_widget');
 
     return (
-        <div className="m-content-create">
+        <div className={`m-content-create ${footerVisible ? 'm-content-create--footer-visible' : ''}`}>
             <iframe src={iframeUrl} className="m-content-create__iframe" ref={iframeRef} onLoad={handleIframeLoad} />
             <div className="m-content-create__actions">
                 <button className="m-content-create__cancel-button btn btn-gray" onClick={cancelContentCreate}>
