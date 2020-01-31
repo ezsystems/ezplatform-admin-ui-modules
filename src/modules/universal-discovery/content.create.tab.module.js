@@ -86,6 +86,7 @@ const ContentCreataTabModule = () => {
         'm-content-create': true,
         'm-content-create--footer-visible': footerVisible,
     });
+    
     useEffect(() => {
         window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
         window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
