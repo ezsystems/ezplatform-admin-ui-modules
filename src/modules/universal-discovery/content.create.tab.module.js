@@ -14,6 +14,7 @@ import {
 } from './universal.discovery.module';
 import { findLocationsById } from './services/universal.discovery.service';
 import deepClone from '../common/helpers/deep.clone.helper';
+import { createCssClassNames } from '../common/helpers/css.class.names';
 
 const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) => {
     return window.Routing.generate('ezplatform.content_on_the_fly.create', {
@@ -81,6 +82,10 @@ const ContentCreataTabModule = () => {
     const showFooter = () => setFooterVisible(true);
     const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'content_create.cancel.label', {}, 'universal_discovery_widget');
     const confirmLabel = Translator.trans(/*@Desc("Confirm")*/ 'content_create.confirm.label', {}, 'universal_discovery_widget');
+    const className = createCssClassNames({
+        'm-content-create': true,
+        'm-content-create--footer-visible': footerVisible,
+    });
     useEffect(() => {
         window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
         window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
@@ -92,7 +97,7 @@ const ContentCreataTabModule = () => {
     })
 
     return (
-        <div className={`m-content-create ${footerVisible ? 'm-content-create--footer-visible' : ''}`}>
+        <div className={className}>
             <iframe src={iframeUrl} className="m-content-create__iframe" ref={iframeRef} onLoad={handleIframeLoad} />
             <div className="m-content-create__actions">
                 <button className="m-content-create__cancel-button btn btn-gray" onClick={cancelContentCreate}>
