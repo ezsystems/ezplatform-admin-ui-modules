@@ -37,20 +37,6 @@ const ContentCreataTabModule = () => {
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const iframeUrl = generateIframeUrl(contentOnTheFlyData);
     const iframeRef = createRef();
-
-    const hideFooter = () => setFooterVisible(false);
-    const showFooter = () => setFooterVisible(true);
-
-    useEffect(() => {
-        window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
-        window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
-
-        return () => {
-            window.document.body.removeEventListener('ez-udw-hide-footer', hideFooter, false);
-            window.document.body.removeEventListener('ez-udw-show-footer', showFooter, false);
-        }
-    })
-
     const cancelContentCreate = () => {
         setCreateContentVisible(false);
         setContentOnTheFlyData({});
@@ -91,8 +77,19 @@ const ContentCreataTabModule = () => {
             });
         }
     };
+    const hideFooter = () => setFooterVisible(false);
+    const showFooter = () => setFooterVisible(true);
     const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'content_create.cancel.label', {}, 'universal_discovery_widget');
     const confirmLabel = Translator.trans(/*@Desc("Confirm")*/ 'content_create.confirm.label', {}, 'universal_discovery_widget');
+    useEffect(() => {
+        window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
+        window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
+
+        return () => {
+            window.document.body.removeEventListener('ez-udw-hide-footer', hideFooter, false);
+            window.document.body.removeEventListener('ez-udw-show-footer', showFooter, false);
+        }
+    })
 
     return (
         <div className={`m-content-create ${footerVisible ? 'm-content-create--footer-visible' : ''}`}>
