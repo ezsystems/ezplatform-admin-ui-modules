@@ -8,4 +8,31 @@
     &--disabled {
         opacity: 0.3;
     }
+
+
+    .c-menu-button {
+        position: relative;
+        padding: 0 calculateRem(18px);
+
+        &--selected::after {
+            content: '';
+            width: 0px;
+            height: 0px;
+            position: absolute;
+            top: calculateRem(11px);
+            right: calculateRem(6px);
+        }
+
+        &--sorted-asc::after {
+            border-left: calculateRem(3px) solid transparent;
+            border-right: calculateRem(3px) solid transparent;
+            border-bottom: calculateRem(5px) solid $ez-white;
+        }
+
+        &--sorted-desc::after {
+            border-top: calculateRem(5px) solid $ez-white;
+            border-left: calculateRem(3px) solid transparent;
+            border-right: calculateRem(3px) solid transparent;
+        }
+    }
 }
