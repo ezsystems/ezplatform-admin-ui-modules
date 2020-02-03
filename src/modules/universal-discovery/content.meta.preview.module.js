@@ -70,7 +70,7 @@ const ContentMetaPreview = () => {
         );
     };
     const previewContent = () => {
-        window.location.href = window.Routing.generate('_ezpublishLocation', { locationId: location.id }, true);
+        window.location.href = window.Routing.generate('_ez_content_view', { contentId: location.ContentInfo.Content._id, locationId: location.id }, true);
     };
     const selectLanguage = () => {
         const languageCodes = version.VersionInfo.languageCodes.split(',');
