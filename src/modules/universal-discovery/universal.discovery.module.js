@@ -121,11 +121,15 @@ export default class UniversalDiscoveryModule extends Component {
             maxHeight: this._refContentContainer.clientHeight,
             mainContainerRestHeight: this._refMainContainer.clientHeight - this._refContentContainer.clientHeight,
         }));
+
+        window.document.body.dispatchEvent(new CustomEvent('ez-udw-opened'));
     }
 
     componentWillUnmount() {
         window.document.body.classList.remove(CLASS_SCROLL_DISABLED);
         window.removeEventListener('resize', this.updateMaxHeightState);
+
+        window.document.body.dispatchEvent(new CustomEvent('ez-udw-closed'));
     }
 
     componentDidUpdate(prevProps, prevState) {
