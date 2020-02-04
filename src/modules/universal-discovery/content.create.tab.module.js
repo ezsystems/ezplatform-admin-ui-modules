@@ -1,4 +1,4 @@
-import React, { useContext, createRef } from 'react';
+import React, { useEffect, useState, useContext, createRef } from 'react';
 
 import {
     ContentOnTheFlyDataContext,
@@ -14,6 +14,7 @@ import {
 } from './universal.discovery.module';
 import { findLocationsById } from './services/universal.discovery.service';
 import deepClone from '../common/helpers/deep.clone.helper';
+import { createCssClassNames } from '../common/helpers/css.class.names';
 
 const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) => {
     return window.Routing.generate('ezplatform.content_on_the_fly.create', {
@@ -24,6 +25,7 @@ const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) 
 };
 
 const ContentCreataTabModule = () => {
+    const [footerVisible, setFooterVisible] = useState(true);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useContext(ContentOnTheFlyDataContext);
     const tabs = useContext(TabsContext);
     const contentOnTheFlyConfig = useContext(ContentOnTheFlyConfigContext);
@@ -76,11 +78,27 @@ const ContentCreataTabModule = () => {
             });
         }
     };
+    const hideFooter = () => setFooterVisible(false);
+    const showFooter = () => setFooterVisible(true);
     const cancelLabel = Translator.trans(/*@Desc("Cancel")*/ 'content_create.cancel.label', {}, 'universal_discovery_widget');
     const confirmLabel = Translator.trans(/*@Desc("Confirm")*/ 'content_create.confirm.label', {}, 'universal_discovery_widget');
+    const className = createCssClassNames({
+        'm-content-create': true,
+        'm-content-create--footer-visible': footerVisible,
+    });
+    
+    useEffect(() => {
+        window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
+        window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
+
+        return () => {
+            window.document.body.removeEventListener('ez-udw-hide-footer', hideFooter, false);
+            window.document.body.removeEventListener('ez-udw-show-footer', showFooter, false);
+        }
+    })
 
     return (
-        <div className="m-content-create">
+        <div className={className}>
             <iframe src={iframeUrl} className="m-content-create__iframe" ref={iframeRef} onLoad={handleIframeLoad} />
             <div className="m-content-create__actions">
                 <button className="m-content-create__cancel-button btn btn-gray" onClick={cancelContentCreate}>
