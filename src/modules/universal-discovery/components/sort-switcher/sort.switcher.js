@@ -6,12 +6,13 @@ import MenuButton from '../menu-button/menu.button';
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import { SortingContext, SortOrderContext, SORTING_OPTIONS } from '../../universal.discovery.module';
 
+const ASCENDING_ORDER = 'ascending';
+const DESCENDING_ORDER = 'descending';
+
 const SortSwitcher = ({ isDisabled }) => {
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
 
-    const ascendingOrder = 'ascending';
-    const descendingOrder = 'descending';
     const className = createCssClassNames({
         'c-sort-switcher': true,
         'c-sort-switcher--disabled': isDisabled,
@@ -22,14 +23,14 @@ const SortSwitcher = ({ isDisabled }) => {
             {SORTING_OPTIONS.map((option) => {
                 const extraClasses = createCssClassNames({
                     'c-menu-button--selected': option.sortClause === sorting,
-                    'c-menu-button--sorted-asc': sortOrder === ascendingOrder,
-                    'c-menu-button--sorted-desc': sortOrder === descendingOrder,
+                    'c-menu-button--sorted-asc': sortOrder === ASCENDING_ORDER,
+                    'c-menu-button--sorted-desc': sortOrder === DESCENDING_ORDER,
                 });
                 const onClick = () => {
                     setSorting(option.sortClause);
 
                     if (sorting === option.sortClause) {
-                        setSortOrder(sortOrder === ascendingOrder ? descendingOrder : ascendingOrder);
+                        setSortOrder(sortOrder === ASCENDING_ORDER ? DESCENDING_ORDER : ASCENDING_ORDER);
                     }
                 };
 
