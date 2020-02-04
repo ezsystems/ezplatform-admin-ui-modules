@@ -12,7 +12,6 @@ const DESCENDING_ORDER = 'descending';
 const SortSwitcher = ({ isDisabled }) => {
     const [sorting, setSorting] = useContext(SortingContext);
     const [sortOrder, setSortOrder] = useContext(SortOrderContext);
-
     const className = createCssClassNames({
         'c-sort-switcher': true,
         'c-sort-switcher--disabled': isDisabled,
