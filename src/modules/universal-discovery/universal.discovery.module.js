@@ -19,7 +19,10 @@ export const SORTING_OPTIONS = [
         sortClause: 'ContentName',
     },
 ];
-export const VIEWS = [{ id: 'grid', icon: 'view-grid' }, { id: 'finder', icon: 'panels' }];
+export const VIEWS = [
+    { id: 'grid', icon: 'view-grid' },
+    { id: 'finder', icon: 'panels' },
+];
 
 const restInfo = {
     token: document.querySelector('meta[name="CSRF-Token"]').content,
@@ -171,7 +174,7 @@ const UniversalDiscoveryModule = (props) => {
         });
 
         dispatchLoadedLocationsAction({ type: 'SET_LOCATIONS', data: locationsMap });
-    }, [sorting]);
+    }, [sorting, sortOrder]);
 
     return (
         <div className={className}>
