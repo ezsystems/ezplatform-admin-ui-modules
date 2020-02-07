@@ -12,10 +12,6 @@ const Finder = ({ itemsPerPage }) => {
     useEffect(() => {
         const container = finderRef.current;
 
-        if (!container) {
-            return;
-        }
-
         container.scrollLeft = container.scrollWidth - container.clientWidth;
     });
 
