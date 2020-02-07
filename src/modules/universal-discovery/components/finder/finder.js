@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import FinderBranch from './finder.branch';
@@ -7,9 +7,20 @@ import { LoadedLocationsMapContext } from '../../universal.discovery.module';
 
 const Finder = ({ itemsPerPage }) => {
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
+    const finderRef = useRef(null);
+
+    useEffect(() => {
+        const container = finderRef.current;
+
+        if (!container) {
+            return;
+        }
+
+        container.scrollLeft = container.scrollWidth - container.clientWidth;
+    });
 
     return (
-        <div className="c-finder">
+        <div className="c-finder" ref={finderRef}>
             {loadedLocationsMap.map((loadedLocation) => (
                 <FinderBranch key={loadedLocation.parentLocationId} itemsPerPage={itemsPerPage} locationData={loadedLocation} />
             ))}
