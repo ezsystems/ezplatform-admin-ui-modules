@@ -94,14 +94,19 @@ class ListItem extends Component {
      * @returns {JSX.Element}
      */
     renderIcon() {
-        const { contentTypeIdentifier, selected } = this.props;
+        const { contentTypeIdentifier, selected, locationId } = this.props;
         const iconAttrs = {
             extraClasses: `ez-icon--small ez-icon--${selected ? 'light' : 'dark'}`,
         };
 
         if (!this.state.isLoading || this.props.subitems.length) {
-            iconAttrs.customPath =
-                eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier) || eZ.helpers.contentType.getContentTypeIconUrl('file');
+            if (locationId === 1) {
+                iconAttrs.customPath = eZ.helpers.contentType.getContentTypeIconUrl('folder');
+            } else {
+                iconAttrs.customPath =
+                    eZ.helpers.contentType.getContentTypeIconUrl(contentTypeIdentifier) ||
+                    eZ.helpers.contentType.getContentTypeIconUrl('file');
+            }
         } else {
             iconAttrs.name = 'spinner';
             iconAttrs.extraClasses = `${iconAttrs.extraClasses} ez-spin`;
@@ -153,10 +158,6 @@ class ListItem extends Component {
     }
 
     renderItemLabel() {
-        if (this.props.isRootItem) {
-            return null;
-        }
-
         const { totalSubitemsCount, href, name, selected } = this.props;
         const togglerClassName = 'c-list-item__toggler';
         const togglerAttrs = {
