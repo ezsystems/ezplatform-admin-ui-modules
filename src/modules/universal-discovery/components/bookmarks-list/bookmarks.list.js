@@ -15,12 +15,9 @@ import {
     AllowedContentTypesContext,
 } from '../../universal.discovery.module';
 
-// @TODO
-const HARDCODED_LIMIT = 50;
-
 const SCROLL_OFFSET = 200;
 
-const BookmarksList = ({ setBookmarkedLocationMarked }) => {
+const BookmarksList = ({ setBookmarkedLocationMarked, itemsPerPage }) => {
     const [offset, setOffset] = useState(0);
     const [bookmarks, setBookmarks] = useState([]);
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
@@ -30,7 +27,7 @@ const BookmarksList = ({ setBookmarkedLocationMarked }) => {
     const allowedContentTypes = useContext(AllowedContentTypesContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const containersOnly = useContext(ContainersOnlyContext);
-    const [data, isLoading] = useLoadBookmarksFetch(HARDCODED_LIMIT, offset);
+    const [data, isLoading] = useLoadBookmarksFetch(itemsPerPage, offset);
     const loadMore = ({ target }) => {
         const areAllItemsLoaded = bookmarks.length >= data.count;
         const isOffsetReached = target.scrollHeight - target.clientHeight - target.scrollTop < SCROLL_OFFSET;
@@ -39,7 +36,7 @@ const BookmarksList = ({ setBookmarkedLocationMarked }) => {
             return;
         }
 
-        setOffset(offset + HARDCODED_LIMIT);
+        setOffset(offset + itemsPerPage);
     };
     const renderLoadingSpinner = () => {
         if (!isLoading) {
@@ -106,6 +103,11 @@ const BookmarksList = ({ setBookmarkedLocationMarked }) => {
 
 BookmarksList.propTypes = {
     setBookmarkedLocationMarked: PropTypes.func.isRequired,
+    itemsPerPage: PropTypes.number,
+};
+
+BookmarksList.defaultProps = {
+    itemsPerPage: 50,
 };
 
 export default BookmarksList;

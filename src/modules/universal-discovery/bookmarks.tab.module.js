@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import Tab from './components/tab/tab';
 import BookmarksList from './components/bookmarks-list/bookmarks.list';
@@ -13,16 +13,13 @@ import {
     SortingContext,
     SortOrderContext,
     RootLocationIdContext,
+    TabsConfigContext,
 } from './universal.discovery.module';
 import { loadAccordionData } from './services/universal.discovery.service';
 
-const views = {
-    grid: <GridView />,
-    finder: <Finder />,
-};
-
 const BookmarksTabModule = () => {
     const restInfo = useContext(RestInfoContext);
+    const tabsConfig = useContext(TabsConfigContext);
     const [currentView, setCurrentView] = useContext(CurrentViewContext);
     const [markedLocation, setMarkedLocation] = useContext(MarkedLocationContext);
     const [sorting, setSorting] = useContext(SortingContext);
@@ -30,6 +27,10 @@ const BookmarksTabModule = () => {
     const rootLocationId = useContext(RootLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [bookmarkedLocationMarked, setBookmarkedLocationMarked] = useState(null);
+    const views = {
+        grid: <GridView itemsPerPage={tabsConfig.bookmarks.itemsPerPage} />,
+        finder: <Finder itemsPerPage={tabsConfig.bookmarks.itemsPerPage} />,
+    };
     const renderBrowseLocations = () => {
         if (!markedLocation) {
             return null;
@@ -69,7 +70,7 @@ const BookmarksTabModule = () => {
     return (
         <div className="m-bookmarks-tab">
             <Tab>
-                <BookmarksList setBookmarkedLocationMarked={setBookmarkedLocationMarked} />
+                <BookmarksList itemsPerPage={tabsConfig.bookmarks.itemsPerPage} setBookmarkedLocationMarked={setBookmarkedLocationMarked} />
                 {renderBrowseLocations()}
             </Tab>
         </div>

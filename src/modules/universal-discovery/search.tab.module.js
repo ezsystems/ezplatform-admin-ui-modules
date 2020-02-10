@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Tab from './components/tab/tab';
 import Search from './components/search/search';
 
+import { TabsConfigContext } from './universal.discovery.module';
+
 const SearchTabModule = () => {
+    const tabsConfig = useContext(TabsConfigContext);
+
     return (
         <div className="m-search-tab">
             <Tab isContentOnTheFlyDisabled={true} isSortSwitcherDisabled={true} isViewSwitcherDisabled={true}>
-                <Search />
+                <Search itemsPerPage={tabsConfig.search.itemsPerPage} />
             </Tab>
         </div>
     );

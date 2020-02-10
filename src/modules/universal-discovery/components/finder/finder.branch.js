@@ -18,10 +18,7 @@ import {
 const CLASS_IS_BRANCH_RESIZING = 'ez-is-branch-resizing';
 const SCROLL_OFFSET = 200;
 
-// @TODO
-const HARDCODED_LIMIT = 50;
-
-const FinderBranch = ({ locationData }) => {
+const FinderBranch = ({ locationData, itemsPerPage }) => {
     const [offset, setOffset] = useState(0);
     const [branchWidth, setBranchWidth] = useState(0);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
@@ -34,7 +31,7 @@ const FinderBranch = ({ locationData }) => {
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
         locationData,
         { sortClause: sortingOptions.sortClause, sortOrder },
-        HARDCODED_LIMIT,
+        itemsPerPage,
         offset
     );
     const { subitems, collapsed } = locationData;
@@ -48,7 +45,7 @@ const FinderBranch = ({ locationData }) => {
             return;
         }
 
-        setOffset(offset + HARDCODED_LIMIT);
+        setOffset(offset + itemsPerPage);
     };
     const expandBranch = () => {
         dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { ...locationData, collapsed: false } });
@@ -158,6 +155,11 @@ FinderBranch.propTypes = {
         location: PropTypes.object.isRequired,
         collapsed: PropTypes.bool,
     }).isRequired,
+    itemsPerPage: PropTypes.number,
+};
+
+FinderBranch.defaultProps = {
+    itemsPerPage: 50,
 };
 
 export default FinderBranch;
