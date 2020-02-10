@@ -42,6 +42,11 @@ export const computePages = ({ proximity, activePageIndex, pagesCount, separator
 
 const Pagination = ({ totalCount, itemsPerPage, proximity, activePageIndex, onPageChange, disabled: paginationDisabled }) => {
     const pagesCount = Math.ceil(totalCount / itemsPerPage);
+
+    if (pagesCount === 1) {
+        return null;
+    }
+
     const backLabel = Translator.trans(/*@Desc("Back")*/ 'pagination.back', {}, 'sub_items');
     const nextLabel = Translator.trans(/*@Desc("Next")*/ 'pagination.next', {}, 'sub_items');
     const previousPage = activePageIndex - 1;

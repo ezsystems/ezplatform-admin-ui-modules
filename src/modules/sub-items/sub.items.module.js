@@ -12,13 +12,7 @@ import Icon from '../common/icon/icon.js';
 
 import deepClone from '../common/helpers/deep.clone.helper.js';
 import { updateLocationPriority, loadLocation } from './services/sub.items.service';
-import {
-    bulkAddLocations,
-    bulkDeleteItems,
-    bulkHideLocations,
-    bulkUnhideLocations,
-    bulkMoveLocations
-} from './services/bulk.service.js';
+import { bulkAddLocations, bulkDeleteItems, bulkHideLocations, bulkUnhideLocations, bulkMoveLocations } from './services/bulk.service.js';
 
 export const ASCENDING_SORT_ORDER = 'ascending';
 const DESCENDING_SORT_ORDER = 'descending';
@@ -358,7 +352,9 @@ export default class SubItemsModule extends Component {
         if (notMovedItems.length) {
             const modalTableTitle = Translator.trans(
                 /*@Desc("%itemsCount% Content items cannot be moved")*/
-                'bulk_move.error.modal.table_title', {itemsCount: notMovedItems.length}, 'sub_items'
+                'bulk_move.error.modal.table_title',
+                { itemsCount: notMovedItems.length },
+                'sub_items'
             );
             const notificationMessage = Translator.trans(
                 /*@Desc("%notMovedCount% of the %totalCount% selected item(s) could not be moved because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator.")*/ 'bulk_move.error.message',
@@ -371,7 +367,9 @@ export default class SubItemsModule extends Component {
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
-                    'bulk_action.error.more_info', {}, 'sub_items'
+                    'bulk_action.error.more_info',
+                    {},
+                    'sub_items'
                 ),
             };
 
@@ -381,7 +379,9 @@ export default class SubItemsModule extends Component {
         if (movedItems.length) {
             const message = Translator.trans(
                 /*@Desc("Content item(s) sent to {{ locationLink }}")*/
-                'bulk_move.success.message', {}, 'sub_items'
+                'bulk_move.success.message',
+                {},
+                'sub_items'
             );
             const rawPlaceholdersMap = {
                 locationLink: Translator.trans(
@@ -407,7 +407,9 @@ export default class SubItemsModule extends Component {
         if (failedItems.length) {
             const modalTableTitle = Translator.trans(
                 /*@Desc("%itemsCount% Content item(s) cannot be hidden")*/
-                'bulk_hide.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
+                'bulk_hide.error.modal.table_title',
+                { itemsCount: failedItems.length },
+                'sub_items'
             );
             const notificationMessage = Translator.trans(
                 /*@Desc("%failedCount% of the %totalCount% selected item(s) could not be hidden because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.")*/
@@ -421,7 +423,9 @@ export default class SubItemsModule extends Component {
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
-                    'bulk_action.error.more_info', {}, 'sub_items'
+                    'bulk_action.error.more_info',
+                    {},
+                    'sub_items'
                 ),
             };
 
@@ -431,7 +435,9 @@ export default class SubItemsModule extends Component {
         if (successItems.length) {
             const message = Translator.trans(
                 /*@Desc("Location(s) hidden.")*/
-                'bulk_hide.success.message', {}, 'sub_items'
+                'bulk_hide.success.message',
+                {},
+                'sub_items'
             );
 
             window.eZ.helpers.notification.showSuccessNotification(message);
@@ -446,7 +452,9 @@ export default class SubItemsModule extends Component {
         if (failedItems.length) {
             const modalTableTitle = Translator.trans(
                 /*@Desc("%itemsCount% Location(s) cannot be revealed")*/
-                'bulk_unhide.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
+                'bulk_unhide.error.modal.table_title',
+                { itemsCount: failedItems.length },
+                'sub_items'
             );
             const notificationMessage = Translator.trans(
                 /*@Desc("%failedCount% of the %totalCount% selected Location(s) could not be revealed because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.")*/
@@ -460,7 +468,9 @@ export default class SubItemsModule extends Component {
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
-                    'bulk_action.error.more_info', {}, 'sub_items'
+                    'bulk_action.error.more_info',
+                    {},
+                    'sub_items'
                 ),
             };
 
@@ -470,7 +480,9 @@ export default class SubItemsModule extends Component {
         if (successItems.length) {
             const message = Translator.trans(
                 /*@Desc("The selected location(s) have been revealed.")*/
-                'bulk_unhide.success.message', {}, 'sub_items'
+                'bulk_unhide.success.message',
+                {},
+                'sub_items'
             );
 
             window.eZ.helpers.notification.showSuccessNotification(message);
@@ -485,7 +497,9 @@ export default class SubItemsModule extends Component {
         if (failedItems.length) {
             const modalTableTitle = Translator.trans(
                 /*@Desc("%itemsCount% Location(s) cannot be added")*/
-                'bulk_add_location.error.modal.table_title', {itemsCount: failedItems.length}, 'sub_items'
+                'bulk_add_location.error.modal.table_title',
+                { itemsCount: failedItems.length },
+                'sub_items'
             );
             const notificationMessage = Translator.trans(
                 /*@Desc("%failedCount% of the %totalCount% selected Locations(s) could not be added because you do not have proper user permissions. {{ moreInformationLink }} Contact your Administrator to obtain permissions.")*/
@@ -499,7 +513,9 @@ export default class SubItemsModule extends Component {
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
-                    'bulk_action.error.more_info', {}, 'sub_items'
+                    'bulk_action.error.more_info',
+                    {},
+                    'sub_items'
                 ),
             };
 
@@ -509,7 +525,9 @@ export default class SubItemsModule extends Component {
         if (successItems.length) {
             const message = Translator.trans(
                 /*@Desc("Location(s) added to {{ locationLink }}.")*/
-                'bulk_add_location.success.message', {}, 'sub_items'
+                'bulk_add_location.success.message',
+                {},
+                'sub_items'
             );
             const rawPlaceholdersMap = {
                 locationLink: Translator.trans(
@@ -637,7 +655,9 @@ export default class SubItemsModule extends Component {
             const rawPlaceholdersMap = {
                 moreInformationLink: Translator.trans(
                     /*@Desc("<u><a class='ez-notification-btn ez-notification-btn--show-modal'>Click here for more information.</a></u><br>")*/
-                    'bulk_action.error.more_info', {}, 'sub_items'
+                    'bulk_action.error.more_info',
+                    {},
+                    'sub_items'
                 ),
             };
 
@@ -704,11 +724,7 @@ export default class SubItemsModule extends Component {
                     'sub_items'
                 );
             } else if (anyUserContentItemDeleted) {
-                message = Translator.trans(
-                    /*@Desc("User(s) deleted.")*/ 'bulk_delete.success.message.users',
-                    {},
-                    'sub_items'
-                );
+                message = Translator.trans(/*@Desc("User(s) deleted.")*/ 'bulk_delete.success.message.users', {}, 'sub_items');
             } else {
                 message = Translator.trans(
                     /*@Desc("Content item(s) sent to Trash.")*/ 'bulk_delete.success.message.nonusers',
@@ -814,11 +830,7 @@ export default class SubItemsModule extends Component {
 
         return (
             <Fragment>
-                <button
-                    onClick={this.closeBulkDeletePopup}
-                    type="button"
-                    className="btn btn-dark"
-                    data-dismiss="modal">
+                <button onClick={this.closeBulkDeletePopup} type="button" className="btn btn-dark" data-dismiss="modal">
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkDeletePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
@@ -834,11 +846,7 @@ export default class SubItemsModule extends Component {
 
         return (
             <Fragment>
-                <button
-                    onClick={this.closeBulkHidePopup}
-                    type="button"
-                    className="btn btn-dark"
-                    data-dismiss="modal">
+                <button onClick={this.closeBulkHidePopup} type="button" className="btn btn-dark" data-dismiss="modal">
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkHidePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
@@ -854,11 +862,7 @@ export default class SubItemsModule extends Component {
 
         return (
             <Fragment>
-                <button
-                    onClick={this.closeBulkUnhidePopup}
-                    type="button"
-                    className="btn btn-dark"
-                    data-dismiss="modal">
+                <button onClick={this.closeBulkUnhidePopup} type="button" className="btn btn-dark" data-dismiss="modal">
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkUnhidePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
@@ -950,7 +954,9 @@ export default class SubItemsModule extends Component {
 
         const confirmationMessage = Translator.trans(
             /*@Desc("Are you sure you want to hide the selected Location(s)?")*/
-            'bulk_hide.popup.message', {}, 'sub_items'
+            'bulk_hide.popup.message',
+            {},
+            'sub_items'
         );
 
         return ReactDOM.createPortal(
@@ -976,7 +982,9 @@ export default class SubItemsModule extends Component {
 
         const confirmationMessage = Translator.trans(
             /*@Desc("Are you sure you want to reveal the selected Location(s)?")*/
-            'bulk_unhide.popup.message', {}, 'sub_items'
+            'bulk_unhide.popup.message',
+            {},
+            'sub_items'
         );
 
         return ReactDOM.createPortal(
@@ -1058,12 +1066,6 @@ export default class SubItemsModule extends Component {
     renderPagination() {
         const { limit: itemsPerPage } = this.props;
         const { totalCount } = this.state;
-        const lessThanOnePage = totalCount <= itemsPerPage;
-
-        if (lessThanOnePage) {
-            return null;
-        }
-
         const { activePageIndex, activePageItems, isDuringBulkOperation } = this.state;
         const isActivePageLoaded = !!activePageItems;
         const isPaginationDisabled = !isActivePageLoaded || isDuringBulkOperation;
@@ -1187,8 +1189,8 @@ export default class SubItemsModule extends Component {
         if (!bulkBtnDisabled) {
             const selectedItemsValues = [...selectedItems.values()];
 
-            bulkHideBtnDisabled = !selectedItemsValues.some(item => !item.hidden);
-            bulkUnhideBtnDisabled = !selectedItemsValues.some(item => !!item.hidden);
+            bulkHideBtnDisabled = !selectedItemsValues.some((item) => !item.hidden);
+            bulkUnhideBtnDisabled = !selectedItemsValues.some((item) => !!item.hidden);
         }
 
         return (
