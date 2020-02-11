@@ -10,6 +10,24 @@ const ENDPOINT_BOOKMARK = '/api/ezp/v2/bookmark';
 
 export const QUERY_LIMIT = 50;
 
+const mapSubitems = (subitems) => {
+    return subitems.locations.map((location) => {
+        const mappedSubitems = {
+            location: location.Location,
+        };
+
+        if (subitems.versions) {
+            const version = subitems.versions.find(
+                (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
+            );
+
+            mappedSubitems.version = version.Version;
+        }
+
+        return mappedSubitems;
+    });
+};
+
 export const findLocationsByParentLocationId = (
     { token, parentLocationId, limit = QUERY_LIMIT, offset = 0, sortClause = 'DatePublished', sortOrder = 'ascending', gridView = false },
     callback
@@ -29,21 +47,7 @@ export const findLocationsByParentLocationId = (
         .then(handleRequestResponse)
         .then((response) => {
             const { bookmarked, location, permissions, subitems, version } = response;
-            const subitemsData = subitems.locations.map((location) => {
-                const mappedSubitems = {
-                    location: location.Location,
-                };
-
-                if (subitems.versions) {
-                    const version = subitems.versions.find(
-                        (version) => version.Version.VersionInfo.Content._href === location.Location.Content._href
-                    );
-
-                    mappedSubitems.version = version.Version;
-                }
-
-                return mappedSubitems;
-            });
+            const subitemsData = mapSubitems(subitems);
             const locationData = {
                 location: location ? location.Location : null,
                 version: version ? version.Version : null,
@@ -87,9 +91,11 @@ export const loadAccordionData = (
         .then((response) => {
             const mappedItems = response.breadcrumb.map((item) => {
                 const location = item.Location;
+                const itemData = response.columns[location.id];
                 const mappedItem = {
                     location,
-                    subitems: [],
+                    totalCount: itemData ? itemData.subitems.totalCount : undefined,
+                    subitems: itemData ? mapSubitems(itemData.subitems) : [],
                     parentLocationId: location.id,
                     collapsed: !response.columns[location.id],
                 };
@@ -97,11 +103,13 @@ export const loadAccordionData = (
                 return mappedItem;
             });
 
+            const rootLocationData = response.columns[1];
             const lastLocationData = response.columns[parentLocationId];
 
-            if (response.columns[1]) {
+            if (rootLocationData) {
                 mappedItems.unshift({
-                    subitems: [],
+                    totalCount: rootLocationData ? rootLocationData.subitems.totalCount : undefined,
+                    subitems: rootLocationData ? mapSubitems(rootLocationData.subitems) : [],
                     parentLocationId: 1,
                     collapsed: false,
                 });
@@ -110,7 +118,8 @@ export const loadAccordionData = (
             mappedItems.push({
                 location: lastLocationData.location.Location,
                 version: lastLocationData.version.Version,
-                subitems: [],
+                totalCount: lastLocationData ? lastLocationData.subitems.totalCount : undefined,
+                subitems: lastLocationData ? mapSubitems(lastLocationData.subitems) : [],
                 bookmarked: lastLocationData.bookmarked,
                 permissions: lastLocationData.permissions,
                 parentLocationId,
