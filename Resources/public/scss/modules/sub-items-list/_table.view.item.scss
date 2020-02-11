@@ -1,4 +1,8 @@
 .c-table-view-item {
+    &__tooltip {
+        left: calculateRem(22px) !important;
+    }
+
     &__translation {
         display: block;
     }
