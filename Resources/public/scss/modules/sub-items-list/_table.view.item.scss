@@ -1,6 +1,11 @@
 .c-table-view-item {
     &__tooltip {
-        left: calculateRem(22px) !important;
+        top: calculateRem(-5px) !important;
+        left: calculateRem(40px) !important;
+
+        .ez-tooltip__arrow {
+            left: calc(50% - 0.4rem) !important;
+        }
     }
 
     &__translation {

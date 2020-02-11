@@ -352,7 +352,6 @@ export default class TableViewItemComponent extends PureComponent {
                 <td className="c-table-view-item__cell c-table-view-item__cell--actions">
                     <span
                         title={editLabel}
-                        data-placement="left"
                         data-extra-classes="c-table-view-item__tooltip"
                         onClick={this.handleEdit}
                         className="c-table-view-item__btn c-table-view-item__btn--edit"
