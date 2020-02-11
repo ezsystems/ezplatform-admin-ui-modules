@@ -158,7 +158,12 @@ class ListItem extends Component {
     }
 
     renderItemLabel() {
-        const { totalSubitemsCount, href, name, selected } = this.props;
+        const { totalSubitemsCount, href, name, selected, locationId } = this.props;
+
+        if (locationId === 1) {
+            return null;
+        }
+
         const togglerClassName = 'c-list-item__toggler';
         const togglerAttrs = {
             className: togglerClassName,
