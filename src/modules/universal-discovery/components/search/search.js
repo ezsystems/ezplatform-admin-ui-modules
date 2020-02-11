@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useContext, createContext } from 'react';
+import PropTypes from 'prop-types';
 
 export const SelectedContentTypesContext = createContext();
 export const SelectedSectionContext = createContext();
@@ -25,10 +26,9 @@ const selectedContentTypesReducer = (state, action) => {
     }
 };
 
-const Search = () => {
+const Search = ({ itemsPerPage }) => {
     const allowedContentTypes = useContext(AllowedContentTypesContext);
     const [searchText, setSearchText] = useState('');
-    const [limit, setLimit] = useState(10);
     const [offset, setOffset] = useState(0);
     const [filtersCollapsed, setFiltersCollapsed] = useState(true);
     const [selectedContentTypes, dispatchSelectedContentTypesAction] = useReducer(selectedContentTypesReducer, []);
@@ -49,14 +49,14 @@ const Search = () => {
 
         const contentTypes = !!selectedContentTypes.length ? [...selectedContentTypes] : allowedContentTypes;
 
-        searchByQuery(searchText, contentTypes, selectedSection, selectedSubtree, limit, offset);
+        searchByQuery(searchText, contentTypes, selectedSection, selectedSubtree, itemsPerPage, offset);
     };
     const handleKeyPressed = ({ charCode }) => {
         if (charCode === ENTER_CHAR_CODE) {
             search(0);
         }
     };
-    const changePage = (pageIndex) => setOffset(pageIndex * limit);
+    const changePage = (pageIndex) => setOffset(pageIndex * itemsPerPage);
     const toggleFiltersCollapsed = () => setFiltersCollapsed((prevState) => !prevState);
     const renderSearchResults = () => {
         const searchResultsLabel = Translator.trans(/*@Desc("Search results")*/ 'search.search_results', {}, 'universal_discovery_widget');
@@ -93,8 +93,8 @@ const Search = () => {
                 <ContentTable
                     count={data.count}
                     items={data.items}
-                    itemsPerPage={limit}
-                    activePageIndex={offset ? offset / limit : 0}
+                    itemsPerPage={itemsPerPage}
+                    activePageIndex={offset ? offset / itemsPerPage : 0}
                     title={title}
                     onPageChange={changePage}
                 />
@@ -159,6 +159,14 @@ const Search = () => {
             {renderSearchResults()}
         </div>
     );
+};
+
+Search.propTypes = {
+    itemsPerPage: PropTypes.number,
+};
+
+Search.defaultProps = {
+    itemsPerPage: 50,
 };
 
 export default Search;

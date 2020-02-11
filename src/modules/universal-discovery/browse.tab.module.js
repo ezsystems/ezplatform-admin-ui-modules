@@ -4,15 +4,15 @@ import Tab from './components/tab/tab';
 import GridView from './components/grid-view/grid.view';
 import Finder from './components/finder/finder';
 
-import { CurrentViewContext } from './universal.discovery.module';
-
-const views = {
-    grid: <GridView />,
-    finder: <Finder />,
-};
+import { CurrentViewContext, TabsConfigContext } from './universal.discovery.module';
 
 const BrowseTabModule = () => {
     const [currentView, setCurrentView] = useContext(CurrentViewContext);
+    const tabsConfig = useContext(TabsConfigContext);
+    const views = {
+        grid: <GridView itemsPerPage={tabsConfig.browse.itemsPerPage} />,
+        finder: <Finder itemsPerPage={tabsConfig.browse.itemsPerPage} />,
+    };
 
     return (
         <div className="m-browse-tab">

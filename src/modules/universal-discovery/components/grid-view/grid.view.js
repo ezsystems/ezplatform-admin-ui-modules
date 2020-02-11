@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import GridViewItem from './grid.view.item';
 import Breadcrumbs from '../breadcrumbs/breadcrumbs';
@@ -6,12 +7,9 @@ import Breadcrumbs from '../breadcrumbs/breadcrumbs';
 import { useFindLocationsByParentLocationIdFetch } from '../../hooks/useFindLocationsByParentLocationIdFetch';
 import { SORTING_OPTIONS, LoadedLocationsMapContext, SortingContext, SortOrderContext } from '../../universal.discovery.module';
 
-// @TODO
-const HARDCODED_LIMIT = 50;
-
 const SCROLL_OFFSET = 200;
 
-const GridView = () => {
+const GridView = ({ itemsPerPage }) => {
     const [offset, setOffset] = useState(0);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const [sorting, setSorting] = useContext(SortingContext);
@@ -21,7 +19,7 @@ const GridView = () => {
     const [loadedLocations, isLoading] = useFindLocationsByParentLocationIdFetch(
         locationData,
         { sortClause: sortingOptions.sortClause, sortOrder },
-        HARDCODED_LIMIT,
+        itemsPerPage,
         offset,
         true
     );
@@ -33,7 +31,7 @@ const GridView = () => {
             return;
         }
 
-        setOffset(offset + HARDCODED_LIMIT);
+        setOffset(offset + itemsPerPage);
     };
     const renderItem = (itemData) => {
         if (!itemData.version) {
@@ -62,6 +60,14 @@ const GridView = () => {
             </div>
         </div>
     );
+};
+
+GridView.propTypes = {
+    itemsPerPage: PropTypes.number,
+};
+
+GridView.defaultProps = {
+    itemsPerPage: 50,
 };
 
 export default GridView;
