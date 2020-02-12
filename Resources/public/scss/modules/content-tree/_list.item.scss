@@ -3,6 +3,7 @@ $list-item-height: calculateRem(20px);
 
 #{$list-item} {
     line-height: $list-item-height;
+    max-height: $list-item-height;
 
     &__label {
         display: flex;
@@ -108,11 +109,10 @@ $list-item-height: calculateRem(20px);
     }
 
     .c-list {
-        transition: all 0.2s ease-in;
-        transform-origin: top;
-        transform: scaleY(0);
+        opacity: 0;
         list-style: none;
         max-height: 0;
+        max-width: 0;
         overflow: hidden;
     }
 
@@ -132,12 +132,10 @@ $list-item-height: calculateRem(20px);
         max-height: initial;
 
         > .c-list {
-            transition: all 0.4s ease-out;
-            transform-origin: top;
-            transform: scaleY(1);
-            max-height: calculateRem(100000px);
+            opacity: 1;
+            max-height: calculateRem(20000px);
             max-width: initial;
-            overflow: hidden;
+            overflow: initial;
         }
 
         > #{$list-item} {
