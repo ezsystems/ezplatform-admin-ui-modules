@@ -43,7 +43,7 @@ export const computePages = ({ proximity, activePageIndex, pagesCount, separator
 const Pagination = ({ totalCount, itemsPerPage, proximity, activePageIndex, onPageChange, disabled: paginationDisabled }) => {
     const pagesCount = Math.ceil(totalCount / itemsPerPage);
 
-    if (pagesCount === 1) {
+    if (pagesCount <= 1) {
         return null;
     }
 
