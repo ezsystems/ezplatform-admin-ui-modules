@@ -106,6 +106,12 @@ const UniversalDiscoveryModule = (props) => {
         };
 
         loadContentTypes(restInfo, handleLoadContentTypes);
+        window.document.body.dispatchEvent(new CustomEvent('ez-udw-opened'));
+        console.log('open');
+        return () => {
+            console.log('closed');
+            window.document.body.dispatchEvent(new CustomEvent('ez-udw-closed'));
+        };
     }, []);
 
     useEffect(() => {
