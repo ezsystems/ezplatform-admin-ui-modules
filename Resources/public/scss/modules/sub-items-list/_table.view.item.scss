@@ -73,6 +73,26 @@
         }
     }
 
+    &__ez-extra-actions {
+        position: fixed;
+        z-index: 2;
+        top: 0;
+        right: calculateRem(80px);
+        width: calculateRem(360px);
+        height: 100vh;
+        opacity: 0;
+        transform: scaleX(0);
+        transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        transform-origin: right;
+        box-shadow: calculateRem(-4px) calculateRem(4px) calculateRem(6px) 0 rgba($ez-color-base-light, 0.35);
+
+        &--visible {
+            opacity: 1;
+            transform: scaleX(1);
+            transition: transform 0.4s ease-in, opacity 0.4s ease-in;
+        }
+    }
+
     &__inner-wrapper {
         cursor: pointer;
 

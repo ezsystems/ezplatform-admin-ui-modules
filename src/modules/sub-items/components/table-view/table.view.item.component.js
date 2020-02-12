@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
 
 const { formatShortDateTime } = window.eZ.helpers.timezone;
+const SELECT_LANGUAGES_MENU_VISIBLE_CLASS = 'c-table-view-item__ez-extra-actions--visible';
 
 export default class TableViewItemComponent extends PureComponent {
     constructor(props) {
@@ -13,15 +14,18 @@ export default class TableViewItemComponent extends PureComponent {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleSelectLanguage = this.handleSelectLanguage.bind(this);
         this.onSelectCheckboxChange = this.onSelectCheckboxChange.bind(this);
         this.setPriorityInputRef = this.setPriorityInputRef.bind(this);
 
         this._refPriorityInput = null;
+        this._refSelectedLanguageMenu = React.createRef();
 
         this.state = {
             priorityValue: props.item.priority,
             priorityInputEnabled: false,
             startingPriorityValue: props.item.priority,
+            selectedLanguageCode: undefined,
         };
 
         this.columnsRenderers = {
@@ -106,6 +110,20 @@ export default class TableViewItemComponent extends PureComponent {
     }
 
     /**
+     * Select language for subitems edit
+     *
+     * @method handleSelectLanguage
+     * @param {Event} event
+     * @memberof TableViewItemComponent
+     */
+    handleSelectLanguage(event) {
+        event.preventDefault();
+        const { languageCode } = event.target.dataset;
+        console.log('handel select : ');
+        this.setState(() => ({ selectedLanguageCode: languageCode }), this.handleEdit);
+    }
+
+    /**
      * Handles edit action.
      *
      * @method handleEdit
@@ -113,7 +131,15 @@ export default class TableViewItemComponent extends PureComponent {
      */
     handleEdit() {
         const { id, mainLanguageCode, currentVersion } = this.props.item.content._info;
+        const { languageCodes } = currentVersion;
 
+        if (languageCodes.length > 1 && this.state.selectedLanguageCode === undefined) {
+            this._refSelectedLanguageMenu.current.classList.toggle(SELECT_LANGUAGES_MENU_VISIBLE_CLASS);
+            return;
+        }
+
+        console.log('Send for ', this.state.selectedLanguageCode || mainLanguageCode);
+        return false;
         this.props.handleEditItem({
             _id: id,
             mainLanguageCode,
@@ -288,6 +314,46 @@ export default class TableViewItemComponent extends PureComponent {
         onItemSelect(item, isSelected);
     }
 
+    /**
+     * Render choosing language to edit subitems
+     *
+     */
+    renderContentEditLanguage() {
+        const languages = this.props.languages.mappings;
+        const { languageCodes } = this.props.item.content._info.currentVersion;
+
+        if (languageCodes.length > 1) {
+            return (
+                <div
+                    className="ez-extra-actions ez-extra-actions--edit c-table-view-item__ez-extra-actions"
+                    dataActions="edit"
+                    ref={this._refSelectedLanguageMenu}>
+                    <div className="ez-extra-actions__header">Label</div>
+                    <div className="ez-extra-actions__content">
+                        <form name="content_edit" method="post" action="/admin/content/edit">
+                            <div className="ez-extra-actions__form-values">
+                                {languageCodes.map((languageCode) => {
+                                    return (
+                                        <div className="form-check">
+                                            <button
+                                                className="form-check-label"
+                                                onClick={this.handleSelectLanguage}
+                                                data-language-code={languageCode}>
+                                                {languages[languageCode].name}
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        } else {
+            return false;
+        }
+    }
+
     render() {
         const { item, isSelected } = this.props;
         const editLabel = Translator.trans(/*@Desc("Edit")*/ 'edit_item_btn.label', {}, 'sub_items');
@@ -313,6 +379,7 @@ export default class TableViewItemComponent extends PureComponent {
                             <Icon name="edit" extraClasses="ez-icon--medium" />
                         </div>
                     </span>
+                    {this.renderContentEditLanguage()}
                 </td>
             </tr>
         );
