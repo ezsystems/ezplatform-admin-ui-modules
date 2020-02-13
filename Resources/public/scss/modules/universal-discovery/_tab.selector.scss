@@ -5,9 +5,11 @@
         align-items: center;
         padding-left: calculateRem(16px);
         cursor: pointer;
+        font-size: calculateRem(14px);
 
         .ez-icon {
             margin-right: calculateRem(4px);
+            fill: $ez-color-base-medium;
         }
 
         &--selected {
