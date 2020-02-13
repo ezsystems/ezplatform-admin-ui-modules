@@ -93,7 +93,7 @@ export default class TableViewItemComponent extends PureComponent {
      * @memberof TableViewItemComponent
      */
     handleEdit() {
-        this.props.handleEditItem(this.props.content);
+        this.props.handleEditItem(this.props.content, this.props.location);
     }
 
     setPriorityInputRef(ref) {
