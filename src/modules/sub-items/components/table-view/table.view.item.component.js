@@ -1,9 +1,10 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
+import InstantFilter from '../sub-items-list/instant.filter.component';
 
 const { formatShortDateTime } = window.eZ.helpers.timezone;
-const SELECT_LANGUAGES_MENU_VISIBLE_CLASS = 'c-table-view-item__ez-extra-actions--visible';
+const SELECT_LANGUAGES_MENU_VISIBLE_CLASS = 'ez-extra-actions--visible';
 
 export default class TableViewItemComponent extends PureComponent {
     constructor(props) {
@@ -14,12 +15,12 @@ export default class TableViewItemComponent extends PureComponent {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleEdit = this.handleEdit.bind(this);
-        this.handleSelectLanguage = this.handleSelectLanguage.bind(this);
+        this.handleSelectedLanguage = this.handleSelectedLanguage.bind(this);
         this.onSelectCheckboxChange = this.onSelectCheckboxChange.bind(this);
         this.setPriorityInputRef = this.setPriorityInputRef.bind(this);
 
         this._refPriorityInput = null;
-        this._refSelectedLanguageMenu = React.createRef();
+        this._refContentEditLanguagesModal = React.createRef();
 
         this.state = {
             priorityValue: props.item.priority,
@@ -116,11 +117,11 @@ export default class TableViewItemComponent extends PureComponent {
      * @param {Event} event
      * @memberof TableViewItemComponent
      */
-    handleSelectLanguage(event) {
+    handleSelectedLanguage(event) {
         event.preventDefault();
-        const { languageCode } = event.target.dataset;
-        console.log('handel select : ');
-        this.setState(() => ({ selectedLanguageCode: languageCode }), this.handleEdit);
+        const languageCode = event.target.value;
+
+        this.setState({ selectedLanguageCode: languageCode }, this.handleEdit);
     }
 
     /**
@@ -132,17 +133,17 @@ export default class TableViewItemComponent extends PureComponent {
     handleEdit() {
         const { id, mainLanguageCode, currentVersion } = this.props.item.content._info;
         const { languageCodes } = currentVersion;
+        const contentEditLanguagesModalNode = this._refContentEditLanguagesModal.current;
 
         if (languageCodes.length > 1 && this.state.selectedLanguageCode === undefined) {
-            this._refSelectedLanguageMenu.current.classList.toggle(SELECT_LANGUAGES_MENU_VISIBLE_CLASS);
+            contentEditLanguagesModalNode.classList.toggle(SELECT_LANGUAGES_MENU_VISIBLE_CLASS);
+
             return;
         }
 
-        console.log('Send for ', this.state.selectedLanguageCode || mainLanguageCode);
-        return false;
         this.props.handleEditItem({
             _id: id,
-            mainLanguageCode,
+            mainLanguageCode: this.state.selectedLanguageCode || mainLanguageCode,
             CurrentVersion: {
                 Version: {
                     VersionInfo: {
@@ -315,37 +316,35 @@ export default class TableViewItemComponent extends PureComponent {
     }
 
     /**
-     * Render choosing language to edit subitems
+     * Render languages select menu
      *
+     * @method renderContentEditLanguage
+     * @returns {JSX.Element}
+     * @memberof TableViewItemComponent
      */
-    renderContentEditLanguage() {
+    renderContentEditLanguagesModal() {
         const languages = this.props.languages.mappings;
         const { languageCodes } = this.props.item.content._info.currentVersion;
+        const label = Translator.trans(/*@Desc("Select languages")*/ 'languages.modal.label', {}, 'sub_items');
+        const languageItems = languageCodes.reduce(
+            (total, item) => [
+                ...total,
+                {
+                    label: languages[item].name,
+                    value: item,
+                },
+            ],
+            []
+        );
 
         if (languageCodes.length > 1) {
             return (
                 <div
-                    className="ez-extra-actions ez-extra-actions--edit c-table-view-item__ez-extra-actions"
-                    dataActions="edit"
-                    ref={this._refSelectedLanguageMenu}>
-                    <div className="ez-extra-actions__header">Label</div>
+                    className="ez-extra-actions ez-extra-actions--edit ez-extra-actions--languages-modal"
+                    ref={this._refContentEditLanguagesModal}>
+                    <div className="ez-extra-actions__header">{`${label} (${languageItems.length})`}</div>
                     <div className="ez-extra-actions__content">
-                        <form name="content_edit" method="post" action="/admin/content/edit">
-                            <div className="ez-extra-actions__form-values">
-                                {languageCodes.map((languageCode) => {
-                                    return (
-                                        <div className="form-check">
-                                            <button
-                                                className="form-check-label"
-                                                onClick={this.handleSelectLanguage}
-                                                data-language-code={languageCode}>
-                                                {languages[languageCode].name}
-                                            </button>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </form>
+                        <InstantFilter uniqueId={this.props.item.id} items={languageItems} handleItemChange={this.handleSelectedLanguage} />
                     </div>
                 </div>
             );
@@ -379,7 +378,7 @@ export default class TableViewItemComponent extends PureComponent {
                             <Icon name="edit" extraClasses="ez-icon--medium" />
                         </div>
                     </span>
-                    {this.renderContentEditLanguage()}
+                    {this.renderContentEditLanguagesModal()}
                 </td>
             </tr>
         );

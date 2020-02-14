@@ -19,6 +19,8 @@ const DESCENDING_SORT_ORDER = 'descending';
 const DEFAULT_SORT_ORDER = ASCENDING_SORT_ORDER;
 const ACTION_FLOW_ADD_LOCATIONS = 'add';
 const ACTION_FLOW_MOVE = 'move';
+const RIGHT_MAIN_MENU_SELECTOR = '.ez-context-menu';
+const LANGUAGES_MODAL_SELECTOR = '.ez-extra-actions--languages-modal';
 
 export default class SubItemsModule extends Component {
     constructor(props) {
@@ -47,6 +49,7 @@ export default class SubItemsModule extends Component {
         this.afterBulkUnhide = this.afterBulkUnhide.bind(this);
         this.changePage = this.changePage.bind(this);
         this.changeSorting = this.changeSorting.bind(this);
+        this.setContentEditLanguagesModalPosition = this.setContentEditLanguagesModalPosition.bind(this);
 
         this._refListViewWrapper = React.createRef();
         this.bulkActionModalContainer = null;
@@ -66,6 +69,7 @@ export default class SubItemsModule extends Component {
             isBulkDeletePopupVisible: false,
             isBulkHidePopupVisible: false,
             isBulkUnhidePopupVisible: false,
+            isOpenContentEditLanguagesModal: false,
             activePageIndex: 0,
             listViewHeight: null,
             actionFlow: null,
@@ -83,6 +87,9 @@ export default class SubItemsModule extends Component {
         if (!this.state.activePageItems) {
             this.loadPage(0);
         }
+
+        window.addEventListener('scroll', this.setContentEditLanguagesModalPosition, false);
+        window.document.addEventListener('click', this.closeContentEditLanguagesModal);
     }
 
     componentDidUpdate() {
@@ -108,6 +115,9 @@ export default class SubItemsModule extends Component {
 
     componentWillUnmount() {
         document.body.removeChild(this.bulkActionModalContainer);
+
+        window.removeEventListener('scroll', this.setContentEditLanguagesModalPosition);
+        window.document.removeEventListener('click', this.closeContentEditLanguagesModal);
     }
 
     getDefaultSortClause(sortClauses) {
@@ -127,6 +137,27 @@ export default class SubItemsModule extends Component {
         this.setState(() => ({
             listViewHeight: this._refListViewWrapper.current.offsetHeight,
         }));
+    }
+
+    /**
+     * Set positing for select language modal of editing sub items
+     *
+     */
+    setContentEditLanguagesModalPosition() {
+        const rightMainMenuNode = document.querySelector(RIGHT_MAIN_MENU_SELECTOR);
+        const languagesModalNode = document.querySelector(LANGUAGES_MODAL_SELECTOR);
+
+        if (languagesModalNode) {
+            const rect = rightMainMenuNode.getBoundingClientRect();
+            const top = rect.top;
+            const languagesModalPosition = top < 0 ? '0px' : top + 'px';
+
+            languagesModalNode.style.top = languagesModalPosition;
+        }
+    }
+
+    closeContentEditLanguagesModal() {
+        console.log('close');
     }
 
     /**
