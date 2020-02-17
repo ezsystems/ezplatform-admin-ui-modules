@@ -80,7 +80,7 @@ InstantFilter.propTypes = {
     uniqueId: PropTypes.string,
     items: PropTypes.array,
     itemClass: PropTypes.string,
-    handleItemChange: PropTypes.func.isRequired,
+    handleItemChange: PropTypes.func,
 };
 
 InstantFilter.defaultProps = {

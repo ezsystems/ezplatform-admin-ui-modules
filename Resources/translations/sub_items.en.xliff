@@ -277,8 +277,8 @@
         <note>key: items_table.row.visible.label</note>
       </trans-unit>
       <trans-unit id="c509fd3a9e7282070fa03f793bb932863c45d8f6" resname="languages.modal.label">
-        <source>Select languages</source>
-        <target state="new">Select languages</target>
+        <source>Select language</source>
+        <target state="new">Select language</target>
         <note>key: languages.modal.label</note>
       </trans-unit>
       <trans-unit id="e3c395cec9466f06c8f2f3f4b2bfcd9021537714" resname="move_btn.label">

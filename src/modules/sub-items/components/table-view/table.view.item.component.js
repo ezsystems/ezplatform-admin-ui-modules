@@ -111,7 +111,7 @@ export default class TableViewItemComponent extends PureComponent {
     }
 
     /**
-     * Select language for subitems edit
+     * Select language for sub items edit
      *
      * @method handleSelectLanguage
      * @param {Event} event
@@ -137,7 +137,9 @@ export default class TableViewItemComponent extends PureComponent {
 
         if (languageCodes.length > 1 && this.state.selectedLanguageCode === undefined) {
             contentEditLanguagesModalNode.classList.toggle(SELECT_LANGUAGES_MENU_VISIBLE_CLASS);
-
+            window.document.dispatchEvent(
+                new CustomEvent('content-edit-languages-modal-visible', { detail: this._refContentEditLanguagesModal.current })
+            );
             return;
         }
 
@@ -325,7 +327,7 @@ export default class TableViewItemComponent extends PureComponent {
     renderContentEditLanguagesModal() {
         const languages = this.props.languages.mappings;
         const { languageCodes } = this.props.item.content._info.currentVersion;
-        const label = Translator.trans(/*@Desc("Select languages")*/ 'languages.modal.label', {}, 'sub_items');
+        const label = Translator.trans(/*@Desc("Select language")*/ 'languages.modal.label', {}, 'sub_items');
         const languageItems = languageCodes.reduce(
             (total, item) => [
                 ...total,
