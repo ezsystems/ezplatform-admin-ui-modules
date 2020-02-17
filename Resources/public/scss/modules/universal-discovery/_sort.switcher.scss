@@ -4,6 +4,8 @@
     display: flex;
     padding: calculateRem(2px);
     margin-right: calculateRem(10px);
+    font-size: calculateRem(14px);
+    line-height: 1;
 
     &--disabled {
         opacity: 0.3;
@@ -12,14 +14,17 @@
     .c-menu-button {
         position: relative;
         padding: 0 calculateRem(18px);
+        display: flex;
+        align-items: center;
 
         &--selected::after {
             content: '';
             width: 0;
             height: 0;
             position: absolute;
-            top: calculateRem(11px);
+            top: 50%;
             right: calculateRem(6px);
+            transform: translateY(-50%);
         }
 
         &--sorted-asc::after {

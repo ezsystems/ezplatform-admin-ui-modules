@@ -3,12 +3,14 @@
     background-color: $ez-ground-base-medium;
     overflow: auto;
     flex-shrink: 0;
+    margin-left: calculateRem(1px);
 
     &__item {
         cursor: pointer;
         display: flex;
         align-items: center;
         padding: calculateRem(2px) calculateRem(5px);
+        font-size: calculateRem(13px);
 
         &--not-selectable {
             background-color: $ez-ground-base-dark;

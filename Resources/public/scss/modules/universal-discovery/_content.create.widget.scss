@@ -16,8 +16,16 @@
         padding: 0 calculateRem(15px) 0 calculateRem(50px);
     }
 
+    &__header-title {
+        font-size: calculateRem(17px);
+    }
+
     &__close-button {
         border: none;
+
+        .ez-icon {
+            fill: $ez-color-base-medium;
+        }
     }
 
     &__language-selector-wrapper {

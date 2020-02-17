@@ -13,6 +13,12 @@
         align-items: center;
     }
 
+    &__content-name {
+        font-size: calculateRem(14px);
+        line-height: calculateRem(16px);
+        font-weight: bold;
+    }
+
     &__details-item {
         display: flex;
         font-size: calculateRem(10px);
@@ -71,6 +77,14 @@
         height: 100%;
         width: calculateRem(360px);
         box-shadow: calculateRem(-2px) calculateRem(4px) calculateRem(6px) 0 rgba(135, 135, 135, 0.35);
+
+        .ez-icon {
+            fill: $ez-color-base-medium;
+        }
+    }
+
+    &__title {
+        font-size: calculateRem(17px);
     }
 
     &__language-selector-header {

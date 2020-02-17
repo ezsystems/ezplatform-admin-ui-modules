@@ -5,6 +5,7 @@
     box-shadow: 0 calculateRem(2px) calculateRem(4px) 0 rgba(51, 51, 51, 0.1);
     margin-right: calculateRem(29px);
     cursor: pointer;
+    padding-bottom: calculateRem(6px);
 
     &:hover {
         .c-toggle-selection-button {
@@ -14,7 +15,9 @@
 
     &__name {
         min-height: calculateRem(30px);
-        padding-left: calculateRem(8px);
+        padding: calculateRem(6px) calculateRem(6px) 0;
+        font-size: calculateRem(12px);
+        line-height: calculateRem(14px);
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;

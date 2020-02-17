@@ -75,7 +75,7 @@ const ContentCreateWidget = () => {
             <div className="c-content-create__header">
                 <div className="c-content-create__header-title">{createContentLabel}</div>
                 <button type="button" className="c-content-create__close-button" onClick={close}>
-                    <Icon name="discard" extraClasses="ez-icon--small-medium" />
+                    <Icon name="discard" extraClasses="ez-icon--small" />
                 </button>
             </div>
             <div className="c-content-create__language-selector-wrapper">

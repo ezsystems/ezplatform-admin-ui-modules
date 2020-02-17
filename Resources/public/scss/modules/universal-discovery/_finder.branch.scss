@@ -11,6 +11,10 @@
         color: $ez-white;
         cursor: pointer;
         display: block;
+
+        .c-finder-branch__name {
+            font-size: calculateRem(13px);
+        }
     }
 
     &__info-wrapper {
