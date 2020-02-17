@@ -69,9 +69,13 @@ const ContentCreateWidget = () => {
         'universal_discovery_widget'
     );
     const createLabel = Translator.trans(/*@Desc("Create")*/ 'create_content.create', {}, 'universal_discovery_widget');
+    const widgetClassName = createCssClassNames({
+        'c-content-create': true,
+        'c-content-create--hidden': !createContentVisible,
+    });
 
     return (
-        <div className="c-content-create">
+        <div className={widgetClassName}>
             <div className="c-content-create__header">
                 <div className="c-content-create__header-title">{createContentLabel}</div>
                 <button type="button" className="c-content-create__close-button" onClick={close}>

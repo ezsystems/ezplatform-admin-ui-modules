@@ -6,20 +6,12 @@ import TabSelector from '../tab-selector/tab.selector';
 import SelectedLocations from '../selected-locations/selected.locations';
 import ContentCreateWidget from '../content-create-widget/content.create.widget';
 
-import { SelectedLocationsContext, CreateContentWidgetContext } from '../../universal.discovery.module';
+import { SelectedLocationsContext } from '../../universal.discovery.module';
 
 const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isViewSwitcherDisabled }) => {
     const ContentMetaPreview = window.eZ.adminUiConfig.universalDiscoveryWidget.contentMetaPreview;
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
-    const [createContentVisible, setCreateContentVisible] = useContext(CreateContentWidgetContext);
     const selectedLocationsComponent = !!selectedLocations.length ? <SelectedLocations /> : null;
-    const renderCreateWidget = () => {
-        if (!createContentVisible) {
-            return null;
-        }
-
-        return <ContentCreateWidget />;
-    };
 
     return (
         <div className="c-udw-tab">
@@ -31,7 +23,7 @@ const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isVi
                 />
             </div>
             <div className="c-udw-tab__left-sidebar">
-                {renderCreateWidget()}
+                <ContentCreateWidget />
                 <TabSelector />
             </div>
             <div className="c-udw-tab__main">{children}</div>
