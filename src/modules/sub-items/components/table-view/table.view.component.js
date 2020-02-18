@@ -1,10 +1,13 @@
 import React, { Component, createRef } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
 import TableViewColumnsTogglerComponent from './table.view.columns.toggler';
 import ThreeStateCheckboxComponent from '../three-state-checkbox/three.state.checkbox.component';
+import LanguageSelector from '../sub-items-list/language.selector.compoment';
 
+const ACTION_COTAINER_SELECTOR = '.ez-extra-actions-container';
 const COLUMNS_VISIBILITY_LOCAL_STORAGE_DATA_KEY = 'sub-items_columns-visibility';
 const DEFAULT_COLUMNS_VISIBILITY = {
     modified: true,
@@ -53,11 +56,13 @@ export default class TableViewComponent extends Component {
         this.selectAll = this.selectAll.bind(this);
         this.setColumnsVisibilityInLocalStorage = this.setColumnsVisibilityInLocalStorage.bind(this);
         this.toggleColumnVisibility = this.toggleColumnVisibility.bind(this);
+        this.setLanguageSelectorContent = this.setLanguageSelectorContent.bind(this);
 
         this._refColumnsTogglerButton = createRef();
 
         this.state = {
             columnsVisibility: this.getColumnsVisibilityFromLocalStorage(),
+            languageSelectorContent: null,
         };
     }
 
@@ -106,6 +111,15 @@ export default class TableViewComponent extends Component {
     }
 
     /**
+     * Set language selector content
+     *
+     * @param {symbol} content
+     */
+    setLanguageSelectorContent(content) {
+        this.setState({ languageSelectorContent: content });
+    }
+
+    /**
      * Renders single list item
      *
      * @method renderItem
@@ -129,6 +143,7 @@ export default class TableViewComponent extends Component {
                 onItemSelect={onItemSelect}
                 isSelected={isSelected}
                 columnsVisibility={columnsVisibility}
+                setLanguageSelectorContent={this.setLanguageSelectorContent}
             />
         );
     }
@@ -223,6 +238,10 @@ export default class TableViewComponent extends Component {
                         <tbody className="c-table-view__body">{renderedItems}</tbody>
                     </table>
                 </div>
+                {createPortal(
+                    <LanguageSelector content={this.state.languageSelectorContent} />,
+                    window.document.querySelector(ACTION_COTAINER_SELECTOR)
+                )}
             </div>
         );
     }

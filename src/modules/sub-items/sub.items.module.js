@@ -19,8 +19,6 @@ const DESCENDING_SORT_ORDER = 'descending';
 const DEFAULT_SORT_ORDER = ASCENDING_SORT_ORDER;
 const ACTION_FLOW_ADD_LOCATIONS = 'add';
 const ACTION_FLOW_MOVE = 'move';
-const RIGHT_MAIN_MENU_SELECTOR = '.ez-context-menu';
-const LANGUAGES_MODAL_VISIBLE_CLASS = 'ez-extra-actions--visible';
 
 export default class SubItemsModule extends Component {
     constructor(props) {
@@ -49,9 +47,6 @@ export default class SubItemsModule extends Component {
         this.afterBulkUnhide = this.afterBulkUnhide.bind(this);
         this.changePage = this.changePage.bind(this);
         this.changeSorting = this.changeSorting.bind(this);
-        this.setContentEditLanguagesModal = this.setContentEditLanguagesModal.bind(this);
-        this.setContentEditLanguagesModalPosition = this.setContentEditLanguagesModalPosition.bind(this);
-        this.contentEditLanguagesModalChange = this.contentEditLanguagesModalChange.bind(this);
 
         this._refListViewWrapper = React.createRef();
         this.bulkActionModalContainer = null;
@@ -77,7 +72,6 @@ export default class SubItemsModule extends Component {
             actionFlow: null,
             sortClause: sortClauseData.name,
             sortOrder: sortClauseData.order,
-            contentEditLanguagesModalNode: null,
         };
     }
 
@@ -90,10 +84,6 @@ export default class SubItemsModule extends Component {
         if (!this.state.activePageItems) {
             this.loadPage(0);
         }
-
-        window.document.addEventListener('scroll', this.setContentEditLanguagesModalPosition, false);
-        window.document.addEventListener('click', this.contentEditLanguagesModalChange, false);
-        window.document.addEventListener('content-edit-languages-modal-visible', this.setContentEditLanguagesModal, false);
     }
 
     componentDidUpdate() {
@@ -119,10 +109,6 @@ export default class SubItemsModule extends Component {
 
     componentWillUnmount() {
         document.body.removeChild(this.bulkActionModalContainer);
-
-        window.document.removeEventListener('scroll', this.setContentEditLanguagesModalPosition);
-        window.document.removeEventListener('click', this.closeContentEditLanguagesModal);
-        window.document.removeEventListener('content-edit-languages-modal-visible', this.setContentEditLanguagesModal);
     }
 
     getDefaultSortClause(sortClauses) {
@@ -142,50 +128,6 @@ export default class SubItemsModule extends Component {
         this.setState(() => ({
             listViewHeight: this._refListViewWrapper.current.offsetHeight,
         }));
-    }
-
-    /**
-     * Set content edit languages modal
-     *
-     * @method setContentEditLanguagesModal
-     * @memberof SubItemsModule
-     * @param {event} event
-     */
-    setContentEditLanguagesModal(event) {
-        this.setState({ contentEditLanguagesModalNode: event.detail });
-    }
-
-    /**
-     * Set positing for select language modal of editing sub items
-     *
-     * @method setContentEditLanguagesModalPosition
-     * @memberof SubItemsModule
-     */
-    setContentEditLanguagesModalPosition() {
-        const rightMainMenuNode = document.querySelector(RIGHT_MAIN_MENU_SELECTOR);
-
-        if (this.state.contentEditLanguagesModalNode) {
-            const rect = rightMainMenuNode.getBoundingClientRect();
-            const top = rect.top;
-            const languagesModalPosition = top < 0 ? '0px' : top + 'px';
-
-            this.state.contentEditLanguagesModalNode.style.top = languagesModalPosition;
-        }
-    }
-
-    /**
-     * Close content edit languages modal if needed
-     *
-     * @method contentEditLanguagesModalChange
-     * @memberof SubItemsModule
-     * @param {event} event
-     */
-    contentEditLanguagesModalChange(event) {
-        if (this.state.contentEditLanguagesModalNode) {
-            if (!event.target.closest('.c-table-view-item__btn') && !event.target.classList.contains('ez-instant-filter__input')) {
-                this.state.contentEditLanguagesModalNode.classList.remove(LANGUAGES_MODAL_VISIBLE_CLASS);
-            }
-        }
     }
 
     /**

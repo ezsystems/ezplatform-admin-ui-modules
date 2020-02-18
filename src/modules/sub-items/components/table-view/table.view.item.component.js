@@ -4,7 +4,6 @@ import Icon from '../../../common/icon/icon';
 import InstantFilter from '../sub-items-list/instant.filter.component';
 
 const { formatShortDateTime } = window.eZ.helpers.timezone;
-const SELECT_LANGUAGES_MENU_VISIBLE_CLASS = 'ez-extra-actions--visible';
 
 export default class TableViewItemComponent extends PureComponent {
     constructor(props) {
@@ -18,15 +17,16 @@ export default class TableViewItemComponent extends PureComponent {
         this.handleSelectedLanguage = this.handleSelectedLanguage.bind(this);
         this.onSelectCheckboxChange = this.onSelectCheckboxChange.bind(this);
         this.setPriorityInputRef = this.setPriorityInputRef.bind(this);
+        this.renderLanguageSelectorContant = this.renderLanguageSelectorContant.bind(this);
 
         this._refPriorityInput = null;
-        this._refContentEditLanguagesModal = React.createRef();
 
         this.state = {
             priorityValue: props.item.priority,
             priorityInputEnabled: false,
             startingPriorityValue: props.item.priority,
             selectedLanguageCode: undefined,
+            showLanguageSelector: false,
         };
 
         this.columnsRenderers = {
@@ -133,27 +133,29 @@ export default class TableViewItemComponent extends PureComponent {
     handleEdit() {
         const { id, mainLanguageCode, currentVersion } = this.props.item.content._info;
         const { languageCodes } = currentVersion;
-        const contentEditLanguagesModalNode = this._refContentEditLanguagesModal.current;
 
-        if (languageCodes.length > 1 && this.state.selectedLanguageCode === undefined) {
-            contentEditLanguagesModalNode.classList.toggle(SELECT_LANGUAGES_MENU_VISIBLE_CLASS);
-            window.document.dispatchEvent(
-                new CustomEvent('content-edit-languages-modal-visible', { detail: this._refContentEditLanguagesModal.current })
-            );
-            return;
-        }
+        this.setState({ showLanguageSelector: false }, () => {
+            if (languageCodes.length > 1 && this.state.selectedLanguageCode === undefined) {
+                this.setState({ showLanguageSelector: true });
+                this.props.setLanguageSelectorContent(this.renderLanguageSelectorContant());
+                return;
+            }
 
-        this.props.handleEditItem({
-            _id: id,
-            mainLanguageCode: this.state.selectedLanguageCode || mainLanguageCode,
-            CurrentVersion: {
-                Version: {
-                    VersionInfo: {
-                        versionNo: currentVersion.versionNumber,
+            this.props.handleEditItem(
+                {
+                    _id: id,
+                    mainLanguageCode: this.state.selectedLanguageCode || mainLanguageCode,
+                    CurrentVersion: {
+                        Version: {
+                            VersionInfo: {
+                                versionNo: currentVersion.versionNumber,
+                            },
+                        },
                     },
                 },
-            },
-        }, this.props.item.id);
+                this.props.item.id
+            );
+        });
     }
 
     setPriorityInputRef(ref) {
@@ -324,10 +326,11 @@ export default class TableViewItemComponent extends PureComponent {
      * @returns {JSX.Element}
      * @memberof TableViewItemComponent
      */
-    renderContentEditLanguagesModal() {
+    renderLanguageSelectorContant() {
         const languages = this.props.languages.mappings;
         const { languageCodes } = this.props.item.content._info.currentVersion;
         const label = Translator.trans(/*@Desc("Select language")*/ 'languages.modal.label', {}, 'sub_items');
+
         const languageItems = languageCodes.reduce(
             (total, item) => [
                 ...total,
@@ -339,20 +342,14 @@ export default class TableViewItemComponent extends PureComponent {
             []
         );
 
-        if (languageCodes.length > 1) {
-            return (
-                <div
-                    className="ez-extra-actions ez-extra-actions--edit ez-extra-actions--languages-modal"
-                    ref={this._refContentEditLanguagesModal}>
-                    <div className="ez-extra-actions__header">{`${label} (${languageItems.length})`}</div>
-                    <div className="ez-extra-actions__content">
-                        <InstantFilter uniqueId={this.props.item.id} items={languageItems} handleItemChange={this.handleSelectedLanguage} />
-                    </div>
+        return (
+            <Fragment>
+                <div className="ez-extra-actions__header">{`${label} (${languageItems.length})`}</div>
+                <div className="ez-extra-actions__content">
+                    <InstantFilter uniqueId={this.props.item.id} items={languageItems} handleItemChange={this.handleSelectedLanguage} />
                 </div>
-            );
-        } else {
-            return false;
-        }
+            </Fragment>
+        );
     }
 
     render() {
@@ -380,7 +377,6 @@ export default class TableViewItemComponent extends PureComponent {
                             <Icon name="edit" extraClasses="ez-icon--medium" />
                         </div>
                     </span>
-                    {this.renderContentEditLanguagesModal()}
                 </td>
             </tr>
         );

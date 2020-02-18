@@ -1,0 +1,16 @@
+.ez-language-selector {
+    .ez-instant-filter {
+        &__items {
+            margin-top: calculateRem(5px);
+            max-height: calc(100vh - #{calculateRem(220px)});
+            overflow: auto;
+    
+            .form-check-label {
+                font-size: calculateRem(16px);
+                line-height: calculateRem(50px);
+            }
+        }
+    }
+}
+
+
