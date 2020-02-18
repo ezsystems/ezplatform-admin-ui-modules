@@ -6,6 +6,16 @@
     height: 100%;
     width: calculateRem(400px);
     z-index: 1;
+    transform: scaleX(1);
+    transform-origin: left center;
+    opacity: 1;
+    transition: all 0.4s ease-in;
+
+    &--hidden {
+        transform: scaleX(0);
+        opacity: 0;
+        transition: all 0.2s ease-out;
+    }
 
     &__header {
         background-color: $ez-ground-primary;

@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useState, useEffect } from 'react';
 
 import Icon from '../common/icon/icon';
 import Thumbnail from '../common/thumbnail/thumbnail';
+import { createCssClassNames } from '../common/helpers/css.class.names';
 
 import { addBookmark, removeBookmark, createDraft } from './services/universal.discovery.service';
 import {
@@ -84,19 +85,19 @@ const ContentMetaPreview = () => {
         setIsLanguageSelectorOpen(false);
     };
     const renderLanguageSelector = () => {
-        if (!isLanguageSelectorOpen) {
-            return null;
-        }
-
         const languageCodes = version.VersionInfo.languageCodes.split(',');
         const editTranslationLabel = Translator.trans(
             /*@Desc("Edit translation")*/ 'meta_preview.edit_translation',
             {},
             'universal_discovery_widget'
         );
+        const className = createCssClassNames({
+            'c-content-meta-preview__language-selector': true,
+            'c-content-meta-preview__language-selector--hidden': !isLanguageSelectorOpen,
+        });
 
         return (
-            <div className="c-content-meta-preview__language-selector">
+            <div className={className}>
                 <div className="c-content-meta-preview__language-selector-header">
                     <button className="c-content-meta-preview__close-button btn" onClick={hideLanguageSelector}>
                         <Icon name="discard" extraClasses="ez-icon--small" />
