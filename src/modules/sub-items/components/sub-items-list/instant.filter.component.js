@@ -11,31 +11,28 @@ const InstantFilter = (props) => {
 
     useEffect(() => {
         const items = [..._refInstantFilter.current.querySelectorAll(`.${props.itemClass}`)];
-        const itemsMap = items.reduce(
-            (total, item) => [
-                ...total,
-                {
-                    label: item.textContent.toLowerCase(),
-                    element: item,
-                },
-            ],
-            []
-        );
+        const itemsMap = items.map((item) => ({
+            label: item.textContent.toLowerCase(),
+            element: item,
+        }));
 
         setItemsMap(itemsMap);
     }, []);
 
     useEffect(() => {
-        window.clearTimeout(filterTimeout);
-
+        const filterQueryLowerCase = filterQuery.toLowerCase();
         const filterActionTimeout = window.setTimeout(() => {
-            const results = itemsMap.filter((item) => item.label.includes(filterQuery.toLowerCase()));
+            const results = itemsMap.filter((item) => item.label.includes(filterQueryLowerCase));
 
             itemsMap.forEach((item) => item.element.setAttribute('hidden', true));
             results.forEach((item) => item.element.removeAttribute('hidden'));
         }, FILTER_TIMEOUT);
 
         setFilterTimeout(filterActionTimeout);
+
+        return () => {
+            window.clearTimeout(filterTimeout);
+        };
     }, [filterQuery]);
 
     return (
@@ -62,7 +59,7 @@ const InstantFilter = (props) => {
                                     name="items"
                                     className="form-check-input"
                                     value={item.value}
-                                    onChange={(event) => props.handleItemChange(event)}
+                                    onChange={props.handleItemChange}
                                 />
                                 <label class="form-check-label" for={radioId}>
                                     {item.label}
