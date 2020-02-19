@@ -124,7 +124,7 @@ export default class TableViewItemComponent extends PureComponent {
                     },
                 },
             },
-        });
+        }, this.props.item.id);
     }
 
     setPriorityInputRef(ref) {
