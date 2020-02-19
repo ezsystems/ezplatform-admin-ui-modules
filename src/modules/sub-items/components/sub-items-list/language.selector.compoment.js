@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
+import InstantFilter from '../sub-items-list/instant.filter.component';
 
 const LanguageSelector = (props) => {
-    const [className, setClassName] = useState({
+    const className = createCssClassNames({
         'ez-extra-actions': true,
-        'ez-extra-actions--edit': true,
         'ez-language-selector': true,
-        'ez-extra-actions--hidden': props.content ? false : true,
+        'ez-extra-actions--edit': true,
+        'ez-extra-actions--hidden': !props.isOpen,
     });
-
     const closeLanguageSelector = (event) => {
         if (!event.target.closest('.c-table-view-item__btn') && !event.target.classList.contains('ez-instant-filter__input')) {
-            setClassName({ ...className, 'ez-extra-actions--hidden': true });
+            props.close();
         }
     };
 
@@ -25,15 +25,32 @@ const LanguageSelector = (props) => {
         };
     }, []);
 
-    useEffect(() => {
-        setClassName({ ...className, 'ez-extra-actions--hidden': props.content ? false : true });
-    }, [props.content]);
-
-    return <div className={createCssClassNames(className)}>{props.content}</div>;
+    return (
+        <div className={className}>
+            <div className="ez-extra-actions__header">{props.label}</div>
+            <div className="ez-extra-actions__content">
+                <InstantFilter uniqueId={props.uniqueId} items={props.languageItems} handleItemChange={props.handleItemChange} />
+            </div>
+        </div>
+    );
 };
 
 LanguageSelector.propTypes = {
-    content: PropTypes.symbol,
+    isOpen: PropTypes.bool,
+    label: PropTypes.string,
+    uniqueId: PropTypes.string,
+    languageItems: PropTypes.array,
+    handleItemChange: PropTypes.func,
+    closeLanguageSelector: PropTypes.func,
+};
+
+LanguageSelector.defaultProps = {
+    isOpen: false,
+    label: '',
+    uniqueId: null,
+    languageItems: [],
+    handleItemChange: () => {},
+    closeLanguageSelector: () => {},
 };
 
 export default LanguageSelector;

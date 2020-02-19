@@ -7,7 +7,8 @@ const InstantFilter = (props) => {
     const _refInstantFilter = useRef(null);
     const [filterQuery, setFilterQuery] = useState('');
     const [itemsMap, setItemsMap] = useState([]);
-    const [filterTimeout, setFilterTimeout] = useState('null');
+
+    let filterTimeout = null;
 
     useEffect(() => {
         const items = [..._refInstantFilter.current.querySelectorAll(`.${props.itemClass}`)];
@@ -21,14 +22,13 @@ const InstantFilter = (props) => {
 
     useEffect(() => {
         const filterQueryLowerCase = filterQuery.toLowerCase();
-        const filterActionTimeout = window.setTimeout(() => {
-            const results = itemsMap.filter((item) => item.label.includes(filterQueryLowerCase));
 
-            itemsMap.forEach((item) => item.element.setAttribute('hidden', true));
-            results.forEach((item) => item.element.removeAttribute('hidden'));
+        filterTimeout = window.setTimeout(() => {
+            itemsMap.forEach((item) => {
+                const methodName = item.label.includes(filterQueryLowerCase) ? 'removeAttribute' : 'setAttribute';
+                item.element[methodName]('hidden', true);
+            });
         }, FILTER_TIMEOUT);
-
-        setFilterTimeout(filterActionTimeout);
 
         return () => {
             window.clearTimeout(filterTimeout);
@@ -36,8 +36,8 @@ const InstantFilter = (props) => {
     }, [filterQuery]);
 
     return (
-        <div class="ez-instant-filter" ref={_refInstantFilter}>
-            <div class="ez-instant-filter__input-wrapper">
+        <div className="ez-instant-filter" ref={_refInstantFilter}>
+            <div className="ez-instant-filter__input-wrapper">
                 <input
                     type="text"
                     className="ez-instant-filter__input form-control"
@@ -46,22 +46,22 @@ const InstantFilter = (props) => {
                     onChange={(event) => setFilterQuery(event.target.value)}
                 />
             </div>
-            <div class="ez-instant-filter__items">
+            <div className="ez-instant-filter__items">
                 {props.items.map((item) => {
                     const radioId = `${props.uniqueId}_${item.value}`;
 
                     return (
                         <div className={props.itemClass}>
-                            <div class="form-check">
+                            <div className="form-check">
                                 <input
                                     type="radio"
                                     id={radioId}
                                     name="items"
                                     className="form-check-input"
                                     value={item.value}
-                                    onChange={props.handleItemChange}
+                                    onChange={() => props.handleItemChange(item.value)}
                                 />
-                                <label class="form-check-label" for={radioId}>
+                                <label className="form-check-label" for={radioId}>
                                     {item.label}
                                 </label>
                             </div>

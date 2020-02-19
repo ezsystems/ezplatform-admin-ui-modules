@@ -66,7 +66,6 @@ export default class SubItemsModule extends Component {
             isBulkDeletePopupVisible: false,
             isBulkHidePopupVisible: false,
             isBulkUnhidePopupVisible: false,
-            isOpenContentEditLanguagesModal: false,
             activePageIndex: 0,
             listViewHeight: null,
             actionFlow: null,

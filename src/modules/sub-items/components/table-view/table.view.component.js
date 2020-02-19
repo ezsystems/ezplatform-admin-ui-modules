@@ -56,13 +56,16 @@ export default class TableViewComponent extends Component {
         this.selectAll = this.selectAll.bind(this);
         this.setColumnsVisibilityInLocalStorage = this.setColumnsVisibilityInLocalStorage.bind(this);
         this.toggleColumnVisibility = this.toggleColumnVisibility.bind(this);
-        this.setLanguageSelectorContent = this.setLanguageSelectorContent.bind(this);
+        this.setLanguageSelectorData = this.setLanguageSelectorData.bind(this);
+        this.openLanguageSelector = this.openLanguageSelector.bind(this);
+        this.closeLanguageSelector = this.closeLanguageSelector.bind(this);
 
         this._refColumnsTogglerButton = createRef();
 
         this.state = {
             columnsVisibility: this.getColumnsVisibilityFromLocalStorage(),
-            languageSelectorContent: null,
+            languageSelectorData: {},
+            languageSelectorOpen: false,
         };
     }
 
@@ -111,12 +114,28 @@ export default class TableViewComponent extends Component {
     }
 
     /**
-     * Set language selector content
+     * Set language selector data
      *
-     * @param {symbol} content
+     * @param {Object} data
      */
-    setLanguageSelectorContent(content) {
-        this.setState({ languageSelectorContent: content });
+    setLanguageSelectorData(data) {
+        this.setState({ languageSelectorData: data });
+    }
+
+    /**
+     * @method openLanguageSelector
+     * @memberof TableViewComponent
+     */
+    openLanguageSelector() {
+        this.setState({ languageSelectorOpen: true });
+    }
+
+    /**
+     * @method closeLanguageSelector
+     * @memberof TableViewComponent
+     */
+    closeLanguageSelector() {
+        this.setState({ languageSelectorOpen: false });
     }
 
     /**
@@ -143,7 +162,8 @@ export default class TableViewComponent extends Component {
                 onItemSelect={onItemSelect}
                 isSelected={isSelected}
                 columnsVisibility={columnsVisibility}
-                setLanguageSelectorContent={this.setLanguageSelectorContent}
+                setLanguageSelectorData={this.setLanguageSelectorData}
+                openLanguageSelector={this.openLanguageSelector}
             />
         );
     }
@@ -239,7 +259,11 @@ export default class TableViewComponent extends Component {
                     </table>
                 </div>
                 {createPortal(
-                    <LanguageSelector content={this.state.languageSelectorContent} />,
+                    <LanguageSelector
+                        isOpen={this.state.languageSelectorOpen}
+                        close={this.closeLanguageSelector}
+                        {...this.state.languageSelectorData}
+                    />,
                     window.document.querySelector(ACTION_COTAINER_SELECTOR)
                 )}
             </div>
