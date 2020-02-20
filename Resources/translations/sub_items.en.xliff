@@ -191,6 +191,11 @@
         <target state="new">Hide selected Location(s)</target>
         <note>key: hide_locations_btn.label</note>
       </trans-unit>
+      <trans-unit id="2f2de7291ed87063841f5d65e5d73c1c50eaa3be" resname="instant.filter.placeholder">
+        <source>Type to refine</source>
+        <target state="new">Type to refine</target>
+        <note>key: instant.filter.placeholder</note>
+      </trans-unit>
       <trans-unit id="2a9e4002be191374ee14674d2e67eb9fe2d631d2" resname="items_list.title">
         <source>Sub-items</source>
         <target state="new">Sub-items</target>

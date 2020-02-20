@@ -41,7 +41,7 @@ const InstantFilter = (props) => {
                 <input
                     type="text"
                     className="ez-instant-filter__input form-control"
-                    placeholder="Type to refine"
+                    placeholder={Translator.trans(/*@Desc("Type to refine")*/ 'instant.filter.placeholder', {}, 'sub_items')}
                     value={filterQuery}
                     onChange={(event) => setFilterQuery(event.target.value)}
                 />
