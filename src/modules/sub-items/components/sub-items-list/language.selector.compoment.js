@@ -7,7 +7,7 @@ import InstantFilter from '../sub-items-list/instant.filter.component';
 const LanguageSelector = (props) => {
     const className = createCssClassNames({
         'ez-extra-actions': true,
-        'ez-language-selector': true,
+        'c-language-selector': true,
         'ez-extra-actions--edit': true,
         'ez-extra-actions--hidden': !props.isOpen,
     });
@@ -29,7 +29,7 @@ const LanguageSelector = (props) => {
         <div className={className}>
             <div className="ez-extra-actions__header">{props.label}</div>
             <div className="ez-extra-actions__content">
-                <InstantFilter uniqueId={props.uniqueId} items={props.languageItems} handleItemChange={props.handleItemChange} />
+                <InstantFilter items={props.languageItems} handleItemChange={props.handleItemChange} />
             </div>
         </div>
     );
@@ -38,7 +38,6 @@ const LanguageSelector = (props) => {
 LanguageSelector.propTypes = {
     isOpen: PropTypes.bool,
     label: PropTypes.string,
-    uniqueId: PropTypes.string,
     languageItems: PropTypes.array,
     handleItemChange: PropTypes.func,
     closeLanguageSelector: PropTypes.func,
@@ -47,7 +46,6 @@ LanguageSelector.propTypes = {
 LanguageSelector.defaultProps = {
     isOpen: false,
     label: '',
-    uniqueId: null,
     languageItems: [],
     handleItemChange: () => {},
     closeLanguageSelector: () => {},

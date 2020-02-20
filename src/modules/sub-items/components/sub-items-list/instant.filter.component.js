@@ -7,18 +7,17 @@ const InstantFilter = (props) => {
     const _refInstantFilter = useRef(null);
     const [filterQuery, setFilterQuery] = useState('');
     const [itemsMap, setItemsMap] = useState([]);
-
     let filterTimeout = null;
 
     useEffect(() => {
-        const items = [..._refInstantFilter.current.querySelectorAll(`.${props.itemClass}`)];
+        const items = [..._refInstantFilter.current.querySelectorAll('.ez-instant-filter__item')];
         const itemsMap = items.map((item) => ({
             label: item.textContent.toLowerCase(),
             element: item,
         }));
 
         setItemsMap(itemsMap);
-    }, []);
+    }, [props.items]);
 
     useEffect(() => {
         const filterQueryLowerCase = filterQuery.toLowerCase();
@@ -26,6 +25,7 @@ const InstantFilter = (props) => {
         filterTimeout = window.setTimeout(() => {
             itemsMap.forEach((item) => {
                 const methodName = item.label.includes(filterQueryLowerCase) ? 'removeAttribute' : 'setAttribute';
+
                 item.element[methodName]('hidden', true);
             });
         }, FILTER_TIMEOUT);
@@ -48,10 +48,10 @@ const InstantFilter = (props) => {
             </div>
             <div className="ez-instant-filter__items">
                 {props.items.map((item) => {
-                    const radioId = `${props.uniqueId}_${item.value}`;
+                    const radioId = `item_${item.value}`;
 
                     return (
-                        <div className={props.itemClass}>
+                        <div className="ez-instant-filter__item">
                             <div className="form-check">
                                 <input
                                     type="radio"
@@ -74,16 +74,12 @@ const InstantFilter = (props) => {
 };
 
 InstantFilter.propTypes = {
-    uniqueId: PropTypes.string,
     items: PropTypes.array,
-    itemClass: PropTypes.string,
     handleItemChange: PropTypes.func,
 };
 
 InstantFilter.defaultProps = {
-    uniqueId: 'item',
     items: [],
-    itemClass: 'ez-instant-filter__item',
     handleItemChange: () => {},
 };
 

@@ -114,7 +114,7 @@ export default class TableViewComponent extends Component {
     }
 
     /**
-     * Set language selector data
+     * Sets language selector data
      *
      * @param {Object} data
      */

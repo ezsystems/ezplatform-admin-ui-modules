@@ -330,7 +330,6 @@ export default class TableViewItemComponent extends PureComponent {
         return {
             languageItems,
             label: `${label} (${languageItems.length})`,
-            uniqueId: this.props.item.id,
             handleItemChange: this.editItem,
         };
     }
