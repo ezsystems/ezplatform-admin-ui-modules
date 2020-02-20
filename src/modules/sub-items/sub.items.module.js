@@ -243,7 +243,10 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     switchView(activeView) {
-        this.setState(() => ({ activeView }), eZ.helpers.tooltips.hideAll());
+        this.setState(
+            () => ({ activeView }),
+            () => eZ.helpers.tooltips.hideAll()
+        );
     }
 
     toggleItemSelection(item, isSelected) {
