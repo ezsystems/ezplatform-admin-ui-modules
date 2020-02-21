@@ -67,7 +67,7 @@ const FinderLeaf = ({ location }) => {
                         customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
                     />
                 </span>
-                <span>{location.ContentInfo.Content.Name}</span>
+                <span>{location.ContentInfo.Content.TranslatedName}</span>
             </span>
             {renderToggleSelectionButton()}
         </div>

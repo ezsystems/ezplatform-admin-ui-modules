@@ -58,7 +58,7 @@ const Breadcrumbs = () => {
                         const locationName =
                             locationId === 1
                                 ? Translator.trans(/*@Desc("Root Location")*/ 'breadcrumbs.root_location', {}, 'universal_discovery_widget')
-                                : item.location.ContentInfo.Content.Name;
+                                : item.location.ContentInfo.Content.TranslatedName;
                         const onClickHandler = goToLocation.bind(this, locationId);
 
                         return (
@@ -95,7 +95,7 @@ const Breadcrumbs = () => {
                         const locationName =
                             locationId === 1
                                 ? Translator.trans(/*@Desc("Root Location")*/ 'breadcrumbs.root_location', {}, 'universal_discovery_widget')
-                                : item.location.ContentInfo.Content.Name;
+                                : item.location.ContentInfo.Content.TranslatedName;
                         const isLast = index === visibleItems.length - 1;
                         const onClickHandler = goToLocation.bind(this, locationId);
                         const className = createCssClassNames({

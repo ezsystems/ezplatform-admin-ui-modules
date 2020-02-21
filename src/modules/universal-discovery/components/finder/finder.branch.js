@@ -87,7 +87,7 @@ const FinderBranch = ({ locationData }) => {
                 loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === subitem.location.id) ||
                 subitem.location.id === markedLocation
         );
-        const contentName = selectedLocation ? selectedLocation.location.ContentInfo.Content.Name : '';
+        const contentName = selectedLocation ? selectedLocation.location.ContentInfo.Content.TranslatedName : '';
 
         return (
             <div className="c-finder-branch__info-wrapper">
