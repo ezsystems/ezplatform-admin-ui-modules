@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../../../common/icon/icon';
+import { createCssClassNames } from '../../../common/helpers/css.class.names';
 
 const ActionButton = (props) => {
     const { disabled, onClick, label, type } = props;
@@ -11,19 +12,23 @@ const ActionButton = (props) => {
         }
     };
     const attrs = {
-        className: `${baseClassName}`,
+        type: 'button',
         title: label,
         tabIndex: '-1',
         onClick: handleClick,
     };
 
-    attrs.className = disabled ? `${attrs.className} ${baseClassName}--disabled` : attrs.className;
-    attrs.className = type ? `${attrs.className} ${baseClassName}--${type}` : attrs.className;
+    attrs.disabled = disabled ? 'disabled' : false;
+    attrs.className = createCssClassNames({
+        [baseClassName]: true,
+        [`${baseClassName}--disabled`]: disabled,
+        [`${baseClassName}--${type}`]: !!type,
+    });
 
     return (
-        <div {...attrs}>
+        <button {...attrs}>
             <Icon name={type} extraClasses="ez-icon--light ez-icon--medium" />
-        </div>
+        </button>
     );
 };
 

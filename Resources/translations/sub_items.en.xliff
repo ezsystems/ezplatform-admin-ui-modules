@@ -216,6 +216,11 @@
         <target state="new">Creator</target>
         <note>key: items_table.header.creator</note>
       </trans-unit>
+      <trans-unit id="1cb1922ab4f684747ddabe1a1b1277893e31006d" resname="items_table.header.filters">
+        <source>Filters</source>
+        <target state="new">Filters</target>
+        <note>key: items_table.header.filters</note>
+      </trans-unit>
       <trans-unit id="fdb8e418a944ccd7b2b8575c09abf1838589d51b" resname="items_table.header.location_id">
         <source>Location ID</source>
         <target state="new">Location ID</target>

@@ -104,6 +104,8 @@ export default class SubItemsModule extends Component {
         if (shouldLoadPage) {
             this.loadPage(activePageIndex);
         }
+
+        eZ.helpers.tooltips.parse();
     }
 
     componentWillUnmount() {
@@ -241,7 +243,10 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     switchView(activeView) {
-        this.setState(() => ({ activeView }));
+        this.setState(
+            () => ({ activeView }),
+            () => eZ.helpers.tooltips.hideAll()
+        );
     }
 
     toggleItemSelection(item, isSelected) {

@@ -1,4 +1,13 @@
 .c-table-view-item {
+    &__tooltip {
+        top: calculateRem(-5px) !important;
+        left: calculateRem(40px) !important;
+
+        .ez-tooltip__arrow {
+            left: calc(50% - 0.4rem) !important;
+        }
+    }
+
     &__translation {
         display: block;
     }
@@ -183,7 +192,7 @@
     }
 
     &__link {
-        display: block;
+        display: inline-block;
         color: $ez-color-hyperlink;
         text-decoration: none;
         cursor: pointer;

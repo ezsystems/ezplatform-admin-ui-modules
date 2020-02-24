@@ -108,11 +108,14 @@ export default class TableViewColumnsTogglerComponent extends Component {
     }
 
     render() {
+        const filterLabel = Translator.trans(/*@Desc("Filters")*/ 'items_table.header.filters', {}, 'sub_items');
+
         return (
             <div className="c-table-view-columns-toggler">
                 <button
                     ref={this._refTogglerButton}
                     type="button"
+                    title={filterLabel}
                     className="btn btn-dark c-table-view-columns-toggler__btn"
                     onClick={this.togglePanel}>
                     <Icon name="filters" extraClasses="ez-icon--small ez-icon--light" />
