@@ -1,10 +1,13 @@
 import React, { Component, createRef } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 
 import TableViewItemComponent from './table.view.item.component';
 import TableViewColumnsTogglerComponent from './table.view.columns.toggler';
 import ThreeStateCheckboxComponent from '../three-state-checkbox/three.state.checkbox.component';
+import LanguageSelector from '../sub-items-list/language.selector.compoment';
 
+const ACTION_COTAINER_SELECTOR = '.ez-extra-actions-container';
 const COLUMNS_VISIBILITY_LOCAL_STORAGE_DATA_KEY = 'sub-items_columns-visibility';
 const DEFAULT_COLUMNS_VISIBILITY = {
     modified: true,
@@ -53,11 +56,16 @@ export default class TableViewComponent extends Component {
         this.selectAll = this.selectAll.bind(this);
         this.setColumnsVisibilityInLocalStorage = this.setColumnsVisibilityInLocalStorage.bind(this);
         this.toggleColumnVisibility = this.toggleColumnVisibility.bind(this);
+        this.setLanguageSelectorData = this.setLanguageSelectorData.bind(this);
+        this.openLanguageSelector = this.openLanguageSelector.bind(this);
+        this.closeLanguageSelector = this.closeLanguageSelector.bind(this);
 
         this._refColumnsTogglerButton = createRef();
 
         this.state = {
             columnsVisibility: this.getColumnsVisibilityFromLocalStorage(),
+            languageSelectorData: {},
+            languageSelectorOpen: false,
         };
     }
 
@@ -106,6 +114,31 @@ export default class TableViewComponent extends Component {
     }
 
     /**
+     * Sets language selector data
+     *
+     * @param {Object} data
+     */
+    setLanguageSelectorData(data) {
+        this.setState({ languageSelectorData: data });
+    }
+
+    /**
+     * @method openLanguageSelector
+     * @memberof TableViewComponent
+     */
+    openLanguageSelector() {
+        this.setState({ languageSelectorOpen: true });
+    }
+
+    /**
+     * @method closeLanguageSelector
+     * @memberof TableViewComponent
+     */
+    closeLanguageSelector() {
+        this.setState({ languageSelectorOpen: false });
+    }
+
+    /**
      * Renders single list item
      *
      * @method renderItem
@@ -129,6 +162,8 @@ export default class TableViewComponent extends Component {
                 onItemSelect={onItemSelect}
                 isSelected={isSelected}
                 columnsVisibility={columnsVisibility}
+                setLanguageSelectorData={this.setLanguageSelectorData}
+                openLanguageSelector={this.openLanguageSelector}
             />
         );
     }
@@ -223,6 +258,14 @@ export default class TableViewComponent extends Component {
                         <tbody className="c-table-view__body">{renderedItems}</tbody>
                     </table>
                 </div>
+                {createPortal(
+                    <LanguageSelector
+                        isOpen={this.state.languageSelectorOpen}
+                        close={this.closeLanguageSelector}
+                        {...this.state.languageSelectorData}
+                    />,
+                    window.document.querySelector(ACTION_COTAINER_SELECTOR)
+                )}
             </div>
         );
     }

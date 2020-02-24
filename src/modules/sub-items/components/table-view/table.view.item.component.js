@@ -15,6 +15,8 @@ export default class TableViewItemComponent extends PureComponent {
         this.handleEdit = this.handleEdit.bind(this);
         this.onSelectCheckboxChange = this.onSelectCheckboxChange.bind(this);
         this.setPriorityInputRef = this.setPriorityInputRef.bind(this);
+        this.getLanguageSelectorData = this.getLanguageSelectorData.bind(this);
+        this.editItem = this.editItem.bind(this);
 
         this._refPriorityInput = null;
 
@@ -106,25 +108,46 @@ export default class TableViewItemComponent extends PureComponent {
     }
 
     /**
+     * Edit sub item
+     *
+     * @method editItem
+     * @memberof TableViewItemComponent
+     */
+    editItem(languageCode) {
+        const { id, currentVersion } = this.props.item.content._info;
+
+        this.props.handleEditItem(
+            {
+                _id: id,
+                mainLanguageCode: languageCode,
+                CurrentVersion: {
+                    Version: {
+                        VersionInfo: {
+                            versionNo: currentVersion.versionNumber,
+                        },
+                    },
+                },
+            },
+            this.props.item.id
+        );
+    }
+
+    /**
      * Handles edit action.
      *
      * @method handleEdit
      * @memberof TableViewItemComponent
      */
     handleEdit() {
-        const { id, mainLanguageCode, currentVersion } = this.props.item.content._info;
+        const { mainLanguageCode, currentVersion } = this.props.item.content._info;
+        const { languageCodes } = currentVersion;
 
-        this.props.handleEditItem({
-            _id: id,
-            mainLanguageCode,
-            CurrentVersion: {
-                Version: {
-                    VersionInfo: {
-                        versionNo: currentVersion.versionNumber,
-                    },
-                },
-            },
-        }, this.props.item.id);
+        if (languageCodes.length > 1) {
+            this.props.setLanguageSelectorData(this.getLanguageSelectorData());
+            this.props.openLanguageSelector();
+        } else {
+            this.editItem(mainLanguageCode);
+        }
     }
 
     setPriorityInputRef(ref) {
@@ -286,6 +309,29 @@ export default class TableViewItemComponent extends PureComponent {
         const isSelected = event.target.checked;
 
         onItemSelect(item, isSelected);
+    }
+
+    /**
+     * Get data for language selector
+     *
+     * @method getLanguageSelectorData
+     * @returns {Object}
+     * @memberof TableViewItemComponent
+     */
+    getLanguageSelectorData() {
+        const languages = this.props.languages.mappings;
+        const { languageCodes } = this.props.item.content._info.currentVersion;
+        const label = Translator.trans(/*@Desc("Select language")*/ 'languages.modal.label', {}, 'sub_items');
+        const languageItems = languageCodes.map((item) => ({
+            label: languages[item].name,
+            value: item,
+        }));
+
+        return {
+            languageItems,
+            label: `${label} (${languageItems.length})`,
+            handleItemChange: this.editItem,
+        };
     }
 
     render() {
