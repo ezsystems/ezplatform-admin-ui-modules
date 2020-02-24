@@ -85,6 +85,10 @@ const Breadcrumbs = () => {
         return () => window.document.body.removeEventListener('click', toggleHiddenListVisible, false);
     }, [hiddenListVisible, toggleHiddenListVisible]);
 
+    if (loadedLocationsMap.some((loadedLocation) => loadedLocation.parentLocationId !== 1 && !loadedLocation.location)) {
+        return null;
+    }
+
     return (
         <div className="c-breadcrumbs">
             {renderHiddenList()}
