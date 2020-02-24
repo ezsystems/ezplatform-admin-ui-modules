@@ -92,7 +92,7 @@ const BookmarksList = ({ setBookmarkedLocationMarked, itemsPerPage }) => {
                 return (
                     <div key={bookmark.id} className={className} onClick={markLocation}>
                         <Icon extraClasses="ez-icon--small" customPath={contentTypeInfo.thumbnail} />
-                        <span className="c-bookmarks-list__item-name">{bookmark.ContentInfo.Content.Name}</span>
+                        <span className="c-bookmarks-list__item-name">{bookmark.ContentInfo.Content.TranslatedName}</span>
                     </div>
                 );
             })}

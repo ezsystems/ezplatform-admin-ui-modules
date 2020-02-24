@@ -141,7 +141,7 @@ const ContentMetaPreview = () => {
                 <Thumbnail thumbnailData={version.Thumbnail} iconExtraClasses="ez-icon--extra-large" />
             </div>
             <div className="c-content-meta-preview__header">
-                <span className="c-content-meta-preview__content-name">{location.ContentInfo.Content.Name}</span>
+                <span className="c-content-meta-preview__content-name">{location.ContentInfo.Content.TranslatedName}</span>
                 <button className="c-content-meta-preview__toggle-bookmark-button" onClick={toggleBookmarked}>
                     <Icon name={bookmarkIconName} extraClasses="ez-icon--small ez-icon--secondary" />
                 </button>

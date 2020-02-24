@@ -16,7 +16,7 @@ const SelectedLocationsItem = ({ location }) => {
         <div className="c-selected-locations-item">
             <div className="c-selected-locations-item__image-wrapper"></div>
             <div className="c-selected-locations-item__info">
-                <span className="c-selected-locations-item__info-name">{location.ContentInfo.Content.Name}</span>
+                <span className="c-selected-locations-item__info-name">{location.ContentInfo.Content.TranslatedName}</span>
                 <span className="c-selected-locations-item__info-description">
                     {contentTypesMap[location.ContentInfo.Content.ContentType._href].name}
                 </span>

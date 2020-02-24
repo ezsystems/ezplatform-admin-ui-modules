@@ -84,7 +84,7 @@ const ContentTableItem = ({ location }) => {
             <td className="c-content-table-item__icon-wrapper">
                 <Icon extraClasses="ez-icon--small" customPath={contentTypeInfo.thumbnail} />
             </td>
-            <td>{location.ContentInfo.Content.Name}</td>
+            <td>{location.ContentInfo.Content.TranslatedName}</td>
             <td>{formatShortDateTime(new Date(location.ContentInfo.Content.lastModificationDate))}</td>
             <td>{contentTypeInfo.name}</td>
             <td className="c-content-table-item__toggle-button-wrapper">{renderToggleSelectionButton()}</td>

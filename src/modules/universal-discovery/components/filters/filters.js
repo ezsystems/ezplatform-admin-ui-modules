@@ -50,7 +50,7 @@ const Filters = ({ isCollapsed, search }) => {
             const id = pathArray.splice(1, pathArray.length - 1).join();
 
             findLocationsById({ ...restInfo, id }, (locations) => {
-                const breadcrumbs = locations.map((location) => location.ContentInfo.Content.Name).join(' / ');
+                const breadcrumbs = locations.map((location) => location.ContentInfo.Content.TranslatedName).join(' / ');
 
                 setSubtreeBreadcrumbs(breadcrumbs);
             });
