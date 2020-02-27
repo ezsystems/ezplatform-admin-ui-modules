@@ -160,7 +160,7 @@ export default class TableViewItemComponent extends PureComponent {
         const linkAttrs = {
             className: 'c-table-view-item__link c-table-view-item__text-wrapper',
             title: contentName,
-            href: generateLink(item.id),
+            href: generateLink(item.id, item.content._info.id),
         };
 
         return <a {...linkAttrs}>{contentName}</a>;
