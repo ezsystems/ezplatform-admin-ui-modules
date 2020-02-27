@@ -18,6 +18,16 @@
         opacity: 0.3;
     }
 
+    &--create {
+        border: calculateRem(1px) solid $ez-color-primary;
+        background: $ez-color-primary;
+
+        &:not(.c-action-btn--disabled):hover,
+        &:not(.c-action-btn--disabled):focus {
+            background: $ez-color-primary-hover;
+        }
+    }
+
     &--move,
     &--hide,
     &--reveal,
