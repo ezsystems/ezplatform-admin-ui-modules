@@ -4,11 +4,11 @@ import Icon from '../../../common/icon/icon';
 import SelectedLocationsItem from './selected.locations.item';
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
 
-import { SelectedLocationsContext, ConfirmContext, ContentTypesInfoMapContext } from '../../universal.discovery.module';
+import { SelectedLocationsContext, ConfirmContext, AllowConfirmationContext } from '../../universal.discovery.module';
 
 const SelectedLocations = () => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
-    const contentTypesInfoMap = useContext(ContentTypesInfoMapContext);
+    const allowConfirmation = useContext(AllowConfirmationContext);
     const onConfirm = useContext(ConfirmContext);
     const [isExpanded, setIsExpanded] = useState(false);
     const className = createCssClassNames({
@@ -65,6 +65,10 @@ const SelectedLocations = () => {
             </div>
         );
     };
+
+    if (!allowConfirmation) {
+        return null;
+    }
 
     return (
         <div className={className}>
