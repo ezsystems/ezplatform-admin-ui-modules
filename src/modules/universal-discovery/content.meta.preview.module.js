@@ -10,7 +10,7 @@ import {
     LoadedLocationsMapContext,
     ContentTypesMapContext,
     RestInfoContext,
-    AllowContentEditContext,
+    AllowRedirectsContext,
 } from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
@@ -18,7 +18,7 @@ const ContentMetaPreview = () => {
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const restInfo = useContext(RestInfoContext);
-    const allowContentEdit = useContext(AllowContentEditContext);
+    const allowRedirects = useContext(AllowRedirectsContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const [isLanguageSelectorOpen, setIsLanguageSelectorOpen] = useState(false);
     const locationData = useMemo(() => {
@@ -70,7 +70,11 @@ const ContentMetaPreview = () => {
         );
     };
     const previewContent = () => {
-        window.location.href = window.Routing.generate('_ez_content_view', { contentId: location.ContentInfo.Content._id, locationId: location.id }, true);
+        window.location.href = window.Routing.generate(
+            '_ez_content_view',
+            { contentId: location.ContentInfo.Content._id, locationId: location.id },
+            true
+        );
     };
     const selectLanguage = () => {
         const languageCodes = version.VersionInfo.languageCodes.split(',');
@@ -115,7 +119,7 @@ const ContentMetaPreview = () => {
         );
     };
     const renderActions = () => {
-        if (!allowContentEdit) {
+        if (!allowRedirects) {
             return null;
         }
 
