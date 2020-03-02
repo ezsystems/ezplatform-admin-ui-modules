@@ -5,7 +5,7 @@ import deepClone from '../common/helpers/deep.clone.helper';
 import { createCssClassNames } from '../common/helpers/css.class.names';
 import { useLoadedLocationsReducer } from './hooks/useLoadedLocationsReducer';
 import { useSelectedLocationsReducer } from './hooks/useSelectedLocationsReducer';
-import { loadAccordionData, loadContentTypes, findLocationsById } from './services/universal.discovery.service';
+import { loadAccordionData, loadContentTypes, findLocationsById, loadContentInfo } from './services/universal.discovery.service';
 
 const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
@@ -124,6 +124,36 @@ const UniversalDiscoveryModule = (props) => {
             (locations) => dispatchSelectedLocationsAction({ type: 'REPLACE_SELECTED_LOCATIONS', locations })
         );
     }, [props.selectedLocations]);
+
+    useEffect(() => {
+        const locationsWithoutVersion = selectedLocations.filter((location) => !location.ContentInfo.Content.CurrentVersion.Version);
+
+        if (!locationsWithoutVersion.length) {
+            return;
+        }
+
+        const contentId = locationsWithoutVersion.map((location) => location.ContentInfo.Content._id).join(',');
+
+        loadContentInfo(
+            {
+                ...restInfo,
+                contentId,
+            },
+            (response) => {
+                const clonedLocations = selectedLocations;
+
+                response.forEach((content) => {
+                    const clonedLocation = clonedLocations.find((location) => location.ContentInfo.Content._id === content._id);
+
+                    if (clonedLocation) {
+                        clonedLocation.ContentInfo.Content.CurrentVersion.Version = content.CurrentVersion.Version;
+                    }
+                });
+
+                dispatchSelectedLocationsAction({ type: 'REPLACE_SELECTED_LOCATIONS', locations: clonedLocations });
+            }
+        );
+    }, [selectedLocations]);
 
     useEffect(() => {
         window.document.body.classList.add(CLASS_SCROLL_DISABLED);
