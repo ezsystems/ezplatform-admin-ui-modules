@@ -69,4 +69,8 @@
         padding: 0 calculateRem(8px);
         line-height: 0.5;
     }
+
+    &__edit-button {
+        padding: calculateRem(8px);
+    }
 }

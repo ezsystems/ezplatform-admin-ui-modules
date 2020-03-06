@@ -5,13 +5,7 @@ import deepClone from '../common/helpers/deep.clone.helper';
 import { createCssClassNames } from '../common/helpers/css.class.names';
 import { useLoadedLocationsReducer } from './hooks/useLoadedLocationsReducer';
 import { useSelectedLocationsReducer } from './hooks/useSelectedLocationsReducer';
-import {
-    loadAccordionData,
-    loadContentTypes,
-    findLocationsById,
-    loadContentInfo,
-    findContentInfo,
-} from './services/universal.discovery.service';
+import { loadAccordionData, loadContentTypes, findLocationsById, loadContentInfo } from './services/universal.discovery.service';
 
 const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
@@ -63,6 +57,7 @@ export const SelectedLocationsContext = createContext();
 export const CreateContentWidgetContext = createContext();
 export const ContentOnTheFlyDataContext = createContext();
 export const ContentOnTheFlyConfigContext = createContext();
+export const EditOnTheFlyDataContext = createContext();
 
 const UniversalDiscoveryModule = (props) => {
     const tabs = window.eZ.adminUiConfig.universalDiscoveryWidget.tabs;
@@ -74,6 +69,7 @@ const UniversalDiscoveryModule = (props) => {
     const [markedLocationId, setMarkedLocationId] = useState(defaultMarkedLocationId !== 1 ? defaultMarkedLocationId : null);
     const [createContentVisible, setCreateContentVisible] = useState(false);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useState({});
+    const [editOnTheFlyData, setEditOnTheFlyData] = useState({});
     const [contentTypesInfoMap, setContentTypesInfoMap] = useState({});
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useLoadedLocationsReducer([
         { parentLocationId: props.rootLocationId, subitems: [] },
@@ -261,7 +257,13 @@ const UniversalDiscoveryModule = (props) => {
                                                                                                         ]}>
                                                                                                         <ContentOnTheFlyConfigContext.Provider
                                                                                                             value={props.contentOnTheFly}>
-                                                                                                            <Tab />
+                                                                                                            <EditOnTheFlyDataContext.Provider
+                                                                                                                value={[
+                                                                                                                    editOnTheFlyData,
+                                                                                                                    setEditOnTheFlyData,
+                                                                                                                ]}>
+                                                                                                                <Tab />
+                                                                                                            </EditOnTheFlyDataContext.Provider>
                                                                                                         </ContentOnTheFlyConfigContext.Provider>
                                                                                                     </ContentOnTheFlyDataContext.Provider>
                                                                                                 </CreateContentWidgetContext.Provider>

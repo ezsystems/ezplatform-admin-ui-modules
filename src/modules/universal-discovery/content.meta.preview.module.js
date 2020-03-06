@@ -11,6 +11,8 @@ import {
     ContentTypesMapContext,
     RestInfoContext,
     AllowRedirectsContext,
+    EditOnTheFlyDataContext,
+    ActiveTabContext,
 } from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
@@ -19,6 +21,8 @@ const ContentMetaPreview = () => {
     const contentTypesMap = useContext(ContentTypesMapContext);
     const restInfo = useContext(RestInfoContext);
     const allowRedirects = useContext(AllowRedirectsContext);
+    const [editOnTheFlyData, setEditOnTheFlyData] = useContext(EditOnTheFlyDataContext);
+    const [activeTab, setActiveTab] = useContext(ActiveTabContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
     const [isTranslationSelectorOpen, setIsTranslationSelectorOpen] = useState(false);
     const locationData = useMemo(() => {
@@ -47,16 +51,28 @@ const ContentMetaPreview = () => {
         });
     };
     const redirectToContentEdit = (contentId, versionNo, language, locationId) => {
-        window.location.href = window.Routing.generate(
-            'ezplatform.content.draft.edit',
-            {
-                contentId,
-                versionNo,
-                language,
-                locationId,
-            },
-            true
-        );
+        if (allowRedirects) {
+            window.location.href = window.Routing.generate(
+                'ezplatform.content.draft.edit',
+                {
+                    contentId,
+                    versionNo,
+                    language,
+                    locationId,
+                },
+                true
+            );
+
+            return;
+        }
+
+        setEditOnTheFlyData({
+            contentId,
+            versionNo,
+            languageCode: language,
+            locationId,
+        });
+        setActiveTab('content-edit');
     };
     const editContent = (languageCode) => {
         const contentId = location.ContentInfo.Content._id;
@@ -99,18 +115,18 @@ const ContentMetaPreview = () => {
         );
     };
     const renderActions = () => {
-        if (!allowRedirects) {
-            return null;
-        }
+        const previewButton = allowRedirects ? (
+            <button className="c-content-meta-preview__preview-button btn" onClick={previewContent}>
+                <Icon name="view" extraClasses="ez-icon--secondary" />
+            </button>
+        ) : null;
 
         return (
             <div className="c-content-meta-preview__actions">
                 <button className="c-content-meta-preview__edit-button btn btn-primary" onClick={selectLanguage}>
                     <Icon name="edit" extraClasses="ez-icon--light ez-icon--small-medium" />
                 </button>
-                <button className="c-content-meta-preview__preview-button btn" onClick={previewContent}>
-                    <Icon name="view" extraClasses="ez-icon--secondary" />
-                </button>
+                {previewButton}
             </div>
         );
     };

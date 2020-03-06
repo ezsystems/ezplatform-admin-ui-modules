@@ -12,8 +12,8 @@ const TranslationSelectorButton = ({ hideTranslationSelector, selectTranslation,
         'universal_discovery_widget'
     );
     const className = createCssClassNames({
-        'c-content-meta-preview__language-selector': true,
-        'c-content-meta-preview__language-selector--hidden': !isOpen,
+        'c-translation-selector': true,
+        'c-translation-selector--hidden': !isOpen,
     });
 
     return (

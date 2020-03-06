@@ -9,6 +9,7 @@ module.exports = (Encore) => {
             path.resolve(__dirname, '../../src/modules/universal-discovery/bookmarks.tab.module.js'),
             path.resolve(__dirname, '../../src/modules/universal-discovery/search.tab.module.js'),
             path.resolve(__dirname, '../../src/modules/universal-discovery/content.create.tab.module.js'),
+            path.resolve(__dirname, '../../src/modules/universal-discovery/content.edit.tab.module.js'),
         ])
         .addEntry('ezplatform-admin-ui-modules-udw-extras-js', [
             path.resolve(__dirname, '../../src/modules/universal-discovery/content.meta.preview.module.js'),
