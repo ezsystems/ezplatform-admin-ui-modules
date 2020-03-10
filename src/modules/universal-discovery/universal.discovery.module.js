@@ -5,7 +5,13 @@ import deepClone from '../common/helpers/deep.clone.helper';
 import { createCssClassNames } from '../common/helpers/css.class.names';
 import { useLoadedLocationsReducer } from './hooks/useLoadedLocationsReducer';
 import { useSelectedLocationsReducer } from './hooks/useSelectedLocationsReducer';
-import { loadAccordionData, loadContentTypes, findLocationsById, loadContentInfo } from './services/universal.discovery.service';
+import {
+    loadAccordionData,
+    loadContentTypes,
+    findLocationsById,
+    loadContentInfo,
+    loadLocationsWithPermissions,
+} from './services/universal.discovery.service';
 
 const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 
@@ -81,9 +87,9 @@ const UniversalDiscoveryModule = (props) => {
         'm-ud': true,
         'm-ud--locations-selected': !!selectedLocations.length && props.allowConfirmation,
     });
-    const onConfirm = (locations = selectedLocations) => {
-        const updatedLocations = locations.map((location) => {
-            const clonedLocation = deepClone(location);
+    const onConfirm = (selectedItems = selectedLocations) => {
+        const updatedLocations = selectedItems.map((selectedItem) => {
+            const clonedLocation = deepClone(selectedItem.location);
             const contentType = clonedLocation.ContentInfo.Content.ContentType;
 
             clonedLocation.ContentInfo.Content.ContentTypeInfo = contentTypesInfoMap[contentType._href];
@@ -92,6 +98,24 @@ const UniversalDiscoveryModule = (props) => {
         });
 
         props.onConfirm(updatedLocations);
+    };
+    const addPermissionsToSelectedLocations = (response) => {
+        const clonedSelectedLocation = deepClone(selectedLocations);
+
+        response.forEach((item) => {
+            const locationWithoutPermissions = clonedSelectedLocation.find(
+                (selectedItem) => selectedItem.location.id === item.location.Location.id
+            );
+
+            if (locationWithoutPermissions) {
+                locationWithoutPermissions.permissions = item.permissions;
+            }
+        });
+
+        dispatchSelectedLocationsAction({
+            type: 'REPLACE_SELECTED_LOCATIONS',
+            locations: clonedSelectedLocation,
+        });
     };
 
     useEffect(() => {
@@ -118,23 +142,32 @@ const UniversalDiscoveryModule = (props) => {
             return;
         }
 
-        findLocationsById(
-            {
-                ...restInfo,
-                id: props.selectedLocations.join(','),
-            },
-            (locations) => dispatchSelectedLocationsAction({ type: 'REPLACE_SELECTED_LOCATIONS', locations })
-        );
+        loadLocationsWithPermissions({ locationIds: props.selectedLocations.join(',') }, addPermissionsToSelectedLocations);
     }, [props.selectedLocations]);
 
     useEffect(() => {
-        const locationsWithoutVersion = selectedLocations.filter((location) => !location.ContentInfo.Content.CurrentVersion.Version);
+        const locationIds = selectedLocations
+            .filter((item) => !item.permissions)
+            .map((item) => item.location.id)
+            .join(',');
+
+        if (!locationIds) {
+            return;
+        }
+
+        loadLocationsWithPermissions({ locationIds }, addPermissionsToSelectedLocations);
+    }, [selectedLocations]);
+
+    useEffect(() => {
+        const locationsWithoutVersion = selectedLocations.filter(
+            (selectedItem) => !selectedItem.location.ContentInfo.Content.CurrentVersion.Version
+        );
 
         if (!locationsWithoutVersion.length) {
             return;
         }
 
-        const contentId = locationsWithoutVersion.map((location) => location.ContentInfo.Content._id).join(',');
+        const contentId = locationsWithoutVersion.map((item) => item.location.ContentInfo.Content._id).join(',');
 
         loadContentInfo(
             {
@@ -145,10 +178,12 @@ const UniversalDiscoveryModule = (props) => {
                 const clonedLocations = selectedLocations;
 
                 response.forEach((content) => {
-                    const clonedLocation = clonedLocations.find((location) => location.ContentInfo.Content._id === content._id);
+                    const clonedLocation = clonedLocations.find(
+                        (clonedItem) => clonedItem.location.ContentInfo.Content._id === content._id
+                    );
 
                     if (clonedLocation) {
-                        clonedLocation.ContentInfo.Content.CurrentVersion.Version = content.CurrentVersion.Version;
+                        clonedLocation.location.ContentInfo.Content.CurrentVersion.Version = content.CurrentVersion.Version;
                     }
                 });
 

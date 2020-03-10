@@ -352,3 +352,17 @@ export const loadContentInfo = ({ token, siteaccess, contentId, limit = QUERY_LI
         })
         .catch(showErrorNotification);
 };
+
+export const loadLocationsWithPermissions = ({ locationIds }, callback) => {
+    const url = window.Routing.generate('ezplatform.udw.locations.data');
+    const request = new Request(`${url}?locationIds=${locationIds}`, {
+        method: 'GET',
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
+        .catch(showErrorNotification);
+};

@@ -1,18 +1,17 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import Icon from '../common/icon/icon';
 import Thumbnail from '../common/thumbnail/thumbnail';
 import TranslationSelector from './components/translation-selector/translation.selector';
+import ContentEditButton from './components/content-edit-button/content.edit.button';
 
-import { addBookmark, removeBookmark, createDraft } from './services/universal.discovery.service';
+import { addBookmark, removeBookmark } from './services/universal.discovery.service';
 import {
     MarkedLocationIdContext,
     LoadedLocationsMapContext,
     ContentTypesMapContext,
     RestInfoContext,
     AllowRedirectsContext,
-    EditOnTheFlyDataContext,
-    ActiveTabContext,
 } from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
@@ -21,10 +20,7 @@ const ContentMetaPreview = () => {
     const contentTypesMap = useContext(ContentTypesMapContext);
     const restInfo = useContext(RestInfoContext);
     const allowRedirects = useContext(AllowRedirectsContext);
-    const [editOnTheFlyData, setEditOnTheFlyData] = useContext(EditOnTheFlyDataContext);
-    const [activeTab, setActiveTab] = useContext(ActiveTabContext);
     const { formatShortDateTime } = window.eZ.helpers.timezone;
-    const [isTranslationSelectorOpen, setIsTranslationSelectorOpen] = useState(false);
     const locationData = useMemo(() => {
         return (
             loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocationId) ||
@@ -33,15 +29,11 @@ const ContentMetaPreview = () => {
         );
     }, [markedLocationId, loadedLocationsMap]);
 
-    useEffect(() => {
-        setIsTranslationSelectorOpen(false);
-    }, [markedLocationId]);
-
     if (!locationData || !locationData.location || !locationData.version || markedLocationId === 1) {
         return null;
     }
 
-    const { bookmarked, location, version } = locationData;
+    const { bookmarked, location, version, permissions } = locationData;
     const bookmarkIconName = bookmarked ? 'bookmark-active' : 'bookmark';
     const toggleBookmarked = () => {
         const toggleBookmark = bookmarked ? removeBookmark : addBookmark;
@@ -50,68 +42,11 @@ const ContentMetaPreview = () => {
             dispatchLoadedLocationsAction({ type: 'UPDATE_LOCATIONS', data: { ...locationData, bookmarked: !bookmarked } });
         });
     };
-    const redirectToContentEdit = (contentId, versionNo, language, locationId) => {
-        if (allowRedirects) {
-            window.location.href = window.Routing.generate(
-                'ezplatform.content.draft.edit',
-                {
-                    contentId,
-                    versionNo,
-                    language,
-                    locationId,
-                },
-                true
-            );
-
-            return;
-        }
-
-        setEditOnTheFlyData({
-            contentId,
-            versionNo,
-            languageCode: language,
-            locationId,
-        });
-        setActiveTab('content-edit');
-    };
-    const editContent = (languageCode) => {
-        const contentId = location.ContentInfo.Content._id;
-
-        createDraft(
-            {
-                ...restInfo,
-                contentId,
-            },
-            (response) => redirectToContentEdit(contentId, response.Version.VersionInfo.versionNo, languageCode, location.id)
-        );
-    };
     const previewContent = () => {
         window.location.href = window.Routing.generate(
             '_ez_content_view',
             { contentId: location.ContentInfo.Content._id, locationId: location.id },
             true
-        );
-    };
-    const selectLanguage = () => {
-        const languageCodes = version.VersionInfo.languageCodes.split(',');
-
-        if (languageCodes.length === 1) {
-            editContent(languageCodes[0]);
-        } else {
-            setIsTranslationSelectorOpen(true);
-        }
-    };
-    const hideTranslationSelector = () => {
-        setIsTranslationSelectorOpen(false);
-    };
-    const renderTranslationSelector = () => {
-        return (
-            <TranslationSelector
-                hideTranslationSelector={hideTranslationSelector}
-                selectTranslation={editContent}
-                version={version}
-                isOpen={isTranslationSelectorOpen}
-            />
         );
     };
     const renderActions = () => {
@@ -120,12 +55,11 @@ const ContentMetaPreview = () => {
                 <Icon name="view" extraClasses="ez-icon--secondary" />
             </button>
         ) : null;
+        const hasAccess = permissions && permissions.edit.hasAccess;
 
         return (
             <div className="c-content-meta-preview__actions">
-                <button className="c-content-meta-preview__edit-button btn btn-primary" onClick={selectLanguage}>
-                    <Icon name="edit" extraClasses="ez-icon--light ez-icon--small-medium" />
-                </button>
+                <ContentEditButton location={location} version={version} isDisabled={!hasAccess} />
                 {previewButton}
             </div>
         );
@@ -136,7 +70,6 @@ const ContentMetaPreview = () => {
 
     return (
         <div className="c-content-meta-preview">
-            {renderTranslationSelector()}
             <div className="c-content-meta-preview__preview">
                 <Thumbnail thumbnailData={version.Thumbnail} iconExtraClasses="ez-icon--extra-large" />
             </div>

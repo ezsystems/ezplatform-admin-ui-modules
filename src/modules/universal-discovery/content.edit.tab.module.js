@@ -1,21 +1,15 @@
 import React, { useRef, useContext } from 'react';
 
 import {
-    ContentOnTheFlyDataContext,
     TabsContext,
-    ContentOnTheFlyConfigContext,
     ActiveTabContext,
-    CreateContentWidgetContext,
     RestInfoContext,
     SelectedLocationsContext,
-    ConfirmContext,
     LoadedLocationsMapContext,
-    MultipleConfigContext,
     EditOnTheFlyDataContext,
 } from './universal.discovery.module';
 import { findLocationsByParentLocationId } from './services/universal.discovery.service';
 import deepClone from '../common/helpers/deep.clone.helper';
-import { createCssClassNames } from '../common/helpers/css.class.names';
 
 const ContentEditTabModule = () => {
     const restInfo = useContext(RestInfoContext);
@@ -44,10 +38,10 @@ const ContentEditTabModule = () => {
 
         findLocationsByParentLocationId({ ...restInfo, parentLocationId: locationId }, (response) => {
             const clonedSelectedLocation = deepClone(selectedLocations);
-            const index = clonedSelectedLocation.findIndex((clonedLocation) => clonedLocation.id === locationId);
+            const index = clonedSelectedLocation.findIndex((clonedLocation) => clonedLocation.location.id === locationId);
 
             if (index !== -1) {
-                clonedSelectedLocation[index] = response.location;
+                clonedSelectedLocation[index].location = response.location;
 
                 dispatchSelectedLocationsAction({ type: 'REPLACE_SELECTED_LOCATIONS', locations: clonedSelectedLocation });
             }

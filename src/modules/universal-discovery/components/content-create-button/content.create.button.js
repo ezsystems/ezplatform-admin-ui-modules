@@ -32,7 +32,9 @@ const ContentCreateButton = ({ isDisabled }) => {
 
     const isAllowedLocation = selectedLocation && (!allowedLocations || allowedLocations.includes(selectedLocation.parentLocationId));
     const hasAccess =
-        !selectedLocation || !selectedLocation.permissions || (selectedLocation.permissions && selectedLocation.permissions.hasAccess);
+        !selectedLocation ||
+        !selectedLocation.permissions ||
+        (selectedLocation.permissions && selectedLocation.permissions.create.hasAccess);
     const isLimitReached = multiple && multipleItemsLimit !== 0 && selectedLocations.length >= multipleItemsLimit;
 
     if (hidden) {

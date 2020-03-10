@@ -6,7 +6,7 @@ import Thumbnail from '../../../common/thumbnail/thumbnail';
 
 import { SelectedLocationsContext, ContentTypesMapContext } from '../../universal.discovery.module';
 
-const SelectedLocationsItem = ({ location }) => {
+const SelectedLocationsItem = ({ location, permissions }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const removeFromSelection = () => {
@@ -38,7 +38,7 @@ const SelectedLocationsItem = ({ location }) => {
                 {sortedActions.map((action) => {
                     const Component = action.component;
 
-                    return <Component key={action.id} location={location} />;
+                    return <Component key={action.id} location={location} permissions={permissions} />;
                 })}
                 <button type="button" className="c-selected-locations-item__remove-button" onClick={removeFromSelection}>
                     <Icon name="discard" extraClasses="ez-icon--small-medium" />
@@ -50,6 +50,7 @@ const SelectedLocationsItem = ({ location }) => {
 
 SelectedLocationsItem.propTypes = {
     location: PropTypes.object.isRequired,
+    permissions: PropTypes.object.isRequired,
 };
 
 export default SelectedLocationsItem;

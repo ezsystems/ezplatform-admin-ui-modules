@@ -56,7 +56,7 @@ const ContentCreateTabModule = () => {
         if (locationId) {
             findLocationsById({ ...restInfo, id: parseInt(locationId.content, 10) }, (createdItems) => {
                 if (contentOnTheFlyConfig.autoConfirmAfterPublish) {
-                    const items = multiple ? [...selectedLocations, ...createdItems] : createdItems;
+                    const items = multiple ? [...selectedLocations, { location: createdItems[0] }] : [{ location: createdItems[0] }];
 
                     onConfirm(items);
 
@@ -67,7 +67,7 @@ const ContentCreateTabModule = () => {
                 const parentLocationData = clonedLoadedLocations[clonedLoadedLocations.length - 1];
                 const action = multiple
                     ? { type: 'ADD_SELECTED_LOCATION', location: createdItems[0] }
-                    : { type: 'REPLACE_SELECTED_LOCATIONS', locations: createdItems };
+                    : { type: 'REPLACE_SELECTED_LOCATIONS', locations: { location: createdItems[0] } };
 
                 parentLocationData.subitems = [];
                 parentLocationData.totalCount = parentLocationData.totalCount + 1;

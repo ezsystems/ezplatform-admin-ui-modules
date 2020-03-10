@@ -5,7 +5,7 @@ import { createCssClassNames } from '../../../common/helpers/css.class.names';
 import Icon from '../../../common/icon/icon';
 
 const TranslationSelectorButton = ({ hideTranslationSelector, selectTranslation, version, isOpen }) => {
-    const languageCodes = version.VersionInfo.languageCodes.split(',');
+    const languageCodes = version ? version.VersionInfo.languageCodes.split(',') : [];
     const editTranslationLabel = Translator.trans(
         /*@Desc("Edit translation")*/ 'meta_preview.edit_translation',
         {},

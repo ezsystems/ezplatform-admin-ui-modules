@@ -26,8 +26,8 @@ const ContentCreateWidget = () => {
         const userHasPermission =
             !selectedLocation ||
             !selectedLocation.permissions ||
-            !selectedLocation.permissions.restrictedLanguageCodes.length ||
-            selectedLocation.permissions.restrictedLanguageCodes.includes(language.languageCode);
+            !selectedLocation.permissions.create.restrictedLanguageCodes.length ||
+            selectedLocation.permissions.create.restrictedLanguageCodes.includes(language.languageCode);
         const isAllowedLanguage = !allowedLanguages || allowedLanguages.includes(language.languageCode);
 
         return userHasPermission && isAllowedLanguage;
@@ -108,8 +108,8 @@ const ContentCreateWidget = () => {
                                 (filterQuery && !groupItem.name.toLowerCase().includes(filterQuery)) ||
                                 (selectedLocation &&
                                     selectedLocation.permissions &&
-                                    selectedLocation.permissions.restrictedContentTypeIds.length &&
-                                    !selectedLocation.permissions.restrictedContentTypeIds.includes(groupItem.id.toString())) ||
+                                    selectedLocation.permissions.create.restrictedContentTypeIds.length &&
+                                    !selectedLocation.permissions.create.restrictedContentTypeIds.includes(groupItem.id.toString())) ||
                                 (allowedContentTypes && !allowedContentTypes.includes(groupItem.identifier))
                             );
                         });
@@ -124,8 +124,8 @@ const ContentCreateWidget = () => {
                                         (filterQuery && !name.toLowerCase().includes(filterQuery)) ||
                                         (selectedLocation &&
                                             selectedLocation.permissions &&
-                                            selectedLocation.permissions.restrictedContentTypeIds.length &&
-                                            !selectedLocation.permissions.restrictedContentTypeIds.includes(id.toString())) ||
+                                            selectedLocation.permissions.create.restrictedContentTypeIds.length &&
+                                            !selectedLocation.permissions.create.restrictedContentTypeIds.includes(id.toString())) ||
                                         (allowedContentTypes && !allowedContentTypes.includes(identifier));
                                     const className = createCssClassNames({
                                         'c-content-create__group-item': true,
