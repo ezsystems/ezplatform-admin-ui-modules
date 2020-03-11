@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import Icon from '../../../common/icon/icon';
 
@@ -69,16 +69,26 @@ const ContentCreateWidget = () => {
         'universal_discovery_widget'
     );
     const createLabel = Translator.trans(/*@Desc("Create")*/ 'create_content.create', {}, 'universal_discovery_widget');
+    const closeLabel = Translator.trans(/*@Desc("Close")*/ 'popup.close.label', {}, 'universal_discovery_widget');
     const widgetClassName = createCssClassNames({
         'c-content-create': true,
         'c-content-create--hidden': !createContentVisible,
     });
 
+    useEffect(() => {
+        window.eZ.helpers.tooltips.parse(window.document.querySelector('.c-content-create'));
+    }, []);
+
     return (
         <div className={widgetClassName}>
             <div className="c-content-create__header">
                 <div className="c-content-create__header-title">{createContentLabel}</div>
-                <button type="button" className="c-content-create__close-button" onClick={close}>
+                <button
+                    type="button"
+                    className="c-content-create__close-button"
+                    onClick={close}
+                    title={closeLabel}
+                    data-tooltip-container-selector=".c-udw-tab">
                     <Icon name="discard" extraClasses="ez-icon--small" />
                 </button>
             </div>

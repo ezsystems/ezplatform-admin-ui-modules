@@ -29,6 +29,11 @@ const ContentMetaPreview = () => {
         );
     }, [markedLocationId, loadedLocationsMap]);
 
+    const { formatShortDateTime } = window.eZ.helpers.timezone;
+    const bookmarkLabel = Translator.trans(/*@Desc("Bookmark")*/ 'meta_preview.bookmark', {}, 'universal_discovery_widget');
+    const editLabel = Translator.trans(/*@Desc("Edit")*/ 'meta_preview.edit', {}, 'universal_discovery_widget');
+    const previewLabel = Translator.trans(/*@Desc("Preview")*/ 'meta_preview.preview', {}, 'universal_discovery_widget');
+
     if (!locationData || !locationData.location || !locationData.version || markedLocationId === 1) {
         return null;
     }
@@ -75,7 +80,12 @@ const ContentMetaPreview = () => {
             </div>
             <div className="c-content-meta-preview__header">
                 <span className="c-content-meta-preview__content-name">{location.ContentInfo.Content.TranslatedName}</span>
-                <button className="c-content-meta-preview__toggle-bookmark-button" onClick={toggleBookmarked}>
+                <button
+                    className="c-content-meta-preview__toggle-bookmark-button"
+                    onClick={toggleBookmarked}
+                    title={bookmarkLabel}
+                    data-placement="left"
+                    data-tooltip-container-selector=".c-content-meta-preview">
                     <Icon name={bookmarkIconName} extraClasses="ez-icon--small ez-icon--secondary" />
                 </button>
             </div>

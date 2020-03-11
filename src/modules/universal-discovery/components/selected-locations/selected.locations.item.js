@@ -9,6 +9,11 @@ import { SelectedLocationsContext, ContentTypesMapContext } from '../../universa
 const SelectedLocationsItem = ({ location, permissions }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
+    const clearLabel = Translator.trans(
+        /*@Desc("Clear selection")*/ 'selected_locations.clear_selection',
+        {},
+        'universal_discovery_widget'
+    );
     const removeFromSelection = () => {
         dispatchSelectedLocationsAction({ type: 'REMOVE_SELECTED_LOCATION', id: location.id });
     };
@@ -40,7 +45,12 @@ const SelectedLocationsItem = ({ location, permissions }) => {
 
                     return <Component key={action.id} location={location} permissions={permissions} />;
                 })}
-                <button type="button" className="c-selected-locations-item__remove-button" onClick={removeFromSelection}>
+                <button
+                    type="button"
+                    className="c-selected-locations-item__remove-button"
+                    onClick={removeFromSelection}
+                    title={clearLabel}
+                    data-tooltip-container-selector=".c-udw-tab">
                     <Icon name="discard" extraClasses="ez-icon--small-medium" />
                 </button>
             </div>

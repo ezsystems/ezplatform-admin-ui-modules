@@ -10,6 +10,9 @@ const ToggleSelectionButton = ({ location }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const isSelected = selectedLocations.some((selectedItem) => selectedItem.location.id === location.id);
+    const addLabel = Translator.trans(/*@Desc("Add")*/ 'browser.add', {}, 'universal_discovery_widget');
+    const selectedLabel = Translator.trans(/*@Desc("Selected")*/ 'browser.selected', {}, 'universal_discovery_widget');
+    const toggleSelectionLabel = isSelected ? selectedLabel : addLabel;
     const iconName = isSelected ? 'checkmark' : 'create';
     const className = createCssClassNames({
         'c-toggle-selection-button': true,
@@ -18,6 +21,7 @@ const ToggleSelectionButton = ({ location }) => {
     const toggleSelection = () => {
         const action = isSelected ? { type: 'REMOVE_SELECTED_LOCATION', id: location.id } : { type: 'ADD_SELECTED_LOCATION', location };
 
+        window.eZ.helpers.tooltips.hideAll();
         dispatchSelectedLocationsAction(action);
     };
 
@@ -26,7 +30,12 @@ const ToggleSelectionButton = ({ location }) => {
     }
 
     return (
-        <button className={className} onClick={toggleSelection}>
+        <button
+            className={className}
+            onClick={toggleSelection}
+            title={toggleSelectionLabel}
+            data-original-title={toggleSelectionLabel}
+            data-tooltip-container-selector=".c-udw-tab">
             <Icon name={iconName} extraClasses="ez-icon--small" />
         </button>
     );
