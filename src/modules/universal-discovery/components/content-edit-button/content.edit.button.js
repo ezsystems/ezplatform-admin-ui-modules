@@ -23,6 +23,7 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
     useEffect(() => {
         setIsTranslationSelectorVisible(false);
     }, [version]);
+
     const hideTranslationSelector = () => {
         setIsTranslationSelectorVisible(false);
     };
