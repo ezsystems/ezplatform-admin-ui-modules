@@ -200,6 +200,39 @@ export const findLocationsById = ({ token, siteaccess, id, limit = QUERY_LIMIT, 
         .catch(showErrorNotification);
 };
 
+export const findContentInfo = ({ token, siteaccess, contentId, limit = QUERY_LIMIT, offset = 0 }, callback) => {
+    const body = JSON.stringify({
+        ViewInput: {
+            identifier: `udw-load-content-info-${contentId}`,
+            public: false,
+            ContentQuery: {
+                Criteria: {},
+                FacetBuilders: {},
+                SortClauses: {},
+                Filter: { ContentIdCriterion: `${contentId}` },
+                limit,
+                offset,
+            },
+        },
+    });
+    const request = new Request(ENDPOINT_CREATE_VIEW, {
+        method: 'POST',
+        headers: { ...HEADERS_CREATE_VIEW, 'X-Siteaccess': siteaccess, 'X-CSRF-Token': token },
+        body,
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then((response) => {
+            const items = response.View.Result.searchHits.searchHit.map((searchHit) => searchHit.value.Content);
+
+            callback(items);
+        })
+        .catch(showErrorNotification);
+};
+
 export const loadBookmarks = ({ token, siteaccess, limit, offset }, callback) => {
     const request = new Request(`${ENDPOINT_BOOKMARK}?limit=${limit}&offset=${offset}`, {
         method: 'GET',
@@ -317,5 +350,19 @@ export const loadContentInfo = ({ token, siteaccess, contentId, limit = QUERY_LI
 
             callback(items);
         })
+        .catch(showErrorNotification);
+};
+
+export const loadLocationsWithPermissions = ({ locationIds }, callback) => {
+    const url = window.Routing.generate('ezplatform.udw.locations.data');
+    const request = new Request(`${url}?locationIds=${locationIds}`, {
+        method: 'GET',
+        mode: 'same-origin',
+        credentials: 'same-origin',
+    });
+
+    fetch(request)
+        .then(handleRequestResponse)
+        .then(callback)
         .catch(showErrorNotification);
 };

@@ -32,7 +32,7 @@ const updateLocationsMap = (state, action) => {
 
     return updatedState;
 };
-const setLoactions = (state, action) => {
+const setLocations = (state, action) => {
     return action.data;
 };
 const clearLoactions = () => {
@@ -46,7 +46,7 @@ const loadedLocationsReducer = (state, action) => {
         case 'UPDATE_LOCATIONS':
             return updateLocationsMap(state, action);
         case 'SET_LOCATIONS':
-            return setLoactions(state, action);
+            return setLocations(state, action);
         case 'CLEAR_LOCATIONS':
             return clearLoactions();
         default:

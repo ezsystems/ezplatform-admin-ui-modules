@@ -24,7 +24,7 @@ const generateIframeUrl = ({ locationId, languageCode, contentTypeIdentifier }) 
     });
 };
 
-const ContentCreataTabModule = () => {
+const ContentCreateTabModule = () => {
     const [footerVisible, setFooterVisible] = useState(true);
     const [contentOnTheFlyData, setContentOnTheFlyData] = useContext(ContentOnTheFlyDataContext);
     const tabs = useContext(TabsContext);
@@ -56,7 +56,7 @@ const ContentCreataTabModule = () => {
         if (locationId) {
             findLocationsById({ ...restInfo, id: parseInt(locationId.content, 10) }, (createdItems) => {
                 if (contentOnTheFlyConfig.autoConfirmAfterPublish) {
-                    const items = multiple ? [...selectedLocations, ...createdItems] : createdItems;
+                    const items = multiple ? [...selectedLocations, { location: createdItems[0] }] : [{ location: createdItems[0] }];
 
                     onConfirm(items);
 
@@ -67,7 +67,7 @@ const ContentCreataTabModule = () => {
                 const parentLocationData = clonedLoadedLocations[clonedLoadedLocations.length - 1];
                 const action = multiple
                     ? { type: 'ADD_SELECTED_LOCATION', location: createdItems[0] }
-                    : { type: 'REPLACE_SELECTED_LOCATIONS', locations: createdItems };
+                    : { type: 'REPLACE_SELECTED_LOCATIONS', locations: [{ location: createdItems[0] }] };
 
                 parentLocationData.subitems = [];
                 parentLocationData.totalCount = parentLocationData.totalCount + 1;
@@ -86,7 +86,7 @@ const ContentCreataTabModule = () => {
         'm-content-create': true,
         'm-content-create--footer-visible': footerVisible,
     });
-    
+
     useEffect(() => {
         window.document.body.addEventListener('ez-udw-hide-footer', hideFooter, false);
         window.document.body.addEventListener('ez-udw-show-footer', showFooter, false);
@@ -94,8 +94,8 @@ const ContentCreataTabModule = () => {
         return () => {
             window.document.body.removeEventListener('ez-udw-hide-footer', hideFooter, false);
             window.document.body.removeEventListener('ez-udw-show-footer', showFooter, false);
-        }
-    })
+        };
+    });
 
     return (
         <div className={className}>
@@ -117,7 +117,7 @@ eZ.addConfig(
     [
         {
             id: 'content-create',
-            component: ContentCreataTabModule,
+            component: ContentCreateTabModule,
             label: Translator.trans(/*@Desc("Content create")*/ 'content_create.label', {}, 'universal_discovery_widget'),
             icon: '/bundles/ezplatformadminui/img/ez-icons.svg#search',
             isHiddenOnList: true,
@@ -126,4 +126,4 @@ eZ.addConfig(
     true
 );
 
-export default ContentCreataTabModule;
+export default ContentCreateTabModule;

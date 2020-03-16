@@ -40,4 +40,16 @@ ViewSwitcher.defaultProps = {
     isDisabled: false,
 };
 
+eZ.addConfig(
+    'adminUiConfig.universalDiscoveryWidget.topMenuActions',
+    [
+        {
+            id: 'view-switcher',
+            priority: 10,
+            component: ViewSwitcher,
+        },
+    ],
+    true
+);
+
 export default ViewSwitcher;

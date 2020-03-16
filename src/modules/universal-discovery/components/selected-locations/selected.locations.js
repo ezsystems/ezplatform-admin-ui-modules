@@ -60,7 +60,11 @@ const SelectedLocations = () => {
         return (
             <div className="c-selected-locations__items-wrapper">
                 {selectedLocations.map((selectedLocation) => (
-                    <SelectedLocationsItem key={selectedLocation.id} location={selectedLocation} />
+                    <SelectedLocationsItem
+                        key={selectedLocation.location.id}
+                        location={selectedLocation.location}
+                        permissions={selectedLocation.permissions}
+                    />
                 ))}
             </div>
         );

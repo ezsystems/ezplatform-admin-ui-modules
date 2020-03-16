@@ -8,7 +8,7 @@ import ContentCreateWidget from '../content-create-widget/content.create.widget'
 
 import { SelectedLocationsContext } from '../../universal.discovery.module';
 
-const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isViewSwitcherDisabled }) => {
+const Tab = ({ children, actionsDisabledMap }) => {
     const ContentMetaPreview = window.eZ.adminUiConfig.universalDiscoveryWidget.contentMetaPreview;
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const selectedLocationsComponent = !!selectedLocations.length ? <SelectedLocations /> : null;
@@ -16,11 +16,7 @@ const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isVi
     return (
         <div className="c-udw-tab">
             <div className="c-udw-tab__top-bar">
-                <TopMenu
-                    isContentOnTheFlyDisabled={isContentOnTheFlyDisabled}
-                    isSortSwitcherDisabled={isSortSwitcherDisabled}
-                    isViewSwitcherDisabled={isViewSwitcherDisabled}
-                />
+                <TopMenu actionsDisabledMap={actionsDisabledMap} />
             </div>
             <div className="c-udw-tab__left-sidebar">
                 <ContentCreateWidget />
@@ -37,15 +33,15 @@ const Tab = ({ children, isContentOnTheFlyDisabled, isSortSwitcherDisabled, isVi
 
 Tab.propTypes = {
     children: PropTypes.any.isRequired,
-    isContentOnTheFlyDisabled: PropTypes.bool,
-    isSortSwitcherDisabled: PropTypes.bool,
-    isViewSwitcherDisabled: PropTypes.bool,
+    actionsDisabledMap: PropTypes.object,
 };
 
 Tab.defaultProps = {
-    isContentOnTheFlyDisabled: false,
-    isSortSwitcherDisabled: false,
-    isViewSwitcherDisabled: false,
+    actionsDisabledMap: {
+        'content-create-button': false,
+        'sort-switcher': false,
+        'view-switcher': false,
+    },
 };
 
 export default Tab;

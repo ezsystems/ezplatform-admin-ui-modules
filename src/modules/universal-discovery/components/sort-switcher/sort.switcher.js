@@ -51,4 +51,16 @@ SortSwitcher.defaultProps = {
     isDisabled: false,
 };
 
+eZ.addConfig(
+    'adminUiConfig.universalDiscoveryWidget.topMenuActions',
+    [
+        {
+            id: 'sort-switcher',
+            priority: 20,
+            component: SortSwitcher,
+        },
+    ],
+    true
+);
+
 export default SortSwitcher;

@@ -9,7 +9,7 @@ import { SelectedLocationsContext, MultipleConfigContext } from '../../universal
 const ToggleSelectionButton = ({ location }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
-    const isSelected = selectedLocations.some((selectedLocation) => selectedLocation.id === location.id);
+    const isSelected = selectedLocations.some((selectedItem) => selectedItem.location.id === location.id);
     const iconName = isSelected ? 'checkmark' : 'create';
     const className = createCssClassNames({
         'c-toggle-selection-button': true,
