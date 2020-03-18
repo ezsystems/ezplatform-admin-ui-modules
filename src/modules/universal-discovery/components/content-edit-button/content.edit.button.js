@@ -67,6 +67,14 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
     };
     const editContent = (languageCode) => {
         const contentId = location.ContentInfo.Content._id;
+        const contentTypeInfo = contentTypesMap[location.ContentInfo.Content.ContentType._href];
+        const isUser = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeInfo.identifier);
+
+        if (isUser) {
+            redirectToContentEdit(contentId, version.VersionInfo.versionNo, languageCode, location.id);
+
+            return;
+        }
 
         createDraft(
             {
