@@ -19,6 +19,8 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
     const [activeTab, setActiveTab] = useContext(ActiveTabContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
     const [isTranslationSelectorVisible, setIsTranslationSelectorVisible] = useState(false);
+    const contentTypeInfo = contentTypesMap[location.ContentInfo.Content.ContentType._href];
+    const isUserContentType = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeInfo.identifier);
 
     useEffect(() => {
         setIsTranslationSelectorVisible(false);
@@ -38,21 +40,28 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
     };
     const redirectToContentEdit = (contentId, versionNo, language, locationId) => {
         if (allowRedirects) {
-            const contentTypeInfo = contentTypesMap[location.ContentInfo.Content.ContentType._href];
-            const editRoute = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeInfo.identifier)
-                ? 'ezplatform.user.update'
-                : 'ezplatform.content.draft.edit';
+            const href = isUserContentType
+                ? window.Routing.generate(
+                      'ezplatform.user.update',
+                      {
+                          contentId,
+                          versionNo,
+                          language,
+                      },
+                      true
+                  )
+                : window.Routing.generate(
+                      'ezplatform.content.draft.edit',
+                      {
+                          contentId,
+                          versionNo,
+                          language,
+                          locationId,
+                      },
+                      true
+                  );
 
-            window.location.href = window.Routing.generate(
-                editRoute,
-                {
-                    contentId,
-                    versionNo,
-                    language,
-                    locationId,
-                },
-                true
-            );
+            window.location.href = href;
 
             return;
         }
@@ -67,10 +76,8 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
     };
     const editContent = (languageCode) => {
         const contentId = location.ContentInfo.Content._id;
-        const contentTypeInfo = contentTypesMap[location.ContentInfo.Content.ContentType._href];
-        const isUser = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeInfo.identifier);
 
-        if (isUser) {
+        if (isUserContentType) {
             redirectToContentEdit(contentId, version.VersionInfo.versionNo, languageCode, location.id);
 
             return;
