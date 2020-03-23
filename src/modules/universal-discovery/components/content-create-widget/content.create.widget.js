@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 
 import Icon from '../../../common/icon/icon';
 
@@ -17,6 +17,7 @@ const languages = Object.values(window.eZ.adminUiConfig.languages.mappings);
 const contentTypes = Object.entries(window.eZ.adminUiConfig.contentTypes);
 
 const ContentCreateWidget = () => {
+    const refContentTree = useRef(null);
     const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const { allowedLanguages, preselectedLanguage, preselectedContentType } = useContext(ContentOnTheFlyConfigContext);
@@ -76,11 +77,11 @@ const ContentCreateWidget = () => {
     });
 
     useEffect(() => {
-        window.eZ.helpers.tooltips.parse(window.document.querySelector('.c-content-create'));
+        window.eZ.helpers.tooltips.parse(refContentTree.current);
     }, []);
 
     return (
-        <div className={widgetClassName}>
+        <div className={widgetClassName} ref={refContentTree}>
             <div className="c-content-create__header">
                 <div className="c-content-create__header-title">{createContentLabel}</div>
                 <button

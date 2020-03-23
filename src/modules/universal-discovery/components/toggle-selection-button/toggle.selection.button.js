@@ -28,6 +28,8 @@ const ToggleSelectionButton = ({ location }) => {
     useEffect(() => {
         window.eZ.helpers.tooltips.hideAll(window.document.querySelector('.c-udw-tab'));
 
+        // Title on toggler selection button is dynamic, for this we have to change 'data-original-title'.
+        // Remove title is neccessary to prevent situation when we have bootsrap and native title.
         if (refToggleSelectionButton.current.getAttribute('data-original-title')) {
             refToggleSelectionButton.current.removeAttribute('title');
         }
