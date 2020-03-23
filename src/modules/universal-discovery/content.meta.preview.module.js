@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState, useRef } from 'react';
 
 import Icon from '../common/icon/icon';
 import Thumbnail from '../common/thumbnail/thumbnail';
@@ -15,6 +15,7 @@ import {
 } from './universal.discovery.module';
 
 const ContentMetaPreview = () => {
+    const refContentMetaPreview = useRef(null);
     const [markedLocationId, setMarkedLocationId] = useContext(MarkedLocationIdContext);
     const [loadedLocationsMap, dispatchLoadedLocationsAction] = useContext(LoadedLocationsMapContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
@@ -29,10 +30,12 @@ const ContentMetaPreview = () => {
         );
     }, [markedLocationId, loadedLocationsMap]);
 
-    const { formatShortDateTime } = window.eZ.helpers.timezone;
     const bookmarkLabel = Translator.trans(/*@Desc("Bookmark")*/ 'meta_preview.bookmark', {}, 'universal_discovery_widget');
-    const editLabel = Translator.trans(/*@Desc("Edit")*/ 'meta_preview.edit', {}, 'universal_discovery_widget');
     const previewLabel = Translator.trans(/*@Desc("Preview")*/ 'meta_preview.preview', {}, 'universal_discovery_widget');
+
+    useEffect(() => {
+        window.eZ.helpers.tooltips.parse(refContentMetaPreview.current);
+    });
 
     if (!locationData || !locationData.location || !locationData.version || markedLocationId === 1) {
         return null;
@@ -56,7 +59,11 @@ const ContentMetaPreview = () => {
     };
     const renderActions = () => {
         const previewButton = allowRedirects ? (
-            <button className="c-content-meta-preview__preview-button btn" onClick={previewContent}>
+            <button
+                className="c-content-meta-preview__preview-button btn"
+                onClick={previewContent}
+                data-tooltip-container-selector=".c-udw-tab"
+                title={previewLabel}>
                 <Icon name="view" extraClasses="ez-icon--secondary" />
             </button>
         ) : null;
@@ -74,7 +81,7 @@ const ContentMetaPreview = () => {
     const translationsLabel = Translator.trans(/*@Desc("Translations")*/ 'meta_preview.translations', {}, 'universal_discovery_widget');
 
     return (
-        <div className="c-content-meta-preview">
+        <div className="c-content-meta-preview" ref={refContentMetaPreview}>
             <div className="c-content-meta-preview__preview">
                 <Thumbnail thumbnailData={version.Thumbnail} iconExtraClasses="ez-icon--extra-large" />
             </div>

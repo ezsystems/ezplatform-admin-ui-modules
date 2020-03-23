@@ -21,6 +21,7 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
     const [isTranslationSelectorVisible, setIsTranslationSelectorVisible] = useState(false);
     const contentTypeInfo = contentTypesMap[location.ContentInfo.Content.ContentType._href];
     const isUserContentType = window.eZ.adminUiConfig.userContentTypes.includes(contentTypeInfo.identifier);
+    const editLabel = Translator.trans(/*@Desc("Edit")*/ 'meta_preview.edit', {}, 'universal_discovery_widget');
 
     useEffect(() => {
         setIsTranslationSelectorVisible(false);
@@ -107,7 +108,9 @@ const ContentEditButton = ({ version, location, isDisabled }) => {
             <button
                 className="c-content-edit-button__btn btn btn-primary"
                 disabled={!version || isDisabled}
-                onClick={toggleTranslationSelectorVisibility}>
+                onClick={toggleTranslationSelectorVisibility}
+                data-tooltip-container-selector=".c-udw-tab"
+                title={editLabel}>
                 <Icon name="edit" extraClasses="ez-icon--medium ez-icon--light" />
             </button>
             {renderTranslationSelector()}

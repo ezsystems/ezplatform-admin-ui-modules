@@ -26,6 +26,11 @@
         <target state="new">Add</target>
         <note>key: browser.add</note>
       </trans-unit>
+      <trans-unit id="ddff3bc3b7838c0c1e752a37cd40b4a6d537dcdd" resname="browser.selected">
+        <source>Selected</source>
+        <target state="new">Selected</target>
+        <note>key: browser.selected</note>
+      </trans-unit>
       <trans-unit id="1713d0deb6344882cf915babb2df574556a3f82c" resname="content_create.cancel.label">
         <source>Cancel</source>
         <target state="new">Cancel</target>

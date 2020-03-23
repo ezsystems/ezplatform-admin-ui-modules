@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../../../common/icon/icon';
 
 import { createCssClassNames } from '../../../common/helpers/css.class.names';
-import { SelectedLocationsContext, MultipleConfigContext } from '../../universal.discovery.module';
+import { SelectedLocationsContext, MultipleConfigContext, ContainersOnlyContext } from '../../universal.discovery.module';
 
 const ToggleSelectionButton = ({ location }) => {
+    const refToggleSelectionButton = useRef(null);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const isSelected = selectedLocations.some((selectedItem) => selectedItem.location.id === location.id);
@@ -21,9 +22,18 @@ const ToggleSelectionButton = ({ location }) => {
     const toggleSelection = () => {
         const action = isSelected ? { type: 'REMOVE_SELECTED_LOCATION', id: location.id } : { type: 'ADD_SELECTED_LOCATION', location };
 
-        window.eZ.helpers.tooltips.hideAll();
         dispatchSelectedLocationsAction(action);
     };
+
+    useEffect(() => {
+        window.eZ.helpers.tooltips.hideAll(window.document.querySelector('.c-udw-tab'));
+
+        if (refToggleSelectionButton.current.getAttribute('data-original-title')) {
+            refToggleSelectionButton.current.removeAttribute('title');
+        }
+
+        refToggleSelectionButton.current.setAttribute('data-original-title', toggleSelectionLabel);
+    }, [isSelected]);
 
     if (multiple && !isSelected && selectedLocations.length >= multipleItemsLimit && multipleItemsLimit !== 0) {
         return null;
@@ -31,10 +41,10 @@ const ToggleSelectionButton = ({ location }) => {
 
     return (
         <button
+            ref={refToggleSelectionButton}
             className={className}
             onClick={toggleSelection}
             title={toggleSelectionLabel}
-            data-original-title={toggleSelectionLabel}
             data-tooltip-container-selector=".c-udw-tab">
             <Icon name={iconName} extraClasses="ez-icon--small" />
         </button>

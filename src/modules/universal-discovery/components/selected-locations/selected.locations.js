@@ -25,6 +25,7 @@ const SelectedLocations = () => {
     );
     const togglerLabel = isExpanded ? collapseLabel : expandLabel;
     const clearSelection = () => {
+        window.eZ.helpers.tooltips.hideAll(refSelectedLocations.current);
         dispatchSelectedLocationsAction({ type: 'CLEAR_SELECTED_LOCATIONS' });
     };
     const toggleExpanded = () => {
