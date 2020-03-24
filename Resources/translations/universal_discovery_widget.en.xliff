@@ -21,6 +21,16 @@
         <target state="new">Browse</target>
         <note>key: browse.label</note>
       </trans-unit>
+      <trans-unit id="a35f9da1e68c9f811d1a0093f434bc32fd0d2b78" resname="browser.add">
+        <source>Add</source>
+        <target state="new">Add</target>
+        <note>key: browser.add</note>
+      </trans-unit>
+      <trans-unit id="ddff3bc3b7838c0c1e752a37cd40b4a6d537dcdd" resname="browser.selected">
+        <source>Selected</source>
+        <target state="new">Selected</target>
+        <note>key: browser.selected</note>
+      </trans-unit>
       <trans-unit id="1713d0deb6344882cf915babb2df574556a3f82c" resname="content_create.cancel.label">
         <source>Cancel</source>
         <target state="new">Cancel</target>
@@ -116,10 +126,20 @@
         <target state="new">Subtree</target>
         <note>key: filters.subtree</note>
       </trans-unit>
+      <trans-unit id="87994bd9606f86f5999597107b8782ae5018a5ea" resname="meta_preview.bookmark">
+        <source>Bookmark</source>
+        <target state="new">Bookmark</target>
+        <note>key: meta_preview.bookmark</note>
+      </trans-unit>
       <trans-unit id="5e42fe3d48d64c1c9a735ac6286d3b0c06a008a0" resname="meta_preview.creation_date">
         <source>Creation Date</source>
         <target state="new">Creation Date</target>
         <note>key: meta_preview.creation_date</note>
+      </trans-unit>
+      <trans-unit id="2e0757eac91bd5a5cd89bd2811a0126bf8bd8194" resname="meta_preview.edit">
+        <source>Edit</source>
+        <target state="new">Edit</target>
+        <note>key: meta_preview.edit</note>
       </trans-unit>
       <trans-unit id="4828dcbcd9cf2ad9c2b69a9b9420c94eccbe5dcc" resname="meta_preview.edit_translation">
         <source>Edit translation</source>
@@ -130,6 +150,11 @@
         <source>Last Modified</source>
         <target state="new">Last Modified</target>
         <note>key: meta_preview.last_modified</note>
+      </trans-unit>
+      <trans-unit id="7035b652193ea7af439a17d02ff8eda8013318ea" resname="meta_preview.preview">
+        <source>Preview</source>
+        <target state="new">Preview</target>
+        <note>key: meta_preview.preview</note>
       </trans-unit>
       <trans-unit id="18595eab7f455b6e3267de1bd018011b8126ab97" resname="meta_preview.translations">
         <source>Translations</source>
@@ -181,6 +206,31 @@
         <target state="new">Some helpful search tips</target>
         <note>key: search.tips</note>
       </trans-unit>
+      <trans-unit id="1e503a68093242d42791b3ce4572f246b994d303" resname="selected_locations.clear_all">
+        <source>Clear all</source>
+        <target state="new">Clear all</target>
+        <note>key: selected_locations.clear_all</note>
+      </trans-unit>
+      <trans-unit id="f57171aaa260d58b75c085d5606779e75a97751f" resname="selected_locations.clear_selection">
+        <source>Clear selection</source>
+        <target state="new">Clear selection</target>
+        <note>key: selected_locations.clear_selection</note>
+      </trans-unit>
+      <trans-unit id="7b84163c8a4215667a4a05bd8f44f25aa5ddc198" resname="selected_locations.collapse.sidebar">
+        <source>Collapse sidebar</source>
+        <target state="new">Collapse sidebar</target>
+        <note>key: selected_locations.collapse.sidebar</note>
+      </trans-unit>
+      <trans-unit id="6e6722ce3ff968c64d765d570209299cd6628024" resname="selected_locations.confirm_selection">
+        <source>Confirm selection</source>
+        <target state="new">Confirm selection</target>
+        <note>key: selected_locations.confirm_selection</note>
+      </trans-unit>
+      <trans-unit id="19700661da70137e52d0009660c9a87f5bcb99bd" resname="selected_locations.expand.sidebar">
+        <source>Expand sidebar</source>
+        <target state="new">Expand sidebar</target>
+        <note>key: selected_locations.expand.sidebar</note>
+      </trans-unit>
       <trans-unit id="49f1cbcf4bdd5ba51b7f17dc8dfe93d95cbd4795" resname="selected_locations.selected">
         <source>selected</source>
         <target state="new">selected</target>
@@ -191,10 +241,30 @@
         <target state="new">Date</target>
         <note>key: sorting.date.label</note>
       </trans-unit>
+      <trans-unit id="a3253454c09869d111cc52367a11b7d419819a8a" resname="sorting.date.tooltip">
+        <source>Sort by Date</source>
+        <target state="new">Sort by Date</target>
+        <note>key: sorting.date.tooltip</note>
+      </trans-unit>
+      <trans-unit id="7e978afd229113429d273612c01318f09e3f3e5e" resname="sorting.grid.view">
+        <source>Grid view</source>
+        <target state="new">Grid view</target>
+        <note>key: sorting.grid.view</note>
+      </trans-unit>
       <trans-unit id="c06c6d1c4592ee395e16fc267b514ee167146886" resname="sorting.name.label">
         <source>Name</source>
         <target state="new">Name</target>
         <note>key: sorting.name.label</note>
+      </trans-unit>
+      <trans-unit id="2ef6e531e02791b42911cf5f7279f9bedebb3fb2" resname="sorting.name.tooltip">
+        <source>Sort by Name</source>
+        <target state="new">Sort by Name</target>
+        <note>key: sorting.name.tooltip</note>
+      </trans-unit>
+      <trans-unit id="27c00b5da502fe6afe6b76e59ddeb951bbbf2c6f" resname="sorting.panels.view">
+        <source>Panels view</source>
+        <target state="new">Panels view</target>
+        <note>key: sorting.panels.view</note>
       </trans-unit>
     </body>
   </file>

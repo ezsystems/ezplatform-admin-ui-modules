@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../../../common/icon/icon';
@@ -7,9 +7,16 @@ import Thumbnail from '../../../common/thumbnail/thumbnail';
 import { SelectedLocationsContext, ContentTypesMapContext } from '../../universal.discovery.module';
 
 const SelectedLocationsItem = ({ location, permissions }) => {
+    const refSelectedLocationsItem = useRef(null);
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const contentTypesMap = useContext(ContentTypesMapContext);
+    const clearLabel = Translator.trans(
+        /*@Desc("Clear selection")*/ 'selected_locations.clear_selection',
+        {},
+        'universal_discovery_widget'
+    );
     const removeFromSelection = () => {
+        window.eZ.helpers.tooltips.hideAll(refSelectedLocationsItem.current);
         dispatchSelectedLocationsAction({ type: 'REMOVE_SELECTED_LOCATION', id: location.id });
     };
     const sortedActions = useMemo(() => {
@@ -23,8 +30,12 @@ const SelectedLocationsItem = ({ location, permissions }) => {
     const version = location.ContentInfo.Content.CurrentVersion.Version;
     const thumbnailData = version ? version.Thumbnail : {};
 
+    useEffect(() => {
+        window.eZ.helpers.tooltips.parse(refSelectedLocationsItem.current);
+    }, []);
+
     return (
-        <div className="c-selected-locations-item">
+        <div className="c-selected-locations-item" ref={refSelectedLocationsItem}>
             <div className="c-selected-locations-item__image-wrapper">
                 <Thumbnail thumbnailData={thumbnailData} />
             </div>
@@ -40,7 +51,12 @@ const SelectedLocationsItem = ({ location, permissions }) => {
 
                     return <Component key={action.id} location={location} permissions={permissions} />;
                 })}
-                <button type="button" className="c-selected-locations-item__remove-button" onClick={removeFromSelection}>
+                <button
+                    type="button"
+                    className="c-selected-locations-item__remove-button"
+                    onClick={removeFromSelection}
+                    title={clearLabel}
+                    data-tooltip-container-selector=".c-udw-tab">
                     <Icon name="discard" extraClasses="ez-icon--small-medium" />
                 </button>
             </div>

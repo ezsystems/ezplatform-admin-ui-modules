@@ -19,7 +19,9 @@ const ContentCreateButton = ({ isDisabled }) => {
     const [selectedLocations, dispatchSelectedLocationsAction] = useContext(SelectedLocationsContext);
     const [multiple, multipleItemsLimit] = useContext(MultipleConfigContext);
     const { hidden, allowedLocations } = useContext(ContentOnTheFlyConfigContext);
+    const createLabel = Translator.trans(/*@Desc("Create")*/ 'create_content.create', {}, 'universal_discovery_widget');
     const toggleContentCreateVisibility = () => {
+        window.eZ.helpers.tooltips.hideAll();
         setCreateContentVisible((prevState) => !prevState);
     };
     let selectedLocation = loadedLocationsMap.find((loadedLocation) => loadedLocation.parentLocationId === markedLocationId);
@@ -46,7 +48,9 @@ const ContentCreateButton = ({ isDisabled }) => {
             <button
                 className="c-content-create-button__btn btn btn-primary"
                 disabled={isDisabled || !hasAccess || !isAllowedLocation || isLimitReached}
-                onClick={toggleContentCreateVisibility}>
+                onClick={toggleContentCreateVisibility}
+                data-tooltip-container-selector=".c-top-menu"
+                title={createLabel}>
                 <Icon name="create" extraClasses="ez-icon--medium ez-icon--light" />
             </button>
         </div>

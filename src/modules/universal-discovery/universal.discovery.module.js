@@ -18,14 +18,27 @@ const CLASS_SCROLL_DISABLED = 'ez-scroll-disabled';
 export const SORTING_OPTIONS = [
     {
         label: Translator.trans(/*@Desc("Date")*/ 'sorting.date.label', {}, 'universal_discovery_widget'),
+        tooltipLabel: Translator.trans(/*@Desc("Sort by Date")*/ 'sorting.date.tooltip', {}, 'universal_discovery_widget'),
         sortClause: 'DatePublished',
     },
     {
         label: Translator.trans(/*@Desc("Name")*/ 'sorting.name.label', {}, 'universal_discovery_widget'),
+        tooltipLabel: Translator.trans(/*@Desc("Sort by Name")*/ 'sorting.name.tooltip', {}, 'universal_discovery_widget'),
         sortClause: 'ContentName',
     },
 ];
-export const VIEWS = [{ id: 'grid', icon: 'view-grid' }, { id: 'finder', icon: 'panels' }];
+export const VIEWS = [
+    {
+        id: 'grid',
+        icon: 'view-grid',
+        tooltipLabel: Translator.trans(/*@Desc("Grid view")*/ 'sorting.grid.view', {}, 'universal_discovery_widget'),
+    },
+    {
+        id: 'finder',
+        icon: 'panels',
+        tooltipLabel: Translator.trans(/*@Desc("Panels view")*/ 'sorting.panels.view', {}, 'universal_discovery_widget'),
+    },
+];
 
 const restInfo = {
     token: document.querySelector('meta[name="CSRF-Token"]').content,
@@ -131,6 +144,7 @@ const UniversalDiscoveryModule = (props) => {
 
         loadContentTypes(restInfo, handleLoadContentTypes);
         window.document.body.dispatchEvent(new CustomEvent('ez-udw-opened'));
+        window.eZ.helpers.tooltips.parse(window.document.querySelector('.c-udw-tab'));
 
         return () => {
             window.document.body.dispatchEvent(new CustomEvent('ez-udw-closed'));

@@ -20,10 +20,16 @@ const ViewSwitcher = ({ isDisabled }) => {
                 const extraClasses = view.id === currentView ? 'c-menu-button--selected' : '';
                 const onClick = () => {
                     setCurrentView(view.id);
+                    window.eZ.helpers.tooltips.hideAll();
                 };
 
                 return (
-                    <MenuButton key={view.id} extraClasses={extraClasses} onClick={onClick} isDisabled={isDisabled}>
+                    <MenuButton
+                        key={view.id}
+                        extraClasses={extraClasses}
+                        onClick={onClick}
+                        isDisabled={isDisabled}
+                        title={view.tooltipLabel}>
                         <Icon name={view.icon} extraClasses="ez-icon--small-medium" />
                     </MenuButton>
                 );

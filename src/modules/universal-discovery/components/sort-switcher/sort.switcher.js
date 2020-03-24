@@ -34,7 +34,12 @@ const SortSwitcher = ({ isDisabled }) => {
                 };
 
                 return (
-                    <MenuButton key={option.sortClause} extraClasses={extraClasses} onClick={onClick} isDisabled={isDisabled}>
+                    <MenuButton
+                        key={option.sortClause}
+                        extraClasses={extraClasses}
+                        onClick={onClick}
+                        isDisabled={isDisabled}
+                        title={option.tooltipLabel}>
                         {option.label}
                     </MenuButton>
                 );

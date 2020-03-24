@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import ToggleSelectionButton from '../toggle-selection-button/toggle.selection.button';
@@ -58,6 +58,10 @@ const FinderLeaf = ({ location }) => {
         'c-finder-leaf--not-selectable': isNotSelectable,
     });
 
+    useEffect(() => {
+        window.eZ.helpers.tooltips.parse(window.document.querySelector('.c-udw-tab'));
+    }, []);
+
     return (
         <div className={className} onClick={markLocation}>
             <span className="c-finder-leaf__name">
@@ -67,7 +71,9 @@ const FinderLeaf = ({ location }) => {
                         customPath={contentTypesMap[location.ContentInfo.Content.ContentType._href].thumbnail}
                     />
                 </span>
-                <span>{location.ContentInfo.Content.TranslatedName}</span>
+                <span title={location.ContentInfo.Content.TranslatedName} data-tooltip-container-selector=".c-udw-tab">
+                    {location.ContentInfo.Content.TranslatedName}
+                </span>
             </span>
             {renderToggleSelectionButton()}
         </div>
