@@ -136,6 +136,11 @@
         <target state="new">Load more</target>
         <note>key: finder.branch.load_more.label</note>
       </trans-unit>
+      <trans-unit id="542b481fc08d900847ee1107c576cd6b4678a52c" resname="finder.no_content.message">
+        <source>No content items.</source>
+        <target state="new">No content items.</target>
+        <note>key: finder.no_content.message</note>
+      </trans-unit>
       <trans-unit id="fa6baf070f27f737433a162bd6411f4a216d46c0" resname="pagination.first">
         <source>First</source>
         <target state="new">First</target>

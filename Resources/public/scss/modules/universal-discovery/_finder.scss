@@ -8,4 +8,11 @@
             margin-left: calculateRem(16px);
         }
     }
+
+    &__no-content-info {
+        padding-top: calculateRem(39px);
+        padding-left: calculateRem(36px);
+        font-size: calculateRem(25px);
+        color: $ez-color-base-light;
+    }
 }

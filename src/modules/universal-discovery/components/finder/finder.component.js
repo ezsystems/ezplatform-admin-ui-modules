@@ -24,6 +24,7 @@ export default class FinderComponent extends Component {
         this.loadBranchLeaves = this.loadBranchLeaves.bind(this);
         this.onLoadMore = this.onLoadMore.bind(this);
         this.renderBranch = this.renderBranch.bind(this);
+        this.renderActiveLocations = this.renderActiveLocations.bind(this);
         this.setBranchContainerRef = this.setBranchContainerRef.bind(this);
         this.setPreselectedState = this.getPreselectedState.bind(this);
 
@@ -450,6 +451,30 @@ export default class FinderComponent extends Component {
         );
     }
 
+    renderActiveLocations() {
+        const { activeLocations, locationsMap } = this.state;
+
+        return activeLocations.map((location, index) => {
+            const locationId = location ? location.id : this.props.startingLocationId;
+            const branchActiveLocation = activeLocations[index + 1];
+            const branchActiveLocationId = branchActiveLocation ? branchActiveLocation.id : null;
+            const isBranchActiveLocationLoading = branchActiveLocationId && !locationsMap[branchActiveLocationId];
+            const locationData = locationsMap[locationId];
+
+            return this.renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading);
+        });
+    }
+
+    renderEmptyContent() {
+        const noContentMessage = Translator.trans(
+            /*@Desc("No content items.")*/ 'finder.no_content.message',
+            {},
+            'universal_discovery_widget'
+        );
+
+        return <div className="c-finder__no-content-info">{noContentMessage}</div>;
+    }
+
     setBranchContainerRef(ref) {
         this._refBranchesContainer = ref;
     }
@@ -461,21 +486,16 @@ export default class FinderComponent extends Component {
             return null;
         }
 
-        const { locationsMap } = this.state;
+        const branches = [
+            this.renderStartingLocationBranch(),
+            ...this.renderActiveLocations(),
+        ];
 
         return (
             <div className="c-finder">
                 <div className="c-finder__branches" style={{ height: `${this.props.maxHeight}px` }} ref={this.setBranchContainerRef}>
-                    {this.renderStartingLocationBranch()}
-                    {activeLocations.map((location, index) => {
-                        const locationId = location ? location.id : this.props.startingLocationId;
-                        const branchActiveLocation = activeLocations[index + 1];
-                        const branchActiveLocationId = branchActiveLocation ? branchActiveLocation.id : null;
-                        const isBranchActiveLocationLoading = branchActiveLocationId && !locationsMap[branchActiveLocationId];
-                        const locationData = locationsMap[locationId];
-
-                        return this.renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading);
-                    })}
+                    {activeLocations.some((location) => location) && branches.every((branch) => !branch) && this.renderEmptyContent()}
+                    {branches}
                 </div>
             </div>
         );
