@@ -25,6 +25,7 @@ export default class FinderComponent extends Component {
         this.onLoadMore = this.onLoadMore.bind(this);
         this.renderBranch = this.renderBranch.bind(this);
         this.renderActiveLocations = this.renderActiveLocations.bind(this);
+        this.renderBranches = this.renderBranches.bind(this);
         this.setBranchContainerRef = this.setBranchContainerRef.bind(this);
         this.setPreselectedState = this.getPreselectedState.bind(this);
 
@@ -475,6 +476,29 @@ export default class FinderComponent extends Component {
         return <div className="c-finder__no-content-info">{noContentMessage}</div>;
     }
 
+    renderBranches() {
+        const { activeLocations } = this.state;
+        const branches = [
+            this.renderStartingLocationBranch(),
+            ...this.renderActiveLocations(),
+        ];
+        const hasActiveLocations = activeLocations.some((location) => location);
+        const hasNonEmptyBranches = branches.every((branch) => !branch);
+
+        if (hasActiveLocations && hasNonEmptyBranches) {
+            const noContentMessage = Translator.trans(
+                /*@Desc("No content items.")*/ 'finder.no_content.message',
+                {},
+                'universal_discovery_widget'
+            );
+
+            return <div className="c-finder__no-content-info">{noContentMessage}</div>;
+        }
+
+        return branches;
+
+    }
+
     setBranchContainerRef(ref) {
         this._refBranchesContainer = ref;
     }
@@ -486,16 +510,10 @@ export default class FinderComponent extends Component {
             return null;
         }
 
-        const branches = [
-            this.renderStartingLocationBranch(),
-            ...this.renderActiveLocations(),
-        ];
-
         return (
             <div className="c-finder">
                 <div className="c-finder__branches" style={{ height: `${this.props.maxHeight}px` }} ref={this.setBranchContainerRef}>
-                    {activeLocations.some((location) => location) && branches.every((branch) => !branch) && this.renderEmptyContent()}
-                    {branches}
+                    {this.renderBranches()}
                 </div>
             </div>
         );
