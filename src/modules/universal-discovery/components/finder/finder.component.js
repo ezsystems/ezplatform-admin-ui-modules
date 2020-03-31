@@ -24,6 +24,8 @@ export default class FinderComponent extends Component {
         this.loadBranchLeaves = this.loadBranchLeaves.bind(this);
         this.onLoadMore = this.onLoadMore.bind(this);
         this.renderBranch = this.renderBranch.bind(this);
+        this.renderActiveLocations = this.renderActiveLocations.bind(this);
+        this.renderBranches = this.renderBranches.bind(this);
         this.setBranchContainerRef = this.setBranchContainerRef.bind(this);
         this.setPreselectedState = this.getPreselectedState.bind(this);
 
@@ -450,6 +452,53 @@ export default class FinderComponent extends Component {
         );
     }
 
+    renderActiveLocations() {
+        const { activeLocations, locationsMap } = this.state;
+
+        return activeLocations.map((location, index) => {
+            const locationId = location ? location.id : this.props.startingLocationId;
+            const branchActiveLocation = activeLocations[index + 1];
+            const branchActiveLocationId = branchActiveLocation ? branchActiveLocation.id : null;
+            const isBranchActiveLocationLoading = branchActiveLocationId && !locationsMap[branchActiveLocationId];
+            const locationData = locationsMap[locationId];
+
+            return this.renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading);
+        });
+    }
+
+    renderEmptyContent() {
+        const noContentMessage = Translator.trans(
+            /*@Desc("No content items.")*/ 'finder.no_content.message',
+            {},
+            'universal_discovery_widget'
+        );
+
+        return <div className="c-finder__no-content-info">{noContentMessage}</div>;
+    }
+
+    renderBranches() {
+        const { activeLocations } = this.state;
+        const branches = [
+            this.renderStartingLocationBranch(),
+            ...this.renderActiveLocations(),
+        ];
+        const hasActiveLocations = activeLocations.some((location) => location);
+        const hasNonEmptyBranches = branches.every((branch) => !branch);
+
+        if (hasActiveLocations && hasNonEmptyBranches) {
+            const noContentMessage = Translator.trans(
+                /*@Desc("No content items.")*/ 'finder.no_content.message',
+                {},
+                'universal_discovery_widget'
+            );
+
+            return <div className="c-finder__no-content-info">{noContentMessage}</div>;
+        }
+
+        return branches;
+
+    }
+
     setBranchContainerRef(ref) {
         this._refBranchesContainer = ref;
     }
@@ -461,21 +510,10 @@ export default class FinderComponent extends Component {
             return null;
         }
 
-        const { locationsMap } = this.state;
-
         return (
             <div className="c-finder">
                 <div className="c-finder__branches" style={{ height: `${this.props.maxHeight}px` }} ref={this.setBranchContainerRef}>
-                    {this.renderStartingLocationBranch()}
-                    {activeLocations.map((location, index) => {
-                        const locationId = location ? location.id : this.props.startingLocationId;
-                        const branchActiveLocation = activeLocations[index + 1];
-                        const branchActiveLocationId = branchActiveLocation ? branchActiveLocation.id : null;
-                        const isBranchActiveLocationLoading = branchActiveLocationId && !locationsMap[branchActiveLocationId];
-                        const locationData = locationsMap[locationId];
-
-                        return this.renderBranch(locationData, branchActiveLocationId, isBranchActiveLocationLoading);
-                    })}
+                    {this.renderBranches()}
                 </div>
             </div>
         );
