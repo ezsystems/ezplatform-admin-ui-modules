@@ -19,6 +19,7 @@ export default class SearchComponent extends Component {
         this.onRequireItemsCount = this.onRequireItemsCount.bind(this);
         this.toggleSubmitButtonState = this.toggleSubmitButtonState.bind(this);
         this.setSearchInputRef = this.setSearchInputRef.bind(this);
+        this.setSearchLanguageRef = this.setSearchLanguageRef.bind(this);
     }
 
     /**
@@ -37,6 +38,7 @@ export default class SearchComponent extends Component {
         }
 
         const searchText = this._refSearchInput.value;
+        const language = this._refSearchLanguage.value;
         const query = {
             FullTextCriterion: searchText,
         };
@@ -49,7 +51,7 @@ export default class SearchComponent extends Component {
             () => ({ isSearching: true, lastSearchText: searchText }),
             () => {
                 const promise = new Promise((resolve) =>
-                    this.props.findContentBySearchQuery(this.props.restInfo, query, resolve, this.props.searchResultsLimit)
+                    this.props.findContentBySearchQuery(this.props.restInfo, query, resolve, this.props.searchResultsLimit, language)
                 );
 
                 promise
@@ -84,6 +86,33 @@ export default class SearchComponent extends Component {
         if (count > items.length) {
             throw new Error('All items loaded.');
         }
+    }
+
+    /**
+     * Renders the language filter
+     *
+     * @method renderLanguageFilter
+     */
+    renderLanguageFilter() {
+        const selectAttrs = {
+            className: 'form-control',
+            ref: this.setSearchLanguageRef
+        };
+
+        const { languages } = this.props;
+
+        const options = languages.priority.map((value) => {
+            const language = languages.mappings[value];
+            return <option value={language.languageCode}>{language.name}</option>;
+        });
+
+        return (
+            <div className="c-search-language__select-wrapper">
+                <select {...selectAttrs}>
+                    {options}
+                </select>
+            </div>
+        );
     }
 
     /**
@@ -134,6 +163,16 @@ export default class SearchComponent extends Component {
      */
     setSearchInputRef(ref) {
         this._refSearchInput = ref;
+    }
+
+    /**
+     * Set a reference to the language filter HTMLElement node
+     *
+     * @method setSearchLanguageRef
+     * @param {HTMLElement} ref
+     */
+    setSearchLanguageRef(ref) {
+        this._refSearchLanguage = ref;
     }
 
     renderSearchTips() {
@@ -200,7 +239,7 @@ export default class SearchComponent extends Component {
             { query: lastSearchText },
             'search'
         );
-
+        
         return (
             <ContentTableComponent
                 items={items}
@@ -235,6 +274,7 @@ export default class SearchComponent extends Component {
                         onKeyUp={this.searchContent}
                         onChange={this.toggleSubmitButtonState}
                     />
+                    {this.renderLanguageFilter()}
                     {this.renderSubmitBtn()}
                 </div>
                 {this.renderResultsTable()}
