@@ -202,7 +202,7 @@ export const findContentBySearchQuery = ({ token, siteaccess }, query, callback,
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-search-query-${query.FullTextCriterion}`,
-            languageCode: languageCode,
+            languageCode,
             public: false,
             LocationQuery: {
                 Criteria: {},

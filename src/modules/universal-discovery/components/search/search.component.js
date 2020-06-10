@@ -38,7 +38,7 @@ export default class SearchComponent extends Component {
         }
 
         const searchText = this._refSearchInput.value;
-        const language = this._refSearchLanguage.value;
+        const languageCode = this._refSearchLanguage.value;
         const query = {
             FullTextCriterion: searchText,
         };
@@ -51,7 +51,7 @@ export default class SearchComponent extends Component {
             () => ({ isSearching: true, lastSearchText: searchText }),
             () => {
                 const promise = new Promise((resolve) =>
-                    this.props.findContentBySearchQuery(this.props.restInfo, query, resolve, this.props.searchResultsLimit, language)
+                    this.props.findContentBySearchQuery(this.props.restInfo, query, resolve, this.props.searchResultsLimit, languageCode)
                 );
 
                 promise
@@ -94,20 +94,19 @@ export default class SearchComponent extends Component {
      * @method renderLanguageFilter
      */
     renderLanguageFilter() {
+        const { languages } = this.props;
         const selectAttrs = {
             className: 'form-control',
             ref: this.setSearchLanguageRef
         };
-
-        const { languages } = this.props;
-
         const options = languages.priority.map((value) => {
             const language = languages.mappings[value];
+
             return <option value={language.languageCode}>{language.name}</option>;
         });
 
         return (
-            <div className="c-search-language__select-wrapper">
+            <div className="c-search__language-wrapper">
                 <select {...selectAttrs}>
                     {options}
                 </select>
@@ -301,4 +300,5 @@ SearchComponent.propTypes = {
     onItemRemove: PropTypes.func.isRequired,
     multiple: PropTypes.bool.isRequired,
     allowedContentTypes: PropTypes.array.isRequired,
+    languages: PropTypes.object.isRequired,
 };

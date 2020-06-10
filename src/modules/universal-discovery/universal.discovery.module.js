@@ -813,11 +813,7 @@ export default class UniversalDiscoveryModule extends Component {
         } = this.props;
         const { userBookmarksItems, userBookmarksCount, contentTypesMap } = this.state;
         const browsePanelConfig = { id: TAB_BROWSE, panel: FinderPanelComponent, attrs: { sortFieldMappings, sortOrderMappings } };
-        const searchPanelConfig = {
-            id: TAB_SEARCH,
-            panel: SearchPanelComponent,
-            attrs: { languages },
-        };
+        const searchPanelConfig = { id: TAB_SEARCH, panel: SearchPanelComponent, attrs: { languages } };
         const bookmarksPanelConfig = {
             id: TAB_BOOKMARKS,
             panel: BookmarksPanelComponent,
