@@ -199,10 +199,12 @@ export const findLocationsByParentLocationId = (
  * @param {String} LanguageCode
  */
 export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit = QUERY_LIMIT, languageCode = null) => {
+    const useAlwaysAvailable = true;
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-search-query-${query.FullTextCriterion}`,
             languageCode,
+            useAlwaysAvailable,
             public: false,
             LocationQuery: {
                 Criteria: {},
