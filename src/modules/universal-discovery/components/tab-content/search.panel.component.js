@@ -20,6 +20,7 @@ const SearchPanelComponent = (props) => {
         canSelectContent,
         allowedContentTypes,
         onItemRemove,
+        languages,
     } = props;
     const searchAttrs = Object.assign(
         {},
@@ -37,6 +38,7 @@ const SearchPanelComponent = (props) => {
             canSelectContent,
             allowedContentTypes,
             onItemRemove,
+            languages,
         }
     );
 
@@ -71,6 +73,7 @@ SearchPanelComponent.propTypes = {
     canSelectContent: PropTypes.func.isRequired,
     onItemRemove: PropTypes.func.isRequired,
     allowedContentTypes: PropTypes.array.isRequired,
+    languages: PropTypes.object.isRequired,
 };
 
 export default SearchPanelComponent;

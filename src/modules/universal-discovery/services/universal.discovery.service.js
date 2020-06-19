@@ -196,11 +196,15 @@ export const findLocationsByParentLocationId = (
  * @param {Object} query Object containing query criterions
  * @param {Function} callback
  * @param {Number} limit
+ * @param {String} LanguageCode
  */
-export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit = QUERY_LIMIT) => {
+export const findContentBySearchQuery = ({ token, siteaccess }, query, callback, limit = QUERY_LIMIT, languageCode = null) => {
+    const useAlwaysAvailable = true;
     const body = JSON.stringify({
         ViewInput: {
             identifier: `udw-locations-by-search-query-${query.FullTextCriterion}`,
+            languageCode,
+            useAlwaysAvailable,
             public: false,
             LocationQuery: {
                 Criteria: {},
