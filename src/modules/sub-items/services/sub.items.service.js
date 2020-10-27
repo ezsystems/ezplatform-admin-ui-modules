@@ -164,8 +164,6 @@ export const updateLocationPriority = ({ priority, location, token, siteaccess }
         body: JSON.stringify({
             LocationUpdate: {
                 priority: priority,
-                sortField: 'PATH',
-                sortOrder: 'ASC',
             },
         }),
     });
