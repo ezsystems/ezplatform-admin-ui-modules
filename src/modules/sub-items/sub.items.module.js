@@ -121,19 +121,15 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadPage(pageIndex) {
-        this.loadLocation(pageIndex)
-            .then(this.loadContentItems)
-            .then(this.loadContentTypes)
-            .then(this.updateItemsState)
-            .catch(() => {
-                const errorMessage = Translator.trans(
-                    /*@Desc("An error occurred while loading items in the Sub Items module")*/ 'page.loading_error.message',
-                    {},
-                    'sub_items'
-                );
+        this.loadLocation(pageIndex).then(this.loadContentItems).then(this.loadContentTypes).then(this.updateItemsState).catch(() => {
+            const errorMessage = Translator.trans(
+                /*@Desc("An error occurred while loading items in the Sub Items module")*/ 'page.loading_error.message',
+                {},
+                'sub_items'
+            );
 
-                window.eZ.helpers.notification.showErrorNotification(errorMessage);
-            });
+            window.eZ.helpers.notification.showErrorNotification(errorMessage);
+        });
     }
 
     /**
@@ -739,11 +735,7 @@ export default class SubItemsModule extends Component {
 
         return (
             <Fragment>
-                <button
-                    onClick={this.closeBulkDeletePopup}
-                    type="button"
-                    className="btn btn-dark"
-                    data-dismiss="modal">
+                <button onClick={this.closeBulkDeletePopup} type="button" className="btn btn-dark" data-dismiss="modal">
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkDeletePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
@@ -822,7 +814,8 @@ export default class SubItemsModule extends Component {
                 isLoading={false}
                 size="medium"
                 footerChildren={this.renderConfirmationPopupFooter(selectionInfo)}
-                noHeader={true}>
+                noHeader={true}
+            >
                 <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
             </Popup>,
             this.bulkDeleteModalContainer
@@ -969,6 +962,8 @@ export default class SubItemsModule extends Component {
 
         const selectedPageLocationsIds = this.getPageSelectedLocationsIds();
 
+        this.updateTrashModal();
+
         return (
             <SubItemsListComponent
                 activeView={this.state.activeView}
@@ -985,6 +980,16 @@ export default class SubItemsModule extends Component {
                 sortClause={sortClause}
                 sortOrder={sortOrder}
             />
+        );
+    }
+
+    updateTrashModal() {
+        document.body.dispatchEvent(
+            new CustomEvent('ez-trash-modal-refresh', {
+                detail: {
+                    numberOfSubitems: this.state.totalCount,
+                },
+            })
         );
     }
 
