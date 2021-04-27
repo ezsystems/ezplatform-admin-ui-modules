@@ -121,15 +121,19 @@ export default class SubItemsModule extends Component {
      * @memberof SubItemsModule
      */
     loadPage(pageIndex) {
-        this.loadLocation(pageIndex).then(this.loadContentItems).then(this.loadContentTypes).then(this.updateItemsState).catch(() => {
-            const errorMessage = Translator.trans(
-                /*@Desc("An error occurred while loading items in the Sub Items module")*/ 'page.loading_error.message',
-                {},
-                'sub_items'
-            );
+        this.loadLocation(pageIndex)
+            .then(this.loadContentItems)
+            .then(this.loadContentTypes)
+            .then(this.updateItemsState)
+            .catch(() => {
+                const errorMessage = Translator.trans(
+                    /*@Desc("An error occurred while loading items in the Sub Items module")*/ 'page.loading_error.message',
+                    {},
+                    'sub_items'
+                );
 
-            window.eZ.helpers.notification.showErrorNotification(errorMessage);
-        });
+                window.eZ.helpers.notification.showErrorNotification(errorMessage);
+            });
     }
 
     /**
