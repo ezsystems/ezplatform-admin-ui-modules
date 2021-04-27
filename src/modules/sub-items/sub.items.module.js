@@ -439,7 +439,7 @@ export default class SubItemsModule extends Component {
         this.updateTotalCountState(totalCount - movedLocations.length);
         this.deselectAllItems();
         this.discardActivePageItems();
-
+        this.updateTrashModal();
         this.toggleBulkOperationStatusState(false);
 
         if (notMovedLocations.length) {
@@ -961,8 +961,6 @@ export default class SubItemsModule extends Component {
         }
 
         const selectedPageLocationsIds = this.getPageSelectedLocationsIds();
-
-        this.updateTrashModal();
 
         return (
             <SubItemsListComponent
