@@ -571,7 +571,7 @@ export default class SubItemsModule extends Component {
         this.updateTotalCountState(totalCount - deletedLocations.length);
         this.deselectAllItems();
         this.discardActivePageItems();
-
+        this.updateTrashModal();
         this.toggleBulkOperationStatusState(false);
 
         if (notDeletedLocations.length) {
