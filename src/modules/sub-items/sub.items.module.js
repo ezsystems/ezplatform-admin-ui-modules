@@ -443,7 +443,7 @@ export default class SubItemsModule extends Component {
         this.updateTotalCountState(totalCount - movedLocations.length);
         this.deselectAllItems();
         this.discardActivePageItems();
-
+        this.updateTrashModal();
         this.toggleBulkOperationStatusState(false);
 
         if (notMovedLocations.length) {
@@ -571,7 +571,7 @@ export default class SubItemsModule extends Component {
         this.updateTotalCountState(totalCount - deletedLocations.length);
         this.deselectAllItems();
         this.discardActivePageItems();
-
+        this.updateTrashModal();
         this.toggleBulkOperationStatusState(false);
 
         if (notDeletedLocations.length) {
@@ -739,11 +739,7 @@ export default class SubItemsModule extends Component {
 
         return (
             <Fragment>
-                <button
-                    onClick={this.closeBulkDeletePopup}
-                    type="button"
-                    className="btn btn-dark"
-                    data-dismiss="modal">
+                <button onClick={this.closeBulkDeletePopup} type="button" className="btn btn-dark" data-dismiss="modal">
                     {cancelLabel}
                 </button>
                 <button onClick={this.onBulkDeletePopupConfirm} type="button" className="btn btn-danger font-weight-bold btn--trigger">
@@ -822,7 +818,8 @@ export default class SubItemsModule extends Component {
                 isLoading={false}
                 size="medium"
                 footerChildren={this.renderConfirmationPopupFooter(selectionInfo)}
-                noHeader={true}>
+                noHeader={true}
+            >
                 <div className="m-sub-items__confirmation-modal-body">{confirmationMessage}</div>
             </Popup>,
             this.bulkDeleteModalContainer
@@ -985,6 +982,16 @@ export default class SubItemsModule extends Component {
                 sortClause={sortClause}
                 sortOrder={sortOrder}
             />
+        );
+    }
+
+    updateTrashModal() {
+        document.body.dispatchEvent(
+            new CustomEvent('ez-trash-modal-refresh', {
+                detail: {
+                    numberOfSubitems: this.state.totalCount,
+                },
+            })
         );
     }
 
