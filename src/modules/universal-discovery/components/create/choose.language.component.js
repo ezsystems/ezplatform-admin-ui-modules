@@ -70,7 +70,7 @@ export default class ChooseLanguageComponent extends Component {
             return null;
         }
 
-        if (this.state.selectedLanguage !== undefined && this.state.selectedLanguage.languageCode === languageCode) {
+        if (this.state.selectedLanguage.languageCode === languageCode) {
             attrs.selected = true;
         }
 
