@@ -9,6 +9,7 @@ export default class ChooseLanguageComponent extends Component {
         this.renderOption = this.renderOption.bind(this);
 
         let selectedLanguageCode = null;
+        let selectedLanguage;
 
         if (props.preselectedLanguage) {
             selectedLanguageCode = props.preselectedLanguage;
@@ -28,18 +29,21 @@ export default class ChooseLanguageComponent extends Component {
 
         if (selectedLanguageCode === null || !props.languages.mappings[selectedLanguageCode].enabled) {
             const languages = Object.values(props.languages.mappings);
-            const filteredLanguages = languages.filter((language) => {
+            const language = languages.find((language) => {
                 const isAllowedLanguage = props.allowedLanguages.length ? props.allowedLanguages.includes(language.languageCode) : true;
 
                 return isAllowedLanguage && language.enabled;
             });
 
-            selectedLanguageCode = filteredLanguages.length ? filteredLanguages[0].languageCode : '';
+            selectedLanguage = language || {};
+        } else {
+            selectedLanguage = props.languages.mappings[selectedLanguageCode]
         }
 
         this.state = {
-            selectedLanguage: props.languages.mappings[selectedLanguageCode],
+            selectedLanguage: selectedLanguage,
         };
+
     }
 
     componentDidMount() {
@@ -66,7 +70,7 @@ export default class ChooseLanguageComponent extends Component {
             return null;
         }
 
-        if (this.state.selectedLanguage.languageCode === languageCode) {
+        if (this.state.selectedLanguage !== undefined && this.state.selectedLanguage.languageCode === languageCode) {
             attrs.selected = true;
         }
 
