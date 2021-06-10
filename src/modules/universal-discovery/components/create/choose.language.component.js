@@ -9,7 +9,7 @@ export default class ChooseLanguageComponent extends Component {
         this.renderOption = this.renderOption.bind(this);
 
         let selectedLanguageCode = null;
-        let selectedLanguage;
+        let selectedLanguage = {};
 
         if (props.preselectedLanguage) {
             selectedLanguageCode = props.preselectedLanguage;
@@ -35,15 +35,16 @@ export default class ChooseLanguageComponent extends Component {
                 return isAllowedLanguage && language.enabled;
             });
 
-            selectedLanguage = language || {};
+            if (language !== undefined) {
+                selectedLanguage = language;
+            }
         } else {
-            selectedLanguage = props.languages.mappings[selectedLanguageCode]
+            selectedLanguage = props.languages.mappings[selectedLanguageCode];
         }
 
         this.state = {
-            selectedLanguage: selectedLanguage,
+            selectedLanguage,
         };
-
     }
 
     componentDidMount() {
