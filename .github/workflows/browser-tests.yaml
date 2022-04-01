@@ -1,0 +1,17 @@
+name: Browser tests
+
+on:
+    push:
+        branches:
+            - master
+            - "[0-9]+.[0-9]+"
+    pull_request: ~
+
+jobs:
+    admin-ui-modules:
+        name: "AdminUI modules"
+        uses: ezsystems/ezplatform/.github/workflows/callable-browser-tests.yaml@2.5
+        with:
+            test-suite: "--mode=behat --profile=adminui --suite=adminuimodules"
+        secrets:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
