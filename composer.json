@@ -1,26 +1,26 @@
 {
-  "name": "ezsystems/ezplatform-admin-ui-modules",
-  "description": "External assets dependencies for EzPlatform AdminUI",
-  "license": "GPL-2.0-only",
-  "authors": [
-    {
-      "name": "eZ dev-team & eZ Community",
-      "homepage": "https://github.com/ezsystems/ezplatform/contributors"
+    "name": "ezsystems/ezplatform-admin-ui-modules",
+    "description": "External assets dependencies for EzPlatform AdminUI",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "eZ dev-team & eZ Community",
+            "homepage": "https://github.com/ezsystems/ezplatform/contributors"
+        }
+    ],
+    "require": {
+        "symfony/symfony": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "EzSystems\\EzPlatformAdminUiModulesBundle\\": "/"
+        }
+    },
+    "extra": {
+        "_ezplatform_branch_for_behat_tests": "2.5",
+        "branch-alias": {
+            "dev-master": "1.5.x-dev",
+            "dev-tmp_ci_branch": "1.5.x-dev"
+        }
     }
-  ],
-  "require": {
-    "symfony/symfony": "^3.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "EzSystems\\EzPlatformAdminUiModulesBundle\\": "/"
-    }
-  },
-  "extra": {
-    "_ezplatform_branch_for_behat_tests": "2.5",
-    "branch-alias": {
-      "dev-master": "1.5.x-dev",
-      "dev-tmp_ci_branch": "1.5.x-dev"
-    }
-  }
 }
